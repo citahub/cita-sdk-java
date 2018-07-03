@@ -32,17 +32,17 @@ import rx.functions.Func1;
  * or the org.web3j.codegen.SolidityFunctionWrapperGenerator in the 
  * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with web3j version 3.2.0.
+ * <p>Generated with web3j version 3.3.1.
  */
 public class Token extends Contract {
-    private static final String BINARY = "6060604052341561000f57600080fd5b60405160208061020083398101604052808051600160a060020a03331660009081526020819052604090205550506101b48061004c6000396000f30060606040526004361061004b5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166370a082318114610050578063a9059cbb14610081575b600080fd5b341561005b57600080fd5b61006f600160a060020a03600435166100a5565b60405190815260200160405180910390f35b341561008c57600080fd5b6100a3600160a060020a03600435166024356100b7565b005b60006020819052908152604090205481565b600160a060020a033316600090815260208190526040902054819010156100dd57600080fd5b600160a060020a038216600090815260208190526040902054818101101561010457600080fd5b600160a060020a03338181166000908152602081905260408082208054869003905592851681528290208054840190557fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef918490849051600160a060020a039384168152919092166020820152604080820192909252606001905180910390a150505600a165627a7a72305820ca1b64bd5fbfa2baede30b8fe2c9d5bf4014054f3a5c006aecf4a2eefed0a11a0029";
+    private static final String BINARY = "6060604052341561000f57600080fd5b6040516020806103b783398101604052808051906020019091905050806000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002081905550506103398061007e6000396000f30060606040526004361061004c576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806370a0823114610051578063a9059cbb1461009e575b600080fd5b341561005c57600080fd5b610088600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919050506100e0565b6040518082815260200191505060405180910390f35b34156100a957600080fd5b6100de600480803573ffffffffffffffffffffffffffffffffffffffff169060200190919080359060200190919050506100f8565b005b60006020528060005260406000206000915090505481565b806000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020541015151561014557600080fd5b6000808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002054816000808573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000205401101515156101d257600080fd5b806000803373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060008282540392505081905550806000808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600082825401925050819055507fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef338383604051808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001828152602001935050505060405180910390a150505600a165627a7a72305820b725c7e03637d8119d73a6927edde2ea8ee768ec0f8136cb7f6dc6ed4c892ff30029";
 
     protected Token(String contractAddress, Web3j web3j, TransactionManager transactionManager) {
         super(BINARY, contractAddress, web3j, transactionManager);
     }
 
     public List<TransferEventResponse> getTransferEvents(TransactionReceipt transactionReceipt) {
-        final Event event = new Event("Transfer", 
+        final Event event = new Event("Transfer",
                 Arrays.<TypeReference<?>>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}, new TypeReference<Uint256>() {}));
         List<EventValues> valueList = extractEventParameters(event, transactionReceipt);
@@ -58,7 +58,7 @@ public class Token extends Contract {
     }
 
     public Observable<TransferEventResponse> transferEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        final Event event = new Event("Transfer", 
+        final Event event = new Event("Transfer",
                 Arrays.<TypeReference<?>>asList(),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}, new TypeReference<Uint256>() {}));
         EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
@@ -77,24 +77,24 @@ public class Token extends Contract {
     }
 
     public RemoteCall<BigInteger> balanceOf(String param0) {
-        Function function = new Function("balanceOf", 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(param0)), 
+        Function function = new Function("balanceOf",
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(param0)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock) {
+    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, Integer chainId, String value) {
         Function function = new Function(
-                "transfer", 
-                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_to), 
-                new org.web3j.abi.datatypes.generated.Uint256(_value)), 
+                "transfer",
+                Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(_to),
+                        new org.web3j.abi.datatypes.generated.Uint256(_value)),
                 Collections.<TypeReference<?>>emptyList());
-        return executeRemoteCallTransaction(function, quota, nonce, validUntilBlock);
+        return executeRemoteCallTransaction(function, quota, nonce, validUntilBlock, version, chainId, value);
     }
 
-    public static RemoteCall<Token> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger initialSupply) {
+    public static RemoteCall<Token> deploy(Web3j web3j, TransactionManager transactionManager, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, String value, Integer chainId, BigInteger initialSupply) {
         String encodedConstructor = FunctionEncoder.encodeConstructor(Arrays.<Type>asList(new org.web3j.abi.datatypes.generated.Uint256(initialSupply)));
-        return deployRemoteCall(Token.class, web3j, transactionManager, quota, nonce, validUntilBlock, BINARY, encodedConstructor);
+        return deployRemoteCall(Token.class, web3j, transactionManager, quota, nonce, validUntilBlock, version, chainId, value, BINARY, encodedConstructor);
     }
 
     public static Token load(String contractAddress, Web3j web3j, TransactionManager transactionManager) {

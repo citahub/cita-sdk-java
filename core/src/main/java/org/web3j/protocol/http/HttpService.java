@@ -30,7 +30,7 @@ public class HttpService extends Service {
 
     public static final String DEFAULT_URL = "http://localhost:8545/";
 
-    private static final Logger log = LoggerFactory.getLogger(HttpService.class);
+    private static boolean debug = false;
 
     private OkHttpClient httpClient;
 
@@ -82,8 +82,8 @@ public class HttpService extends Service {
     }
 
     private static void configureLogging(OkHttpClient.Builder builder) {
-        if (log.isDebugEnabled()) {
-            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(log::debug);
+        if (debug) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             builder.addInterceptor(logging);
         }
@@ -158,5 +158,9 @@ public class HttpService extends Service {
 
     public HashMap<String, String> getHeaders() {
         return headers;
+    }
+
+    public static void setDebug(boolean debug) {
+        HttpService.debug = debug;
     }
 }

@@ -15,11 +15,11 @@ public class RawTransaction {
     private BigInteger gasPrice;
     private BigInteger gasLimit;
     private String to;
-    private BigInteger value;
+    private String value;
     private String data;
 
     private RawTransaction(BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
-                           BigInteger value, String data) {
+                           String value, String data) {
         this.nonce = nonce;
         this.gasPrice = gasPrice;
         this.gasLimit = gasLimit;
@@ -32,7 +32,7 @@ public class RawTransaction {
     }
 
     public static RawTransaction createContractTransaction(
-            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, BigInteger value,
+            BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String value,
             String init) {
 
         return new RawTransaction(nonce, gasPrice, gasLimit, "", value, init);
@@ -40,7 +40,7 @@ public class RawTransaction {
 
     public static RawTransaction createEtherTransaction(
             BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
-            BigInteger value) {
+            String value) {
 
         return new RawTransaction(nonce, gasPrice, gasLimit, to, value, "");
 
@@ -48,12 +48,12 @@ public class RawTransaction {
 
     public static RawTransaction createTransaction(
             BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, String data) {
-        return createTransaction(nonce, gasPrice, gasLimit, to, BigInteger.ZERO, data);
+        return createTransaction(nonce, gasPrice, gasLimit, to, "0", data);
     }
 
     public static RawTransaction createTransaction(
             BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to,
-            BigInteger value, String data) {
+            String value, String data) {
 
         return new RawTransaction(nonce, gasPrice, gasLimit, to, value, data);
     }
@@ -74,7 +74,7 @@ public class RawTransaction {
         return to;
     }
 
-    public BigInteger getValue() {
+    public String getValue() {
         return value;
     }
 

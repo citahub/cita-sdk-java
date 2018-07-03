@@ -76,7 +76,7 @@ public class RawTransactionManager extends TransactionManager {
     @Override
     public EthSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, BigInteger value) throws IOException {
+            String data, String value) throws IOException {
 
         BigInteger nonce = getNonce();
 

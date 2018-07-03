@@ -18,15 +18,16 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 
 import static org.abstractj.kalium.encoders.Encoder.HEX;
+
 import org.abstractj.kalium.keys.SigningKey;
 import org.abstractj.kalium.crypto.Hash;
 
 /**
  * Transaction request object used the below methods.
  * <ol>
- *     <li>eth_call</li>
- *     <li>eth_sendTransaction</li>
- *     <li>eth_estimateGas</li>
+ * <li>eth_call</li>
+ * <li>eth_sendTransaction</li>
+ * <li>eth_estimateGas</li>
  * </ol>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -36,30 +37,49 @@ public class Transaction {
     private BigInteger nonce;  // nonce field is not present on eth_call/eth_estimateGas
     private long quota;  // gas
     private long valid_until_block;
+    private int version = 0;
     private String data;
+    private String value;
+    private int chainId;
     private final Hash hash = new Hash();
 
-    public Transaction(String to, BigInteger nonce, long quota, long valid_until_block, String data) {
+    public Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data) {
         this.to = to;
         this.nonce = nonce;
         this.quota = quota;
+        this.version = version;
         this.valid_until_block = valid_until_block;
+        this.chainId = chainId;
+        this.value = value;
 
         if (data != null) {
             this.data = Numeric.prependHexPrefix(data);
         }
+
+        if (value.length() < 32) {
+            if(value.matches("0[xX][0-9a-fA-F]+")){
+                this.value = value.substring(2);
+            }else{
+                this.value = new BigInteger(value).toString(16);
+            }
+        }
+
     }
 
     public static Transaction createContractTransaction(
-        BigInteger nonce, long quota, long valid_until_block, String init) {
-
-        return new Transaction("", nonce, quota, valid_until_block, init);
+         BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String init) {
+        return new Transaction("", nonce, quota, valid_until_block, version, chainId, value, init);
     }
 
     public static Transaction createFunctionCallTransaction(
-        String to, BigInteger nonce, long quota, long valid_until_block, String data) {
+         String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data) {
+        return new Transaction(to, nonce, quota, valid_until_block, version, chainId, value, data);
+    }
 
-        return new Transaction(to, nonce, quota, valid_until_block, data);
+    public static Transaction createFunctionCallTransaction(
+            String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value,  byte[] data) {
+
+        return new Transaction(to, nonce, quota, valid_until_block, version, chainId, value, new String(data));
     }
 
     public String getTo() {
@@ -78,8 +98,18 @@ public class Transaction {
         return valid_until_block;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
     public String getData() {
         return data;
+    }
+
+    public int getChainId() { return chainId; }
+
+    public String getValue() {
+        return value;
     }
 
     private static String convert(BigInteger value) {
@@ -90,20 +120,28 @@ public class Transaction {
         }
     }
 
-    public String sign(String privateKey) {
-        return sign(privateKey, false);
-    }
-
-    public String sign(String privateKey, boolean isEd25519AndBlake2b) {
+    public String sign(String privateKey, boolean isEd25519AndBlake2b, boolean isByteArray) {
         Blockchain.Transaction.Builder builder = Blockchain.Transaction.newBuilder();
-        byte[] strbyte = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getData()));
+
+        byte[] strbyte;
+        if (isByteArray) {
+            strbyte = getData().getBytes();
+        }else {
+            strbyte = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getData()));
+        }
         ByteString bdata = ByteString.copyFrom(strbyte);
+
+        byte[] byteValue = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getValue()));
+        ByteString bvalue = ByteString.copyFrom(byteValue);
 
         builder.setData(bdata);
         builder.setNonce(getNonce());
         builder.setTo(getTo());
         builder.setValidUntilBlock(get_valid_until_block());
+        builder.setVersion(getVersion());
         builder.setQuota(getQuota());
+        builder.setChainId(getChainId());
+        builder.setValue(bvalue);
         Blockchain.Transaction tx = builder.build();
 
         byte[] sig;
@@ -113,11 +151,11 @@ public class Transaction {
             byte[] pk = key.getVerifyKey().toBytes();
             byte[] signature = key.sign(message);
             sig = new byte[signature.length + pk.length];
-            System.arraycopy(signature, 0, sig, 0, signature.length);  
-            System.arraycopy(pk, 0, sig, signature.length, pk.length);  
+            System.arraycopy(signature, 0, sig, 0, signature.length);
+            System.arraycopy(pk, 0, sig, signature.length, pk.length);
         } else {
             Credentials credentials = Credentials.create(privateKey);
-            ECKeyPair keyPair = credentials.getEcKeyPair();    
+            ECKeyPair keyPair = credentials.getEcKeyPair();
             Sign.SignatureData signatureData = Sign.signMessage(tx.toByteArray(), keyPair);
             sig = signatureData.get_signature();
         }
@@ -127,8 +165,9 @@ public class Transaction {
         builder1.setSignature(ByteString.copyFrom(sig));
         builder1.setCrypto(Crypto.SECP);
         Blockchain.UnverifiedTransaction utx = builder1.build();
+        String txStr = ConvertStrByte.bytesToHexString(utx.toByteArray());
 
-        return ConvertStrByte.bytesToHexString(utx.toByteArray());
+        return Numeric.prependHexPrefix(txStr);
     }
 
     // just used to secp256k1
@@ -137,11 +176,17 @@ public class Transaction {
         byte[] strbyte = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getData()));
         ByteString bdata = ByteString.copyFrom(strbyte);
 
+        byte[] byteValue = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getValue()));
+        ByteString bvalue = ByteString.copyFrom(byteValue);
+
         builder.setData(bdata);
         builder.setNonce(getNonce());
         builder.setTo(getTo());
         builder.setValidUntilBlock(get_valid_until_block());
         builder.setQuota(getQuota());
+        builder.setVersion(getVersion());
+        builder.setChainId(getChainId());
+        builder.setValue(bvalue);
         Blockchain.Transaction tx = builder.build();
 
         ECKeyPair keyPair = credentials.getEcKeyPair();
@@ -153,7 +198,8 @@ public class Transaction {
         builder1.setSignature(ByteString.copyFrom(sig));
         builder1.setCrypto(Crypto.SECP);
         Blockchain.UnverifiedTransaction utx = builder1.build();
+        String txStr = ConvertStrByte.bytesToHexString(utx.toByteArray());
 
-        return ConvertStrByte.bytesToHexString(utx.toByteArray());
+        return Numeric.prependHexPrefix(txStr);
     }
 }

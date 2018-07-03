@@ -43,7 +43,7 @@ public abstract class TransactionManager {
 
     protected TransactionReceipt executeTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, BigInteger value)
+            String data, String value)
             throws IOException, TransactionException {
 
         EthSendTransaction ethSendTransaction = sendTransaction(
@@ -54,24 +54,24 @@ public abstract class TransactionManager {
     // adapt to cita
     protected TransactionReceipt executeTransaction(
             String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock)
+            BigInteger nonce, BigInteger validUntilBlock, BigInteger version , int chainId, String value)
             throws IOException, TransactionException {
         EthSendTransaction ethSendTransaction = sendTransaction(
-                to, data, quota, nonce, validUntilBlock);
+                to, data, quota, nonce, validUntilBlock, version , chainId, value);
         return processResponse(ethSendTransaction);
     }
 
     // adapt to cita, return empty EthSendTransaction default, only CitaTransactionManager will override this method
     public EthSendTransaction sendTransaction(
             String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock)
+            BigInteger nonce, BigInteger validUntilBlock, BigInteger version , int chainId, String value)
             throws IOException {
         return new EthSendTransaction();
     }
 
     public abstract EthSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, BigInteger value)
+            String data, String value)
             throws IOException;
 
     public String getFromAddress() {

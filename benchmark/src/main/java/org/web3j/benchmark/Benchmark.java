@@ -2,11 +2,14 @@ package org.web3j.benchmark;
 
 import org.apache.commons.cli.*;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.protocol.core.methods.response.EthMetaData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -88,6 +91,25 @@ public class Benchmark {
             System.exit(1);
             return 0;
         }
+    }
+
+    public static EthMetaData getMetaData(Web3j service) {
+        try{
+            return service.ethMetaData(DefaultBlockParameter.valueOf("latest"))
+                    .send();
+        }catch (Throwable e) {
+            System.out.println("get block failed because of " + e);
+            return null;
+        }
+    }
+    public static EthMetaData getMetaData(Web3j service, long blockNumber) {
+       try{
+           return service.ethMetaData(DefaultBlockParameter.valueOf(BigInteger.valueOf(blockNumber)))
+                   .send();
+       }catch (Throwable e) {
+           System.out.println("get block " + blockNumber + " failed because of " + e);
+           return null;
+       }
     }
 
     // Note: t1 < t2

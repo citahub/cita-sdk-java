@@ -23,9 +23,11 @@ import java.util.Random;
 public class InterfaceTest {
 
     private Web3j web3j;
+    private String value;
 
     public InterfaceTest(Web3j web3j) {
         this.web3j = web3j;
+        this.value = "0";
     }
 
     public void run() throws Exception {
@@ -62,9 +64,9 @@ public class InterfaceTest {
         Random r = new Random(System.currentTimeMillis());
         long nonce = Math.abs(r.nextLong());
         System.out.println("nonce = " + nonce);
-        Transaction rtx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), 1000000, validBlockNumber.longValue() + 88, code);
+        Transaction rtx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), 1000000, validBlockNumber.longValue() + 88,0,  1, value, code);
         String privateKey = "352416e1c910e413768c51390dfd791b414212b7b4fe6b1a18f58007fa894214";
-        String signedTx = rtx.sign(privateKey);
+        String signedTx = rtx.sign(privateKey, false, false);
         String validTransactionHash = testEthSendRawTransaction(signedTx).get();
         System.out.println("waiting for tx into chain ...");
         Thread.sleep(8000);

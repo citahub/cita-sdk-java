@@ -29,6 +29,8 @@ public class SendTransactionTest {
     private long endHeight;
     private long succeed;
     private long failed;
+    private int chainId;
+    private String value;
 
     public SendTransactionTest(List<Web3j> services, Config config, ExecutorService executor) throws java.io.IOException {
         this.config = config;
@@ -41,17 +43,19 @@ public class SendTransactionTest {
         this.succeed = 0;
         this.failed = 0;
         this.currentHeight = 0;
+        this.chainId = 1;
+        this.value = "0";
     }
 
     private String newTransaction() {
         Transaction tx;
         long nonce = Math.abs(this.random.nextLong());
         if (this.config.getTo().equals("")) {
-            tx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), this.config.getQuota(), this.currentHeight + 88, this.config.getCode());
+            tx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), this.config.getQuota(), this.currentHeight + 88, 0, chainId, value, this.config.getCode());
         } else {
-            tx = Transaction.createFunctionCallTransaction(this.config.getTo(), BigInteger.valueOf(nonce), this.config.getQuota(), this.currentHeight + 88, this.config.getCode());
+            tx = Transaction.createFunctionCallTransaction(this.config.getTo(), BigInteger.valueOf(nonce), this.config.getQuota(), this.currentHeight + 88, 0, chainId, value, this.config.getCode());
         }
-        return tx.sign(this.config.getPrivateKey());
+        return tx.sign(this.config.getPrivateKey(), false, false);
     }
 
     private List<String> generateTransactions() {
