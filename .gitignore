@@ -42,3 +42,6 @@ docs/build
 
 # OS X
 .DS_Store
+
+# config file
+.properties
