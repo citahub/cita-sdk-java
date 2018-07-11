@@ -32,7 +32,7 @@ public class CitaTransactionManager extends TransactionManager {
 
     BigInteger getNonce() throws IOException {
         EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
-                credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
+                credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
 
         return ethGetTransactionCount.getTransactionCount();
     }
