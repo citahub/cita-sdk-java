@@ -34,7 +34,7 @@ public class PermissionSystemTest {
         }
     }
 
-    static {    
+    static {
         loadConfig();
         testNetAddr = props.getProperty("TestNetIpAddr");
         chainId = Integer.parseInt(props.getProperty("ChainId"));
