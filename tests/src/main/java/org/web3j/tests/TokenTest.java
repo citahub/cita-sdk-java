@@ -10,17 +10,21 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Numeric;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.math.BigInteger;
+import java.util.Properties;
 import java.util.Random;
 
 public class TokenTest {
 
-    private static final String privateKey = "0x9ff49cb78086c76f68f3ba2876c998c0fb9e07787f3de4a4999a10674dd32056";
-    private static final String fromAddress = "0xf424B93d7bcDc0Abe1B4d9FbfC9ff92d61Cc66b2";
+    private static Properties props;
+    private static String testNetIpAddr;
+    private static int chainId;
+    private static final String privateKey = "0x2c5c6c187d42e58a4c212a4aab0a3cfa4030256ed82bb3e05706706ab5be9641";
+    private static final String fromAddress = "0x0438bfcabdda99c00acf0039e6c1f3f2d78edde5";
     private static final String toAddress = "0x546226ed566d0abb215c9db075fc36476888b310";
     private static final String solPath = "tests/src/main/resources/Token.sol";
     private static final int version = 0;
-    private static final int chainId = 1;
 
     private static Random random;
     private static BigInteger quota;
@@ -31,9 +35,21 @@ public class TokenTest {
     private CompiledContract tokenContract;
     private String contractAddress;
 
+    static void loadConfig(){
+        try{
+            props = new Properties();
+            props.load(new FileInputStream("tests/src/main/resources/config.properties"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     static {
-        HttpService.setDebug(true);
-        service = Web3j.build(new HttpService("http://127.0.0.1:1337"));
+        loadConfig();
+        HttpService.setDebug(false);
+        testNetIpAddr = props.getProperty("TestNetIpAddr");
+        chainId = Integer.parseInt(props.getProperty("ChainId"));
+        service = Web3j.build(new HttpService(testNetIpAddr));
         random = new Random(System.currentTimeMillis());
         quota = BigInteger.valueOf(1000000);
         value = "0";

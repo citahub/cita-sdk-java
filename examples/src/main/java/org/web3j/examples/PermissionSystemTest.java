@@ -11,22 +11,34 @@ import org.web3j.tx.CitaTransactionManager;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
 
+import java.io.FileInputStream;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class PermissionSystemTest {
+    private static Properties props;
+    private static int chainId;
+    private static String testNetAddr;
     private static Web3j service;
     private static Random random;
     private static BigInteger quota = BigInteger.valueOf(1000000);
     private static final int version = 0;
-    private static final int chainId = 1;
     private static final String value = "0";
 
-    static {
-        service = Web3j.build(new HttpService("http://127.0.0.1:1337"));
+    static void loadConfig(){
+        try{
+            props = new Properties();
+            props.load(new FileInputStream("examples/src/main/resources/config.properties"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    static {    
+        loadConfig();
+        testNetAddr = props.getProperty("TestNetIpAddr");
+        chainId = Integer.parseInt(props.getProperty("ChainId"));
+        service = Web3j.build(new HttpService(testNetAddr));
         random = new Random(System.currentTimeMillis());
     }
 
