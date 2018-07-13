@@ -707,7 +707,7 @@ public class SolidityFunctionWrapper extends Generator {
                 TypeReference.class);
         if (functionDefinition.isPayable()) {
             methodBuilder.addStatement(
-                    "return executeRemoteCallTransaction(function, $N, $N, $N, $N, $N, $N)", WEI_VALUE, QUOTA, NONCE, VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE);
+                    "return executeRemoteCallTransaction(function, $N, $N, $N, $N, $N, $N, $N)", WEI_VALUE, QUOTA, NONCE, VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE);
         } else {
             methodBuilder.addStatement("return executeRemoteCallTransaction(function, $N, $N, $N, $N, $N, $N)", QUOTA, NONCE, VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE);
         }
