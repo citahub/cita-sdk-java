@@ -1,7 +1,10 @@
 package org.web3j.tests;
 
+import java.io.*;
 import java.math.BigInteger;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Uint;
@@ -276,23 +279,22 @@ public class InterfaceTest {
             //is option_value is null return NoSuchElementException, else return option_value
             TransactionReceipt transactionReceipt =
                     ethGetTransactionReceipt.getTransactionReceipt().get();
-
-            System.out.println("transactionHash:" + transactionReceipt.getTransactionHash());
-            System.out.println("transactionIndex:" + transactionReceipt.getTransactionIndex());
-            System.out.println("blockHash:" + transactionReceipt.getBlockHash());
-            System.out.println("blockNumber:" + transactionReceipt.getBlockNumber());
-            System.out.println("cumulativeGasUsed:" + transactionReceipt.getCumulativeGasUsed());
-            System.out.println("gasUsed:" + transactionReceipt.getGasUsed());
-            System.out.println("contractAddress:" + transactionReceipt.getContractAddress());
-            System.out.println("logs.size:" + transactionReceipt.getLogs().size());
-            System.out.println("root:" + transactionReceipt.getRoot());
-            System.out.println("logsBloom:" + transactionReceipt.getLogsBloom());
-            //System.out.println(transactionReceipt.getFrom());
-            //System.out.println(transactionReceipt.getTo());
-            //System.out.println(transactionReceipt.getLogs().get(0).getData());
+            printTransactionReceiptInfo(transactionReceipt);
             return Optional.of(transactionReceipt.getContractAddress());
         }
 
+    }
+
+    public static void printTransactionReceiptInfo(TransactionReceipt transactionReceipt) {
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            String result = mapper.writeValueAsString(transactionReceipt);
+            System.out.println(result);
+        }catch(JsonProcessingException e) {
+            System.out.println("Failed to process object to json. Exception: " + e);
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     //9.  eth_getCode

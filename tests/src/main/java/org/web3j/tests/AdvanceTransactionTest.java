@@ -7,6 +7,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Uint;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.JsonRpc2_0Web3j;
 import org.web3j.protocol.core.methods.request.Call;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
@@ -156,6 +157,11 @@ public class AdvanceTransactionTest {
         this.contractAddress = txReceipt.getContractAddress();
 
         String resetTxHash = funcResetCall(this.contractAddress, isEd25519AndBlake2b);
+
+        //Here are 2 verifications:
+        //1. Make sure TransactionReceipt is not null before fetch values from the receipt in case for null pointer exception.
+        //2. Wait for at most 3 blocks for reset transaction written into block in case for infinite loop.
+        startBlock = testUtil.getCurrentHeight(service).longValue();
         while(true){
             Optional<TransactionReceipt> receipt = service.ethGetTransactionReceipt(resetTxHash).send().getTransactionReceipt();
             if(receipt.isPresent()){
@@ -168,6 +174,13 @@ public class AdvanceTransactionTest {
                     System.exit(1);
                 }
             }else{
+                currentBlock = testUtil.getCurrentHeight(service).longValue();
+                if(currentBlock - startBlock > 3){
+                    System.out.println("Failed to get receipt from reset: timeout.");
+                    System.exit(1);
+                    break;
+                }
+                System.out.println("Waiting to reset count....");
                 Thread.sleep(2000);
             }
         }
@@ -246,7 +259,6 @@ public class AdvanceTransactionTest {
     }
 
     public static void main(String[] args) throws Exception {
-
         int sendcount = 20;
         int threadcount = 1;
         boolean isEd25519AndBlake2b = false;

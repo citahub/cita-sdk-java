@@ -232,7 +232,7 @@ public class TokenTest {
     }
 
     private Token tokenOf(Credentials credentials) {
-            CitaTransactionManager manager = transactionManagerOf(credentials);
+        CitaTransactionManager manager = transactionManagerOf(credentials);
         return Token.load(this.token.getContractAddress(), this.service, manager);
     }
 

@@ -12,21 +12,36 @@ public class testUtil {
     }
 
     static BigInteger getCurrentHeight(Web3j service){
+        return getCurrentHeight(service, 3);
+    }
+
+    static BigInteger getCurrentHeight(Web3j service, int retry){
+        int count = 0;
         long height = -1;
-        while (height == -1) {
+        while (count < retry) {
             try {
                 height = service.ethBlockNumber().send().getBlockNumber().longValue();
             } catch (Exception e){
                 height = -1;
                 System.out.println("getBlockNumber failed retry ..");
-                try {Thread.sleep(2000);} catch(Exception e1){}
+                try {
+                    Thread.sleep(2000);
+                } catch(Exception e1){
+                    System.out.println("failed to get block number, Exception: " + e1);
+                    System.exit(1);
+                }
             }
+            count++;
+        }
+        if(height == -1){
+            System.out.println("Failed to get block number after " + count + " times.");
+            System.exit(1);
         }
         return BigInteger.valueOf(height);
     }
 
-    static BigInteger getValidUtilBlock(Web3j service, int util){
-        return getCurrentHeight(service).add(BigInteger.valueOf(util));
+    static BigInteger getValidUtilBlock(Web3j service, int validUntilBlock){
+        return getCurrentHeight(service).add(BigInteger.valueOf(validUntilBlock));
     }
 
     static BigInteger getValidUtilBlock(Web3j service){
