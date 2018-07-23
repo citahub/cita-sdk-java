@@ -135,7 +135,6 @@ public class AdvanceTransactionTest {
         long dealWithCount = 0;
         String ethCallResult;
         String from = "0x0dbd369a741319fa5107733e2c9db9929093e3c7";
-        long endBlock = 0;
         long startBlock = testUtil.getCurrentHeight(service).longValue();
         long oldBlock = startBlock;
         long currentBlock = startBlock;
@@ -143,25 +142,42 @@ public class AdvanceTransactionTest {
         // deploy contract
         String deployContractTxHash = deployContract(isEd25519AndBlake2b);
         System.out.println("wait to deploy contract , txHash: " + deployContractTxHash);
-        // waiting for new block
-        while (true) {
-            endBlock = testUtil.getCurrentHeight(service).longValue();
-            if (endBlock > startBlock+3){
-                break;
+
+        //wait for contract deployment.
+        //don't wait for 3 more blocks because block height increase might stop or even decrease in some case.
+        System.out.println("Wait for contract deployment. ");
+        Thread.sleep(10000);
+
+        // get contract address from receipt
+//        TransactionReceipt txReceipt = getTransactionReceipt(deployContractTxHash);
+//        this.contractAddress = txReceipt.getContractAddress();
+        int countForContractDeployment = 0;
+        while(true){
+            Optional<TransactionReceipt> receipt = service.ethGetTransactionReceipt(deployContractTxHash).send().getTransactionReceipt();
+            if(receipt.isPresent()){
+                TransactionReceipt resetTxReceipt = receipt.get();
+                if(resetTxReceipt.getErrorMessage() == null){
+                    this.contractAddress = resetTxReceipt.getContractAddress();
+                    System.out.println("Contract is deployed successfully.");
+                    break;
+                }else{
+                    System.out.println("Failed to deploy smart contract.");
+                    System.exit(1);
+                }
             }else{
-                Thread.sleep(2000);
+                System.out.println("Waiting for contract deployment....");
+                Thread.sleep(3000);
+                if(countForContractDeployment++ > 3){
+                    System.out.println("Timeout, failed to deploy contract.");
+                    System.exit(1);
+                }
             }
         }
-        // get contract address from receipt
-        TransactionReceipt txReceipt = getTransactionReceipt(deployContractTxHash);
-        this.contractAddress = txReceipt.getContractAddress();
 
         String resetTxHash = funcResetCall(this.contractAddress, isEd25519AndBlake2b);
 
-        //Here are 2 verifications:
-        //1. Make sure TransactionReceipt is not null before fetch values from the receipt in case for null pointer exception.
-        //2. Wait for at most 3 blocks for reset transaction written into block in case for infinite loop.
-        startBlock = testUtil.getCurrentHeight(service).longValue();
+        //call smart contract function and wait for receipt.
+        int countForResetFunctionCall = 0;
         while(true){
             Optional<TransactionReceipt> receipt = service.ethGetTransactionReceipt(resetTxHash).send().getTransactionReceipt();
             if(receipt.isPresent()){
@@ -174,14 +190,12 @@ public class AdvanceTransactionTest {
                     System.exit(1);
                 }
             }else{
-                currentBlock = testUtil.getCurrentHeight(service).longValue();
-                if(currentBlock - startBlock > 3){
-                    System.out.println("Failed to get receipt from reset: timeout.");
-                    System.exit(1);
-                    break;
-                }
                 System.out.println("Waiting to reset count....");
-                Thread.sleep(2000);
+                Thread.sleep(3000);
+                if(countForResetFunctionCall++ > 3){
+                    System.out.println("Timeout, failed to reset count.");
+                    System.exit(1);
+                }
             }
         }
 
