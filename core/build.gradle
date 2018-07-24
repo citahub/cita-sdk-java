@@ -14,6 +14,7 @@ dependencies {
             "io.reactivex:rxjava:$rxjavaVersion"
     testCompile project(path: ':crypto', configuration: 'archives'),
             "nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion"
+    testCompile files(project(':crypto').sourceSets.test.output.classesDir)
 }
 
 task createProperties(dependsOn: processResources) doLast {

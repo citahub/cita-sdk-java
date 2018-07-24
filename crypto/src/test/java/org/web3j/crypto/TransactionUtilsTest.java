@@ -12,7 +12,7 @@ public class TransactionUtilsTest {
     public void testGenerateTransactionHash() {
         assertThat(generateTransactionHashHexEncoded(
                 TransactionEncoderTest.createContractTransaction(), SampleKeys.CREDENTIALS),
-                is("0xc3a0f520404c8cd0cb1c98be6b8e17ee32bf134ac1697d078e90422525c2d902"));
+                is("0x7e29b4e8a8b155638965cadb09ff0f7abbbc50eca9d85857c60f2d1e7bb749fd"));
     }
 
     @Test
@@ -20,6 +20,6 @@ public class TransactionUtilsTest {
         assertThat(generateTransactionHashHexEncoded(
                 TransactionEncoderTest.createContractTransaction(), (byte) 1,
                 SampleKeys.CREDENTIALS),
-                is("0x568c7f6920c1cee8332e245c473657b9c53044eb96ed7532f5550f1139861e9e"));
+                is("0x62140b583dc4421fbdda95157fd8e3737588e7f7ede321f85ce9565199d3be89"));
     }
 }

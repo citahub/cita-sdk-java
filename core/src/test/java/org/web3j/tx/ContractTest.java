@@ -26,6 +26,7 @@ import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
+import org.web3j.protocol.core.methods.request.Call;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthCall;
 import org.web3j.protocol.core.methods.response.EthGetCode;
@@ -127,9 +128,10 @@ public class ContractTest extends ManagedTransactionTester {
 
         try {
             TestContract.deployRemoteCall(
-                    TestContract.class, web3j, SampleKeys.CREDENTIALS,
-                    ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT,
-                    "0xcafed00d", encodedConstructor, BigInteger.ZERO).send();
+                    TestContract.class,
+                    web3j, SampleKeys.CREDENTIALS,
+                    BigInteger.valueOf(100L), BigInteger.valueOf(100L),
+                    "0xcafed00d", encodedConstructor, "0").send();
         } catch (InterruptedException e) {
             throw e;
         } catch (ExecutionException e) {
@@ -188,7 +190,7 @@ public class ContractTest extends ManagedTransactionTester {
         Request<?, EthCall> request = mock(Request.class);
         when(request.send()).thenReturn(ethCall);
 
-        when(web3j.ethCall(any(Transaction.class), eq(DefaultBlockParameterName.LATEST)))
+        when(web3j.ethCall(any(Call.class), eq(DefaultBlockParameterName.LATEST)))
                 .thenReturn((Request) request);
     }
 
@@ -304,9 +306,10 @@ public class ContractTest extends ManagedTransactionTester {
                 Arrays.<Type>asList(new Uint256(BigInteger.TEN)));
 
         return TestContract.deployRemoteCall(
-                TestContract.class, web3j, SampleKeys.CREDENTIALS,
-                ManagedTransaction.GAS_PRICE, Contract.GAS_LIMIT,
-                "0xcafed00d", encodedConstructor, BigInteger.ZERO).send();
+                TestContract.class,
+                web3j, SampleKeys.CREDENTIALS,
+                BigInteger.valueOf(100L), BigInteger.valueOf(100L),
+                "0xcafed00d", encodedConstructor, "0").send();
     }
 
     @SuppressWarnings("unchecked")

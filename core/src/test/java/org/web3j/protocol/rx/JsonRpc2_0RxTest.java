@@ -194,7 +194,9 @@ public class JsonRpc2_0RxTest {
     private EthBlock createBlock(int number) {
         EthBlock ethBlock = new EthBlock();
         EthBlock.Block block = new EthBlock.Block();
-        block.setNumber(Numeric.encodeQuantity(BigInteger.valueOf(number)));
+        EthBlock.Header header = new EthBlock.Header();
+        header.setNumber(Numeric.encodeQuantity(BigInteger.valueOf(number)));
+        block.setHeader(header);
 
         ethBlock.setResult(block);
         return ethBlock;
