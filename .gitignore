@@ -44,4 +44,4 @@ docs/build
 .DS_Store
 
 # config file
-.properties
+*.properties

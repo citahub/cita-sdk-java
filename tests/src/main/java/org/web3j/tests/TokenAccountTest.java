@@ -7,24 +7,24 @@ import org.web3j.protocol.core.methods.response.AbiDefinition;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
-import org.web3j.utils.Numeric;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.math.BigInteger;
 import java.util.Properties;
 import java.util.Random;
 
-public class TokenTest {
+public class TokenAccountTest {
 
     private static Properties props;
     private static String testNetIpAddr;
     private static int chainId;
-    private static final String privateKey = "0x2c5c6c187d42e58a4c212a4aab0a3cfa4030256ed82bb3e05706706ab5be9641";
-    private static final String fromAddress = "0x0438bfcabdda99c00acf0039e6c1f3f2d78edde5";
-    private static final String toAddress = "0x546226ed566d0abb215c9db075fc36476888b310";
-    private static final String solPath = "tests/src/main/resources/Token.sol";
-    private static final int version = 0;
+    private static int version;
+    private static String privateKey;
+    private static String fromAddress;
+    private static String toAddress;
+    private static String solPath;
+
+    private static final String configPath = "tests/src/main/resources/config.properties";
 
     private static Random random;
     private static BigInteger quota;
@@ -35,20 +35,24 @@ public class TokenTest {
     private CompiledContract tokenContract;
     private String contractAddress;
 
-    static void loadConfig(){
+    static {
         try{
-            props = new Properties();
-            props.load(new FileInputStream("tests/src/main/resources/config.properties"));
-        }catch (Exception e){
+            props = Config.load(configPath);
+        }
+        catch(Exception e){
+            System.out.println("Failed to read properties from config file");
             e.printStackTrace();
         }
-    }
 
-    static {
-        loadConfig();
+        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
+        version = Integer.parseInt(props.getProperty(Config.VERSION));
+        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
+        privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
+        fromAddress = props.getProperty(Config.SENDER_ADDR);
+        toAddress = props.getProperty(Config.TEST_ADDR_1);
+        solPath = props.getProperty(Config.TOKEN_SOLIDITY);
+
         HttpService.setDebug(false);
-        testNetIpAddr = props.getProperty("TestNetIpAddr");
-        chainId = Integer.parseInt(props.getProperty("ChainId"));
         service = Web3j.build(new HttpService(testNetIpAddr));
         random = new Random(System.currentTimeMillis());
         quota = BigInteger.valueOf(1000000);
@@ -64,21 +68,22 @@ public class TokenTest {
         return service.ethGetTransactionReceipt(hash).send().getTransactionReceipt().get();
     }
 
-    public TokenTest() throws Exception {
+    public TokenAccountTest() throws Exception {
         account = new Account(privateKey, service);
         tokenContract = new CompiledContract(new File(solPath));
 
     }
 
-    public void deployContract(String path) throws Exception {
+    public String deployContract(String path) throws Exception {
         EthSendTransaction ethSendTransaction = account.deploy(new File(path), randomNonce(), quota, version, chainId, value);
         TransactionReceipt receipt = waitToGetReceipt(ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
             System.out.println("deploy contract failed because of " + receipt.getErrorMessage());
             System.exit(1);
         }
-        System.out.println("deploy contract success and contract address is " + receipt.getContractAddress());
         contractAddress = receipt.getContractAddress();
+        System.out.println("deploy contract success and contract address is " + receipt.getContractAddress());
+        return contractAddress;
     }
 
     public void transfer(String toAddress, BigInteger amount) throws Exception {
@@ -133,34 +138,35 @@ public class TokenTest {
     }
 
     public static void main(String[] args) throws Exception {
-        // 本地编译solidity文件，然后部署合约以及调用合约方法
-        deployContractAndCallMethodFromSolidity();
 
-        // 根据已经部署过的合约地址从链上获取abi，然后调用合约方法
-//        callContractMethodFromRemoteAbi();
+        //deploy contract with smart contract solidity file and call method "transfer" with generated Abi
+        String contractAddr = deployContractAndCallMethodFromSolidity();
+
+        //get abi from deployed smart contract and call method "transfer"
+        callContractMethodFromRemoteAbi(contractAddr);
 
         System.exit(0);
     }
 
 
-    private static void deployContractAndCallMethodFromSolidity() throws Exception {
-        TokenTest tokenTest = new TokenTest();
-        tokenTest.deployContract(solPath);
-        tokenTest.getBalance(fromAddress);
-        tokenTest.getBalance(toAddress);
-        tokenTest.transfer(toAddress, BigInteger.valueOf(1200));
-        tokenTest.getBalance(fromAddress);
-        tokenTest.getBalance(toAddress);
-        tokenTest.storeAbiToBlockchain();
-        tokenTest.getAbi();
+    private static String deployContractAndCallMethodFromSolidity() throws Exception {
+        TokenAccountTest tokenAccountTest = new TokenAccountTest();
+        String contractAddr = tokenAccountTest.deployContract(solPath);
+        tokenAccountTest.getBalance(fromAddress);
+        tokenAccountTest.getBalance(toAddress);
+        tokenAccountTest.transfer(toAddress, BigInteger.valueOf(1200));
+        tokenAccountTest.getBalance(fromAddress);
+        tokenAccountTest.getBalance(toAddress);
+        tokenAccountTest.storeAbiToBlockchain();
+        tokenAccountTest.getAbi();
+        return contractAddr;
     }
 
-    private static void callContractMethodFromRemoteAbi() throws Exception {
-        TokenTest tokenTest = new TokenTest();
-
-        tokenTest.contractAddress = "0xf889c843bab04701424369c94d5acaeed3648938";
-        tokenTest.transferRemote(toAddress, BigInteger.valueOf(500));
-        tokenTest.getBalanceRemote(fromAddress);
-        tokenTest.getBalanceRemote(toAddress);
+    private static void callContractMethodFromRemoteAbi(String contractAddress) throws Exception {
+        TokenAccountTest tokenAccountTest = new TokenAccountTest();
+        tokenAccountTest.contractAddress = contractAddress;
+        tokenAccountTest.transferRemote(toAddress, BigInteger.valueOf(500));
+        tokenAccountTest.getBalanceRemote(fromAddress);
+        tokenAccountTest.getBalanceRemote(toAddress);
     }
 }
