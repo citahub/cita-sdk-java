@@ -1,13 +1,15 @@
 pragma solidity ^0.4.19;
+import "./SafeMath.sol";
 
 contract Advance {
-    uint count = 0;
+    using SafeMath for uint256;
+    uint256 count = 0;
 
     function add() {
-        count += 1;
+        count = count.add(1);
     }
 
-    function get() constant returns(uint) {
+    function get() constant returns(uint256) {
         return count;
     }
 

@@ -5,6 +5,7 @@ import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Uint;
+import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.JsonRpc2_0Web3j;
@@ -61,9 +62,9 @@ public class AdvanceTransactionTest {
     // Deploy contract, return transaction hash
     private String deployContract(boolean isEd25519AndBlake2b) throws Exception {
         // contract.bin
-        String contractCode = "606060405260008055341561001357600080fd5b60de806100216000396000f30060606040526004361060525763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634f2be91f811460575780636d4ce63c146069578063d826f88f14608b575b600080fd5b3415606157600080fd5b6067609b565b005b3415607357600080fd5b607960a6565b60405190815260200160405180910390f35b3415609557600080fd5b606760ac565b600080546001019055565b60005490565b600080555600a165627a7a723058201b541b114db7898755d2a3124410cef8903e8a119a5a0a59a119cb00412986220029";
+        String contractCode = "606060405260008055341561001357600080fd5b60fc806100216000396000f30060606040526004361060525763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416634f2be91f811460575780636d4ce63c146069578063d826f88f14608b575b600080fd5b3415606157600080fd5b6067609b565b005b3415607357600080fd5b607960b2565b60405190815260200160405180910390f35b3415609557600080fd5b606760b8565b60005460ad90600163ffffffff60be16565b600055565b60005490565b60008055565b8181018281101560ca57fe5b929150505600a165627a7a72305820870dd43666c8c38bef68662f84b2c0e537643ad06bd44e4fb85b76114f99d8750029";
         BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
-        Transaction tx = Transaction.createContractTransaction(nonce, this.quota, this.validUntilBlock, version, chainId, value, contractCode);
+        Transaction tx = Transaction.createContractTransaction(nonce, 99999, this.validUntilBlock, version, chainId, value, contractCode);
 
         String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b,false);
 
@@ -155,13 +156,13 @@ public class AdvanceTransactionTest {
         while(true){
             Optional<TransactionReceipt> receipt = service.ethGetTransactionReceipt(deployContractTxHash).send().getTransactionReceipt();
             if(receipt.isPresent()){
-                TransactionReceipt resetTxReceipt = receipt.get();
-                if(resetTxReceipt.getErrorMessage() == null){
-                    this.contractAddress = resetTxReceipt.getContractAddress();
+                TransactionReceipt deployTxReceipt = receipt.get();
+                if(deployTxReceipt.getErrorMessage() == null){
+                    this.contractAddress = deployTxReceipt.getContractAddress();
                     System.out.println("Contract is deployed successfully.");
                     break;
                 }else{
-                    System.out.println("Failed to deploy smart contract.");
+                    System.out.println("Failed to deploy smart contract. Error: " + deployTxReceipt.getErrorMessage());
                     System.exit(1);
                 }
             }else{
@@ -245,7 +246,7 @@ public class AdvanceTransactionTest {
             Function getCall = new Function(
                     "get",
                     Collections.emptyList(),
-                    Arrays.asList(new TypeReference<Uint>(){})
+                    Arrays.asList(new TypeReference<Uint256>(){})
             );
 
             String getCallData = FunctionEncoder.encode(getCall);
