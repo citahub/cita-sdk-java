@@ -237,8 +237,11 @@ public class TransactionReceipt {
         if (getLogs() != null ? !getLogs().equals(that.getLogs()) : that.getLogs() != null) {
             return false;
         }
-        return getLogsBloom() != null
-                ? getLogsBloom().equals(that.getLogsBloom()) : that.getLogsBloom() == null;
+        if (getLogsBloom() != null ? !getLogsBloom().equals(that.getLogsBloom()) : that.getLogsBloom() != null){
+            return false;
+        }
+        return getErrorMessage() != null
+                ? getErrorMessage().equals(that.getErrorMessage()) : that.getErrorMessage() == null;
     }
 
     @Override
@@ -256,6 +259,7 @@ public class TransactionReceipt {
         result = 31 * result + (getTo() != null ? getTo().hashCode() : 0);
         result = 31 * result + (getLogs() != null ? getLogs().hashCode() : 0);
         result = 31 * result + (getLogsBloom() != null ? getLogsBloom().hashCode() : 0);
+        result = 31 * result + (getErrorMessage() != null ? getErrorMessage().hashCode() : 0);
         return result;
     }
 }

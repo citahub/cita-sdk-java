@@ -50,9 +50,9 @@ public class EthLog extends Response<List<EthLog.LogResult>> {
 
         public LogObject(boolean removed, String logIndex, String transactionIndex,
                          String transactionHash, String blockHash, String blockNumber,
-                         String address, String data, String type, List<String> topics) {
+                         String address, String data, String transactionLogIndex, List<String> topics) {
             super(removed, logIndex, transactionIndex, transactionHash, blockHash, blockNumber,
-                    address, data, type, topics);
+                    address, data, transactionLogIndex, topics);
         }
 
         @Override

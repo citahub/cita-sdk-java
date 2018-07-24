@@ -4,4 +4,5 @@ description 'Geth JSON-RPC API'
 dependencies {
     compile project(':core')
     testCompile project(path: ':core', configuration: 'archives')
+    testCompile files(project(':core').sourceSets.test.output.classesDir)
 }
