@@ -1,16 +1,17 @@
 package org.web3j.protocol.account;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.web3j.protocol.ObjectMapperFactory;
-import org.web3j.protocol.core.methods.response.AbiDefinition;
-import org.web3j.utils.CallCmd;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.web3j.protocol.ObjectMapperFactory;
+import org.web3j.protocol.core.methods.response.AbiDefinition;
+import org.web3j.utils.CallCmd;
 
 public class CompiledContract {
     public static class ContractCompileError extends Exception {
@@ -46,7 +47,8 @@ public class CompiledContract {
     private List<AbiDefinition> typedABI;
 
     /// NOTE: the file name must be same with contract name
-    public CompiledContract(File contractFile) throws IOException, InterruptedException, ContractCompileError {
+    public CompiledContract(File contractFile)
+            throws IOException, InterruptedException, ContractCompileError {
         String fileName = contractFile.getName();
         if (fileName.indexOf(".") > 0) {
             fileName = fileName.substring(0, fileName.indexOf("."));
@@ -66,8 +68,11 @@ public class CompiledContract {
     }
 
     /// TODO: support windows OS
-    private void generateAbiAndBin(File contractFile) throws IOException, InterruptedException, ContractCompileError {
-        String callSolcCmd = String.format("solc %s --abi --bin --optimize --overwrite -o /tmp/", contractFile.getAbsolutePath());
+    private void generateAbiAndBin(File contractFile)
+            throws IOException, InterruptedException, ContractCompileError {
+        String callSolcCmd = String.format(
+                "solc %s --abi --bin --optimize --overwrite -o /tmp/",
+                contractFile.getAbsolutePath());
 
         CallCmd.ExecutedResult result = CallCmd.callCmd(callSolcCmd);
         if (result.exitCode != 0) {
@@ -94,13 +99,14 @@ public class CompiledContract {
     }
 
     /// TODO: how to distinguish overload function which the num of args are same???
-    public AbiDefinition getFunctionAbi(String funcName, int numOfArgs) throws ContractFuncNotFound {
+    public AbiDefinition getFunctionAbi(String funcName, int numOfArgs)
+            throws ContractFuncNotFound {
         Object[] abiDefinitions = this.typedABI
                 .stream()
                 .filter(abiDefinition ->
-                        abiDefinition.getType().equals("function") &&
-                        abiDefinition.getName().equals(funcName) &&
-                        abiDefinition.getInputs().size() == numOfArgs)
+                        abiDefinition.getType().equals("function")
+                                && abiDefinition.getName().equals(funcName)
+                                && abiDefinition.getInputs().size() == numOfArgs)
                 .toArray();
 
         if (abiDefinitions.length == 0) {
@@ -114,7 +120,8 @@ public class CompiledContract {
         Object[] abiDefinitions = this.typedABI
                 .stream()
                 .filter(abiDefinition ->
-                        abiDefinition.getType().equals("event") && abiDefinition.getName().equals(eventName))
+                        abiDefinition.getType().equals("event")
+                                && abiDefinition.getName().equals(eventName))
                 .toArray();
         return (AbiDefinition) abiDefinitions[0];
     }

@@ -23,6 +23,7 @@ public class Call {
     public String getFrom() {
         return from;
     }
+
     public String getTo() {
         return to;
     }

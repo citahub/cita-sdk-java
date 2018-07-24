@@ -2,8 +2,6 @@ package org.web3j.protocol.core.methods.response;
 
 import org.web3j.protocol.core.Response;
 
-import java.io.IOException;
-
 /**
  * eth_sendTransaction.
  */
@@ -33,10 +31,16 @@ public class EthSendTransaction extends Response<EthSendTransaction.SendTransact
             return hash;
         }
 
-        public void setHash(String hash) { this.hash = hash; }
+        public void setHash(String hash) {
+            this.hash = hash;
+        }
 
-        public String getStatus() { return status; }
+        public String getStatus() {
+            return status;
+        }
 
-        public void setStatus(String status) { this.status = status; }
+        public void setStatus(String status) {
+            this.status = status;
+        }
     }
 }

@@ -1,17 +1,25 @@
 package org.web3j.tests;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.CitaTransactionManager;
 import org.web3j.tx.TransactionManager;
-
-import java.math.BigInteger;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class TokenCodegenTest {
     private static Properties props;
@@ -27,13 +35,13 @@ public class TokenCodegenTest {
     private static String value;
     private static Token token;
 
-    private static final String configPath = "tests/src/main/resources/config.properties";
+    private static final String configPath =
+            "tests/src/main/resources/config.properties";
 
     static {
-        try{
+        try {
             props = Config.load(configPath);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Failed to read properties from config file");
             e.printStackTrace();
         }
@@ -52,7 +60,7 @@ public class TokenCodegenTest {
         value = "0";
     }
 
-    static void loadAccounts(){
+    static void loadAccounts() {
         testAccounts.add(creator);
 
         List<String> accounts = new ArrayList<String>();
@@ -63,33 +71,36 @@ public class TokenCodegenTest {
         accounts.stream().map(Credentials::create).forEach(c -> testAccounts.add(c));
     }
 
-    static BigInteger getCurrentHeight() throws Exception{
+    static BigInteger getCurrentHeight() throws Exception {
         return service.ethBlockNumber().send().getBlockNumber();
     }
 
-    static long getBalance(Credentials credentials){
+    static long getBalance(Credentials credentials) {
         long accountBalance = 0;
-        try{
-            CompletableFuture<BigInteger> balanceFuture = token.getBalance(credentials.getAddress()).sendAsync();
+        try {
+            CompletableFuture<BigInteger> balanceFuture = token.getBalance(
+                    credentials.getAddress()).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
-        }catch(Exception e){
-            System.out.println("Failed to get balance of account: " + credentials.getAddress());
+        } catch (Exception e) {
+            System.out.println("Failed to get balance of account: "
+                    + credentials.getAddress());
             e.printStackTrace();
             System.exit(1);
         }
         return accountBalance;
     }
 
-    static void printBalanceInfo(){
-        for (Credentials credentials : testAccounts){
-            System.out.println("Address: " + credentials.getAddress() + " Balance: " + getBalance(credentials));
+    static void printBalanceInfo() {
+        for (Credentials credentials : testAccounts) {
+            System.out.println("Address: " + credentials.getAddress()
+                    + " Balance: " + getBalance(credentials));
         }
     }
 
     /*
-    * Waiting for tx complete.
-    * Interact with chain to get the accounts' balances and then update the local state
-    * */
+     * Waiting for tx complete.
+     * Interact with chain to get the accounts' balances and then update the local state
+     * */
     static void waitToGetToken() {
         try {
             while (!isTokenTransferComplete()) {
@@ -104,14 +115,17 @@ public class TokenCodegenTest {
 
     /**
      * check chain to see if the total token keeps the same.
-     * In the contract, the initial supply is 10000, the total token should be always 10000.
+     * In the contract, the initial supply is 10000,
+     * the total token should be always 10000.
      * As state changes before publish the tx in contract,
-     * it is way verifying tx in the chain by check if the total token keeps the same as initial token.
+     * it is way verifying tx in the chain
+     * by checking if the total token keeps the same as initial token.
      */
-    static boolean isTokenTransferComplete(){
+    static boolean isTokenTransferComplete() {
         Map<Credentials, Long> accountTokens =
-                testAccounts.stream()
-                        .collect(Collectors.toMap(Function.identity(), TokenCodegenTest::getBalance));
+                testAccounts.stream().collect(
+                        Collectors.toMap(Function.identity(),
+                                TokenCodegenTest::getBalance));
         long tokens = 0;
         long totalToken = accountTokens.values().stream().reduce(tokens, (x, y) -> x + y);
         return totalToken == 10000;
@@ -119,21 +133,25 @@ public class TokenCodegenTest {
 
     private void shuffle(Credentials credentials) {
         System.out.println("transfer all tokens to " + credentials.getAddress());
-        testAccounts.forEach(c ->{
-            if(c != credentials){
-                TransferEvent event  = new TransferEvent(c, credentials, getBalance(c));
-                try{
+        testAccounts.forEach(c -> {
+            if (c != credentials) {
+                TransferEvent event = new TransferEvent(c, credentials, getBalance(c));
+                try {
                     CompletableFuture<TransactionReceipt> receiptFuture = event.execute();
                     TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
-                    if(receipt.getErrorMessage() == null) {
+                    if (receipt.getErrorMessage() == null) {
                         System.out.println(event.toString() + " execute success");
-                    }else{
-                        System.out.println(event.toString() + " execute failed. Error: " + receipt.getErrorMessage());
+                    } else {
+                        System.out.println(event.toString()
+                                + " execute failed. Error: " + receipt.getErrorMessage());
                     }
-                }catch (InterruptedException | ExecutionException | TimeoutException e){
-                    System.out.println("Failed to get receipt from receiptFuture. Failed to shuffle.");
+                } catch (InterruptedException
+                        | ExecutionException
+                        | TimeoutException e) {
+                    System.out.println(
+                            "Failed to get receipt from receiptFuture. Failed to shuffle.");
                     System.exit(1);
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Event execute failed. Failed to Shuffle");
                     System.exit(1);
                 }
@@ -164,7 +182,8 @@ public class TokenCodegenTest {
                 continue;
             }
 
-            long transfer = ThreadLocalRandom.current().nextLong(0, balanceOfFrom - balanceOfTo);
+            long transfer = ThreadLocalRandom.current()
+                    .nextLong(0, balanceOfFrom - balanceOfTo);
             TransferEvent event = new TransferEvent(from, to, transfer);
             try {
                 System.out.println("\nStart transfer with current Balance: ");
@@ -174,14 +193,16 @@ public class TokenCodegenTest {
                 CompletableFuture<TransactionReceipt> receiptFuture = event.execute();
                 TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                 if (receipt.getErrorMessage() == null) {
-                    System.out.println(event.toString() + " execute success");
+                    System.out.println(event.toString()
+                            + " execute success");
                 } else {
-                    System.out.println(event.toString() + " execute failed, " + receipt.getErrorMessage());
+                    System.out.println(event.toString()
+                            + " execute failed, " + receipt.getErrorMessage());
                 }
-            } catch (InterruptedException|ExecutionException |TimeoutException e) {
+            } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 System.out.println("Transaction " + event + ", get receipt failed, " + e);
                 waitToGetToken();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -202,59 +223,68 @@ public class TokenCodegenTest {
 
 
     public static void main(String[] args) throws Exception {
-        TransactionManager citaTxManager = new CitaTransactionManager(service, creator, 5, 3000);
+        TransactionManager citaTxManager = new CitaTransactionManager(
+                service, creator, 5, 3000);
         long currentheight = getCurrentHeight().longValue();
         long validUtilBlock = currentheight + 88;
         BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
 
-        CompletableFuture<Token> tokenFuture = Token.deploy(service, citaTxManager, BigInteger.valueOf(1000000), nonce,
-                BigInteger.valueOf(validUtilBlock), BigInteger.valueOf(version), value, chainId).sendAsync();
+        CompletableFuture<Token> tokenFuture = Token.deploy(
+                service, citaTxManager, BigInteger.valueOf(1000000), nonce,
+                BigInteger.valueOf(validUtilBlock),
+                BigInteger.valueOf(version), value, chainId).sendAsync();
         TokenCodegenTest tokenCodegenTest = new TokenCodegenTest();
 
         tokenFuture.whenCompleteAsync((contract, exception) -> {
-           if(exception != null){
-               System.out.println("Failed to deploy the contract. Exception: " + exception);
-               exception.printStackTrace();
-               System.exit(1);
-           }
-           token = contract;
-           System.out.println("Contract deployment success. Contract address: " + contract.getContractAddress());
+            if (exception != null) {
+                System.out.println("Failed to deploy the contract. Exception: "
+                        + exception);
+                exception.printStackTrace();
+                System.exit(1);
+            }
+            token = contract;
+            System.out.println("Contract deployment success. Contract address: "
+                    + contract.getContractAddress());
 
-           try{
-               System.out.println("Contract initial state: ");
-               printBalanceInfo();
-               tokenCodegenTest.randomTransferToken();
-           }catch(Exception e){
-               System.out.println("Failed to get accounts balances");
-               e.printStackTrace();
-               System.exit(1);
-           }
+            try {
+                System.out.println("Contract initial state: ");
+                printBalanceInfo();
+                tokenCodegenTest.randomTransferToken();
+            } catch (Exception e) {
+                System.out.println("Failed to get accounts balances");
+                e.printStackTrace();
+                System.exit(1);
+            }
             System.exit(0);
         });
     }
 
-    private class TransferEvent{
+    private class TransferEvent {
         Credentials from;
         Credentials to;
         long tokens;
 
-        TransferEvent(Credentials from, Credentials to, long tokens){
+        TransferEvent(Credentials from, Credentials to, long tokens) {
             this.from = from;
             this.to = to;
             this.tokens = tokens;
         }
 
         CompletableFuture<TransactionReceipt> execute() throws Exception {
-            Token tokenContract = new Token(token.getContractAddress(), service, new CitaTransactionManager(service, from, 5, 3000));
+            Token tokenContract = new Token(token.getContractAddress(), service,
+                    new CitaTransactionManager(service, from, 5, 3000));
             BigInteger currentHeight = TokenCodegenTest.this.getCurrentHeight();
-            return tokenContract.transfer(this.to.getAddress(), BigInteger.valueOf(tokens), BigInteger.valueOf(100000),
-                    BigInteger.valueOf(Math.abs(random.nextLong())), currentHeight.add(BigInteger.valueOf(88)),
+            return tokenContract.transfer(
+                    this.to.getAddress(), BigInteger.valueOf(tokens), BigInteger.valueOf(100000),
+                    BigInteger.valueOf(Math.abs(random.nextLong())),
+                    currentHeight.add(BigInteger.valueOf(88)),
                     BigInteger.valueOf(0), chainId, value).sendAsync();
         }
 
         @Override
-        public String toString(){
-            return "TransferEvent(" + this.from.getAddress() + ", " + this.to.getAddress() + ", " + this.tokens + ")";
+        public String toString() {
+            return "TransferEvent(" + this.from.getAddress() + ", "
+                    + this.to.getAddress() + ", " + this.tokens + ")";
         }
     }
 }

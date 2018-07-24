@@ -1,21 +1,5 @@
 package org.web3j.protocol.account;
 
-import org.web3j.abi.*;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
-import org.web3j.abi.datatypes.UnorderedEvent;
-import org.web3j.crypto.Credentials;
-import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.request.Call;
-import org.web3j.protocol.core.methods.request.EthFilter;
-import org.web3j.protocol.core.methods.response.*;
-import org.web3j.tx.CitaTransactionManager;
-import org.web3j.utils.TypedAbi;
-import rx.Observable;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -23,6 +7,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import rx.Observable;
+
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.EventValues;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.FunctionReturnDecoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.UnorderedEvent;
+import org.web3j.crypto.Credentials;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.Call;
+import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.response.AbiDefinition;
+import org.web3j.protocol.core.methods.response.EthCall;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.Log;
+import org.web3j.tx.CitaTransactionManager;
+import org.web3j.utils.TypedAbi;
 
 public class Account {
     private static final String ABI_ADDRESS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -41,37 +48,48 @@ public class Account {
     }
 
     /// TODO: get contract address from receipt after deploy, then return contract name(ENS)
-    public EthSendTransaction deploy(File contractFile, BigInteger nonce, BigInteger quota, int version, int chainId, String value)
+    public EthSendTransaction deploy(
+            File contractFile, BigInteger nonce, BigInteger quota,
+            int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
-        return this.transactionManager.
-                sendTransaction("", contractBin, quota, nonce, getValidUntilBlock(), BigInteger.valueOf(version), chainId, value);
+        return this.transactionManager
+                .sendTransaction("", contractBin, quota, nonce, getValidUntilBlock(),
+                        BigInteger.valueOf(version), chainId, value);
     }
 
-    public CompletableFuture<EthSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota, BigInteger version, int chainId, String value)
+    public CompletableFuture<EthSendTransaction> deployAsync(
+            File contractFile, BigInteger nonce, BigInteger quota,
+            BigInteger version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
-        return this.transactionManager.
-                sendTransactionAsync("", contractBin, quota, nonce, getValidUntilBlock(), version, chainId, value);
+        return this.transactionManager
+                .sendTransactionAsync("", contractBin, quota, nonce, getValidUntilBlock(),
+                        version, chainId, value);
     }
 
     // eth_call: nonce and quota is null
     // sendTransaction: nonce and quota is necessary
-    public Object callContract(String contractAddress, String funcName, BigInteger nonce, BigInteger quota, int version,
-                               int chainId, String value, Object... args)
+    public Object callContract(
+            String contractAddress, String funcName,
+            BigInteger nonce, BigInteger quota, int version,
+            int chainId, String value, Object... args)
             throws Exception {
         if (abi == null) {
             abi = getAbi(contractAddress);
         }
         CompiledContract contract = new CompiledContract(abi);
         AbiDefinition functionAbi = contract.getFunctionAbi(funcName, args.length);
-        return callContract(contractAddress, functionAbi, nonce, quota, version, chainId, value, args);
+        return callContract(
+                contractAddress, functionAbi, nonce, quota, version, chainId, value, args);
     }
 
-    public Object callContract(String contractAddress, AbiDefinition functionAbi, BigInteger nonce, BigInteger quota,
-                               int version,int chainId, String value, Object... args)
+    public Object callContract(
+            String contractAddress, AbiDefinition functionAbi,
+            BigInteger nonce, BigInteger quota,
+            int version,int chainId, String value, Object... args)
             throws Exception {
         List<Type> params = new ArrayList<>();
         List<AbiDefinition.NamedType> inputs = functionAbi.getInputs();
@@ -97,7 +115,8 @@ public class Account {
         } else {
             // send_transaction
             func = new Function(functionAbi.getName(), params, Collections.emptyList());
-            return sendTransaction(contractAddress, func, nonce, quota.longValue(), version, chainId, value);
+            return sendTransaction(
+                    contractAddress, func, nonce, quota.longValue(), version, chainId, value);
         }
     }
 
@@ -119,20 +138,28 @@ public class Account {
         }
     }
 
-    public Object sendTransaction(String contractAddress, Function func, BigInteger nonce, long quota, long version, int chainId, String value)
+    public Object sendTransaction(
+            String contractAddress, Function func, BigInteger nonce,
+            long quota, long version, int chainId, String value)
             throws IOException {
         String data = FunctionEncoder.encode(func);
-        return this.transactionManager.sendTransaction(contractAddress, data, BigInteger.valueOf(quota), nonce,
-                getValidUntilBlock(), BigInteger.valueOf(version), chainId, value);
+        return this.transactionManager.sendTransaction(
+                contractAddress, data, BigInteger.valueOf(quota), nonce, getValidUntilBlock(),
+                BigInteger.valueOf(version), chainId, value);
     }
 
-    public Object uploadAbi(String contractAddress, String abi, BigInteger nonce, BigInteger quota, long version, int chainId, String value) throws Exception {
+    public Object uploadAbi(
+            String contractAddress, String abi, BigInteger nonce, BigInteger quota,
+            long version, int chainId, String value) throws Exception {
         String data = hex_remove_0x(contractAddress) + hex_remove_0x(bytesToHexStr(abi.getBytes()));
-        return this.transactionManager.sendTransaction(ABI_ADDRESS, data, quota, nonce, getValidUntilBlock(), BigInteger.valueOf(version), chainId, value);
+        return this.transactionManager.sendTransaction(
+                ABI_ADDRESS, data, quota, nonce, getValidUntilBlock(),
+                BigInteger.valueOf(version), chainId, value);
     }
 
     public String getAbi(String contractAddress) throws IOException {
-        String abi = service.ethGetAbi(contractAddress, DefaultBlockParameter.valueOf("latest")).send().getAbi();
+        String abi = service.ethGetAbi(
+                contractAddress, DefaultBlockParameter.valueOf("latest")).send().getAbi();
         return new String(hexStrToBytes(hex_remove_0x(abi)));
     }
 
@@ -141,11 +168,14 @@ public class Account {
         CompiledContract contract = loadContract(contractName);
         String contractAddress = getContractAddress(contractName);
         AbiDefinition eventAbi = contract.getEventAbi(eventName);
-        return eventObservable(contractAddress, eventAbi, DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST);
+        return eventObservable(
+                contractAddress, eventAbi,
+                DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST);
     }
 
     public Observable<Object> eventObservable(String contractAddress, AbiDefinition eventAbi,
-                                              DefaultBlockParameter start, DefaultBlockParameter end)
+                                              DefaultBlockParameter start,
+                                              DefaultBlockParameter end)
             throws Exception {
         List<TypedAbi.ArgRetType> results = new ArrayList<>();
         List<AbiDefinition.NamedType> namedTypes = eventAbi.getInputs();
@@ -174,13 +204,15 @@ public class Account {
             List<Integer> indexedSeq = event.getIndexedParametersSeq();
             for (int i = 0; i < indexedSize; i++) {
                 int indexSeqNum = indexedSeq.get(i);
-                values.set(indexSeqNum, results.get(indexSeqNum).abiToJava(indexedValues.get(i)));
+                values.set(
+                        indexSeqNum, results.get(indexSeqNum).abiToJava(indexedValues.get(i)));
             }
 
             List<Integer> nonIndexedSeq = event.getNonIndexedParametersSeq();
             for (int i = 0; i < nonIndexedSize; i++) {
                 int indexSeqNum = nonIndexedSeq.get(i);
-                values.set(indexSeqNum, results.get(indexSeqNum).abiToJava(nonIndexedValues.get(i)));
+                values.set(
+                        indexSeqNum, results.get(indexSeqNum).abiToJava(nonIndexedValues.get(i)));
             }
             return values;
         });
@@ -226,7 +258,7 @@ public class Account {
         return BigInteger.valueOf(blockHeight() + 80);
     }
 
-    private String hex_remove_0x(String hex){
+    private String hex_remove_0x(String hex) {
         if (hex.contains("0x")) {
             return hex.substring(2);
         }
@@ -234,22 +266,30 @@ public class Account {
     }
 
     private String bytesToHexStr(byte[] byteArr) {
-        if (null == byteArr || byteArr.length < 1) return "";
+        if (null == byteArr || byteArr.length < 1) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (byte t : byteArr) {
-            if ((t & 0xF0) == 0) sb.append("0");
+            if ((t & 0xF0) == 0) {
+                sb.append("0");
+            }
             sb.append(Integer.toHexString(t & 0xFF));
         }
         return sb.toString();
     }
 
     private byte[] hexStrToBytes(String hexStr) {
-        if (null == hexStr || hexStr.length() < 1) return null;
+        if (null == hexStr || hexStr.length() < 1) {
+            return null;
+        }
         int byteLen = hexStr.length() / 2;
         byte[] result = new byte[byteLen];
         char[] hexChar = hexStr.toCharArray();
-        for(int i=0 ;i<byteLen;i++){
-            result[i] = (byte)(Character.digit(hexChar[i*2],16)<<4 | Character.digit(hexChar[i*2+1],16));
+        for (int i = 0; i < byteLen; i++) {
+            result[i] = (byte)
+                    (Character.digit(hexChar[i * 2],16) << 4
+                            | Character.digit(hexChar[i * 2 + 1],16));
         }
         return result;
     }

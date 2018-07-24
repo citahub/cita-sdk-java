@@ -8,9 +8,11 @@ import org.junit.Test;
 
 import org.web3j.protocol.RequestTester;
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.DefaultBlockParameter;
-import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.request.*;
+import org.web3j.protocol.core.methods.request.Call;
+import org.web3j.protocol.core.methods.request.EthFilter;
+import org.web3j.protocol.core.methods.request.ShhFilter;
+import org.web3j.protocol.core.methods.request.ShhPost;
+import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.utils.Numeric;
 
@@ -238,7 +240,8 @@ public class RequestTest extends RequestTester {
     @Test
     public void testEthEstimateGas() throws Exception {
         web3j.ethEstimateGas(
-                Transaction.createFunctionCallTransaction("to", BigInteger.valueOf(0), 10000L, 10000L, 0, 1, "0", "0x00")).send();
+                Transaction.createFunctionCallTransaction(
+                        "to", BigInteger.valueOf(0), 10000L, 10000L, 0, 1, "0", "0x00")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"eth_estimateGas\","
                 + "\"params\":[{\"from\":\"0xa70e8dd61c5d32be8058bb8eb970870f07233155\","
@@ -250,7 +253,8 @@ public class RequestTest extends RequestTester {
     @Test
     public void testEthEstimateGasContractCreation() throws Exception {
         web3j.ethEstimateGas(
-                Transaction.createFunctionCallTransaction("to", BigInteger.valueOf(0), 10000L, 10000L, 0, 1, "0", "0x00")).send();
+                Transaction.createFunctionCallTransaction(
+                        "to", BigInteger.valueOf(0), 10000L, 10000L, 0, 1, "0", "0x00")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"eth_estimateGas\","
                 + "\"params\":[{\"from\":\"0x52b93c80364dc2dd4444c146d73b9836bbbb2b3f\","

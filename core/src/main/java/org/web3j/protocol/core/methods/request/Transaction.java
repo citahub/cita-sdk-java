@@ -3,24 +3,19 @@ package org.web3j.protocol.core.methods.request;
 import java.math.BigInteger;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import org.web3j.utils.Numeric;
-
-import org.web3j.protobuf.Blockchain;
-
-import org.web3j.protobuf.ConvertStrByte;
-import org.web3j.protobuf.Blockchain.Crypto;
-
-import com.google.protobuf.*;
+import com.google.protobuf.ByteString;
+import org.abstractj.kalium.crypto.Hash;
+import org.abstractj.kalium.keys.SigningKey;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
+import org.web3j.protobuf.Blockchain;
+import org.web3j.protobuf.Blockchain.Crypto;
+import org.web3j.protobuf.ConvertStrByte;
+import org.web3j.utils.Numeric;
 
 import static org.abstractj.kalium.encoders.Encoder.HEX;
-
-import org.abstractj.kalium.keys.SigningKey;
-import org.abstractj.kalium.crypto.Hash;
 
 /**
  * Transaction request object used the below methods.
@@ -36,19 +31,21 @@ public class Transaction {
     private String to;
     private BigInteger nonce;  // nonce field is not present on eth_call/eth_estimateGas
     private long quota;  // gas
-    private long valid_until_block;
+    private long validUntilBlock;
     private int version = 0;
     private String data;
     private String value;
     private int chainId;
     private final Hash hash = new Hash();
 
-    public Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data) {
+    public Transaction(
+            String to, BigInteger nonce, long quota, long validUntilBlock,
+            int version, int chainId, String value, String data) {
         this.to = to;
         this.nonce = nonce;
         this.quota = quota;
         this.version = version;
-        this.valid_until_block = valid_until_block;
+        this.validUntilBlock = validUntilBlock;
         this.chainId = chainId;
         this.value = value;
 
@@ -57,9 +54,9 @@ public class Transaction {
         }
 
         if (value.length() < 32) {
-            if(value.matches("0[xX][0-9a-fA-F]+")){
+            if (value.matches("0[xX][0-9a-fA-F]+")) {
                 this.value = value.substring(2);
-            }else{
+            } else {
                 this.value = new BigInteger(value).toString(16);
             }
         }
@@ -67,19 +64,23 @@ public class Transaction {
     }
 
     public static Transaction createContractTransaction(
-         BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String init) {
-        return new Transaction("", nonce, quota, valid_until_block, version, chainId, value, init);
+            BigInteger nonce, long quota, long validUntilBlock,
+            int version, int chainId, String value, String init) {
+        return new Transaction("", nonce, quota, validUntilBlock, version, chainId, value, init);
     }
 
     public static Transaction createFunctionCallTransaction(
-         String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data) {
-        return new Transaction(to, nonce, quota, valid_until_block, version, chainId, value, data);
+            String to, BigInteger nonce, long quota, long validUntilBlock,
+            int version, int chainId, String value, String data) {
+        return new Transaction(to, nonce, quota, validUntilBlock, version, chainId, value, data);
     }
 
     public static Transaction createFunctionCallTransaction(
-            String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value,  byte[] data) {
+            String to, BigInteger nonce, long quota, long validUntilBlock,
+            int version, int chainId, String value,  byte[] data) {
 
-        return new Transaction(to, nonce, quota, valid_until_block, version, chainId, value, new String(data));
+        return new Transaction(
+                to, nonce, quota, validUntilBlock, version, chainId, value, new String(data));
     }
 
     public String getTo() {
@@ -95,7 +96,7 @@ public class Transaction {
     }
 
     public long get_valid_until_block() {
-        return valid_until_block;
+        return validUntilBlock;
     }
 
     public int getVersion() {
@@ -106,7 +107,9 @@ public class Transaction {
         return data;
     }
 
-    public int getChainId() { return chainId; }
+    public int getChainId() {
+        return chainId;
+    }
 
     public String getValue() {
         return value;
@@ -126,7 +129,7 @@ public class Transaction {
         byte[] strbyte;
         if (isByteArray) {
             strbyte = getData().getBytes();
-        }else {
+        } else {
             strbyte = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getData()));
         }
         ByteString bdata = ByteString.copyFrom(strbyte);
@@ -146,7 +149,8 @@ public class Transaction {
 
         byte[] sig;
         if (isEd25519AndBlake2b) {
-            byte[] message = hash.blake2(tx.toByteArray(), "CryptapeCryptape".getBytes(), null, null);
+            byte[] message = hash.blake2(
+                    tx.toByteArray(), "CryptapeCryptape".getBytes(), null, null);
             SigningKey key = new SigningKey(privateKey, HEX);
             byte[] pk = key.getVerifyKey().toBytes();
             byte[] signature = key.sign(message);
@@ -160,7 +164,8 @@ public class Transaction {
             sig = signatureData.get_signature();
         }
 
-        Blockchain.UnverifiedTransaction.Builder builder1 = Blockchain.UnverifiedTransaction.newBuilder();
+        Blockchain.UnverifiedTransaction.Builder builder1 =
+                Blockchain.UnverifiedTransaction.newBuilder();
         builder1.setTransaction(tx);
         builder1.setSignature(ByteString.copyFrom(sig));
         builder1.setCrypto(Crypto.SECP);
@@ -173,10 +178,12 @@ public class Transaction {
     // just used to secp256k1
     public String sign(Credentials credentials) {
         Blockchain.Transaction.Builder builder = Blockchain.Transaction.newBuilder();
-        byte[] strbyte = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getData()));
+        byte[] strbyte = ConvertStrByte.hexStringToBytes(
+                Numeric.cleanHexPrefix(getData()));
         ByteString bdata = ByteString.copyFrom(strbyte);
 
-        byte[] byteValue = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getValue()));
+        byte[] byteValue = ConvertStrByte.hexStringToBytes(
+                Numeric.cleanHexPrefix(getValue()));
         ByteString bvalue = ByteString.copyFrom(byteValue);
 
         builder.setData(bdata);
@@ -193,7 +200,8 @@ public class Transaction {
         Sign.SignatureData signatureData = Sign.signMessage(tx.toByteArray(), keyPair);
         byte[] sig = signatureData.get_signature();
 
-        Blockchain.UnverifiedTransaction.Builder builder1 = Blockchain.UnverifiedTransaction.newBuilder();
+        Blockchain.UnverifiedTransaction.Builder builder1 =
+                Blockchain.UnverifiedTransaction.newBuilder();
         builder1.setTransaction(tx);
         builder1.setSignature(ByteString.copyFrom(sig));
         builder1.setCrypto(Crypto.SECP);

@@ -2,13 +2,17 @@ package org.web3j.protocol.core;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 import org.web3j.protocol.ResponseTester;
-import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.AbiDefinition;
 import org.web3j.protocol.core.methods.response.DbGetHex;
 import org.web3j.protocol.core.methods.response.DbGetString;
@@ -550,8 +554,10 @@ public class ResponseTest extends ResponseTester {
         );
 
         EthBlock.Body body = new EthBlock.Body(Arrays.asList(
-                new EthBlock.TransactionHash("0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df"),
-                new EthBlock.TransactionHash("0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df")
+                new EthBlock.TransactionHash(
+                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df"),
+                new EthBlock.TransactionHash(
+                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df")
         ));
         String version = "0";
         String hash = "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331";

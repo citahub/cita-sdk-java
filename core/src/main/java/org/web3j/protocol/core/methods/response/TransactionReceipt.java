@@ -31,8 +31,9 @@ public class TransactionReceipt {
 
     public TransactionReceipt(String transactionHash, String transactionIndex,
                               String blockHash, String blockNumber, String cumulativeGasUsed,
-                              String gasUsed, String contractAddress, String root, String status,
-                              String from, String to, List<Log> logs, String logsBloom, String errorMessage) {
+                              String gasUsed, String contractAddress,
+                              String root, String status, String from, String to,
+                              List<Log> logs, String logsBloom, String errorMessage) {
         this.transactionHash = transactionHash;
         this.transactionIndex = transactionIndex;
         this.blockHash = blockHash;
@@ -237,7 +238,8 @@ public class TransactionReceipt {
         if (getLogs() != null ? !getLogs().equals(that.getLogs()) : that.getLogs() != null) {
             return false;
         }
-        if (getLogsBloom() != null ? !getLogsBloom().equals(that.getLogsBloom()) : that.getLogsBloom() != null){
+        if (getLogsBloom() != null
+                ? !getLogsBloom().equals(that.getLogsBloom()) : that.getLogsBloom() != null) {
             return false;
         }
         return getErrorMessage() != null

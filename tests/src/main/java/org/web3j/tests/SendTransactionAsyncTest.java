@@ -1,5 +1,9 @@
 package org.web3j.tests;
 
+import java.math.BigInteger;
+import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -11,10 +15,6 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.response.PollingTransactionReceiptProcessor;
 import org.web3j.utils.Convert;
-
-import java.math.BigInteger;
-import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
 
 public class SendTransactionAsyncTest {
     static String testNetAddr;
@@ -42,34 +42,39 @@ public class SendTransactionAsyncTest {
         service = Web3j.build(new HttpService(testNetAddr));
     }
 
-    static BigInteger getBalance(String address){
+    static BigInteger getBalance(String address) {
         BigInteger balance = null;
-        try{
-            EthGetBalance response = service.ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
+        try {
+            EthGetBalance response = service.ethGetBalance(
+                    address, DefaultBlockParameterName.LATEST).send();
             balance = response.getBalance();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("failed to get balance.");
             System.exit(1);
         }
         return balance;
     }
 
-    static TransactionReceipt transferSync(String payerKey, String payeeAddr, String value) throws Exception{
-        PollingTransactionReceiptProcessor txProcessor = new PollingTransactionReceiptProcessor(
-                service,
-                15 * 1000,
-                40);
+    static TransactionReceipt transferSync(
+            String payerKey, String payeeAddr, String value)
+            throws Exception {
+        PollingTransactionReceiptProcessor txProcessor =
+                new PollingTransactionReceiptProcessor(
+                        service,
+                        15 * 1000,
+                        40);
 
         Transaction tx = new Transaction(payeeAddr,
-                testUtil.getNonce(),
+                TestUtil.getNonce(),
                 quota,
-                testUtil.getValidUtilBlock(service).longValue(),
-                version,chainId,
+                TestUtil.getValidUtilBlock(service).longValue(),
+                version, chainId,
                 value,
                 "");
 
         String rawTx = tx.sign(payerKey, false, false);
-        EthSendTransaction ethSendTrasnction = service.ethSendRawTransaction(rawTx).send();
+        EthSendTransaction ethSendTrasnction = service
+                .ethSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
                 .waitForTransactionReceipt(
@@ -78,11 +83,13 @@ public class SendTransactionAsyncTest {
         return txReceipt;
     }
 
-    static CompletableFuture<TransactionReceipt> transferAsync(String payerKey, String payeeAddr, String value) throws Exception{
-        return new RemoteCall<>(() -> transferSync(payerKey, payeeAddr, value)).sendAsync();
+    static CompletableFuture<TransactionReceipt> transferAsync(
+            String payerKey, String payeeAddr, String value) {
+        return new RemoteCall<>(
+                () -> transferSync(payerKey, payeeAddr, value)).sendAsync();
     }
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) {
         Credentials payerCredential = Credentials.create(payerKey);
         String payerAddr = payerCredential.getAddress();
         System.out.println(getBalance(payerAddr));
@@ -91,16 +98,17 @@ public class SendTransactionAsyncTest {
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
 
-        CompletableFuture<TransactionReceipt> receiptFuture = transferAsync(payerKey, payeeAddr, valueWei);
-        receiptFuture.whenCompleteAsync((data, exception)->{
-            if(exception == null){
-                if(data.getErrorMessage() == null){
+        CompletableFuture<TransactionReceipt> receiptFuture =
+                transferAsync(payerKey, payeeAddr, valueWei);
+        receiptFuture.whenCompleteAsync((data, exception) -> {
+            if (exception == null) {
+                if (data.getErrorMessage() == null) {
                     System.out.println(getBalance(payerAddr));
                     System.out.println(getBalance(payeeAddr));
-                }else{
+                } else {
                     System.out.println("Error get receipt: " + data.getErrorMessage());
                 }
-            }else{
+            } else {
                 System.out.println("Exception happens: " + exception);
             }
         });
