@@ -32,13 +32,15 @@ public abstract class TransactionManager {
 
     protected TransactionManager(Web3j web3j, String fromAddress) {
         this(new PollingTransactionReceiptProcessor(
-                        web3j, DEFAULT_POLLING_FREQUENCY, DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH),
+                        web3j, DEFAULT_POLLING_FREQUENCY,
+                        DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH),
                 fromAddress);
     }
 
     protected TransactionManager(
             Web3j web3j, int attempts, long sleepDuration, String fromAddress) {
-        this(new PollingTransactionReceiptProcessor(web3j, sleepDuration, attempts), fromAddress);
+        this(new PollingTransactionReceiptProcessor(
+                web3j, sleepDuration, attempts), fromAddress);
     }
 
     protected TransactionReceipt executeTransaction(
@@ -54,17 +56,20 @@ public abstract class TransactionManager {
     // adapt to cita
     protected TransactionReceipt executeTransaction(
             String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock, BigInteger version , int chainId, String value)
+            BigInteger nonce, BigInteger validUntilBlock,
+            BigInteger version, int chainId, String value)
             throws IOException, TransactionException {
         EthSendTransaction ethSendTransaction = sendTransaction(
-                to, data, quota, nonce, validUntilBlock, version , chainId, value);
+                to, data, quota, nonce, validUntilBlock, version, chainId, value);
         return processResponse(ethSendTransaction);
     }
 
-    // adapt to cita, return empty EthSendTransaction default, only CitaTransactionManager will override this method
+    // adapt to cita, return empty EthSendTransaction default,
+    // only CitaTransactionManager will override this method
     public EthSendTransaction sendTransaction(
             String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock, BigInteger version , int chainId, String value)
+            BigInteger nonce, BigInteger validUntilBlock,
+            BigInteger version, int chainId, String value)
             throws IOException {
         return new EthSendTransaction();
     }

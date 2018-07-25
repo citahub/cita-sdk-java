@@ -1,5 +1,8 @@
 package org.web3j.tests;
 
+import java.math.BigInteger;
+import java.util.Properties;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
@@ -10,9 +13,6 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.response.PollingTransactionReceiptProcessor;
 import org.web3j.utils.Convert;
-
-import java.math.BigInteger;
-import java.util.Properties;
 
 public class SendTransactionSyncTest {
 
@@ -41,12 +41,14 @@ public class SendTransactionSyncTest {
         service = Web3j.build(new HttpService(testNetAddr));
     }
 
-    static BigInteger getBalance(String address){
+    static BigInteger getBalance(String address) {
         BigInteger balance = null;
-        try{
-            EthGetBalance response = service.ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
+        try {
+            EthGetBalance response = service
+                    .ethGetBalance(
+                            address, DefaultBlockParameterName.LATEST).send();
             balance = response.getBalance();
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("failed to get balance.");
             System.exit(1);
         }
@@ -54,17 +56,19 @@ public class SendTransactionSyncTest {
     }
 
     //use PollingTransactionReceiptProcessor to wait for transaction receipt.
-    static TransactionReceipt transferSync(String payerKey, String payeeAddr, String value) throws Exception{
+    static TransactionReceipt transferSync(
+            String payerKey, String payeeAddr, String value)
+            throws Exception {
         PollingTransactionReceiptProcessor txProcessor = new PollingTransactionReceiptProcessor(
                 service,
                 15 * 1000,
                 40);
 
         Transaction tx = new Transaction(payeeAddr,
-                testUtil.getNonce(),
+                TestUtil.getNonce(),
                 quota,
-                testUtil.getValidUtilBlock(service).longValue(),
-                version,chainId,
+                TestUtil.getValidUtilBlock(service).longValue(),
+                version, chainId,
                 value,
                 "");
 
@@ -89,7 +93,7 @@ public class SendTransactionSyncTest {
 
         TransactionReceipt txReceipt = transferSync(payerKey, payeeAddr, valueWei);
 
-        if(txReceipt.getErrorMessage() == null){
+        if (txReceipt.getErrorMessage() == null) {
             System.out.println(getBalance(payerAddr));
             System.out.println(getBalance(payeeAddr));
         }

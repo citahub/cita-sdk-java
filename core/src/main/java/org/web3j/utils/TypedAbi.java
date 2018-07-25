@@ -1,15 +1,21 @@
 package org.web3j.utils;
 
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.datatypes.*;
-import org.web3j.abi.datatypes.generated.AbiTypes;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Bool;
+import org.web3j.abi.datatypes.DynamicArray;
+import org.web3j.abi.datatypes.DynamicBytes;
+import org.web3j.abi.datatypes.StaticArray;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Utf8String;
+import org.web3j.abi.datatypes.generated.AbiTypes;
 
 public class TypedAbi {
     public static class InvalidAbiType extends Exception {
@@ -47,7 +53,8 @@ public class TypedAbi {
         public static ArgRetType newStaticArray(String length, Class baseType) {
             Class staticArray;
             try {
-                staticArray = Class.forName("org.web3j.abi.datatypes.generated.StaticArray" + length);
+                staticArray = Class.forName(
+                        "org.web3j.abi.datatypes.generated.StaticArray" + length);
             } catch (ClassNotFoundException e) {
                 staticArray = StaticArray.class;
             }

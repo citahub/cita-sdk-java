@@ -64,7 +64,8 @@ public abstract class TypeReference<T extends org.web3j.abi.datatypes.Type>
         };
     }
 
-    public static <T extends org.web3j.abi.datatypes.Type> TypeReference<T> create(ParameterizedType type) {
+    public static <T extends org.web3j.abi.datatypes.Type>
+            TypeReference<T> create(ParameterizedType type) {
         return new TypeReference<T>() {
             @Override
             public Type getType() {
@@ -73,7 +74,8 @@ public abstract class TypeReference<T extends org.web3j.abi.datatypes.Type>
         };
     }
 
-    public static <T extends org.web3j.abi.datatypes.Type> StaticArrayTypeReference<T> create(int length, ParameterizedType type) {
+    public static <T extends org.web3j.abi.datatypes.Type>
+            StaticArrayTypeReference<T> create(int length, ParameterizedType type) {
         return new StaticArrayTypeReference<T>(length) {
             @Override
             public Type getType() {

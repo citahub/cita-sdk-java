@@ -20,7 +20,7 @@ public class SignTest {
         Sign.SignatureData signatureData = Sign.signMessage(TEST_MESSAGE, SampleKeys.KEY_PAIR);
 
         Sign.SignatureData expected = new Sign.SignatureData(
-                (byte) 27,
+                (byte) 0,
                 Numeric.hexStringToByteArray(
                         "0x9631f6d21dec448a213585a4a41a28ef3d4337548aa34734478b563036163786"),
                 Numeric.hexStringToByteArray(

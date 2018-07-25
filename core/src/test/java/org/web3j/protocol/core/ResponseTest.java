@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.web3j.protocol.ResponseTester;
-import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.response.AbiDefinition;
 import org.web3j.protocol.core.methods.response.DbGetHex;
 import org.web3j.protocol.core.methods.response.DbGetString;
@@ -441,6 +441,7 @@ public class ResponseTest extends ResponseTester {
                         + "96cdc8cae7690408b4e800f60ddac49d2ad34180e68f1da0aaf001"));
     }
 
+    @Ignore //sendTransaction is not supported by CITA
     @Test
     public void testEthSendTransaction() {
         buildResponse(
@@ -453,7 +454,7 @@ public class ResponseTest extends ResponseTester {
         );
 
         EthSendTransaction ethSendTransaction = deserialiseResponse(EthSendTransaction.class);
-        assertThat(ethSendTransaction.getTransactionHash(),
+        assertThat(ethSendTransaction.getSendTransactionResult().getHash(),
                 is("0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"));
     }
 
@@ -507,85 +508,69 @@ public class ResponseTest extends ResponseTester {
         //CHECKSTYLE:OFF
         buildResponse(
                 "{\n"
-                        + "\"id\":1,\n"
-                        + "\"jsonrpc\":\"2.0\",\n"
+                        + "\"id\": 1,\n"
+                        + "\"jsonrpc\": \"2.0\",\n"
                         + "\"result\": {\n"
-                        + "    \"number\": \"0x1b4\",\n"
-                        + "    \"hash\": \"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\",\n"
-                        + "    \"parentHash\": \"0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5\",\n"
-                        + "    \"nonce\": \"0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2\",\n"
-                        + "    \"sha3Uncles\": \"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347\",\n"
-                        + "    \"logsBloom\": \"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\",\n"
-                        + "    \"transactionsRoot\": \"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\n"
-                        + "    \"stateRoot\": \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff\",\n"
-                        + "    \"receiptsRoot\": \"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\n"
-                        + "    \"author\": \"0x1a95ad5ccdb0677af951810c6ddf4935afe4e5a6\",\n"
-                        + "    \"miner\": \"0x4e65fda2159562a496f9f3522f89122a3088497a\",\n"
-                        + "    \"mixHash\": \"0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b\",\n"
-                        + "    \"difficulty\": \"0x027f07\",\n"
-                        + "    \"totalDifficulty\":  \"0x027f07\",\n"
-                        + "    \"extraData\": \"0x0000000000000000000000000000000000000000000000000000000000000000\",\n"
-                        + "    \"size\":  \"0x027f07\",\n"
-                        + "    \"gasLimit\": \"0x9f759\",\n"
-                        + "    \"gasUsed\": \"0x9f759\",\n"
-                        + "    \"timestamp\": \"0x54e34e8e\",\n"
-                        + "    \"transactions\": ["
-                        + "        \"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\",\n"
-                        + "        \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df\"\n"
-                        + "    ], \n"
-                        + "    \"uncles\": [\n"
-                        + "       \"0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347\",\n"
-                        + "       \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff\"\n"
-                        + "    ],\n"
-                        + "    \"sealFields\": [\n"
-                        + "       \"0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b\",\n"
-                        + "       \"0x39a3eb432fbef1fc\"\n"
-                        + "    ]\n"
-                        + "  }\n"
+                        + " \"version\": \"0\",\n"
+                        + " \"hash\": \"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\",\n"
+                        + " \"header\": {\n"
+                        + "     \"timestamp\": \"1000000\",\n"
+                        + "     \"prevHash\": \"0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5\",\n"
+                        + "     \"number\": \"0x1b4\",\n"
+                        + "     \"stateRoot\": \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff\",\n"
+                        + "     \"transactionsRoot\": \"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\n"
+                        + "     \"receiptsRoot\": \"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\n"
+                        + "     \"gasUsed\": \"0x9f759\",\n"
+                        + "     \"proof\": {\n"
+                        + "         \"proposal\": \"proposal\",\n"
+                        + "         \"height\": \"height\",\n"
+                        + "         \"round\": \"round\"\n"
+                        + "     }\n"
+                        + " },\n"
+                        + " \"body\": {\n"
+                        + "     \"transactions\": [\n"
+                        + "         \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df\",\n"
+                        + "         \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df\"\n"
+                        + "     ]\n"
+                        + " }\n"
+                        + "}\n"
                         + "}"
         );
         //CHECKSTYLE:ON
 
         EthBlock ethBlock = deserialiseResponse(EthBlock.class);
-        EthBlock.Block block = new EthBlock.Block(
-                "0x1b4",
-                "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
+        EthBlock.Header header = new EthBlock.Header(
+                1000000,
                 "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
-                "0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2",
-                "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-                "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+                "0x1b4",
                 "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
                 "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0x1a95ad5ccdb0677af951810c6ddf4935afe4e5a6",
-                "0x4e65fda2159562a496f9f3522f89122a3088497a",
-                "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
-                "0x027f07",
-                "0x027f07",
-                "0x0000000000000000000000000000000000000000000000000000000000000000",
-                "0x027f07",
+                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
                 "0x9f759",
-                "0x9f759",
-                "0x54e34e8e",
-                Arrays.asList(
-                        new EthBlock.TransactionHash(
-                                "0xe670ec64341771606e55d6b4ca35a1a6b"
-                                        + "75ee3d5145a99d05921026d1527331"),
-                        new EthBlock.TransactionHash(
-                                "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df")
-                ),
-                Arrays.asList(
-                        "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff"
-                ),
-                Arrays.asList(
-                        "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
-                        "0x39a3eb432fbef1fc"
-                )
+                new EthBlock.Proof(
+                        "proposal",
+                        "height",
+                        "round")
+        );
+
+        EthBlock.Body body = new EthBlock.Body(Arrays.asList(
+                new EthBlock.TransactionHash(
+                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df"),
+                new EthBlock.TransactionHash(
+                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df")
+        ));
+        String version = "0";
+        String hash = "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331";
+        EthBlock.Block block = new EthBlock.Block(
+                version,
+                hash,
+                header,
+                body
         );
         assertThat(ethBlock.getBlock(), equalTo(block));
     }
 
+    @Ignore //no support for parity
     @Test
     public void testEthBlockFullTransactionsParity() {
         //CHECKSTYLE:OFF
@@ -644,63 +629,17 @@ public class ResponseTest extends ResponseTester {
                         + "}"
         );
         //CHECKSTYLE:ON
-
         EthBlock ethBlock = deserialiseResponse(EthBlock.class);
-        EthBlock.Block block = new EthBlock.Block(
-                "0x1b4",
-                "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
-                "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
-                "0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2",
-                "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-                "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0x1a95ad5ccdb0677af951810c6ddf4935afe4e5a6",
-                "0x4e65fda2159562a496f9f3522f89122a3088497a",
-                "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
-                "0x027f07",
-                "0x027f07",
-                "0x0000000000000000000000000000000000000000000000000000000000000000",
-                "0x027f07",
-                "0x9f759",
-                "0x9f759",
-                "0x54e34e8e",
-                //CHECKSTYLE:OFF
-                Arrays.asList(new EthBlock.TransactionObject(
-                                "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
-                                "0x",
-                                "0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b",
-                                "0x15df",
-                                "0x1",
-                                "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-                                "0x85h43d8a49eeb85d32cf465507dd71d507100c1",
-                                "0x7f110",
-                                "0x7f110",
-                                "0x09184e72a000",
-                                "0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360",
-                                null,
-                                "0x6614d7d7bfe989295821985de0439e868b26ff05f98ae0da0ce5bccc24ea368a083b785323c9fcb405dd4c10a2c95d93312a1b2d68beb24ab4ea7c3c2f7c455b",
-                                "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                                "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
-                                "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                                (byte) 0
-                        )
-                ),
-                //CHECKSTYLE:ON
-                Arrays.asList(
-                        "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff"
-                ),
-                Arrays.asList(
-                        "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
-                        "0x39a3eb432fbef1fc"
-                )
-        );
+        EthBlock.Header header = new EthBlock.Header();
+        EthBlock.Body body = new EthBlock.Body();
+        String version = "0";
+        String hash = "";
+        EthBlock.Block block = new EthBlock.Block(version, hash, header, body);
         assertThat(ethBlock.getBlock(), equalTo(block));
     }
 
     // Remove once Geth & Parity return the same v value in transactions
+    @Ignore //no support for geth
     @Test
     public void testEthBlockFullTransactionsGeth() {
         //CHECKSTYLE:OFF
@@ -761,57 +700,11 @@ public class ResponseTest extends ResponseTester {
         //CHECKSTYLE:ON
 
         EthBlock ethBlock = deserialiseResponse(EthBlock.class);
-        EthBlock.Block block = new EthBlock.Block(
-                "0x1b4",
-                "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
-                "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
-                "0xe04d296d2460cfb8472af2c5fd05b5a214109c25688d3704aed5484f9a7792f2",
-                "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-                "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0x1a95ad5ccdb0677af951810c6ddf4935afe4e5a6",
-                "0x4e65fda2159562a496f9f3522f89122a3088497a",
-                "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
-                "0x027f07",
-                "0x027f07",
-                "0x0000000000000000000000000000000000000000000000000000000000000000",
-                "0x027f07",
-                "0x9f759",
-                "0x9f759",
-                "0x54e34e8e",
-                //CHECKSTYLE:OFF
-                Arrays.asList(new EthBlock.TransactionObject(
-                                "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
-                                "0x",
-                                "0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b",
-                                "0x15df",
-                                "0x1",
-                                "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-                                "0x85h43d8a49eeb85d32cf465507dd71d507100c1",
-                                "0x7f110",
-                                "0x7f110",
-                                "0x09184e72a000",
-                                "0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360",
-                                null,
-                                "0x6614d7d7bfe989295821985de0439e868b26ff05f98ae0da0ce5bccc24ea368a083b785323c9fcb405dd4c10a2c95d93312a1b2d68beb24ab4ea7c3c2f7c455b",
-                                "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                                "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
-                                "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                                0x9d
-                        )
-                ),
-                //CHECKSTYLE:ON
-                Arrays.asList(
-                        "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff"
-                ),
-                Arrays.asList(
-                        "0x57919c4e72e79ad7705a26e7ecd5a08ff546ac4fa37882e9cc57be87a3dab26b",
-                        "0x39a3eb432fbef1fc"
-                )
-        );
+        EthBlock.Header header = new EthBlock.Header();
+        EthBlock.Body body = new EthBlock.Body();
+        String version = "0";
+        String hash = "";
+        EthBlock.Block block = new EthBlock.Block(version, hash, header, body);
         assertThat(ethBlock.getBlock(), equalTo(block));
     }
 
@@ -851,10 +744,13 @@ public class ResponseTest extends ResponseTester {
                         + "        \"raw\":\"0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62\",\n"
                         + "        \"r\":\"0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc\",\n"
                         + "        \"s\":\"0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62\",\n"
-                        + "        \"v\":0\n"
+                        + "        \"v\":0,\n"
+                        + "        \"content\":\"content\",\n"
+                        + "        \"index\":\"index\"\n"
                         + "  }\n"
                         + "}"
         );
+
         Transaction transaction = new Transaction(
                 "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
                 "0x",
@@ -872,7 +768,9 @@ public class ResponseTest extends ResponseTester {
                 "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
                 "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
                 "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                (byte) 0
+                (byte) 0,
+                "content",
+                "index"
         );
         //CHECKSTYLE:ON
 
@@ -919,10 +817,11 @@ public class ResponseTest extends ResponseTester {
                         + "            \"blockNumber\":\"0x1b4\",\n"
                         + "            \"address\": \"0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d\",\n"
                         + "            \"data\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\n"
-                        + "            \"type\":\"mined\",\n"
+                        + "            \"transactionLogIndex\":\"mined\",\n"
                         + "            \"topics\": [\"0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5\"]"
                         + "        }],\n"
-                        + "        \"logsBloom\":\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n"
+                        + "        \"logsBloom\":\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n"
+                        + "        \"errorMessage\":\"errorMessage\"\n"
                         + "  }\n"
                         + "}"
         );
@@ -956,7 +855,8 @@ public class ResponseTest extends ResponseTester {
                                         )
                                 )
                         ),
-                        "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+                        "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                        "errorMessage"
 
                 );
         //CHECKSTYLE:ON
@@ -994,10 +894,11 @@ public class ResponseTest extends ResponseTester {
                         + "            \"blockNumber\":\"0x1b4\",\n"
                         + "            \"address\": \"0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d\",\n"
                         + "            \"data\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\n"
-                        + "            \"type\":\"mined\",\n"
+                        + "            \"transactionLogIndex\":\"mined\",\n"
                         + "            \"topics\": [\"0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5\"]"
                         + "        }],\n"
-                        + "        \"logsBloom\":\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\"\n"
+                        + "        \"logsBloom\":\"0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\",\n"
+                        + "        \"errorMessage\":\"errorMessage\"\n"
                         + "  }\n"
                         + "}"
         );
@@ -1031,8 +932,8 @@ public class ResponseTest extends ResponseTester {
                                         )
                                 )
                         ),
-                        "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-
+                        "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+                        "errorMessage"
                 );
         //CHECKSTYLE:ON
 
@@ -1218,7 +1119,7 @@ public class ResponseTest extends ResponseTester {
                         + "        \"blockNumber\":\"0x1b4\",\n"
                         + "        \"address\": \"0x16c5785ac562ff41e2dcfdf829c5a142f1fccd7d\",\n"
                         + "        \"data\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\n"
-                        + "        \"type\":\"mined\",\n"
+                        + "        \"transactionLogIndex\":\"mined\",\n"
                         + "        \"topics\": [\"0x59ebeb90bc63057b6515673c3ecf9438e5058bca0f92585014eced636878c9a5\"]"
                         + "    }]"
                         + "}"

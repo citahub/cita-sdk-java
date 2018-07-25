@@ -1,6 +1,10 @@
 package org.web3j.utils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -16,7 +20,10 @@ public class CallCmd {
 
         @Override
         public void run() {
-            new BufferedReader(new InputStreamReader(this.inputStream)).lines().forEach(this.consumer);
+            new BufferedReader(
+                    new InputStreamReader(this.inputStream))
+                    .lines()
+                    .forEach(this.consumer);
         }
     }
 

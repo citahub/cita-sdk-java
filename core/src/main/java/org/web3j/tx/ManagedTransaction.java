@@ -64,7 +64,8 @@ public abstract class ManagedTransaction {
     }
 
     protected TransactionReceipt send(
-            String to, String data, String value, BigInteger gasPrice, BigInteger gasLimit)
+            String to, String data, String value,
+            BigInteger gasPrice, BigInteger gasLimit)
             throws IOException, TransactionException {
 
         return transactionManager.executeTransaction(
@@ -73,8 +74,10 @@ public abstract class ManagedTransaction {
 
     // adapt to cita
     protected TransactionReceipt sendAdaptToCita(
-            String to, String data, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version , int chainId, String value)
+            String to, String data, BigInteger quota, BigInteger nonce,
+            BigInteger validUntilBlock, BigInteger version , int chainId, String value)
             throws IOException, TransactionException {
-        return transactionManager.executeTransaction(to, data, quota, nonce, validUntilBlock, version, chainId, value);
+        return transactionManager.executeTransaction(
+                to, data, quota, nonce, validUntilBlock, version, chainId, value);
     }
 }

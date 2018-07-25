@@ -1,10 +1,10 @@
 package org.web3j.abi.datatypes;
 
-import org.web3j.abi.TypeReference;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.web3j.abi.TypeReference;
 
 public class UnorderedEvent {
     private class EventType {

@@ -138,12 +138,12 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public org.web3j.protocol.core.RemoteCall<org.web3j.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param) {\n"
+                "public org.web3j.protocol.core.RemoteCall<org.web3j.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger quota, java.math.BigInteger nonce, java.math.BigInteger validUntilBlock, java.math.BigInteger version, java.lang.Integer chainId, java.lang.String value) {\n"
                         + "  org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(\n"
                         + "      \"functionName\", \n"
                         + "      java.util.Arrays.<org.web3j.abi.datatypes.Type>asList(new org.web3j.abi.datatypes.generated.Uint8(param)), \n"
                         + "      java.util.Collections.<org.web3j.abi.TypeReference<?>>emptyList());\n"
-                        + "  return executeRemoteCallTransaction(function);\n"
+                        + "  return executeRemoteCallTransaction(function, quota, nonce, validUntilBlock, version, chainId, value);\n"
                         + "}\n";
         //CHECKSTYLE:ON
 
@@ -165,12 +165,12 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public org.web3j.protocol.core.RemoteCall<org.web3j.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue) {\n"
+                "public org.web3j.protocol.core.RemoteCall<org.web3j.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.math.BigInteger quota, java.math.BigInteger nonce, java.math.BigInteger validUntilBlock, java.math.BigInteger version, java.lang.Integer chainId, java.lang.String value) {\n"
                         + "  org.web3j.abi.datatypes.Function function = new org.web3j.abi.datatypes.Function(\n"
                         + "      \"functionName\", \n"
                         + "      java.util.Arrays.<org.web3j.abi.datatypes.Type>asList(new org.web3j.abi.datatypes.generated.Uint8(param)), \n"
                         + "      java.util.Collections.<org.web3j.abi.TypeReference<?>>emptyList());\n"
-                        + "  return executeRemoteCallTransaction(function, weiValue);\n"
+                        + "  return executeRemoteCallTransaction(function, weiValue, quota, nonce, validUntilBlock, version, chainId, value);\n"
                         + "}\n";
         //CHECKSTYLE:ON
 

@@ -1,5 +1,10 @@
 package org.web3j.tests;
 
+import java.io.File;
+import java.math.BigInteger;
+import java.util.Properties;
+import java.util.Random;
+
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.account.Account;
 import org.web3j.protocol.account.CompiledContract;
@@ -8,10 +13,6 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
-import java.io.File;
-import java.math.BigInteger;
-import java.util.Properties;
-import java.util.Random;
 
 public class TokenAccountTest {
 
@@ -36,10 +37,9 @@ public class TokenAccountTest {
     private String contractAddress;
 
     static {
-        try{
+        try {
             props = Config.load(configPath);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Failed to read properties from config file");
             e.printStackTrace();
         }
@@ -63,9 +63,11 @@ public class TokenAccountTest {
         return BigInteger.valueOf(Math.abs(random.nextLong()));
     }
 
-    private static TransactionReceipt waitToGetReceipt(String hash) throws Exception {
+    private static TransactionReceipt waitToGetReceipt(
+            String hash) throws Exception {
         Thread.sleep(10_000);
-        return service.ethGetTransactionReceipt(hash).send().getTransactionReceipt().get();
+        return service.ethGetTransactionReceipt(hash)
+                .send().getTransactionReceipt().get();
     }
 
     public TokenAccountTest() throws Exception {
@@ -75,61 +77,84 @@ public class TokenAccountTest {
     }
 
     public String deployContract(String path) throws Exception {
-        EthSendTransaction ethSendTransaction = account.deploy(new File(path), randomNonce(), quota, version, chainId, value);
-        TransactionReceipt receipt = waitToGetReceipt(ethSendTransaction.getSendTransactionResult().getHash());
+        EthSendTransaction ethSendTransaction = account.deploy(
+                new File(path), randomNonce(), quota, version, chainId, value);
+        TransactionReceipt receipt = waitToGetReceipt(
+                ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
-            System.out.println("deploy contract failed because of " + receipt.getErrorMessage());
+            System.out.println("deploy contract failed because of "
+                    + receipt.getErrorMessage());
             System.exit(1);
         }
         contractAddress = receipt.getContractAddress();
-        System.out.println("deploy contract success and contract address is " + receipt.getContractAddress());
+        System.out.println("deploy contract success and contract address is "
+                + receipt.getContractAddress());
         return contractAddress;
     }
 
-    public void transfer(String toAddress, BigInteger amount) throws Exception {
+    public void transfer(String toAddress, BigInteger amount)
+            throws Exception {
         AbiDefinition transfer = tokenContract.getFunctionAbi("transfer", 2);
         EthSendTransaction ethSendTransaction = (EthSendTransaction)
                 account.callContract(
-                        contractAddress, transfer, randomNonce(), quota, version, chainId, value, toAddress, amount);
-        TransactionReceipt receipt = waitToGetReceipt(ethSendTransaction.getSendTransactionResult().getHash());
+                        contractAddress, transfer, randomNonce(),
+                        quota, version, chainId, value, toAddress, amount);
+        TransactionReceipt receipt = waitToGetReceipt(
+                ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
-            System.out.println("call transfer method failed because of " + receipt.getErrorMessage());
+            System.out.println("call transfer method failed because of "
+                    + receipt.getErrorMessage());
             System.exit(1);
         }
-        System.out.println("call transfer method success and receipt is " + receipt.getTransactionHash());
+        System.out.println("call transfer method success and receipt is "
+                + receipt.getTransactionHash());
     }
 
     public void getBalance(String address) throws Exception {
         AbiDefinition getBalance = tokenContract.getFunctionAbi("getBalance", 1);
-        Object object = account.callContract(contractAddress, getBalance, randomNonce(), quota, version, chainId, value, address);
-        System.out.println(address + " has " + object.toString() + " tokens");
+        Object object = account.callContract(
+                contractAddress, getBalance, randomNonce(),
+                quota, version, chainId, value, address);
+        System.out.println(address + " has "
+                + object.toString() + " tokens");
     }
 
     public void transferRemote(String toAddress, BigInteger amount) throws Exception {
         EthSendTransaction ethSendTransaction = (EthSendTransaction) account.callContract(
-                contractAddress, "transfer", randomNonce(), quota, version, chainId, value, toAddress, amount);
-        TransactionReceipt receipt = waitToGetReceipt(ethSendTransaction.getSendTransactionResult().getHash());
+                contractAddress, "transfer", randomNonce(),
+                quota, version, chainId, value, toAddress, amount);
+        TransactionReceipt receipt = waitToGetReceipt(
+                ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
-            System.out.println("call transfer method failed because of " + receipt.getErrorMessage());
+            System.out.println("call transfer method failed because of "
+                    + receipt.getErrorMessage());
             System.exit(1);
         }
-        System.out.println("call transfer method success and receipt is " + receipt.getTransactionHash());
+        System.out.println("call transfer method success and receipt is "
+                + receipt.getTransactionHash());
     }
 
     public void getBalanceRemote(String address) throws Exception {
-        Object object = account.callContract(contractAddress, "getBalance", randomNonce(), quota, version, chainId, value, address);
+        Object object = account.callContract(
+                contractAddress, "getBalance", randomNonce(),
+                quota, version, chainId, value, address);
         System.out.println(address + " has " + object.toString() + " tokens");
     }
 
     public void storeAbiToBlockchain() throws Exception {
-        EthSendTransaction ethSendTransaction = (EthSendTransaction) account.uploadAbi(contractAddress,
-                tokenContract.getAbi(), randomNonce(), quota, version, chainId, value);
-        TransactionReceipt receipt = waitToGetReceipt(ethSendTransaction.getSendTransactionResult().getHash());
+        EthSendTransaction ethSendTransaction =
+                (EthSendTransaction) account.uploadAbi(
+                        contractAddress, tokenContract.getAbi(),
+                        randomNonce(), quota, version, chainId, value);
+        TransactionReceipt receipt = waitToGetReceipt(
+                ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
-            System.out.println("call upload abi method failed because of " + receipt.getErrorMessage());
+            System.out.println("call upload abi method failed because of "
+                    + receipt.getErrorMessage());
             System.exit(1);
         }
-        System.out.println("call upload abi method success and receipt is " + receipt.getTransactionHash());
+        System.out.println("call upload abi method success and receipt is "
+                + receipt.getTransactionHash());
     }
 
     public void getAbi() throws Exception {
@@ -139,17 +164,21 @@ public class TokenAccountTest {
 
     public static void main(String[] args) throws Exception {
 
-        //deploy contract with smart contract solidity file and call method "transfer" with generated Abi
+        // deploy contract with smart contract solidity file
+        // and call method "transfer" with generated Abi
         String contractAddr = deployContractAndCallMethodFromSolidity();
 
-        //get abi from deployed smart contract and call method "transfer"
+        // get abi from deployed smart contract
+        // and call method "transfer"
         callContractMethodFromRemoteAbi(contractAddr);
 
         System.exit(0);
     }
 
 
-    private static String deployContractAndCallMethodFromSolidity() throws Exception {
+    //CHECKSTYLE:OFF
+    private static String deployContractAndCallMethodFromSolidity()
+            throws Exception {
         TokenAccountTest tokenAccountTest = new TokenAccountTest();
         String contractAddr = tokenAccountTest.deployContract(solPath);
         tokenAccountTest.getBalance(fromAddress);
@@ -161,8 +190,10 @@ public class TokenAccountTest {
         tokenAccountTest.getAbi();
         return contractAddr;
     }
+    //CHECKSTYLE:ON
 
-    private static void callContractMethodFromRemoteAbi(String contractAddress) throws Exception {
+    private static void callContractMethodFromRemoteAbi(String contractAddress)
+            throws Exception {
         TokenAccountTest tokenAccountTest = new TokenAccountTest();
         tokenAccountTest.contractAddress = contractAddress;
         tokenAccountTest.transferRemote(toAddress, BigInteger.valueOf(500));

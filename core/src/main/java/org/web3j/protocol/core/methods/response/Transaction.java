@@ -232,13 +232,17 @@ public class Transaction {
         this.content = content;
     }
 
-    public String getContent() { return content; }
+    public String getContent() {
+        return content;
+    }
 
     public void setIndex(String index) {
         this.index = index;
     }
 
-    public String getIndex() { return index; }
+    public String getIndex() {
+        return index;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -310,7 +314,8 @@ public class Transaction {
         if (getR() != null ? !getR().equals(that.getR()) : that.getR() != null) {
             return false;
         }
-        if (getContent() != null ? !getContent().equals(that.getContent()) : that.getContent() != null) {
+        if (getContent() != null
+                ? !getContent().equals(that.getContent()) : that.getContent() != null) {
             return false;
         }
         if (getIndex() != null ? !getIndex().equals(that.getIndex()) : that.getIndex() != null) {

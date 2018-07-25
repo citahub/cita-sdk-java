@@ -102,7 +102,9 @@ public class EnsResolverTest {
 
     private void configureLatestBlock(long timestamp) throws IOException {
         EthBlock.Block block = new EthBlock.Block();
-        block.setTimestamp(Numeric.encodeQuantity(BigInteger.valueOf(timestamp)));
+        EthBlock.Header header = new EthBlock.Header();
+        block.setHeader(header);
+        block.getHeader().setTimestamp(timestamp);
         EthBlock ethBlock = new EthBlock();
         ethBlock.setResult(block);
 

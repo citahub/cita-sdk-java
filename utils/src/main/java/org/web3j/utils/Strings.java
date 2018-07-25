@@ -8,7 +8,8 @@ import java.util.List;
  */
 public class Strings {
 
-    private Strings() {}
+    private Strings() {
+    }
 
     public static String toCsv(List<String> src) {
         // return src == null ? null : String.join(", ", src.toArray(new String[0]));
@@ -50,24 +51,24 @@ public class Strings {
     public static byte[] asciiToHex(String asciiValue, int length) {
         char[] chars = asciiValue.toCharArray();
         StringBuffer hex = new StringBuffer();
-        for (int i = 0; i < chars.length; i++)
-        {
+        for (int i = 0; i < chars.length; i++) {
             hex.append(Integer.toHexString((int) chars[i]));
         }
 
-        String hexStr = hex.toString() + "".join("", Collections.nCopies(length - (hex.length()/2), "00"));
+        String hexStr = hex.toString() + "".join(
+                "", Collections.nCopies(length - (hex.length() / 2), "00"));
         return Numeric.hexStringToByteArray(hexStr);
     }
 
     public static String hexStringToAscii(String hexStr) {
-        assert(hexStr.length() % 2 == 0);
+        assert (hexStr.length() % 2 == 0);
         StringBuilder asciiStr = new StringBuilder();
         for (int i = 0; i < hexStr.length(); i += 2) {
             String str = hexStr.substring(i, i + 2);
             if (str.equals("00")) {
                 break;
             }
-            asciiStr.append((char)Integer.parseInt(str, 16));
+            asciiStr.append((char) Integer.parseInt(str, 16));
         }
         return asciiStr.toString();
     }

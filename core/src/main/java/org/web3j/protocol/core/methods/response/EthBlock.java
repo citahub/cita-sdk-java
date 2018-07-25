@@ -10,6 +10,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -55,10 +56,10 @@ public class EthBlock extends Response<EthBlock.Block> {
         private String height;
         private String round;
 
-        public Proof(){
+        public Proof() {
         }
 
-        public Proof(String proposal, String height, String round){
+        public Proof(String proposal, String height, String round) {
             this.proposal = proposal;
             this.height = height;
             this.round = round;
@@ -89,6 +90,29 @@ public class EthBlock extends Response<EthBlock.Block> {
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Proof)) {
+                return false;
+            }
+
+            Proof proof = (Proof) o;
+
+            if (getHeight() != null
+                    ? !getHeight().equals(proof.getHeight()) : proof.getHeight() != null) {
+                return false;
+            }
+            if (getProposal() != null
+                    ? !getProposal().equals(proof.getProposal()) : proof.getProposal() != null) {
+                return false;
+            }
+            return (getRound() != null
+                    ? getRound().equals(proof.getRound()) : proof.getRound() == null);
+        }
+
+        @Override
         public int hashCode() {
             int result = getProposal() != null ? getProposal().hashCode() : 0;
             result = 31 * result + (getHeight() != null ? getHeight().hashCode() : 0);
@@ -98,8 +122,8 @@ public class EthBlock extends Response<EthBlock.Block> {
     }
 
 
-    public static class Header{
-        private long timestamp;
+    public static class Header {
+        private Long timestamp;
         private String prevHash;
         private String number;
         private String stateRoot;
@@ -109,11 +133,11 @@ public class EthBlock extends Response<EthBlock.Block> {
         private Proof proof;
 
 
-        public Header(){
+        public Header() {
         }
 
         public Header(long timestamp, String prevHash, String number, String stateRoot,
-                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof){
+                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof) {
             this.timestamp = timestamp;
             this.prevHash = prevHash;
             this.number = number;
@@ -124,7 +148,7 @@ public class EthBlock extends Response<EthBlock.Block> {
             this.proof = proof;
         }
 
-        public long getTimestamp() {
+        public Long getTimestamp() {
             return timestamp;
         }
 
@@ -199,14 +223,74 @@ public class EthBlock extends Response<EthBlock.Block> {
         @Override
         public int hashCode() {
             int result = 0;
-            result = 31 * result + (getPrevHash() != null ? getPrevHash().hashCode() : 0);
-            result = 31 * result + (getNumber() != null ? getNumber().hashCode() : 0);
-            result = 31 * result + (getStateRoot() != null ? getStateRoot().hashCode() : 0);
-            result = 31 * result + (getTransactionsRoot() != null ? getTransactionsRoot().hashCode() : 0);
-            result = 31 * result + (getReceiptsRoot() != null ? getReceiptsRoot().hashCode() : 0);
-            result = 31 * result + (getGasUsed() != null ? getGasUsed().hashCode() : 0);
-            result = 31 * result + (getProof() != null ? getProof().hashCode() : 0);
+            result = 31 * result + (getPrevHash() != null
+                    ? getPrevHash().hashCode() : 0);
+            result = 31 * result + (getNumber() != null
+                    ? getNumber().hashCode() : 0);
+            result = 31 * result + (getStateRoot() != null
+                    ? getStateRoot().hashCode() : 0);
+            result = 31 * result + (getTransactionsRoot() != null
+                    ? getTransactionsRoot().hashCode() : 0);
+            result = 31 * result + (getReceiptsRoot() != null
+                    ? getReceiptsRoot().hashCode() : 0);
+            result = 31 * result + (getGasUsed() != null
+                    ? getGasUsed().hashCode() : 0);
+            result = 31 * result + (getProof() != null
+                    ? getProof().hashCode() : 0);
             return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Header)) {
+                return false;
+            }
+
+            Header header = (Header) o;
+
+            if (getTimestamp() != null
+                    ? !getTimestamp().equals(header.getTimestamp())
+                    : header.getTimestamp() != null) {
+                return false;
+            }
+            if (getPrevHash() != null
+                    ? !getPrevHash().equals(header.getPrevHash())
+                    : header.getPrevHash() != null) {
+                return false;
+            }
+            if (getNumber() != null
+                    ? !getNumber().equals(header.getNumber()) : header.getNumber() != null) {
+                return false;
+            }
+            if (getStateRoot() != null
+                    ? !getStateRoot().equals(header.getStateRoot())
+                    : header.getStateRoot() != null) {
+                return false;
+            }
+            if (getTransactionsRoot() != null
+                    ? !getTransactionsRoot().equals(header.getTransactionsRoot())
+                    : header.getTransactionsRoot() != null) {
+                return false;
+            }
+            if (getReceiptsRoot() != null
+                    ? !getReceiptsRoot().equals(header.getReceiptsRoot())
+                    : header.getReceiptsRoot() != null) {
+                return false;
+            }
+            if (getGasUsed() != null
+                    ? !getGasUsed().equals(header.getGasUsed()) : header.getGasUsed() != null) {
+                return false;
+            }
+            if (getReceiptsRoot() != null
+                    ? !getReceiptsRoot().equals(header.getReceiptsRoot())
+                    : header.getReceiptsRoot() != null) {
+                return false;
+            }
+            return (getProof() != null
+                    ? getProof().equals(header.getProof()) : header.getProof() == null);
         }
     }
 
@@ -234,6 +318,21 @@ public class EthBlock extends Response<EthBlock.Block> {
             int result = getTransactions() != null ? getTransactions().hashCode() : 0;
             return result;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Body)) {
+                return false;
+            }
+
+            Body body = (Body) o;
+            return (getTransactions() != null
+                    ? getTransactions().equals(body.getTransactions())
+                    : body.getTransactions() == null);
+        }
     }
 
     public static class Block {
@@ -242,10 +341,10 @@ public class EthBlock extends Response<EthBlock.Block> {
         private Header header;
         private Body body;
 
-        public Block(){
+        public Block() {
         }
 
-        public Block(String version, String hash, Header header, Body body){
+        public Block(String version, String hash, Header header, Body body) {
             this.version = version;
             this.hash = hash;
             this.header = header;
@@ -282,6 +381,33 @@ public class EthBlock extends Response<EthBlock.Block> {
 
         public void setBody(Body body) {
             this.body = body;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Block)) {
+                return false;
+            }
+
+            Block block = (Block) o;
+
+            if (getHeader() != null
+                    ? !getHeader().equals(block.getHeader()) : block.getHeader() != null) {
+                return false;
+            }
+            if (getBody() != null
+                    ? !getBody().equals(block.getBody()) : block.getBody() != null) {
+                return false;
+            }
+            if (getHash() != null
+                    ? !getHash().equals(block.getHash()) : block.getHash() != null) {
+                return false;
+            }
+            return (getVersion() != null
+                    ? getVersion().equals(block.getVersion()) : block.getVersion() == null);
         }
 
         @Override

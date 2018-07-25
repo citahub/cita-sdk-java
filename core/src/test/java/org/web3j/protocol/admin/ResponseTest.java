@@ -19,6 +19,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * Parity/Geth Shared Protocol Response tests.
  */
+
+/*
+ * Method tested in the file are used to do wallet management in console for ethereum.
+ * personal_xx rpc requests are not supported in CITA, so test case in the class is not required.
+ * I just keep admin tests(RequestTest, ResponseTest) if they added in the future.
+ * */
+
 public class ResponseTest extends ResponseTester {
 
     @Test

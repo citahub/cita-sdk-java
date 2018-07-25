@@ -21,10 +21,11 @@ public class TransactionEncoderTest {
                 createEtherTransaction(), SampleKeys.CREDENTIALS);
         String hexMessage = Numeric.toHexString(signedMessage);
         assertThat(hexMessage,
-                is("0xf85580010a840add5355887fffffffffffffff80"
-                        + "1c"
-                        + "a046360b50498ddf5566551ce1ce69c46c565f1f478bb0ee680caf31fbc08ab727"
-                        + "a01b2f1432de16d110407d544f519fc91b84c8e16d3b6ec899592d486a94974cd0"));
+                is("0xf86080010a840add5355933932323333373230333"
+                        + "63835343737353830378001a0dd9316183231a788f6"
+                        + "1b8797d8f91abac283159ad343eb19a09e048616c9a"
+                        + "fb7a01c9bf41469e6bdffd8e39c350c053c5b311cde"
+                        + "df481caea071fa43682afc1472"));
     }
 
     @Test
@@ -47,8 +48,9 @@ public class TransactionEncoderTest {
     public void testEip155Encode() {
         assertThat(TransactionEncoder.encode(createEip155RawTransaction(), (byte) 1),
                 is(Numeric.hexStringToByteArray(
-                        "0xec098504a817c800825208943535353535353535353535353535353535353535880de0"
-                                + "b6b3a764000080018080")));
+                        "f837098504a817c800825208943535353535353535"
+                                + "35353535353535353535353593313030303030303"
+                                + "0303030303030303030303080018080")));
     }
 
     @Test
@@ -56,32 +58,35 @@ public class TransactionEncoderTest {
         // https://github.com/ethereum/EIPs/issues/155
         Credentials credentials = Credentials.create(
                 "0x4646464646464646464646464646464646464646464646464646464646464646");
-
         assertThat(TransactionEncoder.signMessage(
                 createEip155RawTransaction(), (byte) 1, credentials),
-                is(Numeric.hexStringToByteArray(
-                        "0xf86c098504a817c800825208943535353535353535353535353535353535353535880"
-                                + "de0b6b3a76400008025a028ef61340bd939bc2195fe537567866003e1a15d"
-                                + "3c71ff63e1590620aa636276a067cbe9d8997f761aecb703304b3800ccf55"
-                                + "5c9f3dc64214b297fb1966a3b6d83")));
+                is(Numeric.hexStringToByteArray("f877098504a817c80082520894353535"
+                        + "353535353535353535353535353535353593313"
+                        + "0303030303030303030303030303030303080"
+                        + "0aa080f800b1b9cbd6a09d063f7f4857aa271"
+                        + "ffd34bedd7cbc65ec672f7c21f16798a017ac"
+                        + "2005fccd66cd6743d7cdde2cc47b75cee987e"
+                        + "161f7f0815d6e0accf24009")));
     }
 
     private static RawTransaction createEtherTransaction() {
         return RawTransaction.createEtherTransaction(
                 BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, "0xadd5355",
-                BigInteger.valueOf(Long.MAX_VALUE));
+                String.valueOf(Long.MAX_VALUE));
     }
 
     static RawTransaction createContractTransaction() {
         return RawTransaction.createContractTransaction(
-                BigInteger.ZERO, BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(Long.MAX_VALUE),
+                BigInteger.ZERO, BigInteger.ONE,
+                BigInteger.TEN, String.valueOf(Long.MAX_VALUE),
                 "01234566789");
     }
 
     private static RawTransaction createEip155RawTransaction() {
         return RawTransaction.createEtherTransaction(
                 BigInteger.valueOf(9), BigInteger.valueOf(20000000000L),
-                BigInteger.valueOf(21000), "0x3535353535353535353535353535353535353535",
-                BigInteger.valueOf(1000000000000000000L));
+                BigInteger.valueOf(21000),
+                "0x3535353535353535353535353535353535353535",
+                String.valueOf(1000000000000000000L));
     }
 }

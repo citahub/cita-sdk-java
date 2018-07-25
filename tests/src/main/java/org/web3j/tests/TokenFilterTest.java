@@ -1,5 +1,11 @@
 package org.web3j.tests;
 
+import java.math.BigInteger;
+import java.util.Properties;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -9,9 +15,6 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.CitaTransactionManager;
 import org.web3j.tx.TransactionManager;
 
-import java.math.BigInteger;
-import java.util.*;
-import java.util.concurrent.*;
 
 public class TokenFilterTest {
     private static Properties props;
@@ -28,10 +31,9 @@ public class TokenFilterTest {
     private static final String configPath = "tests/src/main/resources/config.properties";
 
     static {
-        try{
+        try {
             props = Config.load(configPath);
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Failed to read properties from config file");
             e.printStackTrace();
         }
@@ -48,12 +50,13 @@ public class TokenFilterTest {
         value = "0";
     }
 
-    static long getBalance(Credentials credentials){
+    static long getBalance(Credentials credentials) {
         long accountBalance = 0;
-        try{
-            CompletableFuture<BigInteger> balanceFuture = token.getBalance(credentials.getAddress()).sendAsync();
+        try {
+            CompletableFuture<BigInteger> balanceFuture =
+                    token.getBalance(credentials.getAddress()).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Failed to get balance of account: " + credentials.getAddress());
             e.printStackTrace();
             System.exit(1);
@@ -62,8 +65,14 @@ public class TokenFilterTest {
     }
 
     private void eventObserve() {
-        rx.Observable<Token.TransferEventResponse> observable = token.transferEventObservable(DefaultBlockParameter.valueOf(BigInteger.ONE), DefaultBlockParameterName.LATEST);
-        observable.subscribe(event -> System.out.println("Observable, TransferEvent(" + event._from + ", " + event._to + ", " + event._value.longValue() + ")"));
+        rx.Observable<Token.TransferEventResponse> observable =
+                token.transferEventObservable(
+                        DefaultBlockParameter.valueOf(BigInteger.ONE),
+                        DefaultBlockParameterName.LATEST);
+        observable.subscribe(
+                event -> System.out.println(
+                        "Observable, TransferEvent(" + event._from + ", "
+                                + event._to + ", " + event._value.longValue() + ")"));
     }
 
     private void randomTransferToken() {
@@ -72,16 +81,17 @@ public class TokenFilterTest {
         Credentials fromCredential = Credentials.create(payerPrivateKey);
         Credentials toCredential = Credentials.create(payeePrivateKey);
 
-        for(int i = 0; i < 20; i++){
+        for (int i = 0; i < 20; i++) {
             System.out.println("Transfer " + i);
             long fromBalance = getBalance(fromCredential);
-            long transferAmount = ThreadLocalRandom.current().nextLong(0, fromBalance);
+            long transferAmount = ThreadLocalRandom
+                    .current().nextLong(0, fromBalance);
             TransferEvent event = new TransferEvent(fromCredential, toCredential, transferAmount);
             System.out.println("Transaction " + event.toString() + " is being executing.");
             event.execute();
-            try{
+            try {
                 Thread.sleep(10000);
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Thread interrupted.");
             }
         }
@@ -89,27 +99,31 @@ public class TokenFilterTest {
 
 
     public static void main(String[] args) {
-        TransactionManager citaTxManager = new CitaTransactionManager(service, Credentials.create(payerPrivateKey), 5, 3000);
-        long validUtilBlock = testUtil.getValidUtilBlock(service).longValue();
-        BigInteger nonce = testUtil.getNonce();
+        TransactionManager citaTxManager = new CitaTransactionManager(
+                service, Credentials.create(payerPrivateKey), 5, 3000);
+        long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
+        BigInteger nonce = TestUtil.getNonce();
 
-        CompletableFuture<Token> tokenFuture = Token.deploy(service, citaTxManager, BigInteger.valueOf(1000000), nonce,
-                BigInteger.valueOf(validUtilBlock), BigInteger.valueOf(version), value, chainId).sendAsync();
+        CompletableFuture<Token> tokenFuture = Token.deploy(
+                service, citaTxManager, BigInteger.valueOf(1000000), nonce,
+                BigInteger.valueOf(validUtilBlock), BigInteger.valueOf(version),
+                value, chainId).sendAsync();
         TokenFilterTest tokenFilterTest = new TokenFilterTest();
 
         tokenFuture.whenCompleteAsync((contract, exception) -> {
-            if(exception != null){
+            if (exception != null) {
                 System.out.println("Failed to deploy the contract. Exception: " + exception);
                 exception.printStackTrace();
                 System.exit(1);
             }
             token = contract;
-            System.out.println("Contract deployment success. Contract address: " + contract.getContractAddress());
+            System.out.println("Contract deployment success. Contract address: "
+                    + contract.getContractAddress());
 
-            try{
+            try {
                 System.out.println("Contract initial state: ");
                 tokenFilterTest.randomTransferToken();
-            }catch(Exception e){
+            } catch (Exception e) {
                 System.out.println("Failed to get accounts balances");
                 e.printStackTrace();
                 System.exit(1);
@@ -118,28 +132,30 @@ public class TokenFilterTest {
         });
     }
 
-    private class TransferEvent{
+    private class TransferEvent {
         Credentials from;
         Credentials to;
         long tokens;
 
-        TransferEvent(Credentials from, Credentials to, long tokens){
+        TransferEvent(Credentials from, Credentials to, long tokens) {
             this.from = from;
             this.to = to;
             this.tokens = tokens;
         }
 
-        CompletableFuture<TransactionReceipt> execute(){
+        CompletableFuture<TransactionReceipt> execute() {
             Token tokenContract = TokenFilterTest.this.token;
-            BigInteger validUtilBlock = testUtil.getValidUtilBlock(TokenFilterTest.this.service);
-            BigInteger nonce = testUtil.getNonce();
-            return tokenContract.transfer(this.to.getAddress(), BigInteger.valueOf(tokens), TokenFilterTest.this.quota,
+            BigInteger validUtilBlock = TestUtil.getValidUtilBlock(TokenFilterTest.this.service);
+            BigInteger nonce = TestUtil.getNonce();
+            return tokenContract.transfer(
+                    this.to.getAddress(), BigInteger.valueOf(tokens), TokenFilterTest.this.quota,
                     nonce, validUtilBlock, BigInteger.valueOf(version), chainId, value).sendAsync();
         }
 
         @Override
-        public String toString(){
-            return "TransferEvent(" + this.from.getAddress() + ", " + this.to.getAddress() + ", " + this.tokens + ")";
+        public String toString() {
+            return "TransferEvent(" + this.from.getAddress()
+                    + ", " + this.to.getAddress() + ", " + this.tokens + ")";
         }
     }
 }

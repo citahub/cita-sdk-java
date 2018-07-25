@@ -175,7 +175,8 @@ public class Sign {
         int header = signatureData.getV() & 0xFF;
         // The header byte: 0x1B = first key with even y, 0x1C = first key with odd y,
         //                  0x1D = second key with even y, 0x1E = second key with odd y
-        if (header < 27 || header > 34) {
+        //if (header < 27 || header > 34) {
+        if (header < 0 || header > 34) {
             throw new SignatureException("Header byte out of range: " + header);
         }
 
@@ -184,7 +185,8 @@ public class Sign {
                 new BigInteger(1, signatureData.getS()));
 
         byte[] messageHash = Hash.sha3(message);
-        int recId = header - 27;
+        //int recId = header - 27;
+        int recId = header;
         BigInteger key = recoverFromSignature(recId, sig, messageHash);
         if (key == null) {
             throw new SignatureException("Could not recover public key from signature");

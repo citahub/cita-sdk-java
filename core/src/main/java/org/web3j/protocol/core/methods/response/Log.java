@@ -28,7 +28,8 @@ public class Log {
     }
 
     public Log(boolean removed, String logIndex, String transactionIndex, String transactionHash,
-               String blockHash, String blockNumber, String address, String data, String transactionLogIndex,
+               String blockHash, String blockNumber,
+               String address, String data, String transactionLogIndex,
                List<String> topics) {
         this.removed = removed;
         this.logIndex = logIndex;
@@ -186,7 +187,9 @@ public class Log {
         if (getData() != null ? !getData().equals(log.getData()) : log.getData() != null) {
             return false;
         }
-        if (getTransactionLogIndex() != null ? !getTransactionLogIndex().equals(log.getTransactionLogIndex()) : log.getTransactionLogIndex() != null) {
+        if (getTransactionLogIndex() != null
+                ? !getTransactionLogIndex().equals(log.getTransactionLogIndex())
+                : log.getTransactionLogIndex() != null) {
             return false;
         }
         return getTopics() != null ? getTopics().equals(log.getTopics()) : log.getTopics() == null;
@@ -203,7 +206,8 @@ public class Log {
         result = 31 * result + (getBlockNumberRaw() != null ? getBlockNumberRaw().hashCode() : 0);
         result = 31 * result + (getAddress() != null ? getAddress().hashCode() : 0);
         result = 31 * result + (getData() != null ? getData().hashCode() : 0);
-        result = 31 * result + (getTransactionLogIndex() != null ? getTransactionLogIndex().hashCode() : 0);
+        result = 31 * result + (getTransactionLogIndex() != null
+                ? getTransactionLogIndex().hashCode() : 0);
         result = 31 * result + (getTopics() != null ? getTopics().hashCode() : 0);
         return result;
     }

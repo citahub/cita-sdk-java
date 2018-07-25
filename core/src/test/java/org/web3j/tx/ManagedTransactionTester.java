@@ -50,7 +50,10 @@ public abstract class ManagedTransactionTester {
     @SuppressWarnings("unchecked")
     void prepareTransactionRequest() throws IOException {
         EthSendTransaction ethSendTransaction = new EthSendTransaction();
-        ethSendTransaction.setResult(TRANSACTION_HASH);
+        EthSendTransaction.SendTransactionResult sendTransactionResult =
+                new EthSendTransaction.SendTransactionResult();
+        ethSendTransaction.setResult(sendTransactionResult);
+        ethSendTransaction.getSendTransactionResult().setHash(TRANSACTION_HASH);
 
         Request<?, EthSendTransaction> rawTransactionRequest = mock(Request.class);
         when(rawTransactionRequest.send()).thenReturn(ethSendTransaction);
