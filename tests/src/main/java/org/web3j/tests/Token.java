@@ -1,10 +1,13 @@
 package org.web3j.tests;
 
+//CHECKSTYLE:OFF
+//close check for generated codes.
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.EventValues;
 import org.web3j.abi.TypeReference;
@@ -24,6 +27,7 @@ import org.web3j.tx.TransactionManager;
 import rx.Observable;
 import rx.functions.Func1;
 
+
 /**
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
@@ -42,8 +46,11 @@ public class Token extends Contract {
 
     public List<TransferEventResponse> getTransferEvents(TransactionReceipt transactionReceipt) {
         final Event event = new Event("Transfer",
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+                }, new TypeReference<Address>() {
+                }),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         List<EventValues> valueList = extractEventParameters(event, transactionReceipt);
         ArrayList<TransferEventResponse> responses = new ArrayList<TransferEventResponse>(valueList.size());
         for (EventValues eventValues : valueList) {
@@ -58,8 +65,11 @@ public class Token extends Contract {
 
     public Observable<TransferEventResponse> transferEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         final Event event = new Event("Transfer",
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
+                }, new TypeReference<Address>() {
+                }),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         AppFilter filter = new AppFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(event));
         return web3j.appLogObservable(filter).map(new Func1<Log, TransferEventResponse>() {
@@ -78,7 +88,8 @@ public class Token extends Contract {
     public RemoteCall<BigInteger> balances(String param0) {
         Function function = new Function("balances",
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(param0)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
@@ -94,7 +105,8 @@ public class Token extends Contract {
     public RemoteCall<BigInteger> getBalance(String account) {
         Function function = new Function("getBalance",
                 Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(account)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
+                }));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
