@@ -10,58 +10,22 @@ import rx.Observable;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.methods.request.Call;
-import org.web3j.protocol.core.methods.request.ShhFilter;
-import org.web3j.protocol.core.methods.request.ShhPost;
-import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.DbGetHex;
-import org.web3j.protocol.core.methods.response.DbGetString;
-import org.web3j.protocol.core.methods.response.DbPutHex;
-import org.web3j.protocol.core.methods.response.DbPutString;
-import org.web3j.protocol.core.methods.response.EthAccounts;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthBlockNumber;
-import org.web3j.protocol.core.methods.response.EthCoinbase;
-import org.web3j.protocol.core.methods.response.EthCompileLLL;
-import org.web3j.protocol.core.methods.response.EthCompileSerpent;
-import org.web3j.protocol.core.methods.response.EthCompileSolidity;
-import org.web3j.protocol.core.methods.response.EthEstimateGas;
-import org.web3j.protocol.core.methods.response.EthFilter;
-import org.web3j.protocol.core.methods.response.EthGasPrice;
-import org.web3j.protocol.core.methods.response.EthGetAbi;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByHash;
-import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByNumber;
-import org.web3j.protocol.core.methods.response.EthGetCode;
-import org.web3j.protocol.core.methods.response.EthGetCompilers;
-import org.web3j.protocol.core.methods.response.EthGetStorageAt;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockHash;
-import org.web3j.protocol.core.methods.response.EthGetUncleCountByBlockNumber;
-import org.web3j.protocol.core.methods.response.EthGetWork;
-import org.web3j.protocol.core.methods.response.EthHashrate;
-import org.web3j.protocol.core.methods.response.EthLog;
-import org.web3j.protocol.core.methods.response.EthMetaData;
-import org.web3j.protocol.core.methods.response.EthMining;
-import org.web3j.protocol.core.methods.response.EthProtocolVersion;
-import org.web3j.protocol.core.methods.response.EthSign;
-import org.web3j.protocol.core.methods.response.EthSubmitHashrate;
-import org.web3j.protocol.core.methods.response.EthSubmitWork;
-import org.web3j.protocol.core.methods.response.EthSyncing;
-import org.web3j.protocol.core.methods.response.EthTransaction;
-import org.web3j.protocol.core.methods.response.EthUninstallFilter;
+import org.web3j.protocol.core.methods.response.AppAccounts;
+import org.web3j.protocol.core.methods.response.AppBlock;
+import org.web3j.protocol.core.methods.response.AppBlockNumber;
+import org.web3j.protocol.core.methods.response.AppFilter;
+import org.web3j.protocol.core.methods.response.AppGetAbi;
+import org.web3j.protocol.core.methods.response.AppGetBalance;
+import org.web3j.protocol.core.methods.response.AppGetCode;
+import org.web3j.protocol.core.methods.response.AppGetTransactionCount;
+import org.web3j.protocol.core.methods.response.AppGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.AppLog;
+import org.web3j.protocol.core.methods.response.AppMetaData;
+import org.web3j.protocol.core.methods.response.AppSign;
+import org.web3j.protocol.core.methods.response.AppTransaction;
+import org.web3j.protocol.core.methods.response.AppUninstallFilter;
 import org.web3j.protocol.core.methods.response.Log;
-import org.web3j.protocol.core.methods.response.NetListening;
 import org.web3j.protocol.core.methods.response.NetPeerCount;
-import org.web3j.protocol.core.methods.response.NetVersion;
-import org.web3j.protocol.core.methods.response.ShhAddToGroup;
-import org.web3j.protocol.core.methods.response.ShhHasIdentity;
-import org.web3j.protocol.core.methods.response.ShhMessages;
-import org.web3j.protocol.core.methods.response.ShhNewFilter;
-import org.web3j.protocol.core.methods.response.ShhNewGroup;
-import org.web3j.protocol.core.methods.response.ShhNewIdentity;
-import org.web3j.protocol.core.methods.response.ShhUninstallFilter;
-import org.web3j.protocol.core.methods.response.ShhVersion;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.core.methods.response.Web3Sha3;
 import org.web3j.protocol.rx.JsonRpc2_0Rx;
@@ -113,23 +77,6 @@ public class JsonRpc2_0Web3j implements Web3j {
                 Web3Sha3.class);
     }
 
-    @Override
-    public Request<?, NetVersion> netVersion() {
-        return new Request<>(
-                "net_version",
-                Collections.<String>emptyList(),
-                web3jService,
-                NetVersion.class);
-    }
-
-    @Override
-    public Request<?, NetListening> netListening() {
-        return new Request<>(
-                "net_listening",
-                Collections.<String>emptyList(),
-                web3jService,
-                NetListening.class);
-    }
 
     @Override
     public Request<?, NetPeerCount> netPeerCount() {
@@ -140,231 +87,124 @@ public class JsonRpc2_0Web3j implements Web3j {
                 NetPeerCount.class);
     }
 
-    @Override
-    public Request<?, EthProtocolVersion> ethProtocolVersion() {
-        return new Request<>(
-                "eth_protocolVersion",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthProtocolVersion.class);
-    }
+
+    //2 methods: appAccount, appSign are not used
+    //keep them for wallet use in future.
 
     @Override
-    public Request<?, EthCoinbase> ethCoinbase() {
-        return new Request<>(
-                "eth_coinbase",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthCoinbase.class);
-    }
-
-    @Override
-    public Request<?, EthSyncing> ethSyncing() {
-        return new Request<>(
-                "eth_syncing",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthSyncing.class);
-    }
-
-    @Override
-    public Request<?, EthMining> ethMining() {
-        return new Request<>(
-                "eth_mining",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthMining.class);
-    }
-
-    @Override
-    public Request<?, EthHashrate> ethHashrate() {
-        return new Request<>(
-                "eth_hashrate",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthHashrate.class);
-    }
-
-    @Override
-    public Request<?, EthGasPrice> ethGasPrice() {
-        return new Request<>(
-                "eth_gasPrice",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthGasPrice.class);
-    }
-
-    @Override
-    public Request<?, EthAccounts> ethAccounts() {
+    public Request<?, AppAccounts> appAccounts() {
         return new Request<>(
                 "eth_accounts",
                 Collections.<String>emptyList(),
                 web3jService,
-                EthAccounts.class);
+                AppAccounts.class);
     }
 
     @Override
-    public Request<?, EthMetaData> ethMetaData(DefaultBlockParameter defaultBlockParameter) {
+    public Request<?, AppSign> appSign(String address, String sha3HashOfDataToSign) {
+        return new Request<>(
+                "eth_sign",
+                Arrays.asList(address, sha3HashOfDataToSign),
+                web3jService,
+                AppSign.class);
+    }
+
+    @Override
+    public Request<?, AppMetaData> appMetaData(DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "getMetaData",
                 Arrays.asList(defaultBlockParameter.getValue()),
                 web3jService,
-                EthMetaData.class);
+                AppMetaData.class);
     }
 
     @Override
-    public Request<?, EthBlockNumber> ethBlockNumber() {
+    public Request<?, AppBlockNumber> appBlockNumber() {
         return new Request<>(
                 "blockNumber",
                 Collections.<String>emptyList(),
                 web3jService,
-                EthBlockNumber.class);
+                AppBlockNumber.class);
     }
 
     @Override
-    public Request<?, EthGetBalance> ethGetBalance(
+    public Request<?, AppGetBalance> appGetBalance(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "getBalance",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 web3jService,
-                EthGetBalance.class);
+                AppGetBalance.class);
     }
 
     @Override
-    public Request<?, EthGetAbi> ethGetAbi(
+    public Request<?, AppGetAbi> appGetAbi(
             String contractAddress, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "getAbi",
                 Arrays.asList(contractAddress, defaultBlockParameter.getValue()),
                 web3jService,
-                EthGetAbi.class);
+                AppGetAbi.class);
     }
 
-    @Override
-    public Request<?, EthGetStorageAt> ethGetStorageAt(
-            String address, BigInteger position, DefaultBlockParameter defaultBlockParameter) {
-        return new Request<>(
-                "eth_getStorageAt",
-                Arrays.asList(
-                        address,
-                        Numeric.encodeQuantity(position),
-                        defaultBlockParameter.getValue()),
-                web3jService,
-                EthGetStorageAt.class);
-    }
 
     @Override
-    public Request<?, EthGetTransactionCount> ethGetTransactionCount(
+    public Request<?, AppGetTransactionCount> appGetTransactionCount(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "getTransactionCount",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 web3jService,
-                EthGetTransactionCount.class);
+                AppGetTransactionCount.class);
     }
 
-    @Override
-    public Request<?, EthGetBlockTransactionCountByHash> ethGetBlockTransactionCountByHash(
-            String blockHash) {
-        return new Request<>(
-                "eth_getBlockTransactionCountByHash",
-                Arrays.asList(blockHash),
-                web3jService,
-                EthGetBlockTransactionCountByHash.class);
-    }
 
     @Override
-    public Request<?, EthGetBlockTransactionCountByNumber> ethGetBlockTransactionCountByNumber(
-            DefaultBlockParameter defaultBlockParameter) {
-        return new Request<>(
-                "eth_getBlockTransactionCountByNumber",
-                Arrays.asList(defaultBlockParameter.getValue()),
-                web3jService,
-                EthGetBlockTransactionCountByNumber.class);
-    }
-
-    @Override
-    public Request<?, EthGetUncleCountByBlockHash> ethGetUncleCountByBlockHash(String blockHash) {
-        return new Request<>(
-                "eth_getUncleCountByBlockHash",
-                Arrays.asList(blockHash),
-                web3jService,
-                EthGetUncleCountByBlockHash.class);
-    }
-
-    @Override
-    public Request<?, EthGetUncleCountByBlockNumber> ethGetUncleCountByBlockNumber(
-            DefaultBlockParameter defaultBlockParameter) {
-        return new Request<>(
-                "eth_getUncleCountByBlockNumber",
-                Arrays.asList(defaultBlockParameter.getValue()),
-                web3jService,
-                EthGetUncleCountByBlockNumber.class);
-    }
-
-    @Override
-    public Request<?, EthGetCode> ethGetCode(
+    public Request<?, AppGetCode> appGetCode(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "getCode",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 web3jService,
-                EthGetCode.class);
+                AppGetCode.class);
     }
 
-    @Override
-    public Request<?, EthSign> ethSign(String address, String sha3HashOfDataToSign) {
-        return new Request<>(
-                "eth_sign",
-                Arrays.asList(address, sha3HashOfDataToSign),
-                web3jService,
-                EthSign.class);
-    }
+
+    //    @Override
+    //    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
+    //            ethSendTransaction(
+    //            Transaction transaction) {
+    //        return new Request<>(
+    //                "eth_sendTransaction",
+    //                Arrays.asList(transaction),
+    //                web3jService,
+    //                org.web3j.protocol.core.methods.response.EthSendTransaction.class);
+    //    }
 
     @Override
-    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
-            ethSendTransaction(
-            Transaction transaction) {
-        return new Request<>(
-                "eth_sendTransaction",
-                Arrays.asList(transaction),
-                web3jService,
-                org.web3j.protocol.core.methods.response.EthSendTransaction.class);
-    }
-
-    @Override
-    public Request<?, org.web3j.protocol.core.methods.response.EthSendTransaction>
-            ethSendRawTransaction(
+    public Request<?, org.web3j.protocol.core.methods.response.AppSendTransaction>
+            appSendRawTransaction(
             String signedTransactionData) {
         return new Request<>(
                 "sendRawTransaction",
                 Arrays.asList(signedTransactionData),
                 web3jService,
-                org.web3j.protocol.core.methods.response.EthSendTransaction.class);
+                org.web3j.protocol.core.methods.response.AppSendTransaction.class);
     }
 
     @Override
-    public Request<?, org.web3j.protocol.core.methods.response.EthCall> ethCall(
+    public Request<?, org.web3j.protocol.core.methods.response.AppCall> appCall(
             Call call, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "call",
                 Arrays.asList(call, defaultBlockParameter),
                 web3jService,
-                org.web3j.protocol.core.methods.response.EthCall.class);
+                org.web3j.protocol.core.methods.response.AppCall.class);
     }
 
-    @Override
-    public Request<?, EthEstimateGas> ethEstimateGas(Transaction transaction) {
-        return new Request<>(
-                "eth_estimateGas",
-                Arrays.asList(transaction),
-                web3jService,
-                EthEstimateGas.class);
-    }
 
     @Override
-    public Request<?, EthBlock> ethGetBlockByHash(
+    public Request<?, AppBlock> appGetBlockByHash(
             String blockHash, boolean returnFullTransactionObjects) {
         return new Request<>(
                 "getBlockByHash",
@@ -372,11 +212,11 @@ public class JsonRpc2_0Web3j implements Web3j {
                         blockHash,
                         returnFullTransactionObjects),
                 web3jService,
-                EthBlock.class);
+                AppBlock.class);
     }
 
     @Override
-    public Request<?, EthBlock> ethGetBlockByNumber(
+    public Request<?, AppBlock> appGetBlockByNumber(
             DefaultBlockParameter defaultBlockParameter,
             boolean returnFullTransactionObjects) {
         return new Request<>(
@@ -385,345 +225,105 @@ public class JsonRpc2_0Web3j implements Web3j {
                         defaultBlockParameter.getValue(),
                         returnFullTransactionObjects),
                 web3jService,
-                EthBlock.class);
+                AppBlock.class);
     }
 
     @Override
-    public Request<?, EthTransaction> ethGetTransactionByHash(String transactionHash) {
+    public Request<?, AppTransaction> appGetTransactionByHash(String transactionHash) {
         return new Request<>(
                 "getTransaction",
                 Arrays.asList(transactionHash),
                 web3jService,
-                EthTransaction.class);
+                AppTransaction.class);
     }
 
     @Override
-    public Request<?, EthTransaction> ethGetTransactionByBlockHashAndIndex(
-            String blockHash, BigInteger transactionIndex) {
-        return new Request<>(
-                "eth_getTransactionByBlockHashAndIndex",
-                Arrays.asList(
-                        blockHash,
-                        Numeric.encodeQuantity(transactionIndex)),
-                web3jService,
-                EthTransaction.class);
-    }
-
-    @Override
-    public Request<?, EthTransaction> ethGetTransactionByBlockNumberAndIndex(
-            DefaultBlockParameter defaultBlockParameter, BigInteger transactionIndex) {
-        return new Request<>(
-                "eth_getTransactionByBlockNumberAndIndex",
-                Arrays.asList(
-                        defaultBlockParameter.getValue(),
-                        Numeric.encodeQuantity(transactionIndex)),
-                web3jService,
-                EthTransaction.class);
-    }
-
-    @Override
-    public Request<?, EthGetTransactionReceipt> ethGetTransactionReceipt(String transactionHash) {
+    public Request<?, AppGetTransactionReceipt> appGetTransactionReceipt(String transactionHash) {
         return new Request<>(
                 "getTransactionReceipt",
                 Arrays.asList(transactionHash),
                 web3jService,
-                EthGetTransactionReceipt.class);
+                AppGetTransactionReceipt.class);
     }
 
     @Override
-    public Request<?, EthBlock> ethGetUncleByBlockHashAndIndex(
-            String blockHash, BigInteger transactionIndex) {
-        return new Request<>(
-                "eth_getUncleByBlockHashAndIndex",
-                Arrays.asList(
-                        blockHash,
-                        Numeric.encodeQuantity(transactionIndex)),
-                web3jService,
-                EthBlock.class);
-    }
-
-    @Override
-    public Request<?, EthBlock> ethGetUncleByBlockNumberAndIndex(
-            DefaultBlockParameter defaultBlockParameter, BigInteger uncleIndex) {
-        return new Request<>(
-                "eth_getUncleByBlockNumberAndIndex",
-                Arrays.asList(
-                        defaultBlockParameter.getValue(),
-                        Numeric.encodeQuantity(uncleIndex)),
-                web3jService,
-                EthBlock.class);
-    }
-
-    @Override
-    public Request<?, EthGetCompilers> ethGetCompilers() {
-        return new Request<>(
-                "eth_getCompilers",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthGetCompilers.class);
-    }
-
-    @Override
-    public Request<?, EthCompileLLL> ethCompileLLL(String sourceCode) {
-        return new Request<>(
-                "eth_compileLLL",
-                Arrays.asList(sourceCode),
-                web3jService,
-                EthCompileLLL.class);
-    }
-
-    @Override
-    public Request<?, EthCompileSolidity> ethCompileSolidity(String sourceCode) {
-        return new Request<>(
-                "eth_compileSolidity",
-                Arrays.asList(sourceCode),
-                web3jService,
-                EthCompileSolidity.class);
-    }
-
-    @Override
-    public Request<?, EthCompileSerpent> ethCompileSerpent(String sourceCode) {
-        return new Request<>(
-                "eth_compileSerpent",
-                Arrays.asList(sourceCode),
-                web3jService,
-                EthCompileSerpent.class);
-    }
-
-    @Override
-    public Request<?, EthFilter> ethNewFilter(
-            org.web3j.protocol.core.methods.request.EthFilter ethFilter) {
+    public Request<?, AppFilter> appNewFilter(
+            org.web3j.protocol.core.methods.request.AppFilter appFilter) {
         return new Request<>(
                 "newFilter",
-                Arrays.asList(ethFilter),
+                Arrays.asList(appFilter),
                 web3jService,
-                EthFilter.class);
+                AppFilter.class);
     }
 
     @Override
-    public Request<?, EthFilter> ethNewBlockFilter() {
+    public Request<?, AppFilter> appNewBlockFilter() {
         return new Request<>(
                 "newBlockFilter",
                 Collections.<String>emptyList(),
                 web3jService,
-                EthFilter.class);
+                AppFilter.class);
     }
 
-    @Override
-    public Request<?, EthFilter> ethNewPendingTransactionFilter() {
+    public Request<?, AppFilter> appNewPendingTransactionFilter() {
         return new Request<>(
                 "eth_newPendingTransactionFilter",
                 Collections.<String>emptyList(),
                 web3jService,
-                EthFilter.class);
+                AppFilter.class);
     }
 
     @Override
-    public Request<?, EthUninstallFilter> ethUninstallFilter(BigInteger filterId) {
+    public Request<?, AppUninstallFilter> appUninstallFilter(BigInteger filterId) {
         return new Request<>(
                 "uninstallFilter",
                 Arrays.asList(Numeric.encodeQuantity(filterId)),
                 web3jService,
-                EthUninstallFilter.class);
+                AppUninstallFilter.class);
     }
 
     @Override
-    public Request<?, EthLog> ethGetFilterChanges(BigInteger filterId) {
+    public Request<?, AppLog> appGetFilterChanges(BigInteger filterId) {
         return new Request<>(
                 "getFilterChanges",
                 Arrays.asList(Numeric.encodeQuantity(filterId)),
                 web3jService,
-                EthLog.class);
+                AppLog.class);
     }
 
     @Override
-    public Request<?, EthLog> ethGetFilterLogs(BigInteger filterId) {
+    public Request<?, AppLog> appGetFilterLogs(BigInteger filterId) {
         return new Request<>(
                 "getFilterLogs",
                 Arrays.asList(Numeric.encodeQuantity(filterId)),
                 web3jService,
-                EthLog.class);
+                AppLog.class);
     }
 
     @Override
-    public Request<?, EthLog> ethGetLogs(
-            org.web3j.protocol.core.methods.request.EthFilter ethFilter) {
+    public Request<?, AppLog> appGetLogs(
+            org.web3j.protocol.core.methods.request.AppFilter appFilter) {
         return new Request<>(
                 "getLogs",
-                Arrays.asList(ethFilter),
+                Arrays.asList(appFilter),
                 web3jService,
-                EthLog.class);
+                AppLog.class);
     }
 
     @Override
-    public Request<?, EthGetWork> ethGetWork() {
-        return new Request<>(
-                "eth_getWork",
-                Collections.<String>emptyList(),
-                web3jService,
-                EthGetWork.class);
+    public Observable<String> appBlockHashObservable() {
+        return web3jRx.appBlockHashObservable(blockTime);
     }
 
     @Override
-    public Request<?, EthSubmitWork> ethSubmitWork(
-            String nonce, String headerPowHash, String mixDigest) {
-        return new Request<>(
-                "eth_submitWork",
-                Arrays.asList(nonce, headerPowHash, mixDigest),
-                web3jService,
-                EthSubmitWork.class);
+    public Observable<String> appPendingTransactionHashObservable() {
+        return web3jRx.appPendingTransactionHashObservable(blockTime);
     }
 
     @Override
-    public Request<?, EthSubmitHashrate> ethSubmitHashrate(String hashrate, String clientId) {
-        return new Request<>(
-                "eth_submitHashrate",
-                Arrays.asList(hashrate, clientId),
-                web3jService,
-                EthSubmitHashrate.class);
-    }
-
-    @Override
-    public Request<?, DbPutString> dbPutString(
-            String databaseName, String keyName, String stringToStore) {
-        return new Request<>(
-                "db_putString",
-                Arrays.asList(databaseName, keyName, stringToStore),
-                web3jService,
-                DbPutString.class);
-    }
-
-    @Override
-    public Request<?, DbGetString> dbGetString(String databaseName, String keyName) {
-        return new Request<>(
-                "db_getString",
-                Arrays.asList(databaseName, keyName),
-                web3jService,
-                DbGetString.class);
-    }
-
-    @Override
-    public Request<?, DbPutHex> dbPutHex(String databaseName, String keyName, String dataToStore) {
-        return new Request<>(
-                "db_putHex",
-                Arrays.asList(databaseName, keyName, dataToStore),
-                web3jService,
-                DbPutHex.class);
-    }
-
-    @Override
-    public Request<?, DbGetHex> dbGetHex(String databaseName, String keyName) {
-        return new Request<>(
-                "db_getHex",
-                Arrays.asList(databaseName, keyName),
-                web3jService,
-                DbGetHex.class);
-    }
-
-    @Override
-    public Request<?, org.web3j.protocol.core.methods.response.ShhPost> shhPost(ShhPost shhPost) {
-        return new Request<>(
-                "shh_post",
-                Arrays.asList(shhPost),
-                web3jService,
-                org.web3j.protocol.core.methods.response.ShhPost.class);
-    }
-
-    @Override
-    public Request<?, ShhVersion> shhVersion() {
-        return new Request<>(
-                "shh_version",
-                Collections.<String>emptyList(),
-                web3jService,
-                ShhVersion.class);
-    }
-
-    @Override
-    public Request<?, ShhNewIdentity> shhNewIdentity() {
-        return new Request<>(
-                "shh_newIdentity",
-                Collections.<String>emptyList(),
-                web3jService,
-                ShhNewIdentity.class);
-    }
-
-    @Override
-    public Request<?, ShhHasIdentity> shhHasIdentity(String identityAddress) {
-        return new Request<>(
-                "shh_hasIdentity",
-                Arrays.asList(identityAddress),
-                web3jService,
-                ShhHasIdentity.class);
-    }
-
-    @Override
-    public Request<?, ShhNewGroup> shhNewGroup() {
-        return new Request<>(
-                "shh_newGroup",
-                Collections.<String>emptyList(),
-                web3jService,
-                ShhNewGroup.class);
-    }
-
-    @Override
-    public Request<?, ShhAddToGroup> shhAddToGroup(String identityAddress) {
-        return new Request<>(
-                "shh_addToGroup",
-                Arrays.asList(identityAddress),
-                web3jService,
-                ShhAddToGroup.class);
-    }
-
-    @Override
-    public Request<?, ShhNewFilter> shhNewFilter(ShhFilter shhFilter) {
-        return new Request<>(
-                "shh_newFilter",
-                Arrays.asList(shhFilter),
-                web3jService,
-                ShhNewFilter.class);
-    }
-
-    @Override
-    public Request<?, ShhUninstallFilter> shhUninstallFilter(BigInteger filterId) {
-        return new Request<>(
-                "shh_uninstallFilter",
-                Arrays.asList(Numeric.encodeQuantity(filterId)),
-                web3jService,
-                ShhUninstallFilter.class);
-    }
-
-    @Override
-    public Request<?, ShhMessages> shhGetFilterChanges(BigInteger filterId) {
-        return new Request<>(
-                "shh_getFilterChanges",
-                Arrays.asList(Numeric.encodeQuantity(filterId)),
-                web3jService,
-                ShhMessages.class);
-    }
-
-    @Override
-    public Request<?, ShhMessages> shhGetMessages(BigInteger filterId) {
-        return new Request<>(
-                "shh_getMessages",
-                Arrays.asList(Numeric.encodeQuantity(filterId)),
-                web3jService,
-                ShhMessages.class);
-    }
-
-    @Override
-    public Observable<String> ethBlockHashObservable() {
-        return web3jRx.ethBlockHashObservable(blockTime);
-    }
-
-    @Override
-    public Observable<String> ethPendingTransactionHashObservable() {
-        return web3jRx.ethPendingTransactionHashObservable(blockTime);
-    }
-
-    @Override
-    public Observable<Log> ethLogObservable(
-            org.web3j.protocol.core.methods.request.EthFilter ethFilter) {
-        return web3jRx.ethLogObservable(ethFilter, blockTime);
+    public Observable<Log> appLogObservable(
+            org.web3j.protocol.core.methods.request.AppFilter appFilter) {
+        return web3jRx.appLogObservable(appFilter, blockTime);
     }
 
     @Override
@@ -739,19 +339,19 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Observable<EthBlock> blockObservable(boolean fullTransactionObjects) {
+    public Observable<AppBlock> blockObservable(boolean fullTransactionObjects) {
         return web3jRx.blockObservable(fullTransactionObjects, blockTime);
     }
 
     @Override
-    public Observable<EthBlock> replayBlocksObservable(
+    public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
         return web3jRx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
     }
 
     @Override
-    public Observable<EthBlock> replayBlocksObservable(
+    public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
         return web3jRx.replayBlocksObservable(startBlock, endBlock,
@@ -766,15 +366,15 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Observable<EthBlock> catchUpToLatestBlockObservable(
+    public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<EthBlock> onCompleteObservable) {
+            Observable<AppBlock> onCompleteObservable) {
         return web3jRx.catchUpToLatestBlockObservable(
                 startBlock, fullTransactionObjects, onCompleteObservable);
     }
 
     @Override
-    public Observable<EthBlock> catchUpToLatestBlockObservable(
+    public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
         return web3jRx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
     }
@@ -786,7 +386,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Observable<EthBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
+    public Observable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
         return web3jRx.catchUpToLatestAndSubscribeToNewBlocksObservable(
                 startBlock, fullTransactionObjects, blockTime);

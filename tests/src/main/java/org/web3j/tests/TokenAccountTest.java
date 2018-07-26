@@ -9,7 +9,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.account.Account;
 import org.web3j.protocol.account.CompiledContract;
 import org.web3j.protocol.core.methods.response.AbiDefinition;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 
@@ -66,7 +66,7 @@ public class TokenAccountTest {
     private static TransactionReceipt waitToGetReceipt(
             String hash) throws Exception {
         Thread.sleep(10_000);
-        return service.ethGetTransactionReceipt(hash)
+        return service.appGetTransactionReceipt(hash)
                 .send().getTransactionReceipt().get();
     }
 
@@ -77,7 +77,7 @@ public class TokenAccountTest {
     }
 
     public String deployContract(String path) throws Exception {
-        EthSendTransaction ethSendTransaction = account.deploy(
+        AppSendTransaction ethSendTransaction = account.deploy(
                 new File(path), randomNonce(), quota, version, chainId, value);
         TransactionReceipt receipt = waitToGetReceipt(
                 ethSendTransaction.getSendTransactionResult().getHash());
@@ -95,7 +95,7 @@ public class TokenAccountTest {
     public void transfer(String toAddress, BigInteger amount)
             throws Exception {
         AbiDefinition transfer = tokenContract.getFunctionAbi("transfer", 2);
-        EthSendTransaction ethSendTransaction = (EthSendTransaction)
+        AppSendTransaction ethSendTransaction = (AppSendTransaction)
                 account.callContract(
                         contractAddress, transfer, randomNonce(),
                         quota, version, chainId, value, toAddress, amount);
@@ -120,7 +120,7 @@ public class TokenAccountTest {
     }
 
     public void transferRemote(String toAddress, BigInteger amount) throws Exception {
-        EthSendTransaction ethSendTransaction = (EthSendTransaction) account.callContract(
+        AppSendTransaction ethSendTransaction = (AppSendTransaction) account.callContract(
                 contractAddress, "transfer", randomNonce(),
                 quota, version, chainId, value, toAddress, amount);
         TransactionReceipt receipt = waitToGetReceipt(
@@ -142,8 +142,8 @@ public class TokenAccountTest {
     }
 
     public void storeAbiToBlockchain() throws Exception {
-        EthSendTransaction ethSendTransaction =
-                (EthSendTransaction) account.uploadAbi(
+        AppSendTransaction ethSendTransaction =
+                (AppSendTransaction) account.uploadAbi(
                         contractAddress, tokenContract.getAbi(),
                         randomNonce(), quota, version, chainId, value);
         TransactionReceipt receipt = waitToGetReceipt(
@@ -152,18 +152,20 @@ public class TokenAccountTest {
             System.out.println("call upload abi method failed because of "
                     + receipt.getErrorMessage());
             System.exit(1);
+        } else {
+            System.out.println("call upload abi method success. Receipt " + receipt);
         }
         System.out.println("call upload abi method success and receipt is "
                 + receipt.getTransactionHash());
     }
 
     public void getAbi() throws Exception {
+        System.out.println("Get Abi from address: " + contractAddress);
         String abi = account.getAbi(contractAddress);
         System.out.println("abi: " + abi);
     }
 
     public static void main(String[] args) throws Exception {
-
         // deploy contract with smart contract solidity file
         // and call method "transfer" with generated Abi
         String contractAddr = deployContractAndCallMethodFromSolidity();

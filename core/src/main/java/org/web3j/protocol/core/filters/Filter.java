@@ -16,9 +16,9 @@ import org.web3j.protocol.Web3j;
 
 import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
-import org.web3j.protocol.core.methods.response.EthFilter;
-import org.web3j.protocol.core.methods.response.EthLog;
-import org.web3j.protocol.core.methods.response.EthUninstallFilter;
+import org.web3j.protocol.core.methods.response.AppFilter;
+import org.web3j.protocol.core.methods.response.AppLog;
+import org.web3j.protocol.core.methods.response.AppUninstallFilter;
 
 
 /**
@@ -42,12 +42,12 @@ public abstract class Filter<T> {
 
     public void run(ScheduledExecutorService scheduledExecutorService, long blockTime) {
         try {
-            EthFilter ethFilter = sendRequest();
-            if (ethFilter.hasError()) {
-                throwException(ethFilter.getError());
+            AppFilter appFilter = sendRequest();
+            if (appFilter.hasError()) {
+                throwException(appFilter.getError());
             }
 
-            filterId = ethFilter.getFilterId();
+            filterId = appFilter.getFilterId();
             // this runs in the caller thread as if any exceptions are encountered, we shouldn't
             // proceed with creating the scheduled task below
             getInitialFilterLogs();
@@ -72,7 +72,7 @@ public abstract class Filter<T> {
             schedule = scheduledExecutorService.scheduleAtFixedRate(
                     () -> {
                         try {
-                            this.pollFilter(ethFilter);
+                            this.pollFilter(appFilter);
                         } catch (Throwable e) {
                             // All exceptions must be caught, otherwise our job terminates without
                             // any notification
@@ -87,55 +87,55 @@ public abstract class Filter<T> {
 
     private void getInitialFilterLogs() {
         try {
-            Optional<Request<?, EthLog>> maybeRequest = this.getFilterLogs(this.filterId);
-            EthLog ethLog = null;
+            Optional<Request<?, AppLog>> maybeRequest = this.getFilterLogs(this.filterId);
+            AppLog appLog = null;
             if (maybeRequest.isPresent()) {
-                ethLog = maybeRequest.get().send();
+                appLog = maybeRequest.get().send();
             } else {
-                ethLog = new EthLog();
-                ethLog.setResult(Collections.emptyList());
+                appLog = new AppLog();
+                appLog.setResult(Collections.emptyList());
             }
-            process(ethLog.getLogs());
+            process(appLog.getLogs());
 
         } catch (IOException e) {
             throwException(e);
         }
     }
 
-    private void pollFilter(EthFilter ethFilter) {
-        EthLog ethLog = null;
+    private void pollFilter(AppFilter appFilter) {
+        AppLog appLog = null;
         try {
-            ethLog = web3j.ethGetFilterChanges(filterId).send();
+            appLog = web3j.appGetFilterChanges(filterId).send();
         } catch (IOException e) {
             throwException(e);
         }
-        if (ethLog.hasError()) {
-            throwException(ethFilter.getError());
+        if (appLog.hasError()) {
+            throwException(appFilter.getError());
         } else {
-            process(ethLog.getLogs());
+            process(appLog.getLogs());
         }
     }
 
-    abstract EthFilter sendRequest() throws IOException;
+    abstract AppFilter sendRequest() throws IOException;
 
-    abstract void process(List<EthLog.LogResult> logResults);
+    abstract void process(List<AppLog.LogResult> logResults);
 
     public void cancel() {
         schedule.cancel(false);
 
-        EthUninstallFilter ethUninstallFilter = null;
+        AppUninstallFilter appUninstallFilter = null;
         try {
-            ethUninstallFilter = web3j.ethUninstallFilter(filterId).send();
+            appUninstallFilter = web3j.appUninstallFilter(filterId).send();
         } catch (IOException e) {
             throwException(e);
         }
 
-        if (ethUninstallFilter.hasError()) {
-            throwException(ethUninstallFilter.getError());
+        if (appUninstallFilter.hasError()) {
+            throwException(appUninstallFilter.getError());
         }
 
-        if (!ethUninstallFilter.isUninstalled()) {
-            throwException(ethUninstallFilter.getError());
+        if (!appUninstallFilter.isUninstalled()) {
+            throwException(appUninstallFilter.getError());
         }
     }
 
@@ -147,7 +147,7 @@ public abstract class Filter<T> {
      * @param filterId Id of the filter for which the historic log should be retrieved
      * @return Historic logs, or an empty optional if the filter cannot retrieve historic logs
      */
-    protected abstract Optional<Request<?, EthLog>> getFilterLogs(BigInteger filterId);
+    protected abstract Optional<Request<?, AppLog>> getFilterLogs(BigInteger filterId);
 
     void throwException(Response.Error error) {
         throw new FilterException("Invalid request: "

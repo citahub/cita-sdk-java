@@ -8,9 +8,9 @@ import org.web3j.crypto.SampleKeys;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.Request;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppGetTransactionCount;
+import org.web3j.protocol.core.methods.response.AppGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import static org.mockito.Matchers.any;
@@ -37,39 +37,39 @@ public abstract class ManagedTransactionTester {
 
     @SuppressWarnings("unchecked")
     void prepareNonceRequest() throws IOException {
-        EthGetTransactionCount ethGetTransactionCount = new EthGetTransactionCount();
+        AppGetTransactionCount ethGetTransactionCount = new AppGetTransactionCount();
         ethGetTransactionCount.setResult("0x1");
 
-        Request<?, EthGetTransactionCount> transactionCountRequest = mock(Request.class);
+        Request<?, AppGetTransactionCount> transactionCountRequest = mock(Request.class);
         when(transactionCountRequest.send())
                 .thenReturn(ethGetTransactionCount);
-        when(web3j.ethGetTransactionCount(SampleKeys.ADDRESS, DefaultBlockParameterName.PENDING))
+        when(web3j.appGetTransactionCount(SampleKeys.ADDRESS, DefaultBlockParameterName.PENDING))
                 .thenReturn((Request) transactionCountRequest);
     }
 
     @SuppressWarnings("unchecked")
     void prepareTransactionRequest() throws IOException {
-        EthSendTransaction ethSendTransaction = new EthSendTransaction();
-        EthSendTransaction.SendTransactionResult sendTransactionResult =
-                new EthSendTransaction.SendTransactionResult();
+        AppSendTransaction ethSendTransaction = new AppSendTransaction();
+        AppSendTransaction.SendTransactionResult sendTransactionResult =
+                new AppSendTransaction.SendTransactionResult();
         ethSendTransaction.setResult(sendTransactionResult);
         ethSendTransaction.getSendTransactionResult().setHash(TRANSACTION_HASH);
 
-        Request<?, EthSendTransaction> rawTransactionRequest = mock(Request.class);
+        Request<?, AppSendTransaction> rawTransactionRequest = mock(Request.class);
         when(rawTransactionRequest.send()).thenReturn(ethSendTransaction);
-        when(web3j.ethSendRawTransaction(any(String.class)))
+        when(web3j.appSendRawTransaction(any(String.class)))
                 .thenReturn((Request) rawTransactionRequest);
     }
 
     @SuppressWarnings("unchecked")
     void prepareTransactionReceipt(TransactionReceipt transactionReceipt) throws IOException {
-        EthGetTransactionReceipt ethGetTransactionReceipt = new EthGetTransactionReceipt();
+        AppGetTransactionReceipt ethGetTransactionReceipt = new AppGetTransactionReceipt();
         ethGetTransactionReceipt.setResult(transactionReceipt);
 
-        Request<?, EthGetTransactionReceipt> getTransactionReceiptRequest = mock(Request.class);
+        Request<?, AppGetTransactionReceipt> getTransactionReceiptRequest = mock(Request.class);
         when(getTransactionReceiptRequest.send())
                 .thenReturn(ethGetTransactionReceipt);
-        when(web3j.ethGetTransactionReceipt(TRANSACTION_HASH))
+        when(web3j.appGetTransactionReceipt(TRANSACTION_HASH))
                 .thenReturn((Request) getTransactionReceiptRequest);
     }
 }

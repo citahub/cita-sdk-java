@@ -8,8 +8,8 @@ import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppGetTransactionCount;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.tx.response.TransactionReceiptProcessor;
 import org.web3j.utils.Numeric;
 
@@ -67,14 +67,14 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     protected BigInteger getNonce() throws IOException {
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        AppGetTransactionCount ethGetTransactionCount = web3j.appGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
         return ethGetTransactionCount.getTransactionCount();
     }
 
     @Override
-    public EthSendTransaction sendTransaction(
+    public AppSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, String value) throws IOException {
 
@@ -91,7 +91,7 @@ public class RawTransactionManager extends TransactionManager {
         return signAndSend(rawTransaction);
     }
 
-    public EthSendTransaction signAndSend(RawTransaction rawTransaction)
+    public AppSendTransaction signAndSend(RawTransaction rawTransaction)
             throws IOException {
 
         byte[] signedMessage;
@@ -104,6 +104,6 @@ public class RawTransactionManager extends TransactionManager {
 
         String hexValue = Numeric.toHexString(signedMessage);
 
-        return web3j.ethSendRawTransaction(hexValue).send();
+        return web3j.appSendRawTransaction(hexValue).send();
     }
 }

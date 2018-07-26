@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.web3j.protocol.Web3j;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
 import org.web3j.tx.response.PollingTransactionReceiptProcessor;
@@ -16,6 +16,8 @@ import static org.web3j.protocol.core.JsonRpc2_0Web3j.DEFAULT_BLOCK_TIME;
  * Transaction manager abstraction for executing transactions with Ethereum client via
  * various mechanisms.
  */
+
+///TODO this class includes ethereum methods: remove them later
 public abstract class TransactionManager {
 
     public static final int DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH = 40;
@@ -48,7 +50,7 @@ public abstract class TransactionManager {
             String data, String value)
             throws IOException, TransactionException {
 
-        EthSendTransaction ethSendTransaction = sendTransaction(
+        AppSendTransaction ethSendTransaction = sendTransaction(
                 gasPrice, gasLimit, to, data, value);
         return processResponse(ethSendTransaction);
     }
@@ -59,22 +61,22 @@ public abstract class TransactionManager {
             BigInteger nonce, BigInteger validUntilBlock,
             BigInteger version, int chainId, String value)
             throws IOException, TransactionException {
-        EthSendTransaction ethSendTransaction = sendTransaction(
+        AppSendTransaction ethSendTransaction = sendTransaction(
                 to, data, quota, nonce, validUntilBlock, version, chainId, value);
         return processResponse(ethSendTransaction);
     }
 
     // adapt to cita, return empty EthSendTransaction default,
     // only CitaTransactionManager will override this method
-    public EthSendTransaction sendTransaction(
+    public AppSendTransaction sendTransaction(
             String to, String data, BigInteger quota,
             BigInteger nonce, BigInteger validUntilBlock,
             BigInteger version, int chainId, String value)
             throws IOException {
-        return new EthSendTransaction();
+        return new AppSendTransaction();
     }
 
-    public abstract EthSendTransaction sendTransaction(
+    public abstract AppSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, String value)
             throws IOException;
@@ -83,7 +85,7 @@ public abstract class TransactionManager {
         return fromAddress;
     }
 
-    private TransactionReceipt processResponse(EthSendTransaction transactionResponse)
+    private TransactionReceipt processResponse(AppSendTransaction transactionResponse)
             throws IOException, TransactionException {
         if (transactionResponse.hasError()) {
             throw new RuntimeException("Error processing transaction request: "

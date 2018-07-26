@@ -19,7 +19,7 @@ import org.web3j.protocol.core.DefaultBlockParameterNumber;
 import org.web3j.protocol.core.filters.BlockFilter;
 import org.web3j.protocol.core.filters.LogFilter;
 import org.web3j.protocol.core.filters.PendingTransactionFilter;
-import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.AppBlock;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.Transaction;
 import org.web3j.utils.Observables;
@@ -39,7 +39,7 @@ public class JsonRpc2_0Rx {
         this.scheduler = Schedulers.from(scheduledExecutorService);
     }
 
-    public Observable<String> ethBlockHashObservable(long pollingInterval) {
+    public Observable<String> appBlockHashObservable(long pollingInterval) {
         return Observable.create(subscriber -> {
             BlockFilter blockFilter = new BlockFilter(
                     web3j, subscriber::onNext);
@@ -47,7 +47,7 @@ public class JsonRpc2_0Rx {
         });
     }
 
-    public Observable<String> ethPendingTransactionHashObservable(long pollingInterval) {
+    public Observable<String> appPendingTransactionHashObservable(long pollingInterval) {
         return Observable.create(subscriber -> {
             PendingTransactionFilter pendingTransactionFilter = new PendingTransactionFilter(
                     web3j, subscriber::onNext);
@@ -56,11 +56,11 @@ public class JsonRpc2_0Rx {
         });
     }
 
-    public Observable<Log> ethLogObservable(
-            org.web3j.protocol.core.methods.request.EthFilter ethFilter, long pollingInterval) {
+    public Observable<Log> appLogObservable(
+            org.web3j.protocol.core.methods.request.AppFilter appFilter, long pollingInterval) {
         return Observable.create((Subscriber<? super Log> subscriber) -> {
             LogFilter logFilter = new LogFilter(
-                    web3j, subscriber::onNext, ethFilter);
+                    web3j, subscriber::onNext, appFilter);
 
             run(logFilter, subscriber, pollingInterval);
         });
@@ -80,26 +80,26 @@ public class JsonRpc2_0Rx {
     }
 
     public Observable<Transaction> pendingTransactionObservable(long pollingInterval) {
-        return ethPendingTransactionHashObservable(pollingInterval)
+        return appPendingTransactionHashObservable(pollingInterval)
                 .flatMap(transactionHash ->
-                        web3j.ethGetTransactionByHash(transactionHash).observable())
-                .map(ethTransaction -> ethTransaction.getTransaction().get());
+                        web3j.appGetTransactionByHash(transactionHash).observable())
+                .map(appTransaction -> appTransaction.getTransaction().get());
     }
 
-    public Observable<EthBlock> blockObservable(
+    public Observable<AppBlock> blockObservable(
             boolean fullTransactionObjects, long pollingInterval) {
-        return ethBlockHashObservable(pollingInterval)
+        return appBlockHashObservable(pollingInterval)
                 .flatMap(blockHash ->
-                        web3j.ethGetBlockByHash(blockHash, fullTransactionObjects).observable());
+                        web3j.appGetBlockByHash(blockHash, fullTransactionObjects).observable());
     }
 
-    public Observable<EthBlock> replayBlocksObservable(
+    public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
         return replayBlocksObservable(startBlock, endBlock, fullTransactionObjects, true);
     }
 
-    public Observable<EthBlock> replayBlocksObservable(
+    public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
         // We use a scheduler to ensure this Observable runs asynchronously for users to be
@@ -108,13 +108,13 @@ public class JsonRpc2_0Rx {
                 .subscribeOn(scheduler);
     }
 
-    private Observable<EthBlock> replayBlocksObservableSync(
+    private Observable<AppBlock> replayBlocksObservableSync(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
         return replayBlocksObservableSync(startBlock, endBlock, fullTransactionObjects, true);
     }
 
-    private Observable<EthBlock> replayBlocksObservableSync(
+    private Observable<AppBlock> replayBlocksObservableSync(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
 
@@ -129,12 +129,12 @@ public class JsonRpc2_0Rx {
 
         if (ascending) {
             return Observables.range(startBlockNumber, endBlockNumber)
-                    .flatMap(i -> web3j.ethGetBlockByNumber(
+                    .flatMap(i -> web3j.appGetBlockByNumber(
                             new DefaultBlockParameterNumber(i),
                             fullTransactionObjects).observable());
         } else {
             return Observables.range(startBlockNumber, endBlockNumber, false)
-                    .flatMap(i -> web3j.ethGetBlockByNumber(
+                    .flatMap(i -> web3j.appGetBlockByNumber(
                             new DefaultBlockParameterNumber(i),
                             fullTransactionObjects).observable());
         }
@@ -146,9 +146,9 @@ public class JsonRpc2_0Rx {
                 .flatMapIterable(JsonRpc2_0Rx::toTransactions);
     }
 
-    public Observable<EthBlock> catchUpToLatestBlockObservable(
+    public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<EthBlock> onCompleteObservable) {
+            Observable<AppBlock> onCompleteObservable) {
         // We use a scheduler to ensure this Observable runs asynchronously for users to be
         // consistent with the other Observables
         return catchUpToLatestBlockObservableSync(
@@ -156,15 +156,15 @@ public class JsonRpc2_0Rx {
                 .subscribeOn(scheduler);
     }
 
-    public Observable<EthBlock> catchUpToLatestBlockObservable(
+    public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
         return catchUpToLatestBlockObservable(
                 startBlock, fullTransactionObjects, Observable.empty());
     }
 
-    private Observable<EthBlock> catchUpToLatestBlockObservableSync(
+    private Observable<AppBlock> catchUpToLatestBlockObservableSync(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<EthBlock> onCompleteObservable) {
+            Observable<AppBlock> onCompleteObservable) {
 
         BigInteger startBlockNumber;
         BigInteger latestBlockNumber;
@@ -197,7 +197,7 @@ public class JsonRpc2_0Rx {
                 .flatMapIterable(JsonRpc2_0Rx::toTransactions);
     }
 
-    public Observable<EthBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
+    public Observable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
             long pollingInterval) {
 
@@ -222,16 +222,16 @@ public class JsonRpc2_0Rx {
         if (defaultBlockParameter instanceof DefaultBlockParameterNumber) {
             return ((DefaultBlockParameterNumber) defaultBlockParameter).getBlockNumber();
         } else {
-            EthBlock latestEthBlock = web3j.ethGetBlockByNumber(
+            AppBlock latestEthBlock = web3j.appGetBlockByNumber(
                     defaultBlockParameter, false).send();
             return latestEthBlock.getBlock().getHeader().getNumberDec();
         }
     }
 
-    private static List<Transaction> toTransactions(EthBlock ethBlock) {
+    private static List<Transaction> toTransactions(AppBlock appBlock) {
         // If you ever see an exception thrown here, it's probably due to an incomplete chain in
         // Geth/Parity. You should resync to solve.
-        return ethBlock.getBlock().getBody().getTransactions().stream()
+        return appBlock.getBlock().getBody().getTransactions().stream()
                 .map(transactionResult -> (Transaction) transactionResult.get())
                 .collect(Collectors.toList());
     }

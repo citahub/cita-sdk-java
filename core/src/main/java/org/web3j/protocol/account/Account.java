@@ -22,17 +22,19 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.AppFilter;
 import org.web3j.protocol.core.methods.request.Call;
-import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.AbiDefinition;
-import org.web3j.protocol.core.methods.response.EthCall;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppCall;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.tx.CitaTransactionManager;
 import org.web3j.utils.TypedAbi;
 
 public class Account {
-    private static final String ABI_ADDRESS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+//    private static final String ABI_ADDRESS = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
     private CitaTransactionManager transactionManager;
     private Web3j service;
     private String abi;
@@ -47,8 +49,8 @@ public class Account {
         return transactionManager;
     }
 
-    /// TODO: get contract address from receipt after deploy, then return contract name(ENS)
-    public EthSendTransaction deploy(
+    /// TODO: get contract address from receipt after deploy, then return contract name
+    public AppSendTransaction deploy(
             File contractFile, BigInteger nonce, BigInteger quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
@@ -59,7 +61,7 @@ public class Account {
                         BigInteger.valueOf(version), chainId, value);
     }
 
-    public CompletableFuture<EthSendTransaction> deployAsync(
+    public CompletableFuture<AppSendTransaction> deployAsync(
             File contractFile, BigInteger nonce, BigInteger quota,
             BigInteger version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
@@ -123,7 +125,7 @@ public class Account {
     public Object ethCall(String contractAddress, Function func, List<TypedAbi.ArgRetType> retsType)
             throws IOException {
         String data = FunctionEncoder.encode(func);
-        EthCall call = this.service.ethCall(new Call(this.transactionManager.getFromAddress(),
+        AppCall call = this.service.appCall(new Call(this.transactionManager.getFromAddress(),
                 contractAddress, data), DefaultBlockParameterName.LATEST).send();
         String value = call.getValue();
         List<Type> abiValues = FunctionReturnDecoder.decode(value, func.getOutputParameters());
@@ -158,7 +160,7 @@ public class Account {
     }
 
     public String getAbi(String contractAddress) throws IOException {
-        String abi = service.ethGetAbi(
+        String abi = service.appGetAbi(
                 contractAddress, DefaultBlockParameter.valueOf("latest")).send().getAbi();
         return new String(hexStrToBytes(hex_remove_0x(abi)));
     }
@@ -186,10 +188,10 @@ public class Account {
             event.add(namedType.isIndexed(), argRetType.getTypeReference());
         }
 
-        EthFilter filter = new EthFilter(start, end, contractAddress);
+        AppFilter filter = new AppFilter(start, end, contractAddress);
         /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after web3j fixed
         filter.addSingleTopic(EventEncoder.encode(event));
-        return this.service.ethLogObservable(filter).map(log -> {
+        return this.service.appLogObservable(filter).map(log -> {
             EventValues eventValues = staticExtractEventParameters(event, log);
             List<Type> indexedValues = eventValues.getIndexedValues();
             List<Type> nonIndexedValues = eventValues.getNonIndexedValues();
@@ -245,13 +247,13 @@ public class Account {
         return new CompiledContract("");
     }
 
-    /// TODO: get contract address from ENS
+    /// TODO: get contract address
     private String getContractAddress(String contractName) {
         return "";
     }
 
     private long blockHeight() throws IOException {
-        return this.service.ethBlockNumber().send().getBlockNumber().longValue();
+        return this.service.appBlockNumber().send().getBlockNumber().longValue();
     }
 
     private BigInteger getValidUntilBlock() throws IOException {

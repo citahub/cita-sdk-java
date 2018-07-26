@@ -23,7 +23,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.request.Call;
-import org.web3j.protocol.core.methods.response.EthGetCode;
+import org.web3j.protocol.core.methods.response.AppGetCode;
 import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.exceptions.TransactionException;
@@ -132,8 +132,8 @@ public abstract class Contract extends ManagedTransaction {
                             + "contract wrapper with web3j v2.2.0+");
         }
 
-        EthGetCode ethGetCode = web3j
-                .ethGetCode(contractAddress, DefaultBlockParameterName.LATEST)
+        AppGetCode ethGetCode = web3j
+                .appGetCode(contractAddress, DefaultBlockParameterName.LATEST)
                 .send();
         if (ethGetCode.hasError()) {
             return false;
@@ -165,8 +165,8 @@ public abstract class Contract extends ManagedTransaction {
     private List<Type> executeCall(
             Function function) throws IOException {
         String encodedFunction = FunctionEncoder.encode(function);
-        org.web3j.protocol.core.methods.response.EthCall ethCall =
-                web3j.ethCall(
+        org.web3j.protocol.core.methods.response.AppCall ethCall =
+                web3j.appCall(
                         new Call(transactionManager.getFromAddress(),
                                 contractAddress, encodedFunction),
                         DefaultBlockParameterName.LATEST).send();

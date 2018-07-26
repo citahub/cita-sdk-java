@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.tx.response.TransactionReceiptProcessor;
 
 /**
@@ -37,7 +37,7 @@ public class ClientTransactionManager extends TransactionManager {
     }
 
     @Override
-    public EthSendTransaction sendTransaction(
+    public AppSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to,
             String data, String value)
             throws IOException {
@@ -46,7 +46,8 @@ public class ClientTransactionManager extends TransactionManager {
         Transaction transaction = new Transaction(
                 to, BigInteger.valueOf(1), 1000000, 99, 0, 1, "0", data);
 
-        return web3j.ethSendTransaction(transaction)
+        //there is no method sendTransaction in cita so remote this
+        return web3j.appSendRawTransaction("fake data")
                 .send();
     }
 }
