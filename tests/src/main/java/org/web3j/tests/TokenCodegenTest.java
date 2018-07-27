@@ -72,7 +72,7 @@ public class TokenCodegenTest {
     }
 
     static BigInteger getCurrentHeight() throws Exception {
-        return service.ethBlockNumber().send().getBlockNumber();
+        return service.appBlockNumber().send().getBlockNumber();
     }
 
     static long getBalance(Credentials credentials) {

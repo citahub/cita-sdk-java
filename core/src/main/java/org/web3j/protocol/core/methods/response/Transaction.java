@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import org.web3j.utils.Numeric;
 
 /**
- * Transaction object used by both {@link EthTransaction} and {@link EthBlock}.
+ * Transaction object used by both {@link AppTransaction} and {@link AppBlock}.
  */
 public class Transaction {
     private String hash;

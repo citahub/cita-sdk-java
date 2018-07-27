@@ -20,7 +20,7 @@ public class TestUtil {
         long height = -1;
         while (count < retry) {
             try {
-                height = service.ethBlockNumber().send().getBlockNumber().longValue();
+                height = service.appBlockNumber().send().getBlockNumber().longValue();
             } catch (Exception e) {
                 height = -1;
                 System.out.println("getBlockNumber failed retry ..");

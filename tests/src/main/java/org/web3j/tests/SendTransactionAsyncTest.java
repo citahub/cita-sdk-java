@@ -9,8 +9,8 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppGetBalance;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.response.PollingTransactionReceiptProcessor;
@@ -45,7 +45,7 @@ public class SendTransactionAsyncTest {
     static BigInteger getBalance(String address) {
         BigInteger balance = null;
         try {
-            EthGetBalance response = service.ethGetBalance(
+            AppGetBalance response = service.appGetBalance(
                     address, DefaultBlockParameterName.LATEST).send();
             balance = response.getBalance();
         } catch (Exception e) {
@@ -73,8 +73,8 @@ public class SendTransactionAsyncTest {
                 "");
 
         String rawTx = tx.sign(payerKey, false, false);
-        EthSendTransaction ethSendTrasnction = service
-                .ethSendRawTransaction(rawTx).send();
+        AppSendTransaction ethSendTrasnction = service
+                .appSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
                 .waitForTransactionReceipt(
@@ -92,8 +92,8 @@ public class SendTransactionAsyncTest {
     public static void main(String[] args) {
         Credentials payerCredential = Credentials.create(payerKey);
         String payerAddr = payerCredential.getAddress();
-        System.out.println(getBalance(payerAddr));
-        System.out.println(getBalance(payeeAddr));
+        System.out.println(Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+        System.out.println(Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
 
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
@@ -103,8 +103,10 @@ public class SendTransactionAsyncTest {
         receiptFuture.whenCompleteAsync((data, exception) -> {
             if (exception == null) {
                 if (data.getErrorMessage() == null) {
-                    System.out.println(getBalance(payerAddr));
-                    System.out.println(getBalance(payeeAddr));
+                    System.out.println(
+                            Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+                    System.out.println(
+                            Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
                 } else {
                     System.out.println("Error get receipt: " + data.getErrorMessage());
                 }

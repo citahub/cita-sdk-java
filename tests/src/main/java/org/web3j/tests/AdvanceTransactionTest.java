@@ -82,7 +82,7 @@ public class AdvanceTransactionTest {
 
         String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
 
-        return service.ethSendRawTransaction(rawTx)
+        return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
     }
 
@@ -110,7 +110,7 @@ public class AdvanceTransactionTest {
                 resetFuncData);
         String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
 
-        return service.ethSendRawTransaction(rawTx)
+        return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
     }
 
@@ -138,7 +138,7 @@ public class AdvanceTransactionTest {
                 addFuncData);
         String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
 
-        service.ethSendRawTransaction(rawTx).send();
+        service.appSendRawTransaction(rawTx).send();
     }
 
     // eth_call
@@ -146,14 +146,14 @@ public class AdvanceTransactionTest {
             String from, String contractAddress, String callData)
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
-        return service.ethCall(
+        return service.appCall(
                 call, DefaultBlockParameter.valueOf("latest")).send().getValue();
     }
 
     // Get transaction receipt
     private TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
-        return service.ethGetTransactionReceipt(txHash)
+        return service.appGetTransactionReceipt(txHash)
                 .send().getTransactionReceipt().get();
     }
 
@@ -181,7 +181,7 @@ public class AdvanceTransactionTest {
         int countForContractDeployment = 0;
         while (true) {
             Optional<TransactionReceipt> receipt = service
-                    .ethGetTransactionReceipt(deployContractTxHash)
+                    .appGetTransactionReceipt(deployContractTxHash)
                     .send().getTransactionReceipt();
             if (receipt.isPresent()) {
                 TransactionReceipt deployTxReceipt = receipt.get();
@@ -210,7 +210,7 @@ public class AdvanceTransactionTest {
         int countForResetFunctionCall = 0;
         while (true) {
             Optional<TransactionReceipt> receipt = service
-                    .ethGetTransactionReceipt(resetTxHash)
+                    .appGetTransactionReceipt(resetTxHash)
                     .send().getTransactionReceipt();
             if (receipt.isPresent()) {
                 TransactionReceipt resetTxReceipt = receipt.get();

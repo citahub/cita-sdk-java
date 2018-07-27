@@ -72,7 +72,7 @@ public class TokenTransactionTest {
     }
 
     static String deployContract(String contractCode) throws Exception {
-        long currentHeight = service.ethBlockNumber().send()
+        long currentHeight = service.appBlockNumber().send()
                 .getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
         BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
@@ -81,19 +81,19 @@ public class TokenTransactionTest {
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
         String rawTx = tx.sign(privateKey, false, false);
-        return service.ethSendRawTransaction(rawTx)
+        return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
     }
 
     static TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
-        return service.ethGetTransactionReceipt(txHash)
+        return service.appGetTransactionReceipt(txHash)
                 .send().getTransactionReceipt().get();
     }
 
     static String contractFunctionCall(
             String contractAddress, String funcCallData) throws Exception {
-        long currentHeight = service.ethBlockNumber()
+        long currentHeight = service.appBlockNumber()
                 .send().getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
         BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
@@ -104,7 +104,7 @@ public class TokenTransactionTest {
                 version, chainId, value, funcCallData);
         String rawTx = tx.sign(privateKey, false, false);
 
-        return service.ethSendRawTransaction(rawTx)
+        return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
     }
 
@@ -124,7 +124,7 @@ public class TokenTransactionTest {
             String from, String contractAddress, String callData)
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
-        return service.ethCall(call, DefaultBlockParameter.valueOf("latest")).send().getValue();
+        return service.appCall(call, DefaultBlockParameter.valueOf("latest")).send().getValue();
     }
 
     static String getBalance(String fromAddr, String contractAddress) throws Exception {

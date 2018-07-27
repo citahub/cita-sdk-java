@@ -21,16 +21,16 @@ import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Call;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.core.methods.response.EthBlockNumber;
-import org.web3j.protocol.core.methods.response.EthCall;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthGetCode;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
-import org.web3j.protocol.core.methods.response.EthMetaData;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
-import org.web3j.protocol.core.methods.response.EthTransaction;
+import org.web3j.protocol.core.methods.response.AppBlock;
+import org.web3j.protocol.core.methods.response.AppBlockNumber;
+import org.web3j.protocol.core.methods.response.AppCall;
+import org.web3j.protocol.core.methods.response.AppGetBalance;
+import org.web3j.protocol.core.methods.response.AppGetCode;
+import org.web3j.protocol.core.methods.response.AppGetTransactionCount;
+import org.web3j.protocol.core.methods.response.AppGetTransactionReceipt;
+import org.web3j.protocol.core.methods.response.AppMetaData;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
+import org.web3j.protocol.core.methods.response.AppTransaction;
 import org.web3j.protocol.core.methods.response.NetPeerCount;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
@@ -176,38 +176,38 @@ public class InterfaceTest {
     static void testGetBalance() throws Exception {
         Credentials c = Credentials.create(privateKey);
         String addr = c.getAddress();
-        EthGetBalance ethGetbalance = service.ethGetBalance(
+        AppGetBalance appGetbalance = service.appGetBalance(
                 addr, DefaultBlockParameterName.LATEST).send();
-        if (ethGetbalance == null) {
+        if (appGetbalance == null) {
             System.out.println("the result is null");
         } else {
-            BigInteger balance = ethGetbalance.getBalance();
+            BigInteger balance = appGetbalance.getBalance();
             System.out.println("Balance for addr " + addr + "is " + balance);
         }
     }
 
     //1.  getMetaData
     static void testMetaData() throws Exception {
-        EthMetaData ethMetaData = service.ethMetaData(DefaultBlockParameterName.LATEST).send();
-        if (ethMetaData == null) {
+        AppMetaData appMetaData = service.appMetaData(DefaultBlockParameterName.LATEST).send();
+        if (appMetaData == null) {
             System.out.println("the result is null");
         } else {
             System.out.println("BasicToken: "
-                    + ethMetaData.getEthMetaDataResult().basicToken);
+                    + appMetaData.getEthMetaDataResult().basicToken);
             System.out.println("ChainName: "
-                    + ethMetaData.getEthMetaDataResult().chainName);
+                    + appMetaData.getEthMetaDataResult().chainName);
             System.out.println("Genesis TS: "
-                    + ethMetaData.getEthMetaDataResult().genesisTimestamp);
+                    + appMetaData.getEthMetaDataResult().genesisTimestamp);
             System.out.println("Operator: "
-                    + ethMetaData.getEthMetaDataResult().operator);
+                    + appMetaData.getEthMetaDataResult().operator);
             System.out.println("Website: "
-                    + ethMetaData.getEthMetaDataResult().website);
+                    + appMetaData.getEthMetaDataResult().website);
             System.out.println("Block Interval: "
-                    + ethMetaData.getEthMetaDataResult().blockInterval);
+                    + appMetaData.getEthMetaDataResult().blockInterval);
             System.out.println("Chain Id: "
-                    + ethMetaData.getEthMetaDataResult().chainId);
+                    + appMetaData.getEthMetaDataResult().chainId);
             System.out.println("Validators: ");
-            Arrays.asList(ethMetaData.getEthMetaDataResult().validators)
+            Arrays.asList(appMetaData.getEthMetaDataResult().validators)
                     .stream()
                     .forEach(x -> System.out.println("Address: " + x.toString()));
         }
@@ -222,14 +222,14 @@ public class InterfaceTest {
     //2.  blockNumber
     static BigInteger testBlockNumber() throws Exception {
 
-        EthBlockNumber ethBlockNumber = service.ethBlockNumber().send();
+        AppBlockNumber appBlockNumber = service.appBlockNumber().send();
 
         BigInteger validBlockNumber = BigInteger.valueOf(Long.MAX_VALUE);
 
-        if (ethBlockNumber.isEmpty()) {
+        if (appBlockNumber.isEmpty()) {
             System.out.println("the result is null");
         } else {
-            validBlockNumber = ethBlockNumber.getBlockNumber();
+            validBlockNumber = appBlockNumber.getBlockNumber();
             System.out.println("blockNumber:" + validBlockNumber);
         }
         return validBlockNumber;
@@ -239,14 +239,14 @@ public class InterfaceTest {
     public static Optional<String> testEthGetBlockByNumber(
             BigInteger validBlockNumber, boolean isfullTranobj)
             throws Exception {
-        EthBlock ethBlock = service.ethGetBlockByNumber(
+        AppBlock appBlock = service.appGetBlockByNumber(
                 DefaultBlockParameter.valueOf(validBlockNumber), isfullTranobj).send();
 
-        if (ethBlock.isEmpty()) {
+        if (appBlock.isEmpty()) {
             System.out.println("the result is null");
             return Optional.empty();
         } else {
-            EthBlock.Block block = ethBlock.getBlock();
+            AppBlock.Block block = appBlock.getBlock();
             printBlock(block);
             return Optional.of(block.getHash());
         }
@@ -256,14 +256,14 @@ public class InterfaceTest {
     public static Optional<String> testEthGetBlockByHash(
             String validBlockHash, boolean isfullTran)
             throws Exception {
-        EthBlock ethBlock = service
-                .ethGetBlockByHash(validBlockHash, isfullTran).send();
+        AppBlock appBlock = service
+                .appGetBlockByHash(validBlockHash, isfullTran).send();
 
-        if (ethBlock.isEmpty()) {
+        if (appBlock.isEmpty()) {
             System.out.println("the result is null");
             return Optional.empty();
         } else {
-            EthBlock.Block block = ethBlock.getBlock();
+            AppBlock.Block block = appBlock.getBlock();
             printBlock(block);
             return Optional.of(block.getHash());
         }
@@ -273,17 +273,17 @@ public class InterfaceTest {
     //5.  sendRawTransaction
     public static Optional<String> testEthSendRawTransaction(
             String rawData) throws Exception {
-        EthSendTransaction ethSendTx = service
-                .ethSendRawTransaction(rawData).send();
+        AppSendTransaction appSendTx = service
+                .appSendRawTransaction(rawData).send();
 
-        if (ethSendTx.isEmpty()) {
+        if (appSendTx.isEmpty()) {
             System.out.println("the result is null");
             return Optional.empty();
         } else {
-            String hash = ethSendTx.getSendTransactionResult().getHash();
+            String hash = appSendTx.getSendTransactionResult().getHash();
             System.out.println("hash(Transaction):" + hash);
             System.out.println("status:"
-                    + ethSendTx.getSendTransactionResult().getStatus());
+                    + appSendTx.getSendTransactionResult().getStatus());
             return Optional.of(hash);
         }
     }
@@ -292,14 +292,14 @@ public class InterfaceTest {
     //6.  getTransactionByHash
     public static void testEthGetTransactionByHash(
             String validTransactionHash) throws Exception {
-        EthTransaction ethTransaction = service.ethGetTransactionByHash(
+        AppTransaction appTransaction = service.appGetTransactionByHash(
                 validTransactionHash).send();
 
-        if (!ethTransaction.getTransaction().isPresent()) {
+        if (!appTransaction.getTransaction().isPresent()) {
             System.out.println("the result is null");
         } else {
             org.web3j.protocol.core.methods.response.Transaction transaction
-                    = ethTransaction.getTransaction().get();
+                    = appTransaction.getTransaction().get();
             System.out.println("hash(Transaction):" + transaction.getHash());
             System.out.println("content:" + transaction.getContent());
             System.out.println("blockNumber(dec):" + transaction.getBlockNumber());
@@ -312,31 +312,30 @@ public class InterfaceTest {
     //7.  getTransactionCount
     public static void testEthGetTransactionCount(
             String validAccount, DefaultBlockParameter param) throws Exception {
-        EthGetTransactionCount ethGetTransactionCount = service.ethGetTransactionCount(
+        AppGetTransactionCount appGetTransactionCount = service.appGetTransactionCount(
                 validAccount, param).send();
 
-        if (ethGetTransactionCount.isEmpty()) {
+        if (appGetTransactionCount.isEmpty()) {
             System.out.println("the result is null");
         } else {
             System.out.println("TransactionCount:"
-                    + ethGetTransactionCount.getTransactionCount());
+                    + appGetTransactionCount.getTransactionCount());
         }
-
     }
 
     //8.  getTransactionReceipt
     public static Optional<String> testEthGetTransactionReceipt(
             String validTransactionHash) throws Exception {
-        EthGetTransactionReceipt ethGetTransactionReceipt = service.ethGetTransactionReceipt(
+        AppGetTransactionReceipt appGetTransactionReceipt = service.appGetTransactionReceipt(
                 validTransactionHash).send();
 
-        if (!ethGetTransactionReceipt.getTransactionReceipt().isPresent()) {
+        if (!appGetTransactionReceipt.getTransactionReceipt().isPresent()) {
             System.out.println("the result is null");
             return Optional.empty();
         } else {
             //is option_value is null return NoSuchElementException, else return option_value
             TransactionReceipt transactionReceipt =
-                    ethGetTransactionReceipt.getTransactionReceipt().get();
+                    appGetTransactionReceipt.getTransactionReceipt().get();
             printTransactionReceiptInfo(transactionReceipt);
             return Optional.of(transactionReceipt.getContractAddress());
         }
@@ -360,13 +359,13 @@ public class InterfaceTest {
     public static void testEthGetCode(
             String validContractAddress, DefaultBlockParameter param)
             throws Exception {
-        EthGetCode ethGetCode = service
-                .ethGetCode(validContractAddress, param).send();
+        AppGetCode appGetCode = service
+                .appGetCode(validContractAddress, param).send();
 
-        if (ethGetCode.isEmpty()) {
+        if (appGetCode.isEmpty()) {
             System.out.println("the result is null");
         } else {
-            System.out.println("contractcode:" + ethGetCode.getCode());
+            System.out.println("contractcode:" + appGetCode.getCode());
         }
     }
 
@@ -383,14 +382,14 @@ public class InterfaceTest {
     public static void testEthCall(
             String fromaddress, String contractAddress, String encodedFunction,
             DefaultBlockParameter param) throws Exception {
-        EthCall ethCall = service.ethCall(
+        AppCall appCall = service.appCall(
                 new Call(fromaddress, contractAddress, encodedFunction),
                 param).send();
 
-        System.out.println("call result:" + ethCall.getValue());
+        System.out.println("call result:" + appCall.getValue());
     }
 
-    private static void printBlock(EthBlock.Block block) {
+    private static void printBlock(AppBlock.Block block) {
         System.out.println("hash(blockhash):"
                 + block.getHash());
         System.out.println("version:"

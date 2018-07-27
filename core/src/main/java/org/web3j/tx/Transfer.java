@@ -17,6 +17,8 @@ import org.web3j.utils.Numeric;
 /**
  * Class for performing Ether transactions on the Ethereum blockchain.
  */
+
+/// TODO remove this class later
 public class Transfer extends ManagedTransaction {
 
     // This is the cost to send Ether between parties
@@ -45,7 +47,7 @@ public class Transfer extends ManagedTransaction {
             throws IOException, InterruptedException,
             TransactionException {
 
-        BigInteger gasPrice = getGasPrice();
+        BigInteger gasPrice = BigInteger.valueOf(1);
         return send(toAddress, value, unit, gasPrice, GAS_LIMIT);
     }
 
@@ -61,8 +63,7 @@ public class Transfer extends ManagedTransaction {
                             + " = " + weiValue + " Wei");
         }
 
-        String resolvedAddress = ensResolver.resolve(toAddress);
-        return send(resolvedAddress, "",
+        return send(toAddress, "",
                 String.valueOf(weiValue.toBigIntegerExact()), gasPrice, gasLimit);
     }
 

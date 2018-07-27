@@ -7,8 +7,8 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthGetBalance;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppGetBalance;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.response.PollingTransactionReceiptProcessor;
@@ -44,8 +44,8 @@ public class SendTransactionSyncTest {
     static BigInteger getBalance(String address) {
         BigInteger balance = null;
         try {
-            EthGetBalance response = service
-                    .ethGetBalance(
+            AppGetBalance response = service
+                    .appGetBalance(
                             address, DefaultBlockParameterName.LATEST).send();
             balance = response.getBalance();
         } catch (Exception e) {
@@ -73,20 +73,19 @@ public class SendTransactionSyncTest {
                 "");
 
         String rawTx = tx.sign(payerKey, false, false);
-        EthSendTransaction ethSendTrasnction = service.ethSendRawTransaction(rawTx).send();
+        AppSendTransaction ethSendTrasnction = service.appSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
                 .waitForTransactionReceipt(
                         ethSendTrasnction.getSendTransactionResult().getHash());
-
         return txReceipt;
     }
 
     public static void main(String[] args) throws Exception {
         Credentials payerCredential = Credentials.create(payerKey);
         String payerAddr = payerCredential.getAddress();
-        System.out.println(getBalance(payerAddr));
-        System.out.println(getBalance(payeeAddr));
+        System.out.println(Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+        System.out.println(Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
 
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
@@ -94,8 +93,10 @@ public class SendTransactionSyncTest {
         TransactionReceipt txReceipt = transferSync(payerKey, payeeAddr, valueWei);
 
         if (txReceipt.getErrorMessage() == null) {
-            System.out.println(getBalance(payerAddr));
-            System.out.println(getBalance(payeeAddr));
+            System.out.println(
+                    Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+            System.out.println(
+                    Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
         }
     }
 }

@@ -8,8 +8,8 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
-import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
-import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.AppGetTransactionCount;
+import org.web3j.protocol.core.methods.response.AppSendTransaction;
 
 public class CitaTransactionManager extends TransactionManager {
 
@@ -31,40 +31,40 @@ public class CitaTransactionManager extends TransactionManager {
     }
 
     BigInteger getNonce() throws IOException {
-        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+        AppGetTransactionCount ethGetTransactionCount = web3j.appGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
 
         return ethGetTransactionCount.getTransactionCount();
     }
 
     @Override
-    public EthSendTransaction sendTransaction(
+    public AppSendTransaction sendTransaction(
             BigInteger quota, BigInteger nonce, String to,
             String data, String value) throws IOException {
-        return new EthSendTransaction();
+        return new AppSendTransaction();
     }
 
     // adapt to cita
     @Override
-    public EthSendTransaction sendTransaction(
+    public AppSendTransaction sendTransaction(
             String to, String data, BigInteger quota, BigInteger nonce,
             BigInteger validUntilBlock, BigInteger version, int chainId, String value)
             throws IOException {
         Transaction transaction = new Transaction(
                 to, nonce, quota.longValue(), validUntilBlock.longValue(),
                 version.intValue(), chainId, value, data);
-        return web3j.ethSendRawTransaction(transaction.sign(credentials)).send();
+        return web3j.appSendRawTransaction(transaction.sign(credentials)).send();
     }
 
     // adapt to cita
-    public CompletableFuture<EthSendTransaction> sendTransactionAsync(
+    public CompletableFuture<AppSendTransaction> sendTransactionAsync(
             String to, String data, BigInteger quota, BigInteger nonce,
             BigInteger validUntilBlock, BigInteger version, int chainId, String value)
             throws IOException {
         Transaction transaction = new Transaction(
                 to, nonce, quota.longValue(), validUntilBlock.longValue(),
                 version.intValue(), chainId, value, data);
-        return web3j.ethSendRawTransaction(transaction.sign(credentials)).sendAsync();
+        return web3j.appSendRawTransaction(transaction.sign(credentials)).sendAsync();
     }
 
     @Override
