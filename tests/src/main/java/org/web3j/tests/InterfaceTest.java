@@ -95,7 +95,6 @@ public class InterfaceTest {
         boolean returnFullTransactions = true;
         String validBlockHash = testEthGetBlockByNumber(
                 validBlockNumber, returnFullTransactions).get();
-        validBlockHash = "0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1";
 
         System.out.println("======================================");
         System.out.println("***  5.  getBlockByHash       ***");

@@ -70,8 +70,8 @@ public class EqualsVerifierResponseTest {
     }
 
     @Test
-    public void testTransactionHash() {
-        EqualsVerifier.forClass(AppBlock.TransactionHash.class)
+    public void testTransactionObject() {
+        EqualsVerifier.forClass(AppBlock.TransactionObject.class)
                 .suppress(Warning.NONFINAL_FIELDS)
                 .suppress(Warning.STRICT_INHERITANCE)
                 .verify();

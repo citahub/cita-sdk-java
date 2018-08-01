@@ -8,7 +8,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.web3j.protocol.ObjectMapperFactory;
@@ -52,7 +54,7 @@ public class AppBlock extends Response<AppBlock.Block> {
         private String commitAddress;
         private String commit;
 
-        public TendermintCommit() {};
+        public TendermintCommit() {}
 
         public TendermintCommit(String commitAddress, String commit) {
             this.commitAddress = commitAddress;
@@ -74,6 +76,33 @@ public class AppBlock extends Response<AppBlock.Block> {
         public void setCommit(String commit) {
             this.commit = commit;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof TendermintCommit)) {
+                return false;
+            }
+
+            TendermintCommit commit = (TendermintCommit) o;
+
+            if (getCommitAddress() != null
+                    ? !getCommitAddress().equals(commit.getCommitAddress())
+                    : commit.getCommitAddress() != null) {
+                return false;
+            }
+            return (getCommit() != null
+                    ? getCommit().equals(commit.getCommit()) : commit.getCommit() == null);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getCommitAddress() != null ? getCommitAddress().hashCode() : 0;
+            result = 31 * result + (getCommit() != null ? getCommit().hashCode() : 0);
+            return result;
+        }
     }
 
     public static class Tendermint {
@@ -82,9 +111,9 @@ public class AppBlock extends Response<AppBlock.Block> {
         private String round;
         private TendermintCommit[] tendermintCommits;
 
-        Tendermint() {};
+        public Tendermint() {}
 
-        Tendermint(String proposal, String height,
+        public Tendermint(String proposal, String height,
                    String round, TendermintCommit[] tendermintCommits) {
             this.proposal = proposal;
             this.height = height;
@@ -130,6 +159,7 @@ public class AppBlock extends Response<AppBlock.Block> {
             if (this == o) {
                 return true;
             }
+
             if (!(o instanceof Tendermint)) {
                 return false;
             }
@@ -137,15 +167,20 @@ public class AppBlock extends Response<AppBlock.Block> {
             Tendermint tendermint = (Tendermint) o;
 
             if (getHeight() != null
-                    ? !getHeight().equals(tendermint.getHeight()) : tendermint.getHeight() != null) {
+                    ? !getHeight().equals(tendermint.getHeight())
+                    : tendermint.getHeight() != null) {
                 return false;
             }
+
             if (getProposal() != null
-                    ? !getProposal().equals(tendermint.getProposal()) : tendermint.getProposal() != null) {
+                    ? !getProposal().equals(tendermint.getProposal())
+                    : tendermint.getProposal() != null) {
                 return false;
             }
+
             return (getRound() != null
-                    ? getRound().equals(tendermint.getRound()) : tendermint.getRound() == null);
+                    ? getRound().equals(tendermint.getRound())
+                    : tendermint.getRound() == null);
         }
 
         @Override
@@ -159,21 +194,43 @@ public class AppBlock extends Response<AppBlock.Block> {
 
 
     public static class Proof {
-        private Tendermint Tendermint;
+        private Tendermint tendermint;
 
         public Proof() {
         }
 
         public Proof(Tendermint tendermint) {
-            this.Tendermint = tendermint;
+            this.tendermint = tendermint;
         }
 
         public Tendermint getTendermint() {
-            return Tendermint;
+            return this.tendermint;
         }
 
         public void setTendermint(Tendermint tendermint) {
-            this.Tendermint = tendermint;
+            this.tendermint = tendermint;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = getTendermint() != null ? getTendermint().hashCode() : 0;
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Proof)) {
+                return false;
+            }
+
+            Proof proof = (Proof) o;
+
+            return (getTendermint() != null
+                    ? getTendermint().equals(proof.getTendermint())
+                    : proof.getTendermint() == null);
         }
     }
 
@@ -478,45 +535,6 @@ public class AppBlock extends Response<AppBlock.Block> {
     public interface TransactionResult<T> {
         T get();
     }
-//
-//    public static class TransactionHash implements TransactionResult<String> {
-//        private String value;
-//
-//        public TransactionHash() {
-//        }
-//
-//        public TransactionHash(String value) {
-//            this.value = value;
-//        }
-//
-//        @Override
-//        public String get() {
-//            return value;
-//        }
-//
-//        public void setValue(String value) {
-//            this.value = value;
-//        }
-//
-//        @Override
-//        public boolean equals(Object o) {
-//            if (this == o) {
-//                return true;
-//            }
-//            if (!(o instanceof TransactionHash)) {
-//                return false;
-//            }
-//
-//            TransactionHash that = (TransactionHash) o;
-//
-//            return value != null ? value.equals(that.value) : that.value == null;
-//        }
-//
-//        @Override
-//        public int hashCode() {
-//            return value != null ? value.hashCode() : 0;
-//        }
-//    }
 
     public static class TransactionObject extends Transaction
             implements TransactionResult<Transaction> {
@@ -539,7 +557,6 @@ public class AppBlock extends Response<AppBlock.Block> {
     }
 
     public static class ResponseDeserialiser extends JsonDeserializer<Block> {
-
         @Override
         public Block deserialize(
                 JsonParser jsonParser,
@@ -568,9 +585,10 @@ public class AppBlock extends Response<AppBlock.Block> {
 
                 //proof tendermint commits
                 List<TendermintCommit> tendermintCommits = new ArrayList<>();
-                JsonNode commitsNode = node.get("header").get("proof").get("Tendermint").get("commits");
+                JsonNode commitsNode = node.get("header")
+                        .get("proof").get("Tendermint").get("commits");
                 Iterator<String> commitsAddress = commitsNode.fieldNames();
-                while(commitsAddress.hasNext()) {
+                while (commitsAddress.hasNext()) {
                     String commitAddress = commitsAddress.next();
                     String commit = commitsNode.get(commitAddress).asText();
                     tendermintCommits.add(new TendermintCommit(commitAddress, commit));
@@ -580,13 +598,11 @@ public class AppBlock extends Response<AppBlock.Block> {
                 List<TransactionObject> transactionObjs = new ArrayList<TransactionObject>();
                 JsonNode transactionNode = node.get("body").get("transactions");
                 Iterator<JsonNode> txNodes = transactionNode.elements();
-                while(txNodes.hasNext()) {
+                while (txNodes.hasNext()) {
                     JsonNode txNode = txNodes.next();
                     TransactionObject txToAdd = new TransactionObject();
                     txToAdd.setHash(txNode.get("hash").asText());
                     txToAdd.setContent(txNode.get("content").asText());
-                    txToAdd.setBlockHash(blockHash);
-                    txToAdd.setBlockNumber(number);
                     transactionObjs.add(txToAdd);
                 }
 
