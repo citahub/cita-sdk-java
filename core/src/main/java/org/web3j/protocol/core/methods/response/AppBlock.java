@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import org.web3j.protocol.ObjectMapperFactory;
 import org.web3j.protocol.core.Response;
 import org.web3j.utils.Numeric;
 
@@ -541,13 +540,9 @@ public class AppBlock extends Response<AppBlock.Block> {
         public TransactionObject() {
         }
 
-        public TransactionObject(String hash, String nonce, String blockHash, String blockNumber,
-                                 String transactionIndex, String from, String to, String value,
-                                 String gasPrice, String gas, String input, String creates,
-                                 String publicKey, String raw, String r, String s, int v,
+        public TransactionObject(String hash, String blockHash, String blockNumber,
                                  String content, String index) {
-            super(hash, nonce, blockHash, blockNumber, transactionIndex, from, to, value,
-                    gasPrice, gas, input, creates, publicKey, raw, r, s, v, content, index);
+            super(hash, blockHash, blockNumber, content, index);
         }
 
         @Override

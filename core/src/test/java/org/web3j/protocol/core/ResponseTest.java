@@ -509,53 +509,24 @@ public class ResponseTest extends ResponseTester {
     public void testEthTransaction() {
         //CHECKSTYLE:OFF
         buildResponse(
-                "{\n"
-                        + "    \"id\":1,\n"
-                        + "    \"jsonrpc\":\"2.0\",\n"
-                        + "    \"result\": {\n"
-                        + "        \"hash\":\"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b\",\n"
-                        + "        \"nonce\":\"0x\",\n"
-                        + "        \"blockHash\": \"0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b\",\n"
-                        + "        \"blockNumber\": \"0x15df\",\n"
-                        + "        \"transactionIndex\":  \"0x1\",\n"
-                        + "        \"from\":\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\n"
-                        + "        \"to\":\"0x85h43d8a49eeb85d32cf465507dd71d507100c1\",\n"
-                        + "        \"value\":\"0x7f110\",\n"
-                        + "        \"gas\": \"0x7f110\",\n"
-                        + "        \"gasPrice\":\"0x09184e72a000\",\n"
-                        + "        \"input\":\"0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360\",\n"
-                        + "        \"creates\":null,\n"
-                        + "        \"publicKey\":\"0x6614d7d7bfe989295821985de0439e868b26ff05f98ae0da0ce5bccc24ea368a083b785323c9fcb405dd4c10a2c95d93312a1b2d68beb24ab4ea7c3c2f7c455b\",\n"
-                        + "        \"raw\":\"0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62\",\n"
-                        + "        \"r\":\"0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc\",\n"
-                        + "        \"s\":\"0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62\",\n"
-                        + "        \"v\":0,\n"
-                        + "        \"content\":\"content\",\n"
-                        + "        \"index\":\"index\"\n"
-                        + "  }\n"
-                        + "}"
-        );
+                "{\n" +
+                        "   \"jsonrpc\":\"2.0\",\n" +
+                        "   \"id\":1,\n" +
+                        "   \"result\":{\n" +
+                        "       \"hash\":\"0xcd7fc94a452d78b0041abac36de489c19432d3c208e795099ac13a6327bb4bd8\",\n" +
+                        "       \"content\":\"0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65316239383236653737326132306518c0843d20a7ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241d5c91c9e262c57fd79d6979f8b9205d7d49ed8918edaf8eb8b8e3bf5447b7d6745e57ebcb741486064758c0058750569c4e6a759de293563e9fa156172abcc3500\",\n" +
+                        "       \"blockNumber\":\"0x3ff59\",\n" +
+                        "       \"blockHash\":\"0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1\",\n" +
+                        "       \"index\":\"0x1\"\n" +
+                        "   }\n" +
+                        "}");
 
         Transaction transaction = new Transaction(
-                "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
-                "0x",
-                "0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b",
-                "0x15df",
-                "0x1",
-                "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-                "0x85h43d8a49eeb85d32cf465507dd71d507100c1",
-                "0x7f110",
-                "0x7f110",
-                "0x09184e72a000",
-                "0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360",
-                null,
-                "0x6614d7d7bfe989295821985de0439e868b26ff05f98ae0da0ce5bccc24ea368a083b785323c9fcb405dd4c10a2c95d93312a1b2d68beb24ab4ea7c3c2f7c455b",
-                "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
-                "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                (byte) 0,
-                "content",
-                "index"
+                "0xcd7fc94a452d78b0041abac36de489c19432d3c208e795099ac13a6327bb4bd8",
+                "0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1",
+                "0x3ff59",
+                "0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65316239383236653737326132306518c0843d20a7ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241d5c91c9e262c57fd79d6979f8b9205d7d49ed8918edaf8eb8b8e3bf5447b7d6745e57ebcb741486064758c0058750569c4e6a759de293563e9fa156172abcc3500",
+                "0x1"
         );
         //CHECKSTYLE:ON
 
