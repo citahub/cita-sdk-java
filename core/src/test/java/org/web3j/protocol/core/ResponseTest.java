@@ -2,6 +2,7 @@ package org.web3j.protocol.core;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -254,66 +255,103 @@ public class ResponseTest extends ResponseTester {
     public void testEthBlockTransactionHashes() {
         //CHECKSTYLE:OFF
         buildResponse(
-                "{\n"
-                        + "\"id\": 1,\n"
-                        + "\"jsonrpc\": \"2.0\",\n"
-                        + "\"result\": {\n"
-                        + " \"version\": \"0\",\n"
-                        + " \"hash\": \"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\",\n"
-                        + " \"header\": {\n"
-                        + "     \"timestamp\": \"1000000\",\n"
-                        + "     \"prevHash\": \"0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5\",\n"
-                        + "     \"number\": \"0x1b4\",\n"
-                        + "     \"stateRoot\": \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff\",\n"
-                        + "     \"transactionsRoot\": \"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\n"
-                        + "     \"receiptsRoot\": \"0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421\",\n"
-                        + "     \"gasUsed\": \"0x9f759\",\n"
-                        + "     \"proof\": {\n"
-                        + "         \"proposal\": \"proposal\",\n"
-                        + "         \"height\": \"height\",\n"
-                        + "         \"round\": \"round\"\n"
-                        + "     }\n"
-                        + " },\n"
-                        + " \"body\": {\n"
-                        + "     \"transactions\": [\n"
-                        + "         \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df\",\n"
-                        + "         \"0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df\"\n"
-                        + "     ]\n"
-                        + " }\n"
-                        + "}\n"
-                        + "}"
-        );
-        //CHECKSTYLE:ON
+            "{\n"
+                    + "\"jsonrpc\":\"2.0\",\n"
+                    + "\"id\":1,\n"
+                    + "\"result\":{\n"
+                    + " \"version\":0,"
+                    + " \"hash\":\"0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1\",\n"
+                    + " \"header\":{\n"
+                    + "     \"timestamp\":1533101297835,\n"
+                    + "     \"prevHash\":\"0x4391078f4c03c028178e8f1a9f25392a634b098d7737601f1679a8b197fafcf9\","
+                    + "     \"number\":\"0x3ff59\","
+                    + "     \"stateRoot\":\"0x60fb67e5ca3868d292ea44e2c28bb16d83d25793ed629b28f4c8d18de8742a72\","
+                    + "     \"transactionsRoot\":\"0x62d54aa5b82a5813c87a3a4d1d2c3a02e6c88f037c8fb2461e5116e7a9dc2149\","
+                    + "     \"receiptsRoot\":\"0x918334ef71e85bed370065d1f2758d1eb3f089f7e5323a78a633de7a5f07f371\","
+                    + "     \"gasUsed\":\"0x132bd\","
+                    + "     \"proof\":"
+                    + "         {\"Tendermint\":{"
+                    + "             \"proposal\":\"0xe1b9bba13cb64a920c04f3abc2ea0a98d2db4fb65d233df3afc31c5321bb6054\","
+                    + "             \"height\":261976,"
+                    + "             \"round\":0,"
+                    + "             \"commits\":{"
+                    + "                 \"0x486bb688c8d29056bd7f87c26733048b0a6abda6\":\"0x0fc60edaff5f00329e088750119e92af8940e9612d1dbf3ce4158e721faaff592ab43f4bc3c24718631aa4140f8412cefb9086416ba2c280fa85ec83b511ed5f00\","
+                    + "                 \"0x31042d4f7662cddf8ded5229db3c5e7302875e10\":\"0x68e3701cec53f96e792ecb02eb390dad074eb26b0d5472be8804929e016cc99d647b9c40e30942270f1fed91f3fc14479c47de603a5de99735b3122b5d08e2c601\","
+                    + "                 \"0xee01b9ba97671e8a1891e85b206b499f106822a1\":\"0x34272376d15b8e0658efa8cce056f59d5054b5863a9945c5e8e232c65f2d434476833899912a871e58374c08da78e8279dc02c877221f6a880134ed050bae44700\","
+                    + "                 \"0x71b028e49c6f41aaa74932d703c707ecca6d732e\":\"0x7ed41b1ccf137a77eade8bbd4e348534dc26c45c7d8a547adc7286746497f6bf3587f886c87e97dbfadd8e2698827c53123a3fbfddb682c887509342ae030dec01\""
+                    + "                 }"
+                    + "             }"
+                    + "         },"
+                    + " \"proposer\":\"0xee01b9ba97671e8a1891e85b206b499f106822a1\""
+                    + " },"
+                    + " \"body\":{"
+                    + "     \"transactions\":["
+                    + "             {"
+                    + "                 \"hash\":\"0xab64a7be5f38ab8061419472402c52c9a26f5989b26da5eec4d59d7aa68348e1\","
+                    + "                 \"content\":\"0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65333031643366313762346566393518c0843d20a6ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241e1e76fe6f033db9527f0714ba81b4af1f26b9d70210acbf3cebcb916c2f4c7ae70c3fe80a2032d748caa0b90b70159263880ea6b230912f5bb5c62b234ed67a401\""
+                    + "             },"
+                    + "             {"
+                    + "                 \"hash\":\"0xcd7fc94a452d78b0041abac36de489c19432d3c208e795099ac13a6327bb4bd8\","
+                    + "                 \"content\":\"0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65316239383236653737326132306518c0843d20a7ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241d5c91c9e262c57fd79d6979f8b9205d7d49ed8918edaf8eb8b8e3bf5447b7d6745e57ebcb741486064758c0058750569c4e6a759de293563e9fa156172abcc3500\""
+                    + "             }"
+                    + "         ]"
+                    + "     }"
+                    + " }"
+                    + "}");
 
-        AppBlock appBlock = deserialiseResponse(AppBlock.class);
+
+        AppBlock.TendermintCommit[] tendermintCommits = {
+                new AppBlock.TendermintCommit(
+                        "0x486bb688c8d29056bd7f87c26733048b0a6abda6",
+                        "0x0fc60edaff5f00329e088750119e92af8940e9612d1dbf3ce4158e721faaff592ab43f4bc3c24718631aa4140f8412cefb9086416ba2c280fa85ec83b511ed5f00"),
+                new AppBlock.TendermintCommit(
+                        "0x31042d4f7662cddf8ded5229db3c5e7302875e10",
+                        "0x68e3701cec53f96e792ecb02eb390dad074eb26b0d5472be8804929e016cc99d647b9c40e30942270f1fed91f3fc14479c47de603a5de99735b3122b5d08e2c601"),
+                new AppBlock.TendermintCommit(
+                        "0xee01b9ba97671e8a1891e85b206b499f106822a1",
+                        "0x34272376d15b8e0658efa8cce056f59d5054b5863a9945c5e8e232c65f2d434476833899912a871e58374c08da78e8279dc02c877221f6a880134ed050bae44700"),
+                new AppBlock.TendermintCommit(
+                        "0x71b028e49c6f41aaa74932d703c707ecca6d732e",
+                        "0x7ed41b1ccf137a77eade8bbd4e348534dc26c45c7d8a547adc7286746497f6bf3587f886c87e97dbfadd8e2698827c53123a3fbfddb682c887509342ae030dec01"),
+        };
+        AppBlock.Tendermint tendermint = new AppBlock.Tendermint(
+                "0xe1b9bba13cb64a920c04f3abc2ea0a98d2db4fb65d233df3afc31c5321bb6054",
+                "261976", "0",tendermintCommits);
+
         AppBlock.Header header = new AppBlock.Header(
-                1000000,
-                "0x9646252be9520f6e71339a8df9c55e4d7619deeb018d2a3f2d21fc165dde5eb5",
-                "0x1b4",
-                "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
-                "0x9f759",
-                new AppBlock.Proof(
-                        "proposal",
-                        "height",
-                        "round")
+                1533101297835L,
+                "0x4391078f4c03c028178e8f1a9f25392a634b098d7737601f1679a8b197fafcf9",
+                "0x3ff59",
+                "0x60fb67e5ca3868d292ea44e2c28bb16d83d25793ed629b28f4c8d18de8742a72",
+                "0x62d54aa5b82a5813c87a3a4d1d2c3a02e6c88f037c8fb2461e5116e7a9dc2149",
+                "0x918334ef71e85bed370065d1f2758d1eb3f089f7e5323a78a633de7a5f07f371",
+                "0x132bd",
+                new AppBlock.Proof(tendermint)
         );
 
-        AppBlock.Body body = new AppBlock.Body(Arrays.asList(
-                new AppBlock.TransactionHash(
-                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df"),
-                new AppBlock.TransactionHash(
-                        "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1df")
-        ));
+        List<AppBlock.TransactionObject> transactionObjects = new ArrayList<>();
+        AppBlock.TransactionObject txObj1 = new AppBlock.TransactionObject();
+        txObj1.setHash("0xab64a7be5f38ab8061419472402c52c9a26f5989b26da5eec4d59d7aa68348e1");
+        txObj1.setContent("0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65333031643366313762346566393518c0843d20a6ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241e1e76fe6f033db9527f0714ba81b4af1f26b9d70210acbf3cebcb916c2f4c7ae70c3fe80a2032d748caa0b90b70159263880ea6b230912f5bb5c62b234ed67a401");
+
+        AppBlock.TransactionObject txObj2 = new AppBlock.TransactionObject();
+        txObj2.setHash("0xcd7fc94a452d78b0041abac36de489c19432d3c208e795099ac13a6327bb4bd8");
+        txObj2.setContent("0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65316239383236653737326132306518c0843d20a7ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241d5c91c9e262c57fd79d6979f8b9205d7d49ed8918edaf8eb8b8e3bf5447b7d6745e57ebcb741486064758c0058750569c4e6a759de293563e9fa156172abcc3500");
+
+        transactionObjects.add(txObj1);
+        transactionObjects.add(txObj2);
+        AppBlock.Body body = new AppBlock.Body(transactionObjects);
+
         String version = "0";
-        String hash = "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331";
+        String hash = "0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1";
         AppBlock.Block block = new AppBlock.Block(
                 version,
                 hash,
                 header,
                 body
         );
+        //CHECKSTYLE:ON
+        AppBlock appBlock = deserialiseResponse(AppBlock.class);
         assertThat(appBlock.getBlock(), equalTo(block));
     }
 
@@ -471,53 +509,24 @@ public class ResponseTest extends ResponseTester {
     public void testEthTransaction() {
         //CHECKSTYLE:OFF
         buildResponse(
-                "{\n"
-                        + "    \"id\":1,\n"
-                        + "    \"jsonrpc\":\"2.0\",\n"
-                        + "    \"result\": {\n"
-                        + "        \"hash\":\"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b\",\n"
-                        + "        \"nonce\":\"0x\",\n"
-                        + "        \"blockHash\": \"0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b\",\n"
-                        + "        \"blockNumber\": \"0x15df\",\n"
-                        + "        \"transactionIndex\":  \"0x1\",\n"
-                        + "        \"from\":\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\n"
-                        + "        \"to\":\"0x85h43d8a49eeb85d32cf465507dd71d507100c1\",\n"
-                        + "        \"value\":\"0x7f110\",\n"
-                        + "        \"gas\": \"0x7f110\",\n"
-                        + "        \"gasPrice\":\"0x09184e72a000\",\n"
-                        + "        \"input\":\"0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360\",\n"
-                        + "        \"creates\":null,\n"
-                        + "        \"publicKey\":\"0x6614d7d7bfe989295821985de0439e868b26ff05f98ae0da0ce5bccc24ea368a083b785323c9fcb405dd4c10a2c95d93312a1b2d68beb24ab4ea7c3c2f7c455b\",\n"
-                        + "        \"raw\":\"0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62\",\n"
-                        + "        \"r\":\"0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc\",\n"
-                        + "        \"s\":\"0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62\",\n"
-                        + "        \"v\":0,\n"
-                        + "        \"content\":\"content\",\n"
-                        + "        \"index\":\"index\"\n"
-                        + "  }\n"
-                        + "}"
-        );
+                "{\n" +
+                        "   \"jsonrpc\":\"2.0\",\n" +
+                        "   \"id\":1,\n" +
+                        "   \"result\":{\n" +
+                        "       \"hash\":\"0xcd7fc94a452d78b0041abac36de489c19432d3c208e795099ac13a6327bb4bd8\",\n" +
+                        "       \"content\":\"0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65316239383236653737326132306518c0843d20a7ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241d5c91c9e262c57fd79d6979f8b9205d7d49ed8918edaf8eb8b8e3bf5447b7d6745e57ebcb741486064758c0058750569c4e6a759de293563e9fa156172abcc3500\",\n" +
+                        "       \"blockNumber\":\"0x3ff59\",\n" +
+                        "       \"blockHash\":\"0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1\",\n" +
+                        "       \"index\":\"0x1\"\n" +
+                        "   }\n" +
+                        "}");
 
         Transaction transaction = new Transaction(
-                "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
-                "0x",
-                "0xbeab0aa2411b7ab17f30a99d3cb9c6ef2fc5426d6ad6fd9e2a26a6aed1d1055b",
-                "0x15df",
-                "0x1",
-                "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-                "0x85h43d8a49eeb85d32cf465507dd71d507100c1",
-                "0x7f110",
-                "0x7f110",
-                "0x09184e72a000",
-                "0x603880600c6000396000f300603880600c6000396000f3603880600c6000396000f360",
-                null,
-                "0x6614d7d7bfe989295821985de0439e868b26ff05f98ae0da0ce5bccc24ea368a083b785323c9fcb405dd4c10a2c95d93312a1b2d68beb24ab4ea7c3c2f7c455b",
-                "0xf8cd83103a048504a817c800830e57e0945927c5cc723c4486f93bf90bad3be8831139499e80b864140f8dd300000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000c03905df347aa6490d5a98fbb8d8e49520000000000000000000000000000000000000000000000000000000057d56ee61ba0f115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dca04a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                "0xf115cc4d7516dd430046504e1c888198e0323e8ded016d755f89c226ba3481dc",
-                "0x4a2ae8ee49f1100b5c0202b37ed8bacf4caeddebde6b7f77e12e7a55893e9f62",
-                (byte) 0,
-                "content",
-                "index"
+                "0xcd7fc94a452d78b0041abac36de489c19432d3c208e795099ac13a6327bb4bd8",
+                "0xda9e8497221e9d18131292f8b459d62e03c882be4666d084c67b8dcebcce91d1",
+                "0x3ff59",
+                "0x0aad010a2839663864396337633336616632336561656230323032363938333135656163323334653334373039120f65316239383236653737326132306518c0843d20a7ff0f2a44a9059cbb000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa1800000000000000000000000000000000000000000000000000000000000003e83220000000000000000000000000000000000000000000000000000000000000000038011241d5c91c9e262c57fd79d6979f8b9205d7d49ed8918edaf8eb8b8e3bf5447b7d6745e57ebcb741486064758c0058750569c4e6a759de293563e9fa156172abcc3500",
+                "0x1"
         );
         //CHECKSTYLE:ON
 

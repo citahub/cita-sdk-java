@@ -411,23 +411,22 @@ public class InterfaceTest {
         System.out.println("header.gasUsed:"
                 + block.getHeader().getGasUsed());
         System.out.println("header.proof.proposal:"
-                + block.getHeader().getProof().getProposal());
+                + block.getHeader().getProof().getTendermint().getProposal());
         System.out.println("header.proof.height:"
-                + block.getHeader().getProof().getHeight());
+                + block.getHeader().getProof().getTendermint().getHeight());
         System.out.println("header.proof.round:"
-                + block.getHeader().getProof().getRound());
+                + block.getHeader().getProof().getTendermint().getRound());
 
         if (!block.getBody().getTransactions().isEmpty()) {
             System.out.println("number of transaction:"
                     + block.getBody().getTransactions().size());
 
-            int i;
-            for (i = 0; i < block.getBody().getTransactions().size(); i++) {
-                org.web3j.protocol.core.methods.response.Transaction tran =
+            for (int i = 0; i < block.getBody().getTransactions().size(); i++) {
+                org.web3j.protocol.core.methods.response.Transaction tx =
                         (org.web3j.protocol.core.methods.response.Transaction)
                                 block.getBody().getTransactions().get(i).get();
-                System.out.println("body.transactions.tranhash:" + tran.getHash());
-                System.out.println("body.transactions.content:" + tran.getContent());
+                System.out.println("body.transactions.tranhash:" + tx.getHash());
+                System.out.println("body.transactions.content:" + tx.getContent());
             }
         } else {
             System.out.println("the block transactions is null");
