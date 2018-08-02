@@ -2,7 +2,7 @@ Transction定义在core.request中，用于将交易数据封装并且签名（�
 [Transaction](zh-CN/latest/transaction?id=transactionstring-to-biginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-data)  
 [createContractTransaction](zh-CN/latest/transaction?id=createcontracttransactionbiginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-init)  
 [createFunctionCallTransaction](zh-CN/latest/transaction?id=createfunctioncalltransactionstring-to-biginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-data)  
-[CitaTransactionManager](zh-CN/latest/transaction?id=citatransactionmanagerweb3j-web3j-credentials-credentials)  
+[CitaTransactionManager](zh-CN/latest/transaction?id=citatransactionmanagerweb3j-nervosj-credentials-credentials)
 [sendTransaction](zh-CN/latest/transaction?id=ethsendtransaction-sendtransactionstring-to-string-data-biginteger-quota-biginteger-nonce-biginteger-validuntilblock-biginteger-version-int-chainid-string-value)  
 [sendTransactionAsync](zh-CN/latest/transaction?id=completablefuture-sendtransactionasyncstring-to-string-data-biginteger-quota-biginteger-nonce-biginteger-validuntilblock-biginteger-version-int-chainid-string-value)   
 #### Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)
@@ -45,7 +45,7 @@ init - 合约编码后数据（abi）
 Transaction实例  
 <b>例子</b>  
 ```
-//create new web3j service
+//create new nervosj service
 Web3j service = Web3j.build(new HttpService("127.0.0.1"));
 
 //settings initiation
@@ -77,7 +77,7 @@ data - 编码后交易数据（abi）
 Transaction实例  
 <b>例子</b>  
 ```
-//create new web3j service
+//create new nervosj service
 Web3j service = Web3j.build(new HttpService("127.0.0.1"));
 
 //settings initiation
@@ -95,10 +95,10 @@ Transaction txToCallContract = Transction.createFunctionCallTransaction(to, nonc
 String signedTx = txToDeployContract.sign(this.config.getPrivateKey(), false, false);
 EthSendTransaction EthSendTx = service.sendRawTransaction(signedTx);
 ```
-#### CitaTransactionManager(Web3j web3j, Credentials credentials)
+#### CitaTransactionManager(Web3j nervosj, Credentials credentials)
 CitaTransactionManager继承自TransactionManager，进行了Nervos适配。由于在Nervos中，没有支持sendTransaction()方法，所以私钥信息需要在实例化CitaTransactionManager时传入，否则无法对交易签名。  
 <b>参数</b>  
-web3j - web3j实例   
+nervosj - web3j实例
 credentials - 发起交易账户的credential  
 <b>返回值</b>  
 CitaTransctionManager实例  

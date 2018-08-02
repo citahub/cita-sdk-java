@@ -1,6 +1,6 @@
 web3j接口继承了Ethereum和web3jRx两个接口，web3j的实现类（比如JsonRpc2_0Web3j），提供了方法以发送交易的方式对合约进行部署和函数调用。web3中没有提供将solidity合约转换为java类的方法，所以对合约的操作必须依赖合约或者合约函数的二进制码，即手动拼接参数。  
 
-[build](zh-CN/latest/web3?id=web3j-build-web3jservice-web3j)  
+[build](zh-CN/latest/web3?id=nervosj-build-web3jservice-nervosj)
 [netPeer](zh-CN/latest/web3?id=requestlt-netpeercountgt-netpeer)  
 [ethMetaData](zh-CN/latest/web3?id=requestlt-ethmetadatagt-ethmetadatadefaultblockparameter-defaultblockparameter)  
 [ethBlockNumber](zh-CN/latest/web3?id=requestlt-ethblocknumbergt-ethblocknumber)   
@@ -20,10 +20,10 @@ web3j接口继承了Ethereum和web3jRx两个接口，web3j的实现类（比如J
 [ethGetFilterChanges](zh-CN/latest/web3?id=requestlt-ethloggt-ethgetfilterchangesbiginteger-filterid)  
 [ethGetFilterLogs](zh-CN/latest/web3?id=requestlt-ethloggt-ethgetfilterlogsbiginteger-filterid)  
 
-#### Web3j build (Web3jService web3j)
+#### Web3j build (Web3jService nervosj)
 根据Web3jService类型实例化web3j  
 <b>参数</b>  
-web3j - web3jService实例  
+nervosj - web3jService实例
 <b>返回值</b>  
 Web3实例  
 <b>例子</b>  
@@ -218,7 +218,7 @@ Web3j service = Web3j.build(new HttpService("127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 EthGetTransactionReceipt txReceipt = service.ethGetTransactionReceipt(txHash).send();
 ```
-#### Request<?, EthFilter> ethNewFilter(org.web3j.protocol.core.methods.request.EthFilter ethFilter)
+#### Request<?, EthFilter> ethNewFilter(org.nervosj.protocol.core.methods.request.EthFilter ethFilter)
 创建一个新的Nervos过滤器  
 <b>参数</b>  
 ethFilter - 针对于Nervos智能合约event的过滤器（定义在Request中的ethFilter）  
@@ -227,7 +227,7 @@ Request<?, EthFilter>
 <b>例子</b>  
 ```
 Web3j service = Web3j.build(new HttpService("127.0.0.1"));
-org.web3j.protocol.core.methods.request.EthFilter ethFilter = new EthFilter(fromBlock, toBlock, addresses);
+org.nervosj.protocol.core.methods.request.EthFilter ethFilter = new EthFilter(fromBlock, toBlock, addresses);
 EthFilter ethFilter = service.ethNewFilter(txHash).send();
 BigInteger filterId = ethFilter.getFilterId();
 ```

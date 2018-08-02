@@ -264,9 +264,9 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: [
-                            'org/web3j/abi/datatypes/generated/**',
-                            'org/web3j/tuples/generated/**',
-                            'org/web3j/ens/contracts/generated/**'
+                            'org/nervos/appchain/abi/datatypes/generated/**',
+                            'org/nervos/appchain/tuples/generated/**',
+                            'org/nervos/appchain/ens/contracts/generated/**'
                     ])
         })
     }

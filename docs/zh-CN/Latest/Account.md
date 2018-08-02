@@ -1,5 +1,5 @@
 Account封装了TransactionManager（在Cita中使用的是CitaTransactionManager），通过web3和账户的私钥进行实例化。Account使用了CompiledContract类，可以直接从读取Solidity合约文件，生成ABI和BIN文件以供TransactionManager使用。
-[Account](zh-CN/latest/Account?id=accountstring-privatekey-web3j-service)  
+[Account](zh-CN/latest/Account?id=accountstring-privatekey-nervosj-service)
 [deploy](zh-CN/latest/Account?id=ethsendtransaction-deployfile-contractfile-biginteger-nonce-biginteger-quota-int-version-int-chainid-string-value)  
 [callContract](zh-CN/latest/Account?id=object-callcontractstring-contractaddress-string-funcname-biginteger-nonce-biginteger-quota-int-version-int-chainid-string-value-object-args)  
 

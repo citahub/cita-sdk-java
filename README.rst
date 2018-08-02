@@ -1,35 +1,35 @@
 .. To build this file locally ensure docutils Python package is installed and run:
    $ rst2html.py README.rst README.html
 
-web3j: Web3 Java Ethereum Ðapp API
+nervosj: Web3 Java Ethereum Ðapp API
 ==================================
 
-.. image:: https://readthedocs.org/projects/web3j/badge/?version=latest
-   :target: http://docs.web3j.io
+.. image:: https://readthedocs.org/projects/nervosj/badge/?version=latest
+   :target: http://docs.nervosj.io
    :alt: Documentation Status
 
-.. image:: https://travis-ci.org/web3j/web3j.svg?branch=master
-   :target: https://travis-ci.org/web3j/web3j
+.. image:: https://travis-ci.org/nervosj/nervosj.svg?branch=master
+   :target: https://travis-ci.org/nervosj/nervosj
    :alt: Build Status
 
-.. image:: https://codecov.io/gh/web3j/web3j/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/web3j/web3j
+.. image:: https://codecov.io/gh/nervosj/nervosj/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/nervosj/nervosj
    :alt: codecov
 
-.. image:: https://badges.gitter.im/web3j/web3j.svg
-   :target: https://gitter.im/web3j/web3j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-   :alt: Join the chat at https://gitter.im/web3j/web3j
+.. image:: https://badges.gitter.im/nervosj/nervosj.svg
+   :target: https://gitter.im/nervosj/nervosj?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+   :alt: Join the chat at https://gitter.im/nervosj/nervosj
 
-web3j is a lightweight, highly modular, reactive, type safe Java and Android library for working with
+nervosj is a lightweight, highly modular, reactive, type safe Java and Android library for working with
 Smart Contracts and integrating with clients (nodes) on the Ethereum network:
 
-.. image:: https://raw.githubusercontent.com/web3j/web3j/master/docs/source/images/web3j_network.png
+.. image:: https://raw.githubusercontent.com/nervosj/nervosj/master/docs/source/images/web3j_network.png
 
 This allows you to work with the `Ethereum <https://www.ethereum.org/>`_ blockchain, without the
 additional overhead of having to write your own integration code for the platform.
 
 The `Java and the Blockchain <https://www.youtube.com/watch?v=ea3miXs_P6Y>`_ talk provides an
-overview of blockchain, Ethereum and web3j.
+overview of blockchain, Ethereum and nervosj.
 
 
 Features
@@ -52,7 +52,7 @@ Features
 - Comprehensive integration tests demonstrating a number of the above scenarios
 - Command line tools
 - Android compatible
-- Support for JP Morgan's Quorum via `web3j-quorum <https://github.com/web3j/quorum>`_
+- Support for JP Morgan's Quorum via `nervosj-quorum <https://github.com/nervosj/quorum>`_
 
 
 It has five runtime dependencies:
@@ -70,13 +70,13 @@ It also uses `JavaPoet <https://github.com/square/javapoet>`_ for generating sma
 wrappers.
 
 Full project documentation is available at
-`docs.web3j.io <http://docs.web3j.io>`_.
+`docs.nervosj.io <http://docs.nervosj.io>`_.
 
 
 Donate
 ------
 
-You can help fund the development of web3j by donating to the following wallet addresses:
+You can help fund the development of nervosj by donating to the following wallet addresses:
 
 +----------+--------------------------------------------+
 | Ethereum | 0x2dfBf35bb7c3c0A466A6C48BEBf3eF7576d3C420 |
@@ -94,8 +94,8 @@ Commercial support and training is available from `blk.io <https://blk.io>`_.
 Quickstart
 ----------
 
-A `web3j sample project <https://github.com/web3j/sample-project-gradle>`_ is available that
-demonstrates a number of core features of Ethereum with web3j, including:
+A `nervosj sample project <https://github.com/nervosj/sample-project-gradle>`_ is available that
+demonstrates a number of core features of Ethereum with nervosj, including:
 
 - Connecting to a node on the Ethereum network
 - Loading an Ethereum wallet file
@@ -119,7 +119,7 @@ Java 8:
 .. code-block:: xml
 
    <dependency>
-     <groupId>org.web3j</groupId>
+     <groupId>org.nervosj</groupId>
      <artifactId>core</artifactId>
      <version>3.2.0</version>
    </dependency>
@@ -129,7 +129,7 @@ Android:
 .. code-block:: xml
 
    <dependency>
-     <groupId>org.web3j</groupId>
+     <groupId>org.nervosj</groupId>
      <artifactId>core</artifactId>
      <version>3.1.1-android</version>
    </dependency>
@@ -141,13 +141,13 @@ Java 8:
 
 .. code-block:: groovy
 
-   compile ('org.web3j:core:3.2.0')
+   compile ('org.nervosj:core:3.2.0')
 
 Android:
 
 .. code-block:: groovy
 
-   compile ('org.web3j:core:3.1.1-android')
+   compile ('org.nervosj:core:3.1.1-android')
 
 
 Start a client
@@ -173,10 +173,10 @@ Or use `Infura <https://infura.io/>`_, which provides **free clients** running i
    Web3j web3 = Web3j.build(new InfuraHttpService("https://ropsten.infura.io/your-token"));
 
 For further information refer to
-`Using Infura with web3j <https://web3j.github.io/web3j/infura.html>`_
+`Using Infura with nervosj <https://nervosj.github.io/nervosj/infura.html>`_
 
 Instructions on obtaining Ether to transact on the network can be found in the
-`testnet section of the docs <http://docs.web3j.io/transactions.html#ethereum-testnets>`_.
+`testnet section of the docs <http://docs.nervosj.io/transactions.html#ethereum-testnets>`_.
 
 
 Start sending requests
@@ -220,8 +220,8 @@ To use an RxJava Observable:
 IPC
 ---
 
-web3j also supports fast inter-process communication (IPC) via file sockets to clients running on
-the same host as web3j. To connect simply use the relevant *IpcService* implementation instead of
+nervosj also supports fast inter-process communication (IPC) via file sockets to clients running on
+the same host as nervosj. To connect simply use the relevant *IpcService* implementation instead of
 *HttpService* when you create your service:
 
 .. code-block:: java
@@ -234,13 +234,13 @@ the same host as web3j. To connect simply use the relevant *IpcService* implemen
    Web3j web3 = Web3j.build(new WindowsIpcService("/path/to/namedpipefile"));
    ...
 
-**Note:** IPC is not currently available on web3j-android.
+**Note:** IPC is not currently available on nervosj-android.
 
 
 Working with smart contracts with Java smart contract wrappers
 --------------------------------------------------------------
 
-web3j can auto-generate smart contract wrapper code to deploy and interact with smart contracts
+nervosj can auto-generate smart contract wrapper code to deploy and interact with smart contracts
 without leaving the JVM.
 
 To generate the wrapper code, compile your smart contract:
@@ -249,11 +249,11 @@ To generate the wrapper code, compile your smart contract:
 
    $ solc <contract>.sol --bin --abi --optimize -o <output-dir>/
 
-Then generate the wrapper code using web3j's `Command line tools`_:
+Then generate the wrapper code using nervosj's `Command line tools`_:
 
 .. code-block:: bash
 
-   web3j solidity generate /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
+   nervosj solidity generate /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
 
 Now you can create and deploy your smart contract:
 
@@ -263,7 +263,7 @@ Now you can create and deploy your smart contract:
    Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 
    YourSmartContract contract = YourSmartContract.deploy(
-           <web3j>, <credentials>,
+           <nervosj>, <credentials>,
            GAS_PRICE, GAS_LIMIT,
            <param1>, ..., <paramN>).send();  // constructor params
 
@@ -275,12 +275,12 @@ Alternatively, if you use `Truffle <http://truffleframework.com/>`_, you can mak
    $ truffle compile
    $ truffle deploy
 
-Then generate the wrapper code using web3j's `Command line tools`_:
+Then generate the wrapper code using nervosj's `Command line tools`_:
 
 .. code-block:: bash
 
-   $ cd /path/to/your/web3j/java/project
-   $ web3j truffle generate /path/to/<truffle-smart-contract-output>.json -o /path/to/src/main/java -p com.your.organisation.name
+   $ cd /path/to/your/nervosj/java/project
+   $ nervosj truffle generate /path/to/<truffle-smart-contract-output>.json -o /path/to/src/main/java -p com.your.organisation.name
 
 Whether using `Truffle` or `solc` directly, either way you get a ready-to-use Java wrapper for your contract.
 
@@ -289,7 +289,7 @@ So, to use an existing contract:
 .. code-block:: java
 
    YourSmartContract contract = YourSmartContract.load(
-           "0x<address>|<ensName>", <web3j>, <credentials>, GAS_PRICE, GAS_LIMIT);
+           "0x<address>|<ensName>", <nervosj>, <credentials>, GAS_PRICE, GAS_LIMIT);
 
 To transact with a smart contract:
 
@@ -305,20 +305,20 @@ To call a smart contract:
 
    Type result = contract.someMethod(<param1>, ...).send();
 
-For more information refer to `Smart Contracts <http://docs.web3j.io/smart_contracts.html#solidity-smart-contract-wrappers>`_.
+For more information refer to `Smart Contracts <http://docs.nervosj.io/smart_contracts.html#solidity-smart-contract-wrappers>`_.
 
 
 Filters
 -------
 
-web3j functional-reactive nature makes it really simple to setup observers that notify subscribers
+nervosj functional-reactive nature makes it really simple to setup observers that notify subscribers
 of events taking place on the blockchain.
 
 To receive all new blocks as they are added to the blockchain:
 
 .. code-block:: java
 
-   Subscription subscription = web3j.blockObservable(false).subscribe(block -> {
+   Subscription subscription = nervosj.blockObservable(false).subscribe(block -> {
        ...
    });
 
@@ -326,7 +326,7 @@ To receive all new transactions as they are added to the blockchain:
 
 .. code-block:: java
 
-   Subscription subscription = web3j.transactionObservable().subscribe(tx -> {
+   Subscription subscription = nervosj.transactionObservable().subscribe(tx -> {
        ...
    });
 
@@ -335,7 +335,7 @@ been grouped into a block together):
 
 .. code-block:: java
 
-   Subscription subscription = web3j.pendingTransactionObservable().subscribe(tx -> {
+   Subscription subscription = nervosj.pendingTransactionObservable().subscribe(tx -> {
        ...
    });
 
@@ -350,7 +350,7 @@ blocks being created:
    });
 
 There are a number of other transaction and block replay Observables described in the
-`docs <http://docs.web3j.io/filters.html>`_.
+`docs <http://docs.nervosj.io/filters.html>`_.
 
 Topic filters are also supported:
 
@@ -359,7 +359,7 @@ Topic filters are also supported:
    EthFilter filter = new EthFilter(DefaultBlockParameterName.EARLIEST,
            DefaultBlockParameterName.LATEST, <contract-address>)
                 .addSingleTopic(...)|.addOptionalTopics(..., ...)|...;
-   web3j.ethLogObservable(filter).subscribe(log -> {
+   nervosj.ethLogObservable(filter).subscribe(log -> {
        ...
    });
 
@@ -371,15 +371,15 @@ Subscriptions should always be cancelled when no longer required:
 
 **Note:** filters are not supported on Infura.
 
-For further information refer to `Filters and Events <http://docs.web3j.io/filters.html>`_ and the
-`Web3jRx <https://github.com/web3j/web3j/blob/master/src/core/main/java/org/web3j/protocol/rx/Web3jRx.java>`_
+For further information refer to `Filters and Events <http://docs.nervosj.io/filters.html>`_ and the
+`Web3jRx <https://github.com/nervosj/nervosj/blob/master/src/core/main/java/org/nervosj/protocol/rx/Web3jRx.java>`_
 interface.
 
 
 Transactions
 ------------
 
-web3j provides support for both working with Ethereum wallet files (recommended) and Ethereum
+nervosj provides support for both working with Ethereum wallet files (recommended) and Ethereum
 client admin commands for sending transactions.
 
 To send Ether to another party using your Ethereum wallet file:
@@ -401,7 +401,7 @@ Or if you wish to create your own custom transaction:
    Credentials credentials = WalletUtils.loadCredentials("password", "/path/to/walletfile");
 
    // get the next available nonce
-   EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+   EthGetTransactionCount ethGetTransactionCount = nervosj.ethGetTransactionCount(
                 address, DefaultBlockParameterName.LATEST).sendAsync().get();
    BigInteger nonce = ethGetTransactionCount.getTransactionCount();
 
@@ -412,10 +412,10 @@ Or if you wish to create your own custom transaction:
    // sign & send our transaction
    byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
    String hexValue = Hex.toHexString(signedMessage);
-   EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
+   EthSendTransaction ethSendTransaction = nervosj.ethSendRawTransaction(hexValue).send();
    // ...
 
-Although it's far simpler using web3j's `Transfer <https://github.com/web3j/web3j/blob/master/core/src/main/java/org/web3j/tx/Transfer.java>`_
+Although it's far simpler using nervosj's `Transfer <https://github.com/nervosj/nervosj/blob/master/core/src/main/java/org/nervosj/tx/Transfer.java>`_
 for transacting with Ether.
 
 Using an Ethereum client's admin commands (make sure you have your wallet in the client's
@@ -423,8 +423,8 @@ keystore):
 
 .. code-block:: java
   		
-   Admin web3j = Admin.build(new HttpService());  // defaults to http://localhost:8545/
-   PersonalUnlockAccount personalUnlockAccount = web3j.personalUnlockAccount("0x000...", "a password").sendAsync().get();
+   Admin nervosj = Admin.build(new HttpService());  // defaults to http://localhost:8545/
+   PersonalUnlockAccount personalUnlockAccount = nervosj.personalUnlockAccount("0x000...", "a password").sendAsync().get();
    if (personalUnlockAccount.accountUnlocked()) {
        // send a transaction
    }
@@ -433,21 +433,21 @@ If you want to make use of Parity's
 `Personal <https://github.com/paritytech/parity/wiki/JSONRPC-personal-module>`__ or
 `Trace https://github.com/paritytech/parity/wiki/JSONRPC-trace-module`_, or Geth's
 `Personal <https://github.com/ethereum/go-ethereum/wiki/Management-APIs#personal>`__ client APIs,
-you can use the *org.web3j:parity* and *org.web3j:geth* modules respectively.
+you can use the *org.nervosj:parity* and *org.nervosj:geth* modules respectively.
 
 
 Command line tools
 ------------------
 
-A web3j fat jar is distributed with each release providing command line tools. The command line
-tools allow you to use some of the functionality of web3j from the command line:
+A nervosj fat jar is distributed with each release providing command line tools. The command line
+tools allow you to use some of the functionality of nervosj from the command line:
 
 - Wallet creation
 - Wallet password management
 - Transfer of funds from one wallet to another
 - Generate Solidity smart contract function wrappers
 
-Please refer to the `documentation <http://docs.web3j.io/command_line.html>`_ for further
+Please refer to the `documentation <http://docs.nervosj.io/command_line.html>`_ for further
 information.
 
 
@@ -456,28 +456,28 @@ Further details
 
 In the Java 8 build:
 
-- web3j provides type safe access to all responses. Optional or null responses
+- nervosj provides type safe access to all responses. Optional or null responses
   are wrapped in Java 8's
   `Optional <https://docs.oracle.com/javase/8/docs/api/java/util/Optional.html>`_ type.
 - Asynchronous requests are wrapped in a Java 8
   `CompletableFutures <https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html>`_.
-  web3j provides a wrapper around all async requests to ensure that any exceptions during
+  nervosj provides a wrapper around all async requests to ensure that any exceptions during
   execution will be captured rather then silently discarded. This is due to the lack of support
   in *CompletableFutures* for checked exceptions, which are often rethrown as unchecked exception
   causing problems with detection. See the
-  `Async.run() <https://github.com/web3j/web3j/blob/master/core/src/main/java/org/web3j/utils/Async.java>`_ and its associated
-  `test <https://github.com/web3j/web3j/blob/master/core/src/test/java/org/web3j/utils/AsyncTest.java>`_ for details.
+  `Async.run() <https://github.com/nervosj/nervosj/blob/master/core/src/main/java/org/nervosj/utils/Async.java>`_ and its associated
+  `test <https://github.com/nervosj/nervosj/blob/master/core/src/test/java/org/nervosj/utils/AsyncTest.java>`_ for details.
 
 In both the Java 8 and Android builds:
 
 - Quantity payload types are returned as `BigIntegers <https://docs.oracle.com/javase/8/docs/api/java/math/BigInteger.html>`_.
   For simple results, you can obtain the quantity as a String via
-  `Response <https://github.com/web3j/web3j/blob/master/src/main/java/org/web3j/protocol/core/Response.java>`_.getResult().
+  `Response <https://github.com/nervosj/nervosj/blob/master/src/main/java/org/nervosj/protocol/core/Response.java>`_.getResult().
 - It's also possible to include the raw JSON payload in responses via the *includeRawResponse*
   parameter, present in the
-  `HttpService <https://github.com/web3j/web3j/blob/master/core/src/main/java/org/web3j/protocol/http/HttpService.java>`_
+  `HttpService <https://github.com/nervosj/nervosj/blob/master/core/src/main/java/org/nervosj/protocol/http/HttpService.java>`_
   and
-  `IpcService <https://github.com/web3j/web3j/blob/master/core/src/main/java/org/web3j/protocol/ipc/IpcService.java>`_
+  `IpcService <https://github.com/nervosj/nervosj/blob/master/core/src/main/java/org/nervosj/protocol/ipc/IpcService.java>`_
   classes.
 
 
@@ -488,7 +488,7 @@ Tested clients
 - Parity
 
 You can run the integration test class
-`CoreIT <https://github.com/web3j/web3j/blob/master/integration-tests/src/test/java/org/web3j/protocol/core/CoreIT.java>`_
+`CoreIT <https://github.com/nervosj/nervosj/blob/master/integration-tests/src/test/java/org/nervosj/protocol/core/CoreIT.java>`_
 to verify clients.
 
 
@@ -502,7 +502,7 @@ For a pure Java implementation of the Ethereum client, check out
 `Ethereum Harmony <https://github.com/ether-camp/ethereum-harmony>`_.
 
 
-Projects using web3j
+Projects using nervosj
 --------------------
 
 Please submit a pull request if you wish to include your project on the list:
@@ -516,7 +516,7 @@ Please submit a pull request if you wish to include your project on the list:
   `@matthiaszimmermann <https://github.com/matthiaszimmermann>`_
 
 
-Companies using web3j
+Companies using nervosj
 ---------------------
 
 Please submit a pull request if you wish to include your company on the list:
@@ -532,7 +532,7 @@ Please submit a pull request if you wish to include your company on the list:
 Build instructions
 ------------------
 
-web3j includes integration tests for running against a live Ethereum client. If you do not have a
+nervosj includes integration tests for running against a live Ethereum client. If you do not have a
 client running, you can exclude their execution as per the below instructions.
 
 To run a full build (excluding integration tests):
