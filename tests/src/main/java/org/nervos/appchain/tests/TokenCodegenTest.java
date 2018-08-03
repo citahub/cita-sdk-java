@@ -230,9 +230,8 @@ public class TokenCodegenTest {
         BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
 
         CompletableFuture<Token> tokenFuture = Token.deploy(
-                service, citaTxManager, BigInteger.valueOf(1000000), nonce,
-                BigInteger.valueOf(validUtilBlock),
-                BigInteger.valueOf(version), value, chainId).sendAsync();
+                service, citaTxManager, 1000000L, nonce, validUtilBlock,
+                version, value, chainId).sendAsync();
         TokenCodegenTest tokenCodegenTest = new TokenCodegenTest();
 
         tokenFuture.whenCompleteAsync((contract, exception) -> {
@@ -273,12 +272,12 @@ public class TokenCodegenTest {
         CompletableFuture<TransactionReceipt> execute() throws Exception {
             Token tokenContract = new Token(token.getContractAddress(), service,
                     new CitaTransactionManager(service, from, 5, 3000));
-            BigInteger currentHeight = TokenCodegenTest.this.getCurrentHeight();
+            long currentHeight = TokenCodegenTest.this.getCurrentHeight().longValue();
             return tokenContract.transfer(
-                    this.to.getAddress(), BigInteger.valueOf(tokens), BigInteger.valueOf(100000),
+                    this.to.getAddress(), BigInteger.valueOf(tokens), 100000L,
                     BigInteger.valueOf(Math.abs(random.nextLong())),
-                    currentHeight.add(BigInteger.valueOf(88)),
-                    BigInteger.valueOf(0), chainId, value).sendAsync();
+                    currentHeight + 88,
+                    0, chainId, value).sendAsync();
         }
 
         @Override

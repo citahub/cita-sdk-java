@@ -400,10 +400,10 @@ public class SolidityFunctionWrapper extends Generator {
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
                 .addParameter(Nervosj.class, WEB3J)
                 .addParameter(authType, authName)
-                .addParameter(BigInteger.class, QUOTA)
+                .addParameter(Long.class, QUOTA)
                 .addParameter(BigInteger.class, NONCE)
-                .addParameter(BigInteger.class, VALID_UNTIL_BLOCK)
-                .addParameter(BigInteger.class, VERSION)
+                .addParameter(Long.class, VALID_UNTIL_BLOCK)
+                .addParameter(Integer.class, VERSION)
                 .addParameter(String.class, VALUE)
                 .addParameter(Integer.class, CHAIN_ID);
         return builder;
@@ -691,10 +691,10 @@ public class SolidityFunctionWrapper extends Generator {
             methodBuilder.addParameter(BigInteger.class, WEI_VALUE);
         }
 
-        methodBuilder.addParameter(BigInteger.class, QUOTA)
+        methodBuilder.addParameter(Long.class, QUOTA)
                 .addParameter(BigInteger.class, NONCE)
-                .addParameter(BigInteger.class, VALID_UNTIL_BLOCK)
-                .addParameter(BigInteger.class, VERSION)
+                .addParameter(Long.class, VALID_UNTIL_BLOCK)
+                .addParameter(Integer.class, VERSION)
                 .addParameter(Integer.class, CHAIN_ID)
                 .addParameter(String.class, VALUE);
 

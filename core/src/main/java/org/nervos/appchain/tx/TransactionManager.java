@@ -58,21 +58,21 @@ public abstract class TransactionManager {
 
     // adapt to cita
     protected TransactionReceipt executeTransaction(
-            String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock,
-            BigInteger version, int chainId, String value)
+            String to, String data, long quota,
+            BigInteger nonce, long validUntilBlock,
+            int version, int chainId, String value)
             throws IOException, TransactionException {
-        AppSendTransaction ethSendTransaction = sendTransaction(
+        AppSendTransaction appSendTransaction = sendTransaction(
                 to, data, quota, nonce, validUntilBlock, version, chainId, value);
-        return processResponse(ethSendTransaction);
+        return processResponse(appSendTransaction);
     }
 
     // adapt to cita, return empty EthSendTransaction default,
     // only CitaTransactionManager will override this method
     public AppSendTransaction sendTransaction(
-            String to, String data, BigInteger quota,
-            BigInteger nonce, BigInteger validUntilBlock,
-            BigInteger version, int chainId, String value)
+            String to, String data, long quota,
+            BigInteger nonce, long validUntilBlock,
+            int version, int chainId, String value)
             throws IOException {
         return new AppSendTransaction();
     }

@@ -24,7 +24,7 @@ import static org.nervos.appchain.codegen.FunctionWrapperGenerator.SOLIDITY_TYPE
 
 public class TruffleJsonFunctionWrapperGeneratorTest extends TempFileProvider {
 
-    private static final String PackageName = "org.nervosj.unittests.truffle.java";
+    private static final String PackageName = "org.nervos.appchain.unittests.truffle.java";
 
     private String contractBaseDir;
 
