@@ -1,4 +1,4 @@
-# web3j
+# nervosj
 
 ## Introduction
 `Nervos Web3j`, adaptated from `Ethereum Web3j`,  is a Java and Android library for working with Smart Contract and integrating with clients on Nervos network.  
@@ -15,7 +15,7 @@ java 1.8
 gradle 4.3
 
 ### Install
-`git clone https://github.com/cryptape/web3j.git`
+`git clone https://github.com/cryptape/nervosj.git`
 
 ### Test net
 Use Nervos test net (recommended):  
@@ -26,7 +26,7 @@ please find more information in [how to set up client in your local](https://fak
 
 ### Nervos transactions
 #### Deploy smart contract with transaction
-Similar as Ethereum, smart contracts are deployed in Nervos network by sending transactions. Nervos transaction is defined in [Transaction.java](https://github.com/cryptape/web3j/blob/master/core/src/main/java/org/web3j/protocol/core/methods/request/Transaction.java).  
+Similar as Ethereum, smart contracts are deployed in Nervos network by sending transactions. Nervos transaction is defined in [Transaction.java](https://github.com/cryptape/nervosj/blob/master/core/src/main/java/org/nervosj/protocol/core/methods/request/Transaction.java).
 In Nervos transaction, there are 3 special parameters:  
 - nonce: can be generated randomly and depend on specific logic.
 - quota: execution fee for operation, like gas in Ethereum.
@@ -70,7 +70,7 @@ EthSendTransaction result = service.ethSendRawTransaction(rawTx).send();
 ```
 Please be attention that all transactions need to be signed since Nervos only supports method `sendRawTransaction` rather than `sendTransaction`.  
 
-Please check [SendTransactionDemo.java](https://github.com/cryptape/web3j/blob/master/examples/src/main/java/org/web3j/examples/SendTransactionDemo.java) for complete codes.
+Please check [SendTransactionDemo.java](https://github.com/cryptape/nervosj/blob/master/examples/src/main/java/org/nervosj/examples/SendTransactionDemo.java) for complete codes.
 #### Call smart contract with transaction
 In Nervos smart contract call, like contract deployment, a transaction needs to be created with 2 more parameters:
 - contract address: address of the deployed contract.
@@ -99,22 +99,22 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.ethSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-Please check [SendTransactionDemo.java](https://github.com/cryptape/web3j/blob/master/examples/src/main/java/org/web3j/examples/SendTransactionDemo.java) to see complete codes.
+Please check [SendTransactionDemo.java](https://github.com/cryptape/nervosj/blob/master/examples/src/main/java/org/nervosj/examples/SendTransactionDemo.java) to see complete codes.
 
-### Working with Nervos smart contract with web3j wrapper
-Nervos web3j provides a tool to help to convert solidity contract to a java class from which smart contracts can be deployed and called. Run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar` (current version is 3.2.0).  
+### Working with Nervos smart contract with nervosj wrapper
+Nervos nervosj provides a tool to help to convert solidity contract to a java class from which smart contracts can be deployed and called. Run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar` (current version is 3.2.0).
 Usage of console-version-all is shown below:  
 ```
 $ java -jar console-3.2.0-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/<smart-contract>.bin /path/to/<smart-contract>.abi -o /path/to/src/main/java -p com.your.organisation.name
 ```  
-Example for `Token.sol`, `Token.bin` and `Token.abi` under `/home/qingyangkong/Environment/cryptape/web3j/benchmark/src/main/resources`:  
+Example for `Token.sol`, `Token.bin` and `Token.abi` under `/home/qingyangkong/Environment/cryptape/nervosj/benchmark/src/main/resources`:
 ```
-java -jar console/build/libs/console-3.2.0-all.jar solidity generate benchmark/src/main/resources/Token.bin benchmark/src/main/resources/Token.abi -o benchmark/src/main/java/ -p org.web3j.benchmark
+java -jar console/build/libs/console-3.2.0-all.jar solidity generate benchmark/src/main/resources/Token.bin benchmark/src/main/resources/Token.abi -o benchmark/src/main/java/ -p org.nervosj.benchmark
 ```  
-`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contracts. Parameters `quota`, `nonce` and `invalidUtilBlock`, as talked before, must be provided when create new transactions. Please be attention that [CitaTransactionManager](https://github.com/cryptape/web3j/blob/master/core/src/main/java/org/web3j/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos network.  
-Please check [TokenTest.java](https://github.com/cryptape/web3j/blob/master/benchmark/src/main/java/org/web3j/benchmark/TokenTest.java) for complete codes.
-### Use general web3j methods to directly compile, deploy and call smart conrtact
-web3j provides interface [Account](https://github.com/cryptape/web3j/blob/master/core/src/main/java/org/web3j/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without generating extra java, bin or abi file.  
+`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contracts. Parameters `quota`, `nonce` and `invalidUtilBlock`, as talked before, must be provided when create new transactions. Please be attention that [CitaTransactionManager](https://github.com/cryptape/nervosj/blob/master/core/src/main/java/org/nervosj/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos network.
+Please check [TokenTest.java](https://github.com/cryptape/nervosj/blob/master/benchmark/src/main/java/org/nervosj/benchmark/TokenTest.java) for complete codes.
+### Use general nervosj methods to directly compile, deploy and call smart conrtact
+nervosj provides interface [Account](https://github.com/cryptape/nervosj/blob/master/core/src/main/java/org/nervosj/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without generating extra java, bin or abi file.
 Method of smart contract deployment:  
 ```
 // Deploy contract in sync and async way.
@@ -129,5 +129,5 @@ public Object callContract(String contractAddress, String funcName, BigInteger n
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
 public Object callContract(String contractAddress, AbiDefinition functionAbi, BigInteger nonce, BigInteger quota, Object... args)
 ```
-While contract file is required when first deploy the contract, web3j can get the abi file according to address when call methods in deployed contract.  
-Please find complete code in [TokenTest](https://github.com/cryptape/web3j/blob/master/tests/src/main/java/org/web3j/tests/TokenTest.java).
+While contract file is required when first deploy the contract, nervosj can get the abi file according to address when call methods in deployed contract.
+Please find complete code in [TokenTest](https://github.com/cryptape/nervosj/blob/master/tests/src/main/java/org/nervosj/tests/TokenTest.java).
