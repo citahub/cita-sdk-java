@@ -1,4 +1,5 @@
 package org.nervos.appchain.tests;
+
 //CHECKSTYLE:OFF
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -27,9 +28,7 @@ import rx.functions.Func1;
 /**
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
- * <p>Please use the <a href="https://docs.nervosj.io/command_line.html">nervosj command line tools</a>,
- * or the org.nervos.appchain.codegen.SolidityFunctionWrapperGenerator in the
- * <a href="https://github.com/nervosj/nervosj/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use the <a href="https://github.com/cryptape/nervosj/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with nervosj version 0.17.
  */
@@ -42,11 +41,8 @@ public class Token extends Contract {
 
     public List<TransferEventResponse> getTransferEvents(TransactionReceipt transactionReceipt) {
         final Event event = new Event("Transfer",
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-                }, new TypeReference<Address>() {
-                }),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         List<EventValues> valueList = extractEventParameters(event, transactionReceipt);
         ArrayList<TransferEventResponse> responses = new ArrayList<TransferEventResponse>(valueList.size());
         for (EventValues eventValues : valueList) {
@@ -61,11 +57,8 @@ public class Token extends Contract {
 
     public Observable<TransferEventResponse> transferEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         final Event event = new Event("Transfer",
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-                }, new TypeReference<Address>() {
-                }),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         AppFilter filter = new AppFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(event));
         return nervosj.appLogObservable(filter).map(new Func1<Log, TransferEventResponse>() {
@@ -84,8 +77,7 @@ public class Token extends Contract {
     public RemoteCall<BigInteger> balances(String param0) {
         Function function = new Function("balances",
                 Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(param0)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
@@ -101,8 +93,7 @@ public class Token extends Contract {
     public RemoteCall<BigInteger> getBalance(String account) {
         Function function = new Function("getBalance",
                 Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(account)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
