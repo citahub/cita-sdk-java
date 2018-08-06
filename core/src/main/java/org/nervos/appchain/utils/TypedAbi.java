@@ -54,7 +54,7 @@ public class TypedAbi {
             Class staticArray;
             try {
                 staticArray = Class.forName(
-                        "org.nervosj.abi.datatypes.generated.StaticArray" + length);
+                        "org.nervos.appchain.abi.datatypes.generated.StaticArray" + length);
             } catch (ClassNotFoundException e) {
                 staticArray = StaticArray.class;
             }
@@ -97,10 +97,10 @@ public class TypedAbi {
             } else if (typeName.equals("Utf8String")) {
                 ctor = Utf8String.class.getDeclaredConstructor(String.class);
             } else if (typeName.startsWith("Uint") || typeName.startsWith("Int")) {
-                Class c = Class.forName("org.nervosj.abi.datatypes.generated." + typeName);
+                Class c = Class.forName("org.nervos.appchain.abi.datatypes.generated." + typeName);
                 ctor = c.getDeclaredConstructor(BigInteger.class);
             } else if (typeName.startsWith("Bytes")) {
-                Class c = Class.forName("org.nervosj.abi.datatypes.generated." + typeName);
+                Class c = Class.forName("org.nervos.appchain.abi.datatypes.generated." + typeName);
                 ctor = c.getDeclaredConstructor(byte[].class);
             } else {
                 throw new InvalidAbiType(typeName);

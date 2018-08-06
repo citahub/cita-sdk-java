@@ -23,7 +23,7 @@ public class TokenFilterTest {
     private static String payerPrivateKey;
     private static String payeePrivateKey;
     private static Nervosj service;
-    private static BigInteger quota;
+    private static long quota;
     private static String value;
     private static Token token;
 
@@ -45,7 +45,7 @@ public class TokenFilterTest {
 
         HttpService.setDebug(false);
         service = Nervosj.build(new HttpService(testNetIpAddr));
-        quota = BigInteger.valueOf(1000000);
+        quota = 1000000L;
         value = "0";
     }
 
@@ -104,8 +104,8 @@ public class TokenFilterTest {
         BigInteger nonce = TestUtil.getNonce();
 
         CompletableFuture<Token> tokenFuture = Token.deploy(
-                service, citaTxManager, BigInteger.valueOf(1000000), nonce,
-                BigInteger.valueOf(validUtilBlock), BigInteger.valueOf(version),
+                service, citaTxManager, 1000000L, nonce,
+                validUtilBlock, version,
                 value, chainId).sendAsync();
         TokenFilterTest tokenFilterTest = new TokenFilterTest();
 
@@ -144,11 +144,12 @@ public class TokenFilterTest {
 
         CompletableFuture<TransactionReceipt> execute() {
             Token tokenContract = TokenFilterTest.this.token;
-            BigInteger validUtilBlock = TestUtil.getValidUtilBlock(TokenFilterTest.this.service);
+            long validUtilBlock = TestUtil.getValidUtilBlock(
+                    TokenFilterTest.this.service).longValue();
             BigInteger nonce = TestUtil.getNonce();
             return tokenContract.transfer(
                     this.to.getAddress(), BigInteger.valueOf(tokens), TokenFilterTest.this.quota,
-                    nonce, validUtilBlock, BigInteger.valueOf(version), chainId, value).sendAsync();
+                    nonce, validUtilBlock, version, chainId, value).sendAsync();
         }
 
         @Override

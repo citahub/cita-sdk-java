@@ -138,7 +138,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger quota, java.math.BigInteger nonce, java.math.BigInteger validUntilBlock, java.math.BigInteger version, java.lang.Integer chainId, java.lang.String value) {\n"
+                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.lang.Long quota, java.math.BigInteger nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.lang.Integer chainId, java.lang.String value) {\n"
                         + "  org.nervos.appchain.abi.datatypes.Function function = new org.nervos.appchain.abi.datatypes.Function(\n"
                         + "      \"functionName\", \n"
                         + "      java.util.Arrays.<org.nervos.appchain.abi.datatypes.Type>asList(new org.nervos.appchain.abi.datatypes.generated.Uint8(param)), \n"
@@ -165,7 +165,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.math.BigInteger quota, java.math.BigInteger nonce, java.math.BigInteger validUntilBlock, java.math.BigInteger version, java.lang.Integer chainId, java.lang.String value) {\n"
+                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.lang.Long quota, java.math.BigInteger nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.lang.Integer chainId, java.lang.String value) {\n"
                         + "  org.nervos.appchain.abi.datatypes.Function function = new org.nervos.appchain.abi.datatypes.Function(\n"
                         + "      \"functionName\", \n"
                         + "      java.util.Arrays.<org.nervos.appchain.abi.datatypes.Type>asList(new org.nervos.appchain.abi.datatypes.generated.Uint8(param)), \n"

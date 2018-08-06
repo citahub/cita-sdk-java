@@ -79,9 +79,7 @@ public class SolidityFunctionWrapper extends Generator {
     private static final String CODEGEN_WARNING = "<p>Auto generated code.\n"
             + "<p><strong>Do not modify!</strong>\n"
             + "<p>Please use the "
-            + "<a href=\"https://docs.nervosj.io/command_line.html\">nervosj command line tools</a>,\n"
-            + "or the " + SolidityFunctionWrapperGenerator.class.getName() + " in the \n"
-            + "<a href=\"https://github.com/nervosj/nervosj/tree/master/codegen\">"
+            + "<a href=\"https://github.com/cryptape/nervosj/tree/master/codegen\">"
             + "codegen module</a> to update.\n";
 
     private final boolean useNativeJavaTypes;
@@ -167,7 +165,7 @@ public class SolidityFunctionWrapper extends Generator {
                                     .build())
                     .build();
             classBuilder.addMethod(getPreviousAddress);
-            
+
         }
     }
 
@@ -177,7 +175,7 @@ public class SolidityFunctionWrapper extends Generator {
         String javadoc = CODEGEN_WARNING + getWeb3jVersion();
 
         return TypeSpec.classBuilder(className)
-                .addModifiers(Modifier.PUBLIC) 
+                .addModifiers(Modifier.PUBLIC)
                 .addJavadoc(javadoc)
                 .superclass(Contract.class)
                 .addField(createBinaryDefinition(binary));
@@ -400,10 +398,10 @@ public class SolidityFunctionWrapper extends Generator {
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
                 .addParameter(Nervosj.class, WEB3J)
                 .addParameter(authType, authName)
-                .addParameter(BigInteger.class, QUOTA)
+                .addParameter(Long.class, QUOTA)
                 .addParameter(BigInteger.class, NONCE)
-                .addParameter(BigInteger.class, VALID_UNTIL_BLOCK)
-                .addParameter(BigInteger.class, VERSION)
+                .addParameter(Long.class, VALID_UNTIL_BLOCK)
+                .addParameter(Integer.class, VERSION)
                 .addParameter(String.class, VALUE)
                 .addParameter(Integer.class, CHAIN_ID);
         return builder;
@@ -691,10 +689,10 @@ public class SolidityFunctionWrapper extends Generator {
             methodBuilder.addParameter(BigInteger.class, WEI_VALUE);
         }
 
-        methodBuilder.addParameter(BigInteger.class, QUOTA)
+        methodBuilder.addParameter(Long.class, QUOTA)
                 .addParameter(BigInteger.class, NONCE)
-                .addParameter(BigInteger.class, VALID_UNTIL_BLOCK)
-                .addParameter(BigInteger.class, VERSION)
+                .addParameter(Long.class, VALID_UNTIL_BLOCK)
+                .addParameter(Integer.class, VERSION)
                 .addParameter(Integer.class, CHAIN_ID)
                 .addParameter(String.class, VALUE);
 

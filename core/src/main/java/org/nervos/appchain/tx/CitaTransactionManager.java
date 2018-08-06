@@ -47,23 +47,22 @@ public class CitaTransactionManager extends TransactionManager {
     // adapt to cita
     @Override
     public AppSendTransaction sendTransaction(
-            String to, String data, BigInteger quota, BigInteger nonce,
-            BigInteger validUntilBlock, BigInteger version, int chainId, String value)
+            String to, String data, long quota, BigInteger nonce,
+            long validUntilBlock, int version, int chainId, String value)
             throws IOException {
         Transaction transaction = new Transaction(
-                to, nonce, quota.longValue(), validUntilBlock.longValue(),
-                version.intValue(), chainId, value, data);
+                to, nonce, quota, validUntilBlock,
+                version, chainId, value, data);
         return nervosj.appSendRawTransaction(transaction.sign(credentials)).send();
     }
 
     // adapt to cita
     public CompletableFuture<AppSendTransaction> sendTransactionAsync(
-            String to, String data, BigInteger quota, BigInteger nonce,
-            BigInteger validUntilBlock, BigInteger version, int chainId, String value)
-            throws IOException {
+            String to, String data, long quota, BigInteger nonce,
+            long validUntilBlock, int version, int chainId, String value) {
         Transaction transaction = new Transaction(
-                to, nonce, quota.longValue(), validUntilBlock.longValue(),
-                version.intValue(), chainId, value, data);
+                to, nonce, quota, validUntilBlock,
+                version, chainId, value, data);
         return nervosj.appSendRawTransaction(transaction.sign(credentials)).sendAsync();
     }
 

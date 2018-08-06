@@ -1,13 +1,11 @@
 package org.nervos.appchain.tests;
 
 //CHECKSTYLE:OFF
-//close check for generated codes.
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
 import org.nervos.appchain.abi.TypeReference;
@@ -27,13 +25,10 @@ import org.nervos.appchain.tx.TransactionManager;
 import rx.Observable;
 import rx.functions.Func1;
 
-
 /**
  * <p>Auto generated code.
  * <p><strong>Do not modify!</strong>
- * <p>Please use the <a href="https://docs.web3j.io/command_line.html">nervosj command line tools</a>,
- * or the org.nervosj.codegen.SolidityFunctionWrapperGenerator in the
- * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use the <a href="https://github.com/cryptape/nervosj/tree/master/codegen">codegen module</a> to update.
  *
  * <p>Generated with nervosj version 0.17.
  */
@@ -46,11 +41,8 @@ public class Token extends Contract {
 
     public List<TransferEventResponse> getTransferEvents(TransactionReceipt transactionReceipt) {
         final Event event = new Event("Transfer",
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-                }, new TypeReference<Address>() {
-                }),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         List<EventValues> valueList = extractEventParameters(event, transactionReceipt);
         ArrayList<TransferEventResponse> responses = new ArrayList<TransferEventResponse>(valueList.size());
         for (EventValues eventValues : valueList) {
@@ -65,11 +57,8 @@ public class Token extends Contract {
 
     public Observable<TransferEventResponse> transferEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         final Event event = new Event("Transfer",
-                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {
-                }, new TypeReference<Address>() {
-                }),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         AppFilter filter = new AppFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(event));
         return nervosj.appLogObservable(filter).map(new Func1<Log, TransferEventResponse>() {
@@ -87,30 +76,28 @@ public class Token extends Contract {
 
     public RemoteCall<BigInteger> balances(String param0) {
         Function function = new Function("balances",
-                Arrays.<Type>asList(new Address(param0)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(param0)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, Integer chainId, String value) {
+    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, Long quota, BigInteger nonce, Long validUntilBlock, Integer version, Integer chainId, String value) {
         Function function = new Function(
                 "transfer",
-                Arrays.<Type>asList(new Address(_to),
-                        new Uint256(_value)),
+                Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(_to),
+                        new org.nervos.appchain.abi.datatypes.generated.Uint256(_value)),
                 Collections.<TypeReference<?>>emptyList());
         return executeRemoteCallTransaction(function, quota, nonce, validUntilBlock, version, chainId, value);
     }
 
     public RemoteCall<BigInteger> getBalance(String account) {
         Function function = new Function("getBalance",
-                Arrays.<Type>asList(new Address(account)),
-                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
-                }));
+                Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(account)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public static RemoteCall<Token> deploy(Nervosj nervosj, TransactionManager transactionManager, BigInteger quota, BigInteger nonce, BigInteger validUntilBlock, BigInteger version, String value, Integer chainId) {
+    public static RemoteCall<Token> deploy(Nervosj nervosj, TransactionManager transactionManager, Long quota, BigInteger nonce, Long validUntilBlock, Integer version, String value, Integer chainId) {
         return deployRemoteCall(Token.class, nervosj, transactionManager, quota, nonce, validUntilBlock, version, chainId, value, BINARY, "");
     }
 
@@ -126,3 +113,4 @@ public class Token extends Contract {
         public BigInteger _value;
     }
 }
+//CHECKSTYLE:ON

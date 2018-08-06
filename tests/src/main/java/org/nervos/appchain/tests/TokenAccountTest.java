@@ -28,7 +28,7 @@ public class TokenAccountTest {
     private static final String configPath = "tests/src/main/resources/config.properties";
 
     private static Random random;
-    private static BigInteger quota;
+    private static long quota;
     private static String value;
     private static Nervosj service;
 
@@ -55,7 +55,7 @@ public class TokenAccountTest {
         HttpService.setDebug(false);
         service = Nervosj.build(new HttpService(testNetIpAddr));
         random = new Random(System.currentTimeMillis());
-        quota = BigInteger.valueOf(1000000);
+        quota = 1000000L;
         value = "0";
     }
 

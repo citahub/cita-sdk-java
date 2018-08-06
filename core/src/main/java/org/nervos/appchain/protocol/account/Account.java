@@ -49,19 +49,19 @@ public class Account {
 
     /// TODO: get contract address from receipt after deploy, then return contract name
     public AppSendTransaction deploy(
-            File contractFile, BigInteger nonce, BigInteger quota,
+            File contractFile, BigInteger nonce, long quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
         return this.transactionManager
                 .sendTransaction("", contractBin, quota, nonce, getValidUntilBlock(),
-                        BigInteger.valueOf(version), chainId, value);
+                        version, chainId, value);
     }
 
     public CompletableFuture<AppSendTransaction> deployAsync(
-            File contractFile, BigInteger nonce, BigInteger quota,
-            BigInteger version, int chainId, String value)
+            File contractFile, BigInteger nonce, long quota,
+            int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
@@ -74,7 +74,7 @@ public class Account {
     // sendTransaction: nonce and quota is necessary
     public Object callContract(
             String contractAddress, String funcName,
-            BigInteger nonce, BigInteger quota, int version,
+            BigInteger nonce, long quota, int version,
             int chainId, String value, Object... args)
             throws Exception {
         if (abi == null) {
@@ -88,7 +88,7 @@ public class Account {
 
     public Object callContract(
             String contractAddress, AbiDefinition functionAbi,
-            BigInteger nonce, BigInteger quota,
+            BigInteger nonce, long quota,
             int version,int chainId, String value, Object... args)
             throws Exception {
         List<Type> params = new ArrayList<>();
@@ -116,7 +116,7 @@ public class Account {
             // send_transaction
             func = new Function(functionAbi.getName(), params, Collections.emptyList());
             return sendTransaction(
-                    contractAddress, func, nonce, quota.longValue(), version, chainId, value);
+                    contractAddress, func, nonce, quota, version, chainId, value);
         }
     }
 
@@ -140,21 +140,21 @@ public class Account {
 
     public Object sendTransaction(
             String contractAddress, Function func, BigInteger nonce,
-            long quota, long version, int chainId, String value)
+            long quota, int version, int chainId, String value)
             throws IOException {
         String data = FunctionEncoder.encode(func);
         return this.transactionManager.sendTransaction(
-                contractAddress, data, BigInteger.valueOf(quota), nonce, getValidUntilBlock(),
-                BigInteger.valueOf(version), chainId, value);
+                contractAddress, data, quota, nonce, getValidUntilBlock(),
+                version, chainId, value);
     }
 
     public Object uploadAbi(
-            String contractAddress, String abi, BigInteger nonce, BigInteger quota,
-            long version, int chainId, String value) throws Exception {
+            String contractAddress, String abi, BigInteger nonce, long quota,
+            int version, int chainId, String value) throws Exception {
         String data = hex_remove_0x(contractAddress) + hex_remove_0x(bytesToHexStr(abi.getBytes()));
         return this.transactionManager.sendTransaction(
                 ABI_ADDRESS, data, quota, nonce, getValidUntilBlock(),
-                BigInteger.valueOf(version), chainId, value);
+                version, chainId, value);
     }
 
     public String getAbi(String contractAddress) throws IOException {
@@ -254,8 +254,8 @@ public class Account {
         return this.service.appBlockNumber().send().getBlockNumber().longValue();
     }
 
-    private BigInteger getValidUntilBlock() throws IOException {
-        return BigInteger.valueOf(blockHeight() + 80);
+    private long getValidUntilBlock() throws IOException {
+        return blockHeight() + 80;
     }
 
     private String hex_remove_0x(String hex) {
