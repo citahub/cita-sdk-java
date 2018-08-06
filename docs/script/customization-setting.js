@@ -4,7 +4,7 @@
 
 var customization = {
 
-    name: 'Web3j', // name of this document
+    name: 'Nervosj', // name of this document
 
-    homepage: 'Web3jAPI.md',// the home page, extension name '.md' cannot be omitted.
+    homepage: 'NervosjAPI.md',// the home page, extension name '.md' cannot be omitted.
 }
