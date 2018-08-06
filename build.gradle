@@ -58,7 +58,6 @@ allprojects {
     compileJava {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
-    /*
     compileTestJava {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
@@ -72,7 +71,7 @@ allprojects {
             xml.enabled true
         }
     }
-
+/*
     tasks.withType(Test) {
         reports.html.destination = file("${reporting.baseDir}/${name}")
     }
@@ -93,68 +92,18 @@ subprojects {
     }
 }
 
-project(':benchmark') {
-    task benchTest(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.benchmark.Benchmark'
-        args = ['-config', 'src/main/resources/config.json']
-        jvmArgs = ["-Xms2g", "-Xmx8g"]
-    }
-
-    task interfaceTest(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.benchmark.Benchmark'
-        args = ['-interface']
-    }
-
-    task tokenTest(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.benchmark.Benchmark'
-        args = ['-token', 'src/main/resources/token_test_config.json']
-    }
-
-    task advanceTest(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.benchmark.AdvanceTest'
-    }
-
-    task benchJar(type: Jar) {
-        exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
-        from {
-            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        }
-        from sourceSets.main.output
-
-        manifest {
-            attributes "Main-Class": "org.web3j.benchmark.Benchmark"
-        }
-    }
-}
-
-project(':examples') {
-    task runDemo(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.examples.SendTransactionDemo'
-    }
-
-    task permissionTest(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.examples.PermissionSystemTest'
-    }
-}
-
-project(':tests') {
-    task runTests(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.tests.PermissionSystemTest'
-        args = ['src/main/resources/config.json']
-    }
-
-    task runToken(type: JavaExec) {
-        classpath = sourceSets.main.runtimeClasspath
-        main = 'org.web3j.tests.TokenTest'
-    }
-}
+//project(':tests') {
+//    task runTests(type: JavaExec) {
+//        classpath = sourceSets.main.runtimeClasspath
+//        main = 'org.web3j.tests.PermissionSystemTest'
+//        args = ['src/main/resources/config.json']
+//    }
+//
+//    task runToken(type: JavaExec) {
+//        classpath = sourceSets.main.runtimeClasspath
+//        main = 'org.web3j.tests.TokenTest'
+//    }
+//}
 
 project(':core') {
     task coreJar(type: Jar) {
@@ -315,9 +264,9 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: [
-                            'org/web3j/abi/datatypes/generated/**',
-                            'org/web3j/tuples/generated/**',
-                            'org/web3j/ens/contracts/generated/**'
+                            'org/nervos/appchain/abi/datatypes/generated/**',
+                            'org/nervos/appchain/tuples/generated/**',
+                            'org/nervos/appchain/ens/contracts/generated/**'
                     ])
         })
     }
