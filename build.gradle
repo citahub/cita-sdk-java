@@ -44,7 +44,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'org.web3j'
-    version '0.17'
+    version '0.17.1'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
