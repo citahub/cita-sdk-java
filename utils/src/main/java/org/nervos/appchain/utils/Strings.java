@@ -17,8 +17,22 @@ public class Strings {
     }
 
     public static String join(List<String> src, String delimiter) {
-        return src == null ? null : String.join(delimiter, src.toArray(new String[0]));
+        if (src != null) {
+            StringBuilder builder = new StringBuilder();
+            if (!src.isEmpty()) {
+                builder.append(src.get(0));
+            }
+            for (int i = 1; i < src.size(); i++) {
+                builder.append(delimiter).append(src.get(i));
+            }
+            return builder.toString();
+        }
+        return null;
     }
+
+//    public static String join(List<String> src, String delimiter) {
+//        return src == null ? null : String.join(delimiter, src.toArray(new String[0]));
+//    }
 
     public static String capitaliseFirstLetter(String string) {
         if (string == null || string.length() == 0) {
@@ -55,8 +69,12 @@ public class Strings {
             hex.append(Integer.toHexString((int) chars[i]));
         }
 
-        String hexStr = hex.toString() + "".join(
-                "", Collections.nCopies(length - (hex.length() / 2), "00"));
+        String temp = "";
+        for(String s: Collections.nCopies(length - (hex.length() / 2), "00")){
+            temp += s;
+        }
+        String hexStr = hex.toString() + temp;
+
         return Numeric.hexStringToByteArray(hexStr);
     }
 

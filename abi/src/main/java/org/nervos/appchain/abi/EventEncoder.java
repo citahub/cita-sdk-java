@@ -2,7 +2,6 @@ package org.nervos.appchain.abi;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.nervos.appchain.abi.datatypes.Event;
 import org.nervos.appchain.abi.datatypes.Type;
@@ -41,9 +40,17 @@ public class EventEncoder {
         StringBuilder result = new StringBuilder();
         result.append(methodName);
         result.append("(");
-        String params = parameters.stream()
-                .map(Utils::getTypeName)
-                .collect(Collectors.joining(","));
+
+        String params = "";
+        for(int i = 0; i < parameters.size(); i++) {
+            TypeReference<T> typeReference = parameters.get(i);
+            String typeName = Utils.getTypeName(typeReference);
+            params += typeName;
+            if(i + 1 < parameters.size()) {
+                params += ",";
+            }
+        }
+
         result.append(params);
         result.append(")");
         return result.toString();
@@ -59,9 +66,16 @@ public class EventEncoder {
         StringBuilder result = new StringBuilder();
         result.append(methodName);
         result.append("(");
-        String params = parameters.stream()
-                .map(p -> Utils.getTypeName(p))
-                .collect(Collectors.joining(","));
+
+        String params = "";
+        for (int i = 0; i < parameters.size(); i++) {
+            TypeReference<T> typeReference =parameters.get(i);
+            String typeName = Utils.getTypeName(typeReference);
+            params += typeName;
+            if (i + 1 < parameters.size()) {
+                params += ",";
+            }
+        }
         result.append(params);
         result.append(")");
         return result.toString();

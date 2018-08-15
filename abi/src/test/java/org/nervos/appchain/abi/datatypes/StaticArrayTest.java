@@ -1,7 +1,5 @@
 package org.nervos.appchain.abi.datatypes;
 
-import java.util.stream.IntStream;
-
 import org.junit.Test;
 
 import org.nervos.appchain.abi.datatypes.generated.StaticArray3;
@@ -50,6 +48,10 @@ public class StaticArrayTest {
     }
 
     private Uint[] arrayOfUints(int length) {
-        return IntStream.rangeClosed(1, length).mapToObj(Uint8::new).toArray(Uint[]::new);
+        Uint[] units = new Uint[length];
+        for (int i = 0; i < length; i++) {
+            units[i] = new Uint8(i + 1);
+        }
+        return units;
     }
 }

@@ -54,12 +54,12 @@ public abstract class TypeReference<T extends org.nervos.appchain.abi.datatypes.
         if (getType() instanceof ParameterizedType) {
             return (Class<T>) ((ParameterizedType) clsType).getRawType();
         } else {
-            return (Class<T>) Class.forName(clsType.getTypeName());
+            return (Class<T>) Class.forName(((Class) clsType).getName());
         }
     }
 
     public static <T extends org.nervos.appchain.abi.datatypes.Type>
-                TypeReference<T> create(Class<T> cls) {
+                TypeReference<T> create(final Class<T> cls) {
         return new TypeReference<T>() {
             @Override
             public Type getType() {
@@ -69,7 +69,7 @@ public abstract class TypeReference<T extends org.nervos.appchain.abi.datatypes.
     }
 
     public static <T extends org.nervos.appchain.abi.datatypes.Type>
-            TypeReference<T> create(ParameterizedType type) {
+            TypeReference<T> create(final ParameterizedType type) {
         return new TypeReference<T>() {
             @Override
             public Type getType() {
@@ -79,7 +79,7 @@ public abstract class TypeReference<T extends org.nervos.appchain.abi.datatypes.
     }
 
     public static <T extends org.nervos.appchain.abi.datatypes.Type>
-            StaticArrayTypeReference<T> create(int length, ParameterizedType type) {
+            StaticArrayTypeReference<T> create(int length, final ParameterizedType type) {
         return new StaticArrayTypeReference<T>(length) {
             @Override
             public Type getType() {

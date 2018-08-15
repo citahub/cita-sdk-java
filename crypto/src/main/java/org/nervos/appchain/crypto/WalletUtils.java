@@ -5,9 +5,8 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -24,11 +23,6 @@ import static org.nervos.appchain.crypto.Keys.PRIVATE_KEY_LENGTH_IN_HEX;
 public class WalletUtils {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    static {
-        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     public static String generateFullNewWalletFile(String password, File destinationDirectory)
             throws NoSuchAlgorithmException, NoSuchProviderException,
@@ -51,6 +45,11 @@ public class WalletUtils {
 
         ECKeyPair ecKeyPair = Keys.createEcKeyPair();
         return generateWalletFile(password, ecKeyPair, destinationDirectory, useFullScrypt);
+    }
+
+    static {
+        objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public static String generateWalletFile(
@@ -84,11 +83,8 @@ public class WalletUtils {
     }
 
     private static String getWalletFileName(WalletFile walletFile) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern(
-                "'UTC--'yyyy-MM-dd'T'HH-mm-ss.nVV'--'");
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-
-        return now.format(format) + walletFile.getAddress() + ".json";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("'UTC--'yyyy-MM-dd'T'HH-mm-ss.SSS'--'");
+        return dateFormat.format(new Date()) + walletFile.getAddress() + ".json";
     }
 
     public static String getDefaultKeyDirectory() {

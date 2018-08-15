@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 import org.nervos.appchain.abi.datatypes.DynamicArray;
@@ -32,20 +34,20 @@ public class FunctionReturnDecoderTest {
         Function function = new Function(
                 "test",
                 Collections.<Type>emptyList(),
-                Collections.singletonList(new TypeReference<Uint>(){})
+                Collections.<TypeReference<?>>singletonList(new TypeReference<Uint>(){})
         );
 
         assertThat(FunctionReturnDecoder.decode(
                 "0x0000000000000000000000000000000000000000000000000000000000000037",
                 function.getOutputParameters()),
-                equalTo(Collections.singletonList(new Uint(BigInteger.valueOf(55)))));
+                IsEqual.<List>equalTo(Collections.singletonList(new Uint(BigInteger.valueOf(55)))));
     }
 
     @Test
     public void testSimpleFunctionStringResultDecode() {
         Function function = new Function("simple",
-                Arrays.asList(),
-                Collections.singletonList(new TypeReference<Utf8String>() {
+                Arrays.<Type>asList(),
+                Collections.<TypeReference<?>>singletonList(new TypeReference<Utf8String>() {
                 }));
 
         List<Type> utf8Strings = FunctionReturnDecoder.decode(
@@ -55,14 +57,14 @@ public class FunctionReturnDecoderTest {
                         + "6f6e65206d6f72652074696d6500000000000000000000000000000000000000",
                 function.getOutputParameters());
 
-        assertThat(utf8Strings.get(0).getValue(), is("one more time"));
+        assertThat((String) utf8Strings.get(0).getValue(), is("one more time"));
     }
 
     @Test
     public void testFunctionEmptyStringResultDecode() {
         Function function = new Function("test",
-                Collections.emptyList(),
-                Collections.singletonList(new TypeReference<Utf8String>() {
+                Collections.<Type>emptyList(),
+                Collections.<TypeReference<?>>singletonList(new TypeReference<Utf8String>() {
                 }));
 
         List<Type> utf8Strings = FunctionReturnDecoder.decode(
@@ -70,7 +72,7 @@ public class FunctionReturnDecoderTest {
                         + "0000000000000000000000000000000000000000000000000000000000000000",
                 function.getOutputParameters());
 
-        assertThat(utf8Strings.get(0).getValue(), is(""));
+        assertThat((String) utf8Strings.get(0).getValue(), is(""));
     }
 
     @Test
@@ -78,14 +80,14 @@ public class FunctionReturnDecoderTest {
         Function function = new Function(
                 "test",
                 Collections.<Type>emptyList(),
-                Arrays.asList(new TypeReference<Uint>() { }, new TypeReference<Uint>() { })
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint>() { }, new TypeReference<Uint>() { })
         );
 
         assertThat(FunctionReturnDecoder.decode(
                 "0x0000000000000000000000000000000000000000000000000000000000000037"
                 + "0000000000000000000000000000000000000000000000000000000000000007",
                 function.getOutputParameters()),
-                equalTo(Arrays.asList(new Uint(BigInteger.valueOf(55)),
+                IsEqual.<List>equalTo(Arrays.asList(new Uint(BigInteger.valueOf(55)),
                         new Uint(BigInteger.valueOf(7)))));
     }
 
@@ -93,7 +95,7 @@ public class FunctionReturnDecoderTest {
     public void testDecodeMultipleStringValues() {
         Function function = new Function("function",
                 Collections.<Type>emptyList(),
-                Arrays.asList(
+                Arrays.<TypeReference<?>>asList(
                         new TypeReference<Utf8String>() { }, new TypeReference<Utf8String>() { },
                         new TypeReference<Utf8String>() { }, new TypeReference<Utf8String>() { }));
 
@@ -111,7 +113,7 @@ public class FunctionReturnDecoderTest {
                         + "0000000000000000000000000000000000000000000000000000000000000004"
                         + "6d6e6f3200000000000000000000000000000000000000000000000000000000",
                 function.getOutputParameters()),
-                equalTo(Arrays.asList(
+                equalTo(Arrays.<Type>asList(
                         new Utf8String("def1"), new Utf8String("ghi1"),
                         new Utf8String("jkl1"), new Utf8String("mno2"))));
     }
@@ -132,7 +134,7 @@ public class FunctionReturnDecoderTest {
                         + "000000000000000000000000000000000000000000000000000000000000000a",
                 outputParameters);
 
-        List<Type> expected = Arrays.asList(
+        List<Type> expected = Arrays.<Type>asList(
                 new StaticArray<>(new Uint256(BigInteger.valueOf(55)), new Uint256(BigInteger.ONE)),
                 new Uint256(BigInteger.TEN));
         assertThat(decoded, equalTo(expected));
@@ -142,22 +144,22 @@ public class FunctionReturnDecoderTest {
     public void testVoidResultFunctionDecode() {
         Function function = new Function(
                 "test",
-                Collections.emptyList(),
-                Collections.emptyList());
+                Collections.<Type>emptyList(),
+                Collections.<TypeReference<?>>emptyList());
 
         assertThat(FunctionReturnDecoder.decode("0x", function.getOutputParameters()),
-                is(Collections.emptyList()));
+                CoreMatchers.<List>is(Collections.emptyList()));
     }
 
     @Test
     public void testEmptyResultFunctionDecode() {
         Function function = new Function(
                 "test",
-                Collections.emptyList(),
-                Collections.singletonList(new TypeReference<Uint>() { }));
+                Collections.<Type>emptyList(),
+                Collections.<TypeReference<?>>singletonList(new TypeReference<Uint>() { }));
 
         assertThat(FunctionReturnDecoder.decode("0x", function.getOutputParameters()),
-                is(Collections.emptyList()));
+                CoreMatchers.<List>is(Collections.emptyList()));
     }
 
     @Test
@@ -168,7 +170,7 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 encoded,
                 new TypeReference<Uint256>() {}),
-                equalTo(value));
+                IsEqual.<Type>equalTo(value));
     }
 
     @Test
@@ -180,7 +182,7 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 hash,
                 new TypeReference<Utf8String>() {}),
-                equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
+                IsEqual.<Type>equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
     }
 
     @Test
@@ -191,7 +193,7 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 rawInput,
                 new TypeReference<Bytes32>(){}),
-                equalTo(new Bytes32(rawInputBytes)));
+                IsEqual.<Type>equalTo(new Bytes32(rawInputBytes)));
     }
 
     @Test
@@ -202,7 +204,7 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 rawInput,
                 new TypeReference<Bytes16>(){}),
-                equalTo(new Bytes16(rawInputBytes)));
+                IsEqual.<Type>equalTo(new Bytes16(rawInputBytes)));
     }
 
     @Test
@@ -214,7 +216,7 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 hash,
                 new TypeReference<DynamicBytes>() {}),
-                equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
+                IsEqual.<Type>equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
     }
 
     @Test
@@ -226,6 +228,6 @@ public class FunctionReturnDecoderTest {
         assertThat(FunctionReturnDecoder.decodeIndexedValue(
                 hash,
                 new TypeReference<DynamicArray>() {}),
-                equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
+                IsEqual.<Type>equalTo(new Bytes32(Numeric.hexStringToByteArray(hash))));
     }
 }
