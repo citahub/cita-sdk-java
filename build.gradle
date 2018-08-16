@@ -36,19 +36,19 @@ apply plugin: 'idea'
 apply plugin: 'io.codearte.nexus-staging'
 apply plugin: 'jacoco'
 
-description 'web3j base project'
+description 'nervosj base project'
 
 allprojects {
 
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
 
-    group 'org.web3j'
-    version '0.17.1'
+    group 'org.nervos'
+    version '0.17.1-android'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
+//    apply plugin: 'checkstyle'
 
     repositories {
         mavenCentral()
@@ -77,10 +77,10 @@ allprojects {
     }
     */
 
-    checkstyle {
-        toolVersion = "7.7"
-        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-    }
+//    checkstyle {
+//        toolVersion = "7.7"
+//        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+//    }
 }
 
 subprojects {
@@ -91,19 +91,6 @@ subprojects {
                     "org.mockito:mockito-core:$mockitoVersion"
     }
 }
-
-//project(':tests') {
-//    task runTests(type: JavaExec) {
-//        classpath = sourceSets.main.runtimeClasspath
-//        main = 'org.web3j.tests.PermissionSystemTest'
-//        args = ['src/main/resources/config.json']
-//    }
-//
-//    task runToken(type: JavaExec) {
-//        classpath = sourceSets.main.runtimeClasspath
-//        main = 'org.web3j.tests.TokenTest'
-//    }
-//}
 
 project(':core') {
     task coreJar(type: Jar) {
@@ -177,14 +164,14 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
                 }
 
                 pom.project {
-                    name 'web3j'
+                    name 'nervosj'
                     packaging 'jar'
                     description project.description
-                    url 'https://web3j.io'
+                    url 'https://docs.nervos.org/nervosj/#/'
 
                     scm {
-                        connection 'scm:git:https://github.com/web3j/web3j.git'
-                        url 'https://github.com/web3j/web3j.git'
+                        connection 'scm:git:https://github.com/cryptape/nervosj.git'
+                        url 'https://github.com/cryptape/nervosj.git'
                     }
 
                     licenses {
@@ -196,9 +183,9 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
 
                     developers {
                         developer {
-                            id 'conor10'
-                            name 'Conor Svensson'
-                            email 'conor10@gmail.com'
+                            id 'QingyangKong'
+                            name 'Qingyang Kong'
+                            email 'Qingyangkong@cryptape.com'
                         }
                     }
                 }
@@ -218,13 +205,13 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
         publish = true
         pkg {
             repo = 'maven'
-            name = 'org.web3j'
+            name = 'org.cryptape'
             desc = project.description
-            userOrg = 'web3j'
+            userOrg = 'cryptape'
             licenses = ['Apache-2.0']
-            issueTrackerUrl = 'https://github.com/web3j/web3j/issues'
-            vcsUrl = 'https://github.com/web3j/web3j.git'
-            websiteUrl = 'https://web3j.io'
+            issueTrackerUrl = 'https://github.com/cryptape/nervosj/issues'
+            vcsUrl = 'https://github.com/cryptape/nervosj.git'
+            websiteUrl = 'https://docs.nervos.org/nervosj/#/'
             publicDownloadNumbers = true
         }
     }
