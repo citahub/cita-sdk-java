@@ -1,10 +1,11 @@
 package org.nervos.appchain.protocol.core;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.utils.Async;
 import rx.Observable;
+import rx.Subscriber;
 
 /**
  * A common type for wrapping remote requests.
@@ -20,8 +21,8 @@ public class RemoteCall<T> {
     }
 
     /**
-     * Perform request synchronously.
      *
+     * Perform request synchronously.
      * @return result of enclosed function
      * @throws Exception if the function throws an exception
      */
@@ -34,8 +35,13 @@ public class RemoteCall<T> {
      *
      * @return a future containing our function
      */
-    public CompletableFuture<T> sendAsync() {
-        return Async.run(this::send);
+    public Future<T> sendAsync() {
+        return Async.run(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return RemoteCall.this.send();
+            }
+        });
     }
 
     /**
@@ -45,14 +51,16 @@ public class RemoteCall<T> {
      */
     public Observable<T> observable() {
         return Observable.create(
-                subscriber -> {
-                    try {
-                        subscriber.onNext(send());
-                        subscriber.onCompleted();
-                    } catch (Exception e) {
-                        subscriber.onError(e);
+                new Observable.OnSubscribe<T>() {
+                    @Override
+                    public void call(Subscriber<? super T> subscriber) {
+                        try {
+                            subscriber.onNext(send());
+                            subscriber.onCompleted();
+                        } catch (Exception e) {
+                            subscriber.onError(e);
+                        }
                     }
-                }
-        );
+                });
     }
 }

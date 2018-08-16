@@ -3,7 +3,7 @@ package org.nervos.appchain.tx;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.nervos.appchain.crypto.Credentials;
@@ -36,7 +36,7 @@ public class Transfer extends ManagedTransaction {
      * @param value amount to send
      * @param unit of specified send
      *
-     * @return {@link Optional} containing our transaction receipt
+     * @return transaction receipt
      * @throws ExecutionException if the computation threw an
      *                            exception
      * @throws InterruptedException if the current thread was interrupted
@@ -68,14 +68,18 @@ public class Transfer extends ManagedTransaction {
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(
-            Nervosj nervosj, Credentials credentials,
-            String toAddress, BigDecimal value, Convert.Unit unit) throws InterruptedException,
+            final Nervosj nervosj, Credentials credentials,
+            final String toAddress, final BigDecimal value, final Convert.Unit unit) throws InterruptedException,
             IOException, TransactionException {
 
-        TransactionManager transactionManager = new RawTransactionManager(nervosj, credentials);
+        final TransactionManager transactionManager = new RawTransactionManager(nervosj, credentials);
 
-        return new RemoteCall<>(() ->
-                new Transfer(nervosj, transactionManager).send(toAddress, value, unit));
+        return new RemoteCall<TransactionReceipt>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                return new Transfer(nervosj, transactionManager).send(toAddress, value, unit);
+            }
+        });
     }
 
     /**
@@ -89,13 +93,23 @@ public class Transfer extends ManagedTransaction {
      * @return {@link RemoteCall} containing executing transaction
      */
     public RemoteCall<TransactionReceipt> sendFunds(
-            String toAddress, BigDecimal value, Convert.Unit unit) {
-        return new RemoteCall<>(() -> send(toAddress, value, unit));
+            final String toAddress, final BigDecimal value, final Convert.Unit unit) {
+        return new RemoteCall<TransactionReceipt>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                return send(toAddress, value, unit);
+            }
+        });
     }
 
     public RemoteCall<TransactionReceipt> sendFunds(
-            String toAddress, BigDecimal value, Convert.Unit unit, BigInteger gasPrice,
-            BigInteger gasLimit) {
-        return new RemoteCall<>(() -> send(toAddress, value, unit, gasPrice, gasLimit));
+            final String toAddress, final BigDecimal value, final Convert.Unit unit, final BigInteger gasPrice,
+            final BigInteger gasLimit) {
+        return new RemoteCall<>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                return send(toAddress, value, unit, gasPrice, gasLimit);
+            }
+        });
     }
 }

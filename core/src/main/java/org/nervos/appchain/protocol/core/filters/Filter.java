@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +39,7 @@ public abstract class Filter<T> {
 
     public void run(ScheduledExecutorService scheduledExecutorService, long blockTime) {
         try {
-            AppFilter appFilter = sendRequest();
+            final AppFilter appFilter = sendRequest();
             if (appFilter.hasError()) {
                 throwException(appFilter.getError());
             }
@@ -68,13 +67,16 @@ public abstract class Filter<T> {
             which isn't ideal given the aforementioned issues.
             */
             schedule = scheduledExecutorService.scheduleAtFixedRate(
-                    () -> {
-                        try {
-                            this.pollFilter(appFilter);
-                        } catch (Throwable e) {
-                            // All exceptions must be caught, otherwise our job terminates without
-                            // any notification
-                            log.error("Error sending request", e);
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Filter.this.pollFilter(appFilter);
+                            } catch (Throwable e) {
+                                // All exceptions must be caught, otherwise our job terminates without
+                                // any notification
+                                log.error("Error sending request", e);
+                            }
                         }
                     },
                     0, blockTime, TimeUnit.MILLISECONDS);
@@ -85,13 +87,13 @@ public abstract class Filter<T> {
 
     private void getInitialFilterLogs() {
         try {
-            Optional<Request<?, AppLog>> maybeRequest = this.getFilterLogs(this.filterId);
+            Request<?, AppLog> request = this.getFilterLogs(this.filterId);
             AppLog appLog = null;
-            if (maybeRequest.isPresent()) {
-                appLog = maybeRequest.get().send();
+            if (request != null) {
+                appLog = request.send();
             } else {
                 appLog = new AppLog();
-                appLog.setResult(Collections.emptyList());
+                appLog.setResult(Collections.<AppLog.LogResult>emptyList());
             }
             process(appLog.getLogs());
 
@@ -145,7 +147,7 @@ public abstract class Filter<T> {
      * @param filterId Id of the filter for which the historic log should be retrieved
      * @return Historic logs, or an empty optional if the filter cannot retrieve historic logs
      */
-    protected abstract Optional<Request<?, AppLog>> getFilterLogs(BigInteger filterId);
+    protected abstract Request<?, AppLog> getFilterLogs(BigInteger filterId);
 
     void throwException(Response.Error error) {
         throw new FilterException("Invalid request: "

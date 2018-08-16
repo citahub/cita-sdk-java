@@ -2,7 +2,7 @@ package org.nervos.appchain.tx;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
@@ -57,7 +57,7 @@ public class CitaTransactionManager extends TransactionManager {
     }
 
     // adapt to cita
-    public CompletableFuture<AppSendTransaction> sendTransactionAsync(
+    public Future<AppSendTransaction> sendTransactionAsync(
             String to, String data, long quota, BigInteger nonce,
             long validUntilBlock, int version, int chainId, String value) {
         Transaction transaction = new Transaction(

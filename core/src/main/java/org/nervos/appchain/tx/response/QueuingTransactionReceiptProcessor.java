@@ -1,7 +1,6 @@
 package org.nervos.appchain.tx.response;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,7 +36,12 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
         this.pollingAttemptsPerTxHash = pollingAttemptsPerTxHash;
 
         scheduledExecutorService.scheduleAtFixedRate(
-                this::sendTransactionReceiptRequests,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        QueuingTransactionReceiptProcessor.this.sendTransactionReceiptRequests();
+                    }
+                },
                 pollingFrequency, pollingFrequency, TimeUnit.MILLISECONDS);
     }
 
@@ -53,10 +57,10 @@ public class QueuingTransactionReceiptProcessor extends TransactionReceiptProces
         for (RequestWrapper requestWrapper : pendingTransactions) {
             try {
                 String transactionHash = requestWrapper.getTransactionHash();
-                Optional<TransactionReceipt> transactionReceipt =
+                TransactionReceipt transactionReceipt =
                         sendTransactionReceiptRequest(transactionHash);
-                if (transactionReceipt.isPresent()) {
-                    callback.accept(transactionReceipt.get());
+                if (transactionReceipt != null) {
+                    callback.accept(transactionReceipt);
                     pendingTransactions.remove(requestWrapper);
                 } else {
                     if (requestWrapper.getCount() == pollingAttemptsPerTxHash) {

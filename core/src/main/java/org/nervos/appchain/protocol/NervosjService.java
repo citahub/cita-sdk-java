@@ -1,7 +1,7 @@
 package org.nervos.appchain.protocol;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.Response;
@@ -13,6 +13,6 @@ public interface NervosjService {
     <T extends Response> T send(
             Request request, Class<T> responseType) throws IOException;
 
-    <T extends Response> CompletableFuture<T> sendAsync(
+    <T extends Response> Future<T> sendAsync(
             Request request, Class<T> responseType);
 }

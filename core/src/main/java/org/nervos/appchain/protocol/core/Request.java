@@ -2,7 +2,8 @@ package org.nervos.appchain.protocol.core;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.nervos.appchain.protocol.NervosjService;
@@ -70,11 +71,16 @@ public class Request<S, T extends Response> {
         return nervosjService.send(this, responseType);
     }
 
-    public CompletableFuture<T> sendAsync() {
+    public Future<T> sendAsync() {
         return  nervosjService.sendAsync(this, responseType);
     }
 
     public Observable<T> observable() {
-        return new RemoteCall<>(this::send).observable();
+        return new RemoteCall<T>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return Request.this.send();
+            }
+        }).observable();
     }
 }

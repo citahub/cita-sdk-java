@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
@@ -153,8 +153,8 @@ public abstract class Contract extends ManagedTransaction {
      *
      * @return the TransactionReceipt generated at contract deployment
      */
-    public Optional<TransactionReceipt> getTransactionReceipt() {
-        return Optional.ofNullable(transactionReceipt);
+    public TransactionReceipt getTransactionReceipt() {
+        return transactionReceipt;
     }
 
     /**
@@ -229,7 +229,7 @@ public abstract class Contract extends ManagedTransaction {
      *
      * @param data  to send in transaction
      * @param weiValue in Wei to send in transaction
-     * @return {@link Optional} containing our transaction receipt
+     * @return transaction receipt
      * @throws IOException                 if the call to the node fails
      * @throws TransactionException if the transaction was not mined while waiting
      */
@@ -250,41 +250,67 @@ public abstract class Contract extends ManagedTransaction {
     }
 
     protected <T extends Type> RemoteCall<T>
-                executeRemoteCallSingleValueReturn(Function function) {
-        return new RemoteCall<>(
-                () -> executeCallSingleValueReturn(function));
+                executeRemoteCallSingleValueReturn(final Function function) {
+        return new RemoteCall<T>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return Contract.this.executeCallSingleValueReturn(function);
+            }
+        });
     }
 
     protected <T> RemoteCall<T> executeRemoteCallSingleValueReturn(
-            Function function, Class<T> returnType) {
-        return new RemoteCall<>(
-                () -> executeCallSingleValueReturn(function, returnType));
+            final Function function, final Class<T> returnType) {
+        return new RemoteCall<>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return Contract.this.executeCallSingleValueReturn(function, returnType);
+            }
+        });
     }
 
     protected RemoteCall<List<Type>>
-                executeRemoteCallMultipleValueReturn(Function function) {
-        return new RemoteCall<>(
-                () -> executeCallMultipleValueReturn(function));
+                executeRemoteCallMultipleValueReturn(final Function function) {
+        return new RemoteCall<>(new Callable<List<Type>>() {
+            @Override
+            public List<Type> call() throws Exception {
+                return Contract.this.executeCallMultipleValueReturn(function);
+            }
+        });
     }
 
     protected RemoteCall<TransactionReceipt>
-                executeRemoteCallTransaction(Function function) {
-        return new RemoteCall<>(() -> executeTransaction(function));
+                executeRemoteCallTransaction(final Function function) {
+        return new RemoteCall<>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                return Contract.this.executeTransaction(function);
+            }
+        });
     }
 
     protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
-            Function function, String weiValue) {
-        return new RemoteCall<>(() -> executeTransaction(function, weiValue));
+            final Function function, final String weiValue) {
+        return new RemoteCall<>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                return Contract.this.executeTransaction(function, weiValue);
+            }
+        });
     }
 
     protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
-            Function function, long quota, BigInteger nonce,
-            long validUntilBlock, int version,
-            int chainId, String value) {
-        return new RemoteCall<>(
-                () -> executeTransaction(
+            final Function function, final long quota, final BigInteger nonce,
+            final long validUntilBlock, final int version,
+            final int chainId, final String value) {
+        return new RemoteCall<>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() throws Exception {
+                return Contract.this.executeTransaction(
                         FunctionEncoder.encode(function),
-                        quota, nonce, validUntilBlock, version, chainId, value));
+                        quota, nonce, validUntilBlock, version, chainId, value);
+            }
+        });
     }
 
     private static <T extends Contract> T create(
@@ -400,24 +426,34 @@ public abstract class Contract extends ManagedTransaction {
 
     protected static <T extends Contract> RemoteCall<T>
                     deployRemoteCall(
-            Class<T> type, Nervosj nervosj, TransactionManager transactionManager,
-            long quota, BigInteger nonce, long validUntilBlock,
-            int version, int chainId, String value,
-            String binary, String encodedConstructor) {
-        return new RemoteCall<>(() -> deploy(
-                type, nervosj, transactionManager, quota, nonce, validUntilBlock,
-                version, binary, chainId, value, encodedConstructor));
+            final Class<T> type, final Nervosj nervosj, final TransactionManager transactionManager,
+            final long quota, final BigInteger nonce, final long validUntilBlock,
+            final int version, final int chainId, final String value,
+            final String binary, final String encodedConstructor) {
+        return new RemoteCall<>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return deploy(
+                        type, nervosj, transactionManager, quota, nonce, validUntilBlock,
+                        version, binary, chainId, value, encodedConstructor);
+            }
+        });
     }
 
     protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            Nervosj nervosj, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor,
-            String value) {
-        return new RemoteCall<>(() -> deploy(
-                type, nervosj, credentials, gasPrice, gasLimit, binary,
-                encodedConstructor, value));
+            final Class<T> type,
+            final Nervosj nervosj, final Credentials credentials,
+            final BigInteger gasPrice, final BigInteger gasLimit,
+            final String binary, final String encodedConstructor,
+            final String value) {
+        return new RemoteCall<T>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return deploy(
+                        type, nervosj, credentials, gasPrice, gasLimit, binary,
+                        encodedConstructor, value);
+            }
+        });
     }
 
     protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
@@ -431,13 +467,18 @@ public abstract class Contract extends ManagedTransaction {
     }
 
     protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            Nervosj nervosj, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor, String value) {
-        return new RemoteCall<>(() -> deploy(
-                type, nervosj, transactionManager, gasPrice, gasLimit, binary,
-                encodedConstructor, value));
+            final Class<T> type,
+            final Nervosj nervosj, final TransactionManager transactionManager,
+            final BigInteger gasPrice, final BigInteger gasLimit,
+            final String binary, final String encodedConstructor, final String value) {
+        return new RemoteCall<T>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return deploy(
+                        type, nervosj, transactionManager, gasPrice, gasLimit, binary,
+                        encodedConstructor, value);
+            }
+        });
     }
 
     protected static <T extends Contract> RemoteCall<T> deployRemoteCall(

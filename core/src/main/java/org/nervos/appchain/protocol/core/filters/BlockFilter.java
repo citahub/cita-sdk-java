@@ -3,7 +3,6 @@ package org.nervos.appchain.protocol.core.filters;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 import org.nervos.appchain.protocol.Nervosj;
 import org.nervos.appchain.protocol.core.Request;
@@ -46,8 +45,8 @@ public class BlockFilter extends Filter<String> {
      * Optional.empty()
      */
     @Override
-    protected Optional<Request<?, AppLog>> getFilterLogs(BigInteger filterId) {
-        return Optional.empty();
+    protected Request<?, AppLog> getFilterLogs(BigInteger filterId) {
+        return null;
     }
 }
 

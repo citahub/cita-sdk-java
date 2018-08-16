@@ -2,26 +2,31 @@ package org.nervos.appchain.protocol.rx;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.stream.Collectors;
 
 import org.nervos.appchain.protocol.Nervosj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
 import org.nervos.appchain.protocol.core.filters.BlockFilter;
+import org.nervos.appchain.protocol.core.filters.Callback;
 import org.nervos.appchain.protocol.core.filters.Filter;
 import org.nervos.appchain.protocol.core.filters.LogFilter;
 import org.nervos.appchain.protocol.core.filters.PendingTransactionFilter;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
 import org.nervos.appchain.protocol.core.methods.response.AppBlock;
+import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.Transaction;
 import org.nervos.appchain.utils.Observables;
 import rx.Observable;
 import rx.Scheduler;
 import rx.Subscriber;
+import rx.functions.Action0;
+import rx.functions.Func0;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -40,58 +45,104 @@ public class JsonRpc2_0Rx {
         this.scheduler = Schedulers.from(scheduledExecutorService);
     }
 
-    public Observable<String> appBlockHashObservable(long pollingInterval) {
-        return Observable.create(subscriber -> {
-            BlockFilter blockFilter = new BlockFilter(
-                    nervosj, subscriber::onNext);
-            run(blockFilter, subscriber, pollingInterval);
+    public Observable<String> appBlockHashObservable(final long pollingInterval) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                BlockFilter blockFilter = new BlockFilter(
+                        nervosj, new Callback<String>() {
+                    @Override
+                    public void onEvent(String value) {
+                        subscriber.onNext(value);
+                    }
+                });
+                JsonRpc2_0Rx.this.run(blockFilter, subscriber, pollingInterval);
+            }
         });
     }
 
-    public Observable<String> appPendingTransactionHashObservable(long pollingInterval) {
-        return Observable.create(subscriber -> {
-            PendingTransactionFilter pendingTransactionFilter = new PendingTransactionFilter(
-                    nervosj, subscriber::onNext);
-
-            run(pendingTransactionFilter, subscriber, pollingInterval);
+    public Observable<String> appPendingTransactionHashObservable(final long pollingInterval) {
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                PendingTransactionFilter pendingTransactionFilter = new PendingTransactionFilter(
+                        nervosj, new Callback<String>() {
+                    @Override
+                    public void onEvent(String value) {
+                        subscriber.onNext(value);
+                    }
+                });
+                JsonRpc2_0Rx.this.run(pendingTransactionFilter, subscriber, pollingInterval);
+            }
         });
     }
 
     public Observable<Log> appLogObservable(
-            AppFilter appFilter, long pollingInterval) {
-        return Observable.create((Subscriber<? super Log> subscriber) -> {
-            LogFilter logFilter = new LogFilter(
-                    nervosj, subscriber::onNext, appFilter);
+            final AppFilter appFilter, final long pollingInterval) {
+        return Observable.create(new Observable.OnSubscribe<Log>() {
+            @Override
+            public void call(final Subscriber<? super Log> subscriber) {
+                LogFilter logFilter = new LogFilter(
+                        nervosj, new Callback<Log>() {
+                    @Override
+                    public void onEvent(Log value) {
+                        subscriber.onNext(value);
+                    }
+                }, appFilter);
 
-            run(logFilter, subscriber, pollingInterval);
+                run(logFilter, subscriber, pollingInterval);
+            }
         });
     }
 
     private <T> void run(
-            Filter<T> filter, Subscriber<? super T> subscriber,
-            long pollingInterval) {
+            final Filter<T> filter, Subscriber<? super T> subscriber,
+            final long pollingInterval) {
 
         filter.run(scheduledExecutorService, pollingInterval);
-        subscriber.add(Subscriptions.create(filter::cancel));
+        subscriber.add(Subscriptions.create(new Action0() {
+            @Override
+            public void call() {
+                filter.cancel();
+            }
+        }));
     }
 
-    public Observable<Transaction> transactionObservable(long pollingInterval) {
+    public Observable<Transaction> transactionObservable(final long pollingInterval) {
         return blockObservable(true, pollingInterval)
-                .flatMapIterable(JsonRpc2_0Rx::toTransactions);
+                .flatMapIterable(new Func1<AppBlock, Iterable<? extends Transaction>>() {
+                    @Override
+                    public Iterable<? extends Transaction> call(final AppBlock appBlock) {
+                        return JsonRpc2_0Rx.this.toTransactions(appBlock);
+                    }
+                });
     }
 
     public Observable<Transaction> pendingTransactionObservable(long pollingInterval) {
         return appPendingTransactionHashObservable(pollingInterval)
-                .flatMap(transactionHash ->
-                        nervosj.appGetTransactionByHash(transactionHash).observable())
-                .map(appTransaction -> appTransaction.getTransaction().get());
+                .flatMap(new Func1<String, Observable<AppTransaction>>() {
+                    @Override
+                    public Observable<AppTransaction> call(final String transactionHash) {
+                        return nervosj.appGetTransactionByHash(transactionHash).observable();
+                    }
+                })
+                .map(new Func1<AppTransaction, Transaction>() {
+                    @Override
+                    public Transaction call(AppTransaction appTransaction) {
+                        return appTransaction.getTransaction();
+                    }
+                });
     }
 
     public Observable<AppBlock> blockObservable(
-            boolean fullTransactionObjects, long pollingInterval) {
+            final boolean fullTransactionObjects, long pollingInterval) {
         return appBlockHashObservable(pollingInterval)
-                .flatMap(blockHash ->
-                        nervosj.appGetBlockByHash(blockHash, fullTransactionObjects).observable());
+                .flatMap(new Func1<String, Observable<? extends AppBlock>>() {
+                    @Override
+                    public Observable<? extends AppBlock> call(final String blockHash) {
+                        return nervosj.appGetBlockByHash(blockHash, fullTransactionObjects).observable();
+                    }
+                });
     }
 
     public Observable<AppBlock> replayBlocksObservable(
@@ -117,7 +168,7 @@ public class JsonRpc2_0Rx {
 
     private Observable<AppBlock> replayBlocksObservableSync(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
-            boolean fullTransactionObjects, boolean ascending) {
+            final boolean fullTransactionObjects, boolean ascending) {
 
         BigInteger startBlockNumber = null;
         BigInteger endBlockNumber = null;
@@ -130,21 +181,36 @@ public class JsonRpc2_0Rx {
 
         if (ascending) {
             return Observables.range(startBlockNumber, endBlockNumber)
-                    .flatMap(i -> nervosj.appGetBlockByNumber(
-                            new DefaultBlockParameterNumber(i),
-                            fullTransactionObjects).observable());
+                    .flatMap(new Func1<BigInteger, Observable<? extends AppBlock>>() {
+                        @Override
+                        public Observable<? extends AppBlock> call(BigInteger i) {
+                            return nervosj.appGetBlockByNumber(
+                                    new DefaultBlockParameterNumber(i),
+                                    fullTransactionObjects).observable();
+                        }
+                    });
         } else {
             return Observables.range(startBlockNumber, endBlockNumber, false)
-                    .flatMap(i -> nervosj.appGetBlockByNumber(
-                            new DefaultBlockParameterNumber(i),
-                            fullTransactionObjects).observable());
+                    .flatMap(new Func1<BigInteger, Observable<? extends AppBlock>>() {
+                        @Override
+                        public Observable<? extends AppBlock> call(BigInteger i) {
+                            return nervosj.appGetBlockByNumber(
+                                    new DefaultBlockParameterNumber(i),
+                                    fullTransactionObjects).observable();
+                        }
+                    });
         }
     }
 
     public Observable<Transaction> replayTransactionsObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         return replayBlocksObservable(startBlock, endBlock, true)
-                .flatMapIterable(JsonRpc2_0Rx::toTransactions);
+                .flatMapIterable(new Func1<AppBlock, Iterable<? extends Transaction>>() {
+                    @Override
+                    public Iterable<? extends Transaction> call(AppBlock appBlock) {
+                        return toTransactions(appBlock);
+                    }
+                });
     }
 
     public Observable<AppBlock> catchUpToLatestBlockObservable(
@@ -160,15 +226,15 @@ public class JsonRpc2_0Rx {
     public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
         return catchUpToLatestBlockObservable(
-                startBlock, fullTransactionObjects, Observable.empty());
+                startBlock, fullTransactionObjects, Observable.<AppBlock>empty());
     }
 
     private Observable<AppBlock> catchUpToLatestBlockObservableSync(
-            DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<AppBlock> onCompleteObservable) {
+            DefaultBlockParameter startBlock, final boolean fullTransactionObjects,
+            final Observable<AppBlock> onCompleteObservable) {
 
         BigInteger startBlockNumber;
-        BigInteger latestBlockNumber;
+        final BigInteger latestBlockNumber;
         try {
             startBlockNumber = getBlockNumber(startBlock);
             latestBlockNumber = getLatestBlockNumber();
@@ -184,18 +250,29 @@ public class JsonRpc2_0Rx {
                             new DefaultBlockParameterNumber(startBlockNumber),
                             new DefaultBlockParameterNumber(latestBlockNumber),
                             fullTransactionObjects),
-                    Observable.defer(() -> catchUpToLatestBlockObservableSync(
-                            new DefaultBlockParameterNumber(latestBlockNumber.add(BigInteger.ONE)),
-                            fullTransactionObjects,
-                            onCompleteObservable)));
+                    Observable.defer(new Func0<Observable<AppBlock>>() {
+                        @Override
+                        public Observable<AppBlock> call() {
+                            return JsonRpc2_0Rx.this.catchUpToLatestBlockObservableSync(
+                                    new DefaultBlockParameterNumber(latestBlockNumber.add(BigInteger.ONE)),
+                                    fullTransactionObjects,
+                                    onCompleteObservable
+                            );
+                        }
+                    }));
         }
     }
 
     public Observable<Transaction> catchUpToLatestTransactionObservable(
-            DefaultBlockParameter startBlock) {
+            final DefaultBlockParameter startBlock) {
         return catchUpToLatestBlockObservable(
-                startBlock, true, Observable.empty())
-                .flatMapIterable(JsonRpc2_0Rx::toTransactions);
+                startBlock, true, Observable.<AppBlock>empty())
+                .flatMapIterable(new Func1<AppBlock, Iterable<? extends Transaction>>() {
+                    @Override
+                    public Iterable<? extends Transaction> call(AppBlock appBlock) {
+                        return toTransactions(appBlock);
+                    }
+                });
     }
 
     public Observable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
@@ -211,7 +288,12 @@ public class JsonRpc2_0Rx {
             DefaultBlockParameter startBlock, long pollingInterval) {
         return catchUpToLatestAndSubscribeToNewBlocksObservable(
                 startBlock, true, pollingInterval)
-                .flatMapIterable(JsonRpc2_0Rx::toTransactions);
+                .flatMapIterable(new Func1<AppBlock, Iterable<? extends Transaction>>() {
+                    @Override
+                    public Iterable<? extends Transaction> call(AppBlock appBlock) {
+                        return toTransactions(appBlock);
+                    }
+                });
     }
 
     private BigInteger getLatestBlockNumber() throws IOException {
@@ -232,8 +314,11 @@ public class JsonRpc2_0Rx {
     private static List<Transaction> toTransactions(AppBlock appBlock) {
         // If you ever see an exception thrown here, it's probably due to an incomplete chain in
         // Geth/Parity. You should resync to solve.
-        return appBlock.getBlock().getBody().getTransactions().stream()
-                .map(transactionResult -> (Transaction) transactionResult.get())
-                .collect(Collectors.toList());
+        List<AppBlock.TransactionObject> transactionResults = appBlock.getBlock().getBody().getTransactions();
+        List<Transaction> transactions = new ArrayList<Transaction>(transactionResults.size());
+        for (AppBlock.TransactionObject transactionResult: transactionResults) {
+            transactions.add((Transaction) transactionResult.get());
+        }
+        return transactions;
     }
 }
