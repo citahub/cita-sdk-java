@@ -9,6 +9,7 @@ import java.util.concurrent.Future;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.crypto.WalletUtils;
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.core.methods.response.Web3ClientVersion;
 import org.nervos.appchain.protocol.exceptions.TransactionException;
@@ -132,11 +133,11 @@ public class WalletSendFunds extends WalletManager {
 
         Nervosj nervosj;
         if (clientAddress.equals("")) {
-            nervosj = Nervosj.build(new HttpService());
+            nervosj = NervosjFactory.build(new HttpService());
         } else if (clientAddress.contains("infura.io")) {
-            nervosj = Nervosj.build(new InfuraHttpService(clientAddress));
+            nervosj = NervosjFactory.build(new InfuraHttpService(clientAddress));
         } else {
-            nervosj = Nervosj.build(new HttpService(clientAddress));
+            nervosj = NervosjFactory.build(new HttpService(clientAddress));
         }
 
         try {

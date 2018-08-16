@@ -3,6 +3,8 @@ package org.nervos.appchain.crypto;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 import org.nervos.appchain.rlp.RlpString;
@@ -33,7 +35,8 @@ public class TransactionEncoderTest {
         List<RlpType> rlpStrings = TransactionEncoder.asRlpValues(createEtherTransaction(),
                 new Sign.SignatureData((byte) 0, new byte[32], new byte[32]));
         assertThat(rlpStrings.size(), is(9));
-        assertThat(rlpStrings.get(3), equalTo(RlpString.create(new BigInteger("add5355", 16))));
+        assertThat(rlpStrings.get(3),
+                IsEqual.<RlpType>equalTo(RlpString.create(new BigInteger("add5355", 16))));
     }
 
     @Test
@@ -41,7 +44,7 @@ public class TransactionEncoderTest {
         List<RlpType> rlpStrings = TransactionEncoder.asRlpValues(
                 createContractTransaction(), null);
         assertThat(rlpStrings.size(), is(6));
-        assertThat(rlpStrings.get(3), is(RlpString.create("")));
+        assertThat(rlpStrings.get(3), CoreMatchers.<RlpType>is(RlpString.create("")));
     }
 
     @Test

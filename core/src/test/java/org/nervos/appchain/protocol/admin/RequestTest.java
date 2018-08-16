@@ -20,7 +20,7 @@ public class RequestTest extends RequestTester {
 
     @Override
     protected void initWeb3Client(HttpService httpService) {
-        web3j = Admin.build(httpService);
+        web3j = AdminFactory.build(httpService);
     }
 
 
@@ -38,7 +38,7 @@ public class RequestTest extends RequestTester {
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"personal_newAccount\","
                 + "\"params\":[\"password\"],\"id\":1}");
-    } 
+    }
 
     @Ignore
     //personal_sendTransaction is not supported in CITA
@@ -62,7 +62,7 @@ public class RequestTest extends RequestTester {
         //CHECKSTYLE:OFF
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"personal_sendTransaction\",\"params\":[{\"from\":\"FROM\",\"to\":\"TO\",\"gas\":\"0x1\",\"gasPrice\":\"0xa\",\"value\":\"0x0\",\"data\":\"0xDATA\",\"nonce\":\"0x1\"},\"password\"],\"id\":1}");
         //CHECKSTYLE:ON
-    }   
+    }
 
     @Test
     public void testPersonalUnlockAccount() throws Exception {

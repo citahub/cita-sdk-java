@@ -3,6 +3,7 @@ package org.nervos.appchain.protocol.core;
 import org.junit.Test;
 
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.RequestTester;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
@@ -15,7 +16,7 @@ public class RequestTest extends RequestTester {
 
     @Override
     protected void initWeb3Client(HttpService httpService) {
-        nervosj = Nervosj.build(httpService);
+        nervosj = NervosjFactory.build(httpService);
     }
 
     @Test
@@ -82,7 +83,7 @@ public class RequestTest extends RequestTester {
     @Test
     public void testAppGetCode() throws Exception {
         nervosj.appGetCode("0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
-                DefaultBlockParameter.valueOf(Numeric.toBigInt("0x2"))).send();
+                DefaultBlockParameterNumber.valueOf(Numeric.toBigInt("0x2"))).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"getCode\","
                 + "\"params\":[\"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b\",\"0x2\"],\"id\":1}");
@@ -117,7 +118,7 @@ public class RequestTest extends RequestTester {
                 "0xa70e8dd61c5d32be8058bb8eb970870f07233155",
                 "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
                         "0x0"),
-                DefaultBlockParameter.valueOf("latest")).send();
+                DefaultBlockParameterName.fromString("latest")).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"call\","
                 + "\"params\":[{\"from\":\"0xa70e8dd61c5d32be8058bb8eb970870f07233155\","
@@ -140,7 +141,7 @@ public class RequestTest extends RequestTester {
     @Test
     public void testAppGetBlockByNumber() throws Exception {
         nervosj.appGetBlockByNumber(
-                DefaultBlockParameter.valueOf(Numeric.toBigInt("0x1b4")), true).send();
+                DefaultBlockParameterNumber.valueOf(Numeric.toBigInt("0x1b4")), true).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"getBlockByNumber\","
                 + "\"params\":[\"0x1b4\",true],\"id\":1}");
@@ -232,8 +233,8 @@ public class RequestTest extends RequestTester {
     @Test
     public void testAppGetLogsWithNumericBlockRange() throws Exception {
         nervosj.appGetLogs(new AppFilter(
-                DefaultBlockParameter.valueOf(Numeric.toBigInt("0xe8")),
-                DefaultBlockParameter.valueOf("latest"), ""))
+                DefaultBlockParameterNumber.valueOf(Numeric.toBigInt("0xe8")),
+                DefaultBlockParameterName.fromString("latest"), ""))
                 .send();
 
         verifyResult(

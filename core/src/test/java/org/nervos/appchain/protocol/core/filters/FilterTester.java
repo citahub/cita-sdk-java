@@ -1,5 +1,6 @@
 package org.nervos.appchain.protocol.core.filters;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -8,11 +9,12 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.NervosjService;
 
 import org.nervos.appchain.protocol.ObjectMapperFactory;
@@ -22,6 +24,8 @@ import org.nervos.appchain.protocol.core.methods.response.AppLog;
 import org.nervos.appchain.protocol.core.methods.response.AppUninstallFilter;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -44,7 +48,7 @@ public abstract class FilterTester {
     @Before
     public void setUp() {
         nervosjService = mock(NervosjService.class);
-        nervosj = Nervosj.build(nervosjService, 1000, scheduledExecutorService);
+        nervosj = NervosjFactory.build(nervosjService, 1000, scheduledExecutorService);
     }
 
     <T> void runTest(AppLog appLog, Observable<T> observable) throws Exception {
@@ -60,11 +64,11 @@ public abstract class FilterTester {
 
         @SuppressWarnings("unchecked")
         List<T> expected = createExpected(appLog);
-        Set<T> results = Collections.synchronizedSet(new HashSet<T>());
+        final Set<T> results = Collections.synchronizedSet(new HashSet<T>());
 
-        CountDownLatch transactionLatch = new CountDownLatch(expected.size());
+        final CountDownLatch transactionLatch = new CountDownLatch(expected.size());
 
-        CountDownLatch completedLatch = new CountDownLatch(1);
+        final CountDownLatch completedLatch = new CountDownLatch(1);
 
         when(nervosjService.send(any(Request.class), eq(AppFilter.class)))
                 .thenReturn(appFilter);
@@ -74,15 +78,28 @@ public abstract class FilterTester {
                 .thenReturn(appUninstallFilter);
 
         Subscription subscription = observable.subscribe(
-                result -> {
-                    results.add(result);
-                    transactionLatch.countDown();
+                new Action1<T>() {
+                    @Override
+                    public void call(T result) {
+                        results.add(result);
+                        transactionLatch.countDown();
+                    }
                 },
-                throwable -> fail(throwable.getMessage()),
-                () -> completedLatch.countDown());
+                new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        fail(throwable.getMessage());
+                    }
+                },
+                new Action0() {
+                    @Override
+                    public void call() {
+                        completedLatch.countDown();
+                    }
+                });
 
         transactionLatch.await(1, TimeUnit.SECONDS);
-        assertThat(results, equalTo(new HashSet<>(expected)));
+        assertThat(results, CoreMatchers.<Set<T>>equalTo(new HashSet<>(expected)));
 
         subscription.unsubscribe();
 
@@ -96,7 +113,10 @@ public abstract class FilterTester {
             fail("Results cannot be empty");
         }
 
-        return appLog.getLogs().stream()
-                .map(t -> t.get()).collect(Collectors.toList());
+        List expected = new ArrayList();
+        for (AppLog.LogResult logResult : appLog.getLogs()) {
+            expected.add(logResult.get());
+        }
+        return expected;
     }
 }

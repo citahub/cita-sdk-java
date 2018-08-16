@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -531,7 +530,7 @@ public class ResponseTest extends ResponseTester {
         //CHECKSTYLE:ON
 
         AppTransaction appTransaction = deserialiseResponse(AppTransaction.class);
-        assertThat(appTransaction.getTransaction().get(), equalTo(transaction));
+        assertThat(appTransaction.getTransaction(), equalTo(transaction));
     }
 
     @Test
@@ -543,7 +542,7 @@ public class ResponseTest extends ResponseTester {
         );
 
         AppTransaction appTransaction = deserialiseResponse(AppTransaction.class);
-        assertThat(appTransaction.getTransaction(), is(Optional.empty()));
+        assertNull(appTransaction.getTransaction());
     }
 
     @Test
@@ -619,7 +618,7 @@ public class ResponseTest extends ResponseTester {
 
         AppGetTransactionReceipt appGetTransactionReceipt = deserialiseResponse(
                 AppGetTransactionReceipt.class);
-        assertThat(appGetTransactionReceipt.getTransactionReceipt().get(),
+        assertThat(appGetTransactionReceipt.getTransactionReceipt(),
                 equalTo(transactionReceipt));
     }
 
@@ -695,7 +694,7 @@ public class ResponseTest extends ResponseTester {
 
         AppGetTransactionReceipt appGetTransactionReceipt = deserialiseResponse(
                 AppGetTransactionReceipt.class);
-        assertThat(appGetTransactionReceipt.getTransactionReceipt().get(),
+        assertThat(appGetTransactionReceipt.getTransactionReceipt(),
                 equalTo(transactionReceipt));
     }
 
@@ -750,7 +749,7 @@ public class ResponseTest extends ResponseTester {
         );
         //CHECKSTYLE:ON
 
-        List<Log> logs = Collections.singletonList(
+        List<AppLog.LogResult> logs = Collections.<AppLog.LogResult>singletonList(
                 new AppLog.LogObject(
                         false,
                         "0x1",

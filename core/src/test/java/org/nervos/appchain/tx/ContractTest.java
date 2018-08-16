@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import org.junit.Before;
@@ -71,7 +72,7 @@ public class ContractTest extends ManagedTransactionTester {
 
     @Test
     public void testGetContractTransactionReceipt() {
-        assertFalse(contract.getTransactionReceipt().isPresent());
+        assertNull(contract.getTransactionReceipt());
     }
 
     @Test
@@ -80,8 +81,8 @@ public class ContractTest extends ManagedTransactionTester {
         Contract deployedContract = deployContract(transactionReceipt);
 
         assertThat(deployedContract.getContractAddress(), is(ADDRESS));
-        assertTrue(deployedContract.getTransactionReceipt().isPresent());
-        assertThat(deployedContract.getTransactionReceipt().get(), equalTo(transactionReceipt));
+        assertNotNull(deployedContract.getTransactionReceipt());
+        assertThat(deployedContract.getTransactionReceipt(), equalTo(transactionReceipt));
     }
 
     private TransactionReceipt createTransactionReceipt() {
@@ -169,7 +170,7 @@ public class ContractTest extends ManagedTransactionTester {
         prepareCall(appCall);
 
         assertThat(contract.callMultipleValue().send(),
-                equalTo(Arrays.asList(
+                equalTo(Arrays.<Type>asList(
                         new Uint256(BigInteger.valueOf(55)),
                         new Uint256(BigInteger.valueOf(7)))));
     }
@@ -181,7 +182,7 @@ public class ContractTest extends ManagedTransactionTester {
         prepareCall(appCall);
 
         assertThat(contract.callMultipleValue().send(),
-                equalTo(Collections.emptyList()));
+                equalTo(Collections.<Type>emptyList()));
     }
 
     @SuppressWarnings("unchecked")
@@ -222,10 +223,10 @@ public class ContractTest extends ManagedTransactionTester {
         EventValues eventValues = contract.processEvent(transactionReceipt).get(0);
 
         assertThat(eventValues.getIndexedValues(),
-                equalTo(Collections.singletonList(
+                equalTo(Collections.<Type>singletonList(
                         new Address("0x3d6cb163f7c72d20b0fcd6baae5889329d138a4a"))));
         assertThat(eventValues.getNonIndexedValues(),
-                equalTo(Collections.singletonList(new Uint256(BigInteger.ONE))));
+                equalTo(Collections.<Type>singletonList(new Uint256(BigInteger.ONE))));
     }
 
     @Test(expected = TransactionException.class)
@@ -247,11 +248,16 @@ public class ContractTest extends ManagedTransactionTester {
     public void testInvalidTransactionResponse() throws Throwable {
         prepareNonceRequest();
 
-        AppSendTransaction ethSendTransaction = new AppSendTransaction();
-        ethSendTransaction.setError(new Response.Error(1, "Invalid transaction"));
+        final AppSendTransaction appSendTransaction = new AppSendTransaction();
+        appSendTransaction.setError(new Response.Error(1, "Invalid transaction"));
 
         Request<?, AppSendTransaction> rawTransactionRequest = mock(Request.class);
-        when(rawTransactionRequest.sendAsync()).thenReturn(Async.run(() -> ethSendTransaction));
+        when(rawTransactionRequest.sendAsync()).thenReturn(Async.run(new Callable<AppSendTransaction>() {
+            @Override
+            public AppSendTransaction call() throws Exception {
+                return appSendTransaction;
+            }
+        }));
         when(nervosj.appSendRawTransaction(any(String.class)))
                 .thenReturn((Request) rawTransactionRequest);
 
@@ -273,12 +279,17 @@ public class ContractTest extends ManagedTransactionTester {
         prepareNonceRequest();
         prepareTransactionRequest();
 
-        AppGetTransactionReceipt ethGetTransactionReceipt = new AppGetTransactionReceipt();
-        ethGetTransactionReceipt.setError(new Response.Error(1, "Invalid transaction receipt"));
+        final AppGetTransactionReceipt appGetTransactionReceipt = new AppGetTransactionReceipt();
+        appGetTransactionReceipt.setError(new Response.Error(1, "Invalid transaction receipt"));
 
         Request<?, AppGetTransactionReceipt> getTransactionReceiptRequest = mock(Request.class);
         when(getTransactionReceiptRequest.sendAsync())
-                .thenReturn(Async.run(() -> ethGetTransactionReceipt));
+                .thenReturn(Async.run(new Callable<AppGetTransactionReceipt>() {
+                    @Override
+                    public AppGetTransactionReceipt call() throws Exception {
+                        return appGetTransactionReceipt;
+                    }
+                }));
         when(nervosj.appGetTransactionReceipt(TRANSACTION_HASH))
                 .thenReturn((Request) getTransactionReceiptRequest);
 

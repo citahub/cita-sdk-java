@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
 
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.NervosjService;
 import org.nervos.appchain.protocol.ObjectMapperFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
@@ -25,6 +26,8 @@ import org.nervos.appchain.protocol.core.methods.response.AppUninstallFilter;
 import org.nervos.appchain.utils.Numeric;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action0;
+import rx.functions.Action1;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -46,7 +49,7 @@ public class JsonRpc2_0RxTest {
     @Before
     public void setUp() {
         nervosjService = mock(NervosjService.class);
-        nervosj = Nervosj.build(nervosjService, 1000, Executors.newSingleThreadScheduledExecutor());
+        nervosj = NervosjFactory.build(nervosjService, 1000, Executors.newSingleThreadScheduledExecutor());
     }
 
     @Test
@@ -65,17 +68,30 @@ public class JsonRpc2_0RxTest {
                 new DefaultBlockParameterNumber(BigInteger.valueOf(2)),
                 false);
 
-        CountDownLatch transactionLatch = new CountDownLatch(appBlocks.size());
-        CountDownLatch completedLatch = new CountDownLatch(1);
+        final CountDownLatch transactionLatch = new CountDownLatch(appBlocks.size());
+        final CountDownLatch completedLatch = new CountDownLatch(1);
 
-        List<AppBlock> results = new ArrayList<>(appBlocks.size());
+        final List<AppBlock> results = new ArrayList<>(appBlocks.size());
         Subscription subscription = observable.subscribe(
-                result -> {
-                    results.add(result);
-                    transactionLatch.countDown();
+                new Action1<AppBlock>() {
+                    @Override
+                    public void call(AppBlock result) {
+                        results.add(result);
+                        transactionLatch.countDown();
+                    }
                 },
-                throwable -> fail(throwable.getMessage()),
-                () -> completedLatch.countDown());
+                new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        fail(throwable.getMessage());
+                    }
+                },
+                new Action0() {
+                    @Override
+                    public void call() {
+                        completedLatch.countDown();
+                    }
+                });
 
         transactionLatch.await(1, TimeUnit.SECONDS);
         assertThat(results, equalTo(appBlocks));
@@ -102,17 +118,30 @@ public class JsonRpc2_0RxTest {
                 new DefaultBlockParameterNumber(BigInteger.valueOf(2)),
                 false, false);
 
-        CountDownLatch transactionLatch = new CountDownLatch(appBlocks.size());
-        CountDownLatch completedLatch = new CountDownLatch(1);
+        final CountDownLatch transactionLatch = new CountDownLatch(appBlocks.size());
+        final CountDownLatch completedLatch = new CountDownLatch(1);
 
-        List<AppBlock> results = new ArrayList<>(appBlocks.size());
+        final List<AppBlock> results = new ArrayList<>(appBlocks.size());
         Subscription subscription = observable.subscribe(
-                result -> {
-                    results.add(result);
-                    transactionLatch.countDown();
+                new Action1<AppBlock>() {
+                    @Override
+                    public void call(AppBlock result) {
+                        results.add(result);
+                        transactionLatch.countDown();
+                    }
                 },
-                throwable -> fail(throwable.getMessage()),
-                () -> completedLatch.countDown());
+                new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        fail(throwable.getMessage());
+                    }
+                },
+                new Action0() {
+                    @Override
+                    public void call() {
+                        completedLatch.countDown();
+                    }
+                });
 
         transactionLatch.await(1, TimeUnit.SECONDS);
         assertThat(results, equalTo(appBlocks));
@@ -170,17 +199,30 @@ public class JsonRpc2_0RxTest {
                 new DefaultBlockParameterNumber(BigInteger.ZERO),
                 false);
 
-        CountDownLatch transactionLatch = new CountDownLatch(expected.size());
-        CountDownLatch completedLatch = new CountDownLatch(1);
+        final CountDownLatch transactionLatch = new CountDownLatch(expected.size());
+        final CountDownLatch completedLatch = new CountDownLatch(1);
 
-        List<AppBlock> results = new ArrayList<>(expected.size());
+        final List<AppBlock> results = new ArrayList<>(expected.size());
         Subscription subscription = observable.subscribe(
-                result -> {
-                    results.add(result);
-                    transactionLatch.countDown();
+                new Action1<AppBlock>() {
+                    @Override
+                    public void call(AppBlock result) {
+                        results.add(result);
+                        transactionLatch.countDown();
+                    }
                 },
-                throwable -> fail(throwable.getMessage()),
-                () -> completedLatch.countDown());
+                new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        fail(throwable.getMessage());
+                    }
+                },
+                new Action0() {
+                    @Override
+                    public void call() {
+                        completedLatch.countDown();
+                    }
+                });
 
         transactionLatch.await(1250, TimeUnit.MILLISECONDS);
         assertThat(results, equalTo(expected));
