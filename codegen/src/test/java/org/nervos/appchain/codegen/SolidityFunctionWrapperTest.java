@@ -11,6 +11,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import org.hamcrest.core.Is;
+import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 
 import org.nervos.appchain.TempFileProvider;
@@ -26,6 +28,7 @@ import org.nervos.appchain.abi.datatypes.generated.StaticArray10;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.abi.datatypes.generated.Uint64;
 import org.nervos.appchain.protocol.core.methods.response.AbiDefinition;
+import org.nervos.appchain.utils.Collection;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -55,26 +58,26 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
     @Test
     public void testBuildTypeName() {
         assertThat(buildTypeName("uint256"),
-                is(ClassName.get(Uint256.class)));
+                Is.<TypeName>is(ClassName.get(Uint256.class)));
         assertThat(buildTypeName("uint64"),
-                is(ClassName.get(Uint64.class)));
+                Is.<TypeName>is(ClassName.get(Uint64.class)));
         assertThat(buildTypeName("string"),
-                is(ClassName.get(Utf8String.class)));
+                Is.<TypeName>is(ClassName.get(Utf8String.class)));
 
         assertThat(buildTypeName("uint256[]"),
-                is(ParameterizedTypeName.get(DynamicArray.class, Uint256.class)));
+                Is.<TypeName>is(ParameterizedTypeName.get(DynamicArray.class, Uint256.class)));
 
         assertThat(buildTypeName("uint256[] storage"),
-                is(ParameterizedTypeName.get(DynamicArray.class, Uint256.class)));
+                Is.<TypeName>is(ParameterizedTypeName.get(DynamicArray.class, Uint256.class)));
 
         assertThat(buildTypeName("uint256[] memory"),
-                is(ParameterizedTypeName.get(DynamicArray.class, Uint256.class)));
+                Is.<TypeName>is(ParameterizedTypeName.get(DynamicArray.class, Uint256.class)));
 
         assertThat(buildTypeName("uint256[10]"),
-                is(ParameterizedTypeName.get(StaticArray10.class, Uint256.class)));
+                Is.<TypeName>is(ParameterizedTypeName.get(StaticArray10.class, Uint256.class)));
 
         assertThat(buildTypeName("uint256[33]"),
-                is(ParameterizedTypeName.get(StaticArray.class, Uint256.class)));
+                Is.<TypeName>is(ParameterizedTypeName.get(StaticArray.class, Uint256.class)));
     }
 
     @Test
@@ -100,7 +103,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
         assertThat(getNativeType(
                 ParameterizedTypeName.get(
                         ClassName.get(DynamicArray.class), TypeName.get(Address.class))),
-                equalTo(ParameterizedTypeName.get(
+                IsEqual.<TypeName>equalTo(ParameterizedTypeName.get(
                         ClassName.get(List.class), TypeName.get(String.class))));
     }
 
@@ -127,10 +130,10 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
     public void testBuildFunctionTransaction() throws Exception {
         AbiDefinition functionDefinition = new AbiDefinition(
                 false,
-                Arrays.asList(
+                Arrays.<AbiDefinition.NamedType>asList(
                         new AbiDefinition.NamedType("param", "uint8")),
                 "functionName",
-                Collections.emptyList(),
+                Collections.<AbiDefinition.NamedType>emptyList(),
                 "type",
                 false);
 
@@ -154,10 +157,10 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
     public void testBuildPayabelFunctionTransaction() throws Exception {
         AbiDefinition functionDefinition = new AbiDefinition(
                 false,
-                Arrays.asList(
+                Arrays.<AbiDefinition.NamedType>asList(
                         new AbiDefinition.NamedType("param", "uint8")),
                 "functionName",
-                Collections.emptyList(),
+                Collections.<AbiDefinition.NamedType>emptyList(),
                 "type",
                 true);
 
@@ -211,7 +214,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                 Arrays.asList(
                         new AbiDefinition.NamedType("param", "uint8")),
                 "functionName",
-                Collections.emptyList(),
+                Collections.<AbiDefinition.NamedType>emptyList(),
                 "type",
                 false);
 
@@ -272,7 +275,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                 false,
                 Arrays.asList(id, fromAddress, toAddress, value, message),
                 "Transfer",
-                new ArrayList<>(),
+                new ArrayList<AbiDefinition.NamedType>(),
                 "event",
                 false);
         TypeSpec.Builder builder = TypeSpec.classBuilder("testClass");

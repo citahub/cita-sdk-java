@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -121,12 +120,13 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         } else {
             String className = Strings.capitaliseFirstLetter(contractName);
             System.out.printf("Generating " + basePackageName + "." + className + " ... ");
-            Map<String, String> addresses;
+            Map<String, String> addresses = new HashMap<>();
             if (c.networks != null && !c.networks.isEmpty()) {
-                addresses = c.networks.entrySet().stream()
-                        .filter(e -> (e.getValue() != null && e.getValue().getAddress() != null))
-                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAddress()
-                        ));
+                for(Map.Entry<String, NetworkInfo> network : c.networks.entrySet()) {
+                    if(network.getValue() != null & network.getValue().getAddress() != null) {
+                        addresses.put(network.getKey(), network.getValue().getAddress());
+                    }
+                }
             } else {
                 addresses = Collections.EMPTY_MAP;
             }
@@ -222,7 +222,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
             this.schemaVersion = schemaVersion;
             this.updatedAt = updatedAt;
         }
-        
+
         public String getContractName() {
             return contractName;
         }
@@ -234,7 +234,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         public String getBytecode() {
             return bytecode;
         }
-        
+
         public NetworkInfo getNetwork(String networkId) {
             return networks == null ? null : networks.get(networkId);
         }
@@ -343,7 +343,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
             this.links = links;
             this.address = address;
         }
-        
+
         public String getAddress() {
             return address;
         }

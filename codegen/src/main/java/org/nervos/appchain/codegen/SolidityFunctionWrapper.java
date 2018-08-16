@@ -133,9 +133,10 @@ public class SolidityFunctionWrapper extends Generator {
 
             final CodeBlock.Builder staticInit = CodeBlock.builder();
             staticInit.addStatement("_addresses = new HashMap<>()");
-            addresses.forEach((k, v) ->
-                    staticInit.addStatement(String.format("_addresses.put(\"%1s\", \"%2s\")", k, v))
-            );
+            for (Map.Entry<String, String> address : addresses.entrySet()) {
+                staticInit.addStatement(String.format("_addresses.put(\"%1s\", \"%2s\")", address.getKey(), address.getValue()));
+            }
+
             classBuilder.addStaticBlock(staticInit.build());
 
             // See org.nervosj.tx.Contract#getStaticDeployedAddress(String)
@@ -454,12 +455,22 @@ public class SolidityFunctionWrapper extends Generator {
                     inputParameterTypes,
                     ", \n",
                     // this results in fully qualified names being generated
-                    parameterSpec -> createMappedParameterTypes(parameterSpec));
+                    new Collection.Function<ParameterSpec, String>() {
+                        @Override
+                        public String apply(ParameterSpec parameterSpec) {
+                            return createMappedParameterTypes(parameterSpec);
+                        }
+                    });
         } else {
             return Collection.join(
                     inputParameterTypes,
                     ", ",
-                    parameterSpec -> parameterSpec.name);
+                    new Collection.Function<ParameterSpec, String>() {
+                        @Override
+                        public String apply(ParameterSpec parameterSpec) {
+                            return parameterSpec.name;
+                        }
+                    });
         }
     }
 
@@ -956,7 +967,12 @@ public class SolidityFunctionWrapper extends Generator {
         String asListParams = Collection.join(
                 outputParameterTypes,
                 ", ",
-                typeName -> "new $T<$T>() {}");
+                new Collection.Function<TypeName, String>() {
+                    @Override
+                    public String apply(TypeName typeName) {
+                        return "new $T<$T>() {}";
+                    }
+                });
 
         methodBuilder.addStatement("final $T function = new $T($S, \n$T.<$T>asList($L), \n$T"
                 + ".<$T<?>>asList("
@@ -1033,12 +1049,22 @@ public class SolidityFunctionWrapper extends Generator {
         String indexedAsListParams = Collection.join(
                 indexedParameterTypes,
                 ", ",
-                typeName -> "new $T<$T>() {}");
+                new Collection.Function<NamedTypeName, String>() {
+                    @Override
+                    public String apply(NamedTypeName namedTypeName) {
+                        return "new $T<$T>() {}";
+                    }
+                });
 
         String nonIndexedAsListParams = Collection.join(
                 nonIndexedParameterTypes,
                 ", ",
-                typeName -> "new $T<$T>() {}");
+                new Collection.Function<NamedTypeName, String>() {
+                    @Override
+                    public String apply(NamedTypeName namedTypeName) {
+                        return "new $T<$T>() {}";
+                    }
+                });
 
         methodBuilder.addStatement("final $T event = new $T($S, \n"
                 + "$T.<$T<?>>asList(" + indexedAsListParams + "),\n"
