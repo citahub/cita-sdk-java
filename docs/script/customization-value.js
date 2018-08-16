@@ -11,4 +11,4 @@ const default_language = 'zh-CN';
 const versionIsSupported = true;
 
 //github url for enabling Edit on GitHub
-const github_url = 'https://github.com/cryptape/cryptape.github.io/blob/master/';
+const github_url = 'https://github.com/cryptape/nervosj/blob/master/docs/';
