@@ -101,7 +101,7 @@ String value = "100000000";
 String init = "{encoded abi}";
 
 //construct transaction
-Transaction txToCallContract = Transction.createFunctionCallTransaction(to, nonce, quota, valid_until_block, version, chainId, value, init);
+Transaction txToDeployContract = Transction.createFunctionCallTransaction(to, nonce, quota, valid_until_block, version, chainId, value, init);
 String signedTx = txToDeployContract.sign(this.config.getPrivateKey(), false, false);
 AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 ```
@@ -179,4 +179,3 @@ int chainId = 1;
 String value = "0";
 CompletableFuture<AppSendTransaction> appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
 ```
-
