@@ -2,20 +2,21 @@ package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.CitaTransactionManager;
@@ -54,7 +55,7 @@ public class TokenCodegenTest {
         loadAccounts();
 
         HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
+        service = NervosjFactory.build(new HttpService(testNetIpAddr));
         random = new Random(System.currentTimeMillis());
         quota = BigInteger.valueOf(1000000);
         value = "0";
@@ -68,7 +69,10 @@ public class TokenCodegenTest {
         String testAcct2 = props.getProperty(Config.TEST_PRIVATE_KEY_2);
         accounts.add(testAcct1);
         accounts.add(testAcct2);
-        accounts.stream().map(Credentials::create).forEach(c -> testAccounts.add(c));
+        for (String acct : accounts) {
+            Credentials c = Credentials.create(acct);
+            testAccounts.add(c);
+        }
     }
 
     static BigInteger getCurrentHeight() throws Exception {
@@ -78,7 +82,7 @@ public class TokenCodegenTest {
     static long getBalance(Credentials credentials) {
         long accountBalance = 0;
         try {
-            CompletableFuture<BigInteger> balanceFuture = token.getBalance(
+            Future<BigInteger> balanceFuture = token.getBalance(
                     credentials.getAddress()).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
         } catch (Exception e) {
@@ -122,22 +126,30 @@ public class TokenCodegenTest {
      * by checking if the total token keeps the same as initial token.
      */
     static boolean isTokenTransferComplete() {
-        Map<Credentials, Long> accountTokens =
-                testAccounts.stream().collect(
-                        Collectors.toMap(Function.identity(),
-                                TokenCodegenTest::getBalance));
-        long tokens = 0;
-        long totalToken = accountTokens.values().stream().reduce(tokens, (x, y) -> x + y);
+        Map<Credentials, Long> accountTokens = new HashMap<Credentials, Long>();
+        for (Credentials c : testAccounts) {
+            Long balance = getBalance(c);
+            accountTokens.put(c, balance);
+        }
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("failed to get balance.");
+        }
+        long totalToken = 0;
+        for (Map.Entry<Credentials, Long> accountToken : accountTokens.entrySet()) {
+            totalToken += accountToken.getValue();
+        }
         return totalToken == 10000;
     }
 
     private void shuffle(Credentials credentials) {
         System.out.println("transfer all tokens to " + credentials.getAddress());
-        testAccounts.forEach(c -> {
-            if (c != credentials) {
-                TransferEvent event = new TransferEvent(c, credentials, getBalance(c));
+        for (Credentials testAccount : testAccounts) {
+            if(testAccount != credentials) {
+                TransferEvent event = new TransferEvent(testAccount, credentials, getBalance(testAccount));
                 try {
-                    CompletableFuture<TransactionReceipt> receiptFuture = event.execute();
+                    Future<TransactionReceipt> receiptFuture = event.execute();
                     TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                     if (receipt.getErrorMessage() == null) {
                         System.out.println(event.toString() + " execute success");
@@ -156,7 +168,7 @@ public class TokenCodegenTest {
                     System.exit(1);
                 }
             }
-        });
+        }
     }
 
     private void randomTransferToken() {
@@ -165,7 +177,11 @@ public class TokenCodegenTest {
         long shuffleThreshold = 10;
 
         while (true) {
-            int[] pair = random.ints(0, accountNum).limit(2).toArray();
+            Random r = new Random();
+            int n = accountNum;
+            int i = r.nextInt() % n;
+            int j = r.nextInt() % n;
+            int[] pair = {i, j};
             Credentials from;
             Credentials to;
             if (getBalance(testAccounts.get(pair[0])) > getBalance(testAccounts.get(pair[1]))) {
@@ -190,7 +206,7 @@ public class TokenCodegenTest {
                 printBalanceInfo();
                 System.out.println(event.toString() + " executing..");
 
-                CompletableFuture<TransactionReceipt> receiptFuture = event.execute();
+                Future<TransactionReceipt> receiptFuture = event.execute();
                 TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                 if (receipt.getErrorMessage() == null) {
                     System.out.println(event.toString()
@@ -208,10 +224,12 @@ public class TokenCodegenTest {
 
             if (!isTokenTransferComplete()) {
                 System.out.println("token test failed, account tokens: ");
-                testAccounts.forEach((account) -> {
-                    long accountBalance = getBalance(account);
-                    System.out.println(account.getAddress() + ": " + accountBalance);
-                });
+
+                for (Credentials testAccount : testAccounts) {
+                    long accountBalance = getBalance(testAccount);
+                    System.out.println(testAccount.getAddress() + ": " + accountBalance);
+                }
+
                 System.exit(1);
             }
 
@@ -229,33 +247,35 @@ public class TokenCodegenTest {
         long validUtilBlock = currentheight + 88;
         BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
 
-        CompletableFuture<Token> tokenFuture = Token.deploy(
+        Future<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, 1000000L, nonce, validUtilBlock,
                 version, value, chainId).sendAsync();
         TokenCodegenTest tokenCodegenTest = new TokenCodegenTest();
 
-        tokenFuture.whenCompleteAsync((contract, exception) -> {
-            if (exception != null) {
-                System.out.println("Failed to deploy the contract. Exception: "
-                        + exception);
-                exception.printStackTrace();
-                System.exit(1);
-            }
-            token = contract;
-            System.out.println("Contract deployment success. Contract address: "
-                    + contract.getContractAddress());
 
-            try {
-                System.out.println("Contract initial state: ");
-                printBalanceInfo();
-                tokenCodegenTest.randomTransferToken();
-            } catch (Exception e) {
-                System.out.println("Failed to get accounts balances");
-                e.printStackTrace();
-                System.exit(1);
-            }
-            System.exit(0);
-        });
+        System.out.println("Wait 10s for contract to be deployed...");
+        Thread.sleep(10000);
+        Token token = tokenFuture.get();
+        if(token != null) {
+            System.out.println("contract deployment success. Contract address: "
+                    + token.getContractAddress());
+        } else {
+            System.out.println("Failed to deploy the contract.");
+            System.exit(1);
+        }
+
+        try {
+            System.out.println("Contract initial state: ");
+            printBalanceInfo();
+            tokenCodegenTest.randomTransferToken();
+        } catch (Exception e) {
+            System.out.println("Failed to get accounts balances");
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        System.exit(0);
+
     }
 
     private class TransferEvent {
@@ -269,7 +289,7 @@ public class TokenCodegenTest {
             this.tokens = tokens;
         }
 
-        CompletableFuture<TransactionReceipt> execute() throws Exception {
+        Future<TransactionReceipt> execute() throws Exception {
             Token tokenContract = new Token(token.getContractAddress(), service,
                     new CitaTransactionManager(service, from, 5, 3000));
             long currentHeight = TokenCodegenTest.this.getCurrentHeight().longValue();

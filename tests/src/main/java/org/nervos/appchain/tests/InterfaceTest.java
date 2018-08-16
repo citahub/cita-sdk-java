@@ -3,7 +3,6 @@ package org.nervos.appchain.tests;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Properties;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,12 +12,15 @@ import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.abi.datatypes.Function;
+import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppBlock;
@@ -57,7 +59,7 @@ public class InterfaceTest {
         }
         testNetAddr = props.getProperty(Config.TEST_NET_ADDR);
         HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetAddr));
+        service = NervosjFactory.build(new HttpService(testNetAddr));
         privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
         quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA));
         version = Integer.parseInt(props.getProperty(Config.VERSION));
@@ -86,13 +88,13 @@ public class InterfaceTest {
 
         System.out.println(validBlockNumber);
         System.out.println(validBlockNumber.toString(16));
-        System.out.println(DefaultBlockParameter.valueOf(validBlockNumber).getValue());
+        System.out.println(DefaultBlockParameterNumber.valueOf(validBlockNumber).getValue());
 
         System.out.println("======================================");
         System.out.println("***  4.  getBlockByNumber     ***");
         boolean returnFullTransactions = true;
         String validBlockHash = testEthGetBlockByNumber(
-                validBlockNumber, returnFullTransactions).get();
+                validBlockNumber, returnFullTransactions);
 
         System.out.println("======================================");
         System.out.println("***  5.  getBlockByHash       ***");
@@ -131,7 +133,7 @@ public class InterfaceTest {
                 version, chainId, value, code);
         String signedTx = rtx.sign(privateKey, false, false);
 
-        validTransactionHash = testEthSendRawTransaction(signedTx).get();
+        validTransactionHash = testEthSendRawTransaction(signedTx);
         System.out.println("waiting for tx into chain ...");
         Thread.sleep(8000);
 
@@ -143,16 +145,16 @@ public class InterfaceTest {
         System.out.println("***  8.  getTransactionCount   ***");
         Credentials credentials = Credentials.create(privateKey);
         String validAccount = credentials.getAddress();
-        DefaultBlockParameter param = DefaultBlockParameter.valueOf("latest");
+        DefaultBlockParameter param = DefaultBlockParameterName.valueOf("latest");
         testEthGetTransactionCount(validAccount, param);
 
         System.out.println("======================================");
         System.out.println("***  9.  getTransactionReceipt ***");
-        String validContractAddress = testEthGetTransactionReceipt(validTransactionHash).get();
+        String validContractAddress = testEthGetTransactionReceipt(validTransactionHash);
 
         System.out.println("======================================");
         System.out.println("***  10.  getCode               ***");
-        DefaultBlockParameter parameter = DefaultBlockParameter.valueOf("latest");
+        DefaultBlockParameter parameter = DefaultBlockParameterName.valueOf("latest");
         testEthGetCode(validContractAddress, parameter);
 
         System.out.println("======================================");
@@ -160,8 +162,8 @@ public class InterfaceTest {
         String fromAddr = Credentials.create(privateKey).getAddress();
         Function getBalanceFunc = new Function(
                 "getBalance",
-                Arrays.asList(new Address(fromAddr)),
-                Arrays.asList(new TypeReference<Uint>() {
+                Arrays.<Type>asList(new Address(fromAddr)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint>() {
                 })
         );
         String funcCallData = FunctionEncoder.encode(getBalanceFunc);
@@ -205,9 +207,10 @@ public class InterfaceTest {
             System.out.println("Chain Id: "
                     + appMetaData.getEthMetaDataResult().chainId);
             System.out.println("Validators: ");
-            Arrays.asList(appMetaData.getEthMetaDataResult().validators)
-                    .stream()
-                    .forEach(x -> System.out.println("Address: " + x.toString()));
+
+            for (Address validator : appMetaData.getEthMetaDataResult().validators) {
+                System.out.println("Address: " + validator.toString());
+            }
         }
     }
 
@@ -234,24 +237,24 @@ public class InterfaceTest {
     }
 
     //3.  getBlockByNumber
-    public static Optional<String> testEthGetBlockByNumber(
+    public static String testEthGetBlockByNumber(
             BigInteger validBlockNumber, boolean isfullTranobj)
             throws Exception {
         AppBlock appBlock = service.appGetBlockByNumber(
-                DefaultBlockParameter.valueOf(validBlockNumber), isfullTranobj).send();
+                DefaultBlockParameterNumber.valueOf(validBlockNumber), isfullTranobj).send();
 
         if (appBlock.isEmpty()) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             AppBlock.Block block = appBlock.getBlock();
             printBlock(block);
-            return Optional.of(block.getHash());
+            return block.getHash();
         }
     }
 
     //4.  cita_getBlockByHash
-    public static Optional<String> testEthGetBlockByHash(
+    public static String testEthGetBlockByHash(
             String validBlockHash, boolean isfullTran)
             throws Exception {
         AppBlock appBlock = service
@@ -259,30 +262,30 @@ public class InterfaceTest {
 
         if (appBlock.isEmpty()) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             AppBlock.Block block = appBlock.getBlock();
             printBlock(block);
-            return Optional.of(block.getHash());
+            return block.getHash();
         }
     }
 
 
     //5.  sendRawTransaction
-    public static Optional<String> testEthSendRawTransaction(
+    public static String testEthSendRawTransaction(
             String rawData) throws Exception {
         AppSendTransaction appSendTx = service
                 .appSendRawTransaction(rawData).send();
 
         if (appSendTx.isEmpty()) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             String hash = appSendTx.getSendTransactionResult().getHash();
             System.out.println("hash(Transaction):" + hash);
             System.out.println("status:"
                     + appSendTx.getSendTransactionResult().getStatus());
-            return Optional.of(hash);
+            return hash;
         }
     }
 
@@ -293,11 +296,11 @@ public class InterfaceTest {
         AppTransaction appTransaction = service.appGetTransactionByHash(
                 validTransactionHash).send();
 
-        if (!appTransaction.getTransaction().isPresent()) {
+        if (appTransaction.getTransaction() != null) {
             System.out.println("the result is null");
         } else {
             org.nervos.appchain.protocol.core.methods.response.Transaction transaction
-                    = appTransaction.getTransaction().get();
+                    = appTransaction.getTransaction();
             System.out.println("hash(Transaction):" + transaction.getHash());
             System.out.println("content:" + transaction.getContent());
             System.out.println("blockNumber(dec):" + transaction.getBlockNumber());
@@ -322,20 +325,20 @@ public class InterfaceTest {
     }
 
     //8.  getTransactionReceipt
-    public static Optional<String> testEthGetTransactionReceipt(
+    public static String testEthGetTransactionReceipt(
             String validTransactionHash) throws Exception {
         AppGetTransactionReceipt appGetTransactionReceipt = service.appGetTransactionReceipt(
                 validTransactionHash).send();
 
-        if (!appGetTransactionReceipt.getTransactionReceipt().isPresent()) {
+        if (appGetTransactionReceipt.getTransactionReceipt() != null) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             //is option_value is null return NoSuchElementException, else return option_value
             TransactionReceipt transactionReceipt =
-                    appGetTransactionReceipt.getTransactionReceipt().get();
+                    appGetTransactionReceipt.getTransactionReceipt();
             printTransactionReceiptInfo(transactionReceipt);
-            return Optional.of(transactionReceipt.getContractAddress());
+            return transactionReceipt.getContractAddress();
         }
 
     }
@@ -371,8 +374,8 @@ public class InterfaceTest {
     public Function totalSupply() {
         return new Function(
                 "get",
-                Collections.emptyList(),
-                Collections.singletonList(new TypeReference<Uint256>() {
+                Collections.<Type>emptyList(),
+                Collections.<TypeReference<?>>singletonList(new TypeReference<Uint256>() {
                 }));
     }
 

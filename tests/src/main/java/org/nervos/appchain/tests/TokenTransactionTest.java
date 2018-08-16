@@ -19,7 +19,9 @@ import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
@@ -61,7 +63,7 @@ public class TokenTransactionTest {
         binPath = props.getProperty(Config.TOKEN_BIN);
 
         HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
+        service = NervosjFactory.build(new HttpService(testNetIpAddr));
         random = new Random(System.currentTimeMillis());
         quota = BigInteger.valueOf(1000000);
         value = "0";
@@ -88,7 +90,7 @@ public class TokenTransactionTest {
     static TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
         return service.appGetTransactionReceipt(txHash)
-                .send().getTransactionReceipt().get();
+                .send().getTransactionReceipt();
     }
 
     static String contractFunctionCall(
@@ -112,8 +114,8 @@ public class TokenTransactionTest {
             String contractAddr, String toAddr, BigInteger value) throws Exception {
         Function transferFunc = new Function(
                 "transfer",
-                Arrays.asList(new Address(toAddr), new Uint256(value)),
-                Collections.emptyList()
+                Arrays.<Type>asList(new Address(toAddr), new Uint256(value)),
+                Collections.<TypeReference<?>>emptyList()
         );
         String funcCallData = FunctionEncoder.encode(transferFunc);
         return contractFunctionCall(contractAddr, funcCallData);
@@ -124,14 +126,14 @@ public class TokenTransactionTest {
             String from, String contractAddress, String callData)
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
-        return service.appCall(call, DefaultBlockParameter.valueOf("latest")).send().getValue();
+        return service.appCall(call, DefaultBlockParameterName.fromString("latest")).send().getValue();
     }
 
     static String getBalance(String fromAddr, String contractAddress) throws Exception {
         Function getBalanceFunc = new Function(
                 "getBalance",
-                Arrays.asList(new Address(fromAddr)),
-                Arrays.asList(new TypeReference<Uint>() {
+                Arrays.<Type>asList(new Address(fromAddr)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<Uint>() {
                 })
         );
         String funcCallData = FunctionEncoder.encode(getBalanceFunc);

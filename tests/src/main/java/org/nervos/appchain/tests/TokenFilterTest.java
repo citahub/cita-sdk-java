@@ -2,18 +2,23 @@ package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
+import org.nervos.appchain.utils.Numeric;
+import rx.functions.Action1;
 
 public class TokenFilterTest {
     private static Properties props;
@@ -44,7 +49,7 @@ public class TokenFilterTest {
         payeePrivateKey = props.getProperty(Config.TEST_PRIVATE_KEY_1);
 
         HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
+        service = NervosjFactory.build(new HttpService(testNetIpAddr));
         quota = 1000000L;
         value = "0";
     }
@@ -52,7 +57,7 @@ public class TokenFilterTest {
     static long getBalance(Credentials credentials) {
         long accountBalance = 0;
         try {
-            CompletableFuture<BigInteger> balanceFuture =
+            Future<BigInteger> balanceFuture =
                     token.getBalance(credentials.getAddress()).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
         } catch (Exception e) {
@@ -66,16 +71,27 @@ public class TokenFilterTest {
     private void eventObserve() {
         rx.Observable<Token.TransferEventResponse> observable =
                 token.transferEventObservable(
-                        DefaultBlockParameter.valueOf(BigInteger.ONE),
+                        DefaultBlockParameterNumber.valueOf(BigInteger.ONE),
                         DefaultBlockParameterName.LATEST);
-        observable.subscribe(
-                event -> System.out.println(
-                        "Observable, TransferEvent(" + event._from + ", "
-                                + event._to + ", " + event._value.longValue() + ")"));
+
+        observable.subscribe(new Action1<Token.TransferEventResponse>() {
+                                 @Override
+                                 public void call(Token.TransferEventResponse transferEventResponse) {
+                                     System.out.println(
+                                             "Observable, TransferEvent(" + transferEventResponse._from + ", "
+                                                     + transferEventResponse._to + ", "
+                                                     + transferEventResponse._value.longValue() + ")");
+                                 }
+                             });
     }
 
     private void randomTransferToken() {
-        new Thread(this::eventObserve).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TokenFilterTest.this.eventObserve();
+            }
+        }).start();
 
         Credentials fromCredential = Credentials.create(payerPrivateKey);
         Credentials toCredential = Credentials.create(payeePrivateKey);
@@ -103,32 +119,36 @@ public class TokenFilterTest {
         long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
         BigInteger nonce = TestUtil.getNonce();
 
-        CompletableFuture<Token> tokenFuture = Token.deploy(
+        Future<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, 1000000L, nonce,
                 validUtilBlock, version,
                 value, chainId).sendAsync();
         TokenFilterTest tokenFilterTest = new TokenFilterTest();
 
-        tokenFuture.whenCompleteAsync((contract, exception) -> {
-            if (exception != null) {
-                System.out.println("Failed to deploy the contract. Exception: " + exception);
-                exception.printStackTrace();
-                System.exit(1);
-            }
-            token = contract;
-            System.out.println("Contract deployment success. Contract address: "
-                    + contract.getContractAddress());
+        Token contract = null;
+        try {
+            contract = tokenFuture.get();
+        } catch (ExecutionException |InterruptedException e) {
+            e.printStackTrace();
+            System.out.println("Failed to get contract.");
+            System.exit(1);
+        }
 
-            try {
-                System.out.println("Contract initial state: ");
-                tokenFilterTest.randomTransferToken();
-            } catch (Exception e) {
-                System.out.println("Failed to get accounts balances");
-                e.printStackTrace();
-                System.exit(1);
-            }
-            System.exit(0);
-        });
+        if(contract == null) {
+            System.out.println("Contract is null.");
+        }
+
+        System.out.println("Contract deployment success. Contract address: " + contract.getContractAddress());
+
+        try {
+            System.out.println("Contract initial state: ");
+            tokenFilterTest.randomTransferToken();
+        } catch (Exception e) {
+            System.out.println("Failed to get accounts balances");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.exit(0);
     }
 
     private class TransferEvent {
@@ -142,7 +162,7 @@ public class TokenFilterTest {
             this.tokens = tokens;
         }
 
-        CompletableFuture<TransactionReceipt> execute() {
+        Future<TransactionReceipt> execute() {
             Token tokenContract = TokenFilterTest.this.token;
             long validUtilBlock = TestUtil.getValidUtilBlock(
                     TokenFilterTest.this.service).longValue();

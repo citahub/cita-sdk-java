@@ -31,7 +31,7 @@ public class DefaultBlockParameterNumber implements DefaultBlockParameter {
         return blockNumber;
     }
 
-    static DefaultBlockParameter valueOf(BigInteger blockNumber) {
+    public static DefaultBlockParameter valueOf(BigInteger blockNumber) {
         return new DefaultBlockParameterNumber(blockNumber);
     }
 }

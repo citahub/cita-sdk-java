@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
 
@@ -12,9 +11,11 @@ import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.FunctionReturnDecoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Function;
+import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.protocol.Nervosj;
-import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.NervosjFactory;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
@@ -31,7 +32,7 @@ public class AdvanceTransactionTest {
 
     static {
         props = Config.load(configPath);
-        service = Nervosj.build(new HttpService(props.getProperty(Config.TEST_NET_ADDR)));
+        service = NervosjFactory.build(new HttpService(props.getProperty(Config.TEST_NET_ADDR)));
         senderPrivateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
         version = Integer.parseInt(props.getProperty(Config.VERSION));
         chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
@@ -92,8 +93,8 @@ public class AdvanceTransactionTest {
             throws Exception {
         Function resetFunc = new Function(
                 "reset",
-                Collections.emptyList(),
-                Collections.emptyList()
+                Collections.<Type>emptyList(),
+                Collections.<TypeReference<?>>emptyList()
         );
 
         String resetFuncData = FunctionEncoder.encode(resetFunc);
@@ -120,8 +121,8 @@ public class AdvanceTransactionTest {
             throws Exception {
         Function addFunc = new Function(
                 "add",
-                Collections.emptyList(),
-                Collections.emptyList()
+                Collections.<Type>emptyList(),
+                Collections.<TypeReference<?>>emptyList()
         );
         String addFuncData = FunctionEncoder.encode(addFunc);
 
@@ -147,18 +148,18 @@ public class AdvanceTransactionTest {
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
         return service.appCall(
-                call, DefaultBlockParameter.valueOf("latest")).send().getValue();
+                call, DefaultBlockParameterName.fromString("latest")).send().getValue();
     }
 
     // Get transaction receipt
     private TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
         return service.appGetTransactionReceipt(txHash)
-                .send().getTransactionReceipt().get();
+                .send().getTransactionReceipt();
     }
 
     public void runContract() throws Exception {
-        boolean isEd25519AndBlake2b = this.isEd25519AndBlake2b;
+        final boolean isEd25519AndBlake2b = this.isEd25519AndBlake2b;
         long dealWithCount = 0;
         String ethCallResult;
         String from = "0x0dbd369a741319fa5107733e2c9db9929093e3c7";
@@ -180,11 +181,11 @@ public class AdvanceTransactionTest {
         // get contract address from receipt
         int countForContractDeployment = 0;
         while (true) {
-            Optional<TransactionReceipt> receipt = service
+            TransactionReceipt receipt = service
                     .appGetTransactionReceipt(deployContractTxHash)
                     .send().getTransactionReceipt();
-            if (receipt.isPresent()) {
-                TransactionReceipt deployTxReceipt = receipt.get();
+            if (receipt != null) {
+                TransactionReceipt deployTxReceipt = receipt;
                 if (deployTxReceipt.getErrorMessage() == null) {
                     this.contractAddress = deployTxReceipt.getContractAddress();
                     System.out.println("Contract is deployed successfully.");
@@ -209,11 +210,11 @@ public class AdvanceTransactionTest {
         //call smart contract function and wait for receipt.
         int countForResetFunctionCall = 0;
         while (true) {
-            Optional<TransactionReceipt> receipt = service
+            TransactionReceipt receipt = service
                     .appGetTransactionReceipt(resetTxHash)
                     .send().getTransactionReceipt();
-            if (receipt.isPresent()) {
-                TransactionReceipt resetTxReceipt = receipt.get();
+            if (receipt != null) {
+                TransactionReceipt resetTxReceipt = receipt;
                 if (resetTxReceipt.getErrorMessage() == null) {
                     System.out.println("Count is reset successfully.");
                     break;
@@ -236,22 +237,24 @@ public class AdvanceTransactionTest {
         long startTime = System.currentTimeMillis();
         //start thread
         Thread[] threads = new Thread[this.threadCount];
-        int countPerThread = this.sendCount;
+        final int countPerThread = this.sendCount;
         for (int i = 0; i < this.threadCount; i++) {
-            Thread t = new Thread(
-                    () -> {
-                        try {
-                            int j = 0;
-                            while (j < countPerThread) {
-                                funcAddCall(contractAddress, isEd25519AndBlake2b);
-                                j++;
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Failed to call contract function.");
-                            e.printStackTrace();
-                            System.exit(1);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        int j = 0;
+                        while (j < countPerThread) {
+                            funcAddCall(contractAddress, isEd25519AndBlake2b);
+                            j++;
                         }
-                    });
+                    } catch (Exception e) {
+                        System.out.println("Failed to call contract function.");
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                }
+            });
             t.start();
             threads[i] = t;
         }
@@ -276,8 +279,8 @@ public class AdvanceTransactionTest {
 
             Function getCall = new Function(
                     "get",
-                    Collections.emptyList(),
-                    Arrays.asList(new TypeReference<Uint256>() {
+                    Collections.<Type>emptyList(),
+                    Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {
                     })
             );
 

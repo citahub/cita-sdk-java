@@ -2,10 +2,13 @@ package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
 import java.util.Properties;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.NervosjFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.RemoteCall;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
@@ -15,6 +18,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.response.PollingTransactionReceiptProcessor;
 import org.nervos.appchain.utils.Convert;
+import rx.Completable;
 
 public class SendTransactionAsyncTest {
     static String testNetAddr;
@@ -39,7 +43,7 @@ public class SendTransactionAsyncTest {
         quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA));
 
         HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetAddr));
+        service = NervosjFactory.build(new HttpService(testNetAddr));
     }
 
     static BigInteger getBalance(String address) {
@@ -73,20 +77,30 @@ public class SendTransactionAsyncTest {
                 "");
 
         String rawTx = tx.sign(payerKey, false, false);
-        AppSendTransaction ethSendTrasnction = service
+        AppSendTransaction appSendTrasnction = service
                 .appSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
                 .waitForTransactionReceipt(
-                        ethSendTrasnction.getSendTransactionResult().getHash());
+                        appSendTrasnction.getSendTransactionResult().getHash());
 
         return txReceipt;
     }
 
-    static CompletableFuture<TransactionReceipt> transferAsync(
-            String payerKey, String payeeAddr, String value) {
-        return new RemoteCall<>(
-                () -> transferSync(payerKey, payeeAddr, value)).sendAsync();
+    static RemoteCall<TransactionReceipt> transferAsync(
+            final String payerKey, final String payeeAddr, final String value) {
+        return new RemoteCall<TransactionReceipt>(new Callable<TransactionReceipt>() {
+            @Override
+            public TransactionReceipt call() {
+                TransactionReceipt receipt = null;
+                try {
+                    transferSync(payerKey, payeeAddr, value);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return receipt;
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -98,21 +112,29 @@ public class SendTransactionAsyncTest {
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
 
-        CompletableFuture<TransactionReceipt> receiptFuture =
-                transferAsync(payerKey, payeeAddr, valueWei);
-        receiptFuture.whenCompleteAsync((data, exception) -> {
-            if (exception == null) {
-                if (data.getErrorMessage() == null) {
-                    System.out.println(
-                            Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-                    System.out.println(
-                            Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
-                } else {
-                    System.out.println("Error get receipt: " + data.getErrorMessage());
-                }
+        Future<TransactionReceipt> receiptFuture =
+                transferAsync(payerKey, payeeAddr, valueWei).sendAsync();
+
+        try {
+            System.out.println("Waiting 10s to get receipt...");
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        try {
+            TransactionReceipt receipt = receiptFuture.get();
+            if (receipt.getErrorMessage() == null) {
+                System.out.println(
+                        Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+                System.out.println(
+                        Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
             } else {
-                System.out.println("Exception happens: " + exception);
+                System.out.println("Error get receipt: " + receipt.getErrorMessage());
             }
-        });
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
