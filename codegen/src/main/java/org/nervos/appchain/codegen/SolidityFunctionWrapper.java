@@ -671,7 +671,7 @@ public class SolidityFunctionWrapper extends Generator {
             buildVariableLengthReturnFunctionConstructor(
                     methodBuilder, functionName, inputParams, outputParameterTypes);
 
-            buildTupleResultContainer(methodBuilder, parameterizedTupleType);
+            buildTupleResultContainer(methodBuilder, parameterizedTupleType, outputParameterTypes);
         }
     }
 
@@ -964,30 +964,54 @@ public class SolidityFunctionWrapper extends Generator {
     }
 
     private void buildTupleResultContainer(
-            MethodSpec.Builder methodBuilder, ParameterizedTypeName tupleType)
+            MethodSpec.Builder methodBuilder, ParameterizedTypeName tupleType,
+            List<TypeName> outputParameterTypes)
             throws ClassNotFoundException {
 
         List<TypeName> typeArguments = tupleType.typeArguments;
 
         CodeBlock.Builder tupleConstructor = CodeBlock.builder();
         tupleConstructor.addStatement(
-                        "$T results = executeCallMultipleValueReturn(function);",
-                        ParameterizedTypeName.get(List.class, Type.class))
+                "$T results = executeCallMultipleValueReturn(function);",
+                ParameterizedTypeName.get(List.class, Type.class))
                 .add("return new $T(", tupleType)
                 .add("$>$>");
 
-        String resultString = "\n($T) results.get($L)";
+        String resultStringSimple = "\n($T) results.get($L)";
         if (useNativeJavaTypes) {
-            resultString += ".getValue()";
+            resultStringSimple += ".getValue()";
         }
 
+        String resultStringNativeList =
+                "\nconvertToNative(($T) results.get($L).getValue())";
+
         int size = typeArguments.size();
-        for (int i = 0; i < size - 1; i++) {
+        ClassName classList = ClassName.get(List.class);
+
+        for (int i = 0; i < size; i++) {
+            TypeName param = outputParameterTypes.get(i);
+            TypeName convertTo = typeArguments.get(i);
+
+            String resultString = resultStringSimple;
+
+            // If we use native java types we need to convert
+            // elements of arrays to native java types too
+            if (useNativeJavaTypes && param instanceof ParameterizedTypeName) {
+                ParameterizedTypeName oldContainer = (ParameterizedTypeName)param;
+                ParameterizedTypeName newContainer = (ParameterizedTypeName)convertTo;
+                if (newContainer.rawType.compareTo(classList) == 0
+                        && newContainer.typeArguments.size() == 1) {
+                    convertTo = ParameterizedTypeName.get(classList,
+                            oldContainer.typeArguments.get(0));
+                    resultString = resultStringNativeList;
+                }
+            }
+
             tupleConstructor
-                    .add(resultString + ", ", typeArguments.get(i), i);
+                    .add(resultString, convertTo, i);
+            tupleConstructor.add(i < size - 1 ? ", " : ");\n");
         }
-        tupleConstructor
-                .add(resultString + ");\n", typeArguments.get(size - 1), size - 1);
+
         tupleConstructor.add("$<$<");
 
         TypeSpec callableType = TypeSpec.anonymousClassBuilder("")
