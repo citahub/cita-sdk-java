@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.concurrent.CompletableFuture;
 
 import org.nervos.appchain.crypto.Credentials;
+import org.nervos.appchain.crypto.Signature;
 import org.nervos.appchain.protocol.Nervosj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
@@ -14,7 +15,8 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 public class CitaTransactionManager extends TransactionManager {
 
     private final Nervosj nervosj;
-    final Credentials credentials;
+    private Credentials credentials;
+    private Signature signature;
 
     public CitaTransactionManager(Nervosj nervosj, Credentials credentials) {
         super(nervosj, credentials.getAddress());
@@ -23,11 +25,24 @@ public class CitaTransactionManager extends TransactionManager {
 
     }
 
+    public CitaTransactionManager(Nervosj nervosj, Signature signature) {
+        super(nervosj, signature.getAddress());
+        this.nervosj = nervosj;
+        this.signature = signature;
+    }
+
     public CitaTransactionManager(
             Nervosj nervosj, Credentials credentials, int attempts, int sleepDuration) {
         super(nervosj, attempts, sleepDuration, credentials.getAddress());
         this.nervosj = nervosj;
         this.credentials = credentials;
+    }
+
+    public CitaTransactionManager(
+            Nervosj nervosj, Signature signature, int attempts, int sleepDuration) {
+        super(nervosj, attempts, sleepDuration, signature.getAddress());
+        this.nervosj = nervosj;
+        this.signature = signature;
     }
 
     BigInteger getNonce() throws IOException {
@@ -53,7 +68,13 @@ public class CitaTransactionManager extends TransactionManager {
         Transaction transaction = new Transaction(
                 to, nonce, quota, validUntilBlock,
                 version, chainId, value, data);
-        return nervosj.appSendRawTransaction(transaction.sign(credentials)).send();
+        String rawTx = null;
+        if (this.credentials != null) {
+            rawTx = transaction.sign(this.credentials);
+        } else if (this.signature != null) {
+            rawTx = transaction.sign(this.signature);
+        }
+        return nervosj.appSendRawTransaction(rawTx).send();
     }
 
     // adapt to cita
@@ -63,7 +84,13 @@ public class CitaTransactionManager extends TransactionManager {
         Transaction transaction = new Transaction(
                 to, nonce, quota, validUntilBlock,
                 version, chainId, value, data);
-        return nervosj.appSendRawTransaction(transaction.sign(credentials)).sendAsync();
+        String rawTx = null;
+        if (this.credentials != null) {
+            rawTx = transaction.sign(this.credentials);
+        } else if (this.signature != null) {
+            rawTx = transaction.sign(this.signature);
+        }
+        return nervosj.appSendRawTransaction(rawTx).sendAsync();
     }
 
     @Override
