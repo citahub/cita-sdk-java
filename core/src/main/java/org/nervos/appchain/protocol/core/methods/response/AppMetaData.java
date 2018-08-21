@@ -23,6 +23,9 @@ public class AppMetaData extends Response<AppMetaData.EthMetaDataResult> {
         public String basicToken;
         public Address[] validators;
         public int blockInterval;
+        public String tokenName;
+        public String tokenSymbol;
+        public String tokenAvatar;
     }
 
 }
