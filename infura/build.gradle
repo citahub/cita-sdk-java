@@ -1,5 +1,5 @@
 
-description 'web3j customisations for working with Infura.io'
+description 'nervosj customisations for working with Infura.io'
 
 dependencies {
     compile project(':core')

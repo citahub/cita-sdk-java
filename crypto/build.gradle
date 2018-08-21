@@ -1,5 +1,5 @@
 
-description 'web3j Ethereum crypto library'
+description 'nervosj AppChain crypto library'
 
 dependencies {
     compile project(':rlp'),

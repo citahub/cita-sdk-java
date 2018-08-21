@@ -1,6 +1,6 @@
 import java.text.SimpleDateFormat
 
-description 'web3j is a lightweight Java library for integration with Ethereum clients'
+description 'nervosj is a lightweight Java library for integration with nervos AppChain.'
 
 dependencies {
     compile project(':abi'),
