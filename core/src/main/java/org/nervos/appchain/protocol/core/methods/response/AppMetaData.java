@@ -17,8 +17,8 @@ public class AppMetaData extends Response<AppMetaData.EthMetaDataResult> {
     public static class EthMetaDataResult {
         public int chainId;
         public String chainName;
-        public String operator;    //运营方
-        public String website;     //网站
+        public String operator;
+        public String website;
         public String genesisTimestamp;
         public String basicToken;
         public Address[] validators;
