@@ -573,7 +573,7 @@ public class AppBlock extends Response<AppBlock.Block> {
                 String gasUsed = headerNode.get("gasUsed").asText();
 
                 //proof tendermint
-                JsonNode proofNode = node.get("header").get("proof").get("Tendermint");
+                JsonNode proofNode = node.get("header").get("proof").get("Bft");
                 String proposal = proofNode.get("proposal").asText();
                 String height = proofNode.get("height").asText();
                 String round = proofNode.get("round").asText();
@@ -581,7 +581,7 @@ public class AppBlock extends Response<AppBlock.Block> {
                 //proof tendermint commits
                 List<TendermintCommit> tendermintCommits = new ArrayList<>();
                 JsonNode commitsNode = node.get("header")
-                        .get("proof").get("Tendermint").get("commits");
+                        .get("proof").get("Bft").get("commits");
                 Iterator<String> commitsAddress = commitsNode.fieldNames();
                 while (commitsAddress.hasNext()) {
                     String commitAddress = commitsAddress.next();

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.abstractj.kalium.crypto.Hash;
-import org.abstractj.kalium.keys.KeyPair;
 import org.abstractj.kalium.keys.SigningKey;
 
 import org.nervos.appchain.crypto.Credentials;
@@ -39,6 +38,9 @@ public class Transaction {
     private String value;
     private int chainId;
     private final Hash hash = new Hash();
+    private static final BigInteger MAX_VALUE
+            = new BigInteger(
+                    "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
 
     public Transaction(
             String to, BigInteger nonce, long quota, long validUntilBlock,
@@ -55,14 +57,28 @@ public class Transaction {
             this.data = Numeric.prependHexPrefix(data);
         }
 
-        if (value.length() < 32) {
-            if (value.matches("0[xX][0-9a-fA-F]+")) {
-                this.value = value.substring(2);
-            } else {
-                this.value = new BigInteger(value).toString(16);
-            }
+        this.value = processValue(value);
+    }
+
+    public static String processValue(String value) {
+        String result = "";
+        if (value.matches("0[xX][0-9a-fA-F]+")) {
+            result = value.substring(2);
+        } else if (value == null || value.equals("")) {
+            result = "0";
+        } else {
+            result = new BigInteger(value).toString(16);
         }
 
+        BigInteger valueBigInt = new BigInteger(result, 16);
+
+        if (Transaction.MAX_VALUE.compareTo(valueBigInt) > 0) {
+            return result;
+        } else {
+            System.out.println("Value you input is out of bound");
+            System.out.println("Value is set as 0");
+            return  "0";
+        }
     }
 
     public static Transaction createContractTransaction(
@@ -165,7 +181,7 @@ public class Transaction {
         ByteString bdata = ByteString.copyFrom(strbyte);
 
         byte[] byteValue = ConvertStrByte.hexStringToBytes(
-                Numeric.cleanHexPrefix(getValue()));
+                Numeric.cleanHexPrefix(getValue()), 256);
         ByteString bvalue = ByteString.copyFrom(byteValue);
 
         builder.setData(bdata);

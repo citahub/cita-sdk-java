@@ -10,7 +10,7 @@ import org.nervos.appchain.protocol.NervosjService;
 import org.nervos.appchain.protocol.admin.methods.response.NewAccountIdentifier;
 import org.nervos.appchain.protocol.admin.methods.response.PersonalListAccounts;
 import org.nervos.appchain.protocol.admin.methods.response.PersonalUnlockAccount;
-import org.nervos.appchain.protocol.core.JsonRpc2_0Web3j;
+import org.nervos.appchain.protocol.core.JsonRpc2_0Nervosj;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
@@ -18,12 +18,12 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 /**
  * JSON-RPC 2.0 factory implementation for common Parity and Geth.
  */
-public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
+public class JsonRpc2_0Admin extends JsonRpc2_0Nervosj implements Admin {
 
     public JsonRpc2_0Admin(NervosjService nervosjService) {
         super(nervosjService);
     }
-    
+
     @Override
     public Request<?, PersonalListAccounts> personalListAccounts() {
         return new Request<>(
@@ -40,7 +40,7 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
                 Arrays.asList(password),
                 nervosjService,
                 NewAccountIdentifier.class);
-    }   
+    }
 
     @Override
     public Request<?, PersonalUnlockAccount> personalUnlockAccount(
@@ -49,7 +49,7 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
         List<Object> attributes = new ArrayList<>(3);
         attributes.add(accountId);
         attributes.add(password);
-        
+
         if (duration != null) {
             // Parity has a bug where it won't support a duration
             // See https://github.com/ethcore/parity/issues/1215
@@ -58,21 +58,21 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
             // we still need to include the null value, otherwise Parity rejects request
             attributes.add(null);
         }
-        
+
         return new Request<>(
                 "personal_unlockAccount",
                 attributes,
                 nervosjService,
                 PersonalUnlockAccount.class);
     }
-    
+
     @Override
     public Request<?, PersonalUnlockAccount> personalUnlockAccount(
             String accountId, String password) {
-        
+
         return personalUnlockAccount(accountId, password, null);
     }
-    
+
     @Override
     public Request<?, AppSendTransaction> personalSendTransaction(
             Transaction transaction, String passphrase) {
@@ -82,5 +82,5 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Web3j implements Admin {
                 nervosjService,
                 AppSendTransaction.class);
     }
-    
+
 }
