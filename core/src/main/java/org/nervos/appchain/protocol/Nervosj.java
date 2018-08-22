@@ -3,7 +3,7 @@ package org.nervos.appchain.protocol;
 import java.util.concurrent.ScheduledExecutorService;
 
 import org.nervos.appchain.protocol.core.AppChain;
-import org.nervos.appchain.protocol.core.JsonRpc2_0Web3j;
+import org.nervos.appchain.protocol.core.JsonRpc2_0Nervosj;
 import org.nervos.appchain.protocol.rx.NervosjRx;
 
 /**
@@ -18,11 +18,11 @@ public interface Nervosj extends AppChain, NervosjRx {
      * @return new Nervosj instance
      */
     static Nervosj build(NervosjService nervosjService) {
-        return new JsonRpc2_0Web3j(nervosjService);
+        return new JsonRpc2_0Nervosj(nervosjService);
     }
 
     static Nervosj build(NervosjService nervosjService, long pollingInterval) {
-        return new JsonRpc2_0Web3j(nervosjService, pollingInterval);
+        return new JsonRpc2_0Nervosj(nervosjService, pollingInterval);
     }
 
     /**
@@ -38,6 +38,6 @@ public interface Nervosj extends AppChain, NervosjRx {
     static Nervosj build(
             NervosjService nervosjService, long pollingInterval,
             ScheduledExecutorService scheduledExecutorService) {
-        return new JsonRpc2_0Web3j(nervosjService, pollingInterval, scheduledExecutorService);
+        return new JsonRpc2_0Nervosj(nervosjService, pollingInterval, scheduledExecutorService);
     }
 }

@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.nervos.appchain.protocol.Nervosj;
-import org.nervos.appchain.protocol.core.JsonRpc2_0Web3j;
+import org.nervos.appchain.protocol.core.JsonRpc2_0Nervosj;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.exceptions.TransactionException;
 import org.nervos.appchain.tx.response.PollingTransactionReceiptProcessor;
 import org.nervos.appchain.tx.response.TransactionReceiptProcessor;
-
-import static org.nervos.appchain.protocol.core.JsonRpc2_0Web3j.DEFAULT_BLOCK_TIME;
 
 /**
  * Transaction manager abstraction for executing transactions with Ethereum client via
@@ -22,7 +20,7 @@ import static org.nervos.appchain.protocol.core.JsonRpc2_0Web3j.DEFAULT_BLOCK_TI
 public abstract class TransactionManager {
 
     public static final int DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH = 40;
-    public static final long DEFAULT_POLLING_FREQUENCY = JsonRpc2_0Web3j.DEFAULT_BLOCK_TIME;
+    public static final long DEFAULT_POLLING_FREQUENCY = JsonRpc2_0Nervosj.DEFAULT_BLOCK_TIME;
 
     private final TransactionReceiptProcessor transactionReceiptProcessor;
     private final String fromAddress;
