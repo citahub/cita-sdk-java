@@ -156,7 +156,7 @@ public class InterfaceTest {
         testAppGetCode(validContractAddress, parameter);
 
         System.out.println("======================================");
-        System.out.println("***  11. eth_call                  ***");
+        System.out.println("***  11. appCall                  ***");
         String fromAddr = Credentials.create(privateKey).getAddress();
         Function getBalanceFunc = new Function(
                 "getBalance",
@@ -190,22 +190,26 @@ public class InterfaceTest {
         if (appMetaData == null) {
             System.out.println("the result is null");
         } else {
-            System.out.println("BasicToken: "
-                    + appMetaData.getEthMetaDataResult().basicToken);
+            System.out.println("TokenName: "
+                    + appMetaData.getAppMetaDataResult().tokenName);
+            System.out.println("TokenSymbol: "
+                    + appMetaData.getAppMetaDataResult().tokenSymbol);
+            System.out.println("TokenAvator: "
+                    + appMetaData.getAppMetaDataResult().tokenAvatar);
             System.out.println("ChainName: "
-                    + appMetaData.getEthMetaDataResult().chainName);
+                    + appMetaData.getAppMetaDataResult().chainName);
             System.out.println("Genesis TS: "
-                    + appMetaData.getEthMetaDataResult().genesisTimestamp);
+                    + appMetaData.getAppMetaDataResult().genesisTimestamp);
             System.out.println("Operator: "
-                    + appMetaData.getEthMetaDataResult().operator);
+                    + appMetaData.getAppMetaDataResult().operator);
             System.out.println("Website: "
-                    + appMetaData.getEthMetaDataResult().website);
+                    + appMetaData.getAppMetaDataResult().website);
             System.out.println("Block Interval: "
-                    + appMetaData.getEthMetaDataResult().blockInterval);
+                    + appMetaData.getAppMetaDataResult().blockInterval);
             System.out.println("Chain Id: "
-                    + appMetaData.getEthMetaDataResult().chainId);
+                    + appMetaData.getAppMetaDataResult().chainId);
             System.out.println("Validators: ");
-            Arrays.asList(appMetaData.getEthMetaDataResult().validators)
+            Arrays.asList(appMetaData.getAppMetaDataResult().validators)
                     .stream()
                     .forEach(x -> System.out.println("Address: " + x.toString()));
         }
