@@ -158,7 +158,7 @@ public class Transaction {
         }
         ByteString bdata = ByteString.copyFrom(strbyte);
 
-        byte[] byteValue = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getValue()));
+        byte[] byteValue = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getValue()), 256);
         ByteString bvalue = ByteString.copyFrom(byteValue);
 
         builder.setData(bdata);
