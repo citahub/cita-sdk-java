@@ -93,12 +93,12 @@ public class InterfaceTest {
         System.out.println("======================================");
         System.out.println("***  4.  getBlockByNumber     ***");
         boolean returnFullTransactions = true;
-        String validBlockHash = testEthGetBlockByNumber(
+        String validBlockHash = testAppGetBlockByNumber(
                 validBlockNumber, returnFullTransactions);
 
         System.out.println("======================================");
         System.out.println("***  5.  getBlockByHash       ***");
-        testEthGetBlockByHash(validBlockHash, returnFullTransactions);
+        testAppGetBlockByHash(validBlockHash, returnFullTransactions);
 
         //because unsigned transaction is not supported in cita, there is no method sendTransaction.
         System.out.println("======================================");
@@ -133,29 +133,30 @@ public class InterfaceTest {
                 version, chainId, value, code);
         String signedTx = rtx.sign(privateKey, false, false);
 
-        validTransactionHash = testEthSendRawTransaction(signedTx);
+        validTransactionHash = testAppSendRawTransaction(signedTx);
+        System.out.println("transaction hash: " + validTransactionHash);
         System.out.println("waiting for tx into chain ...");
         Thread.sleep(8000);
 
         System.out.println("======================================");
         System.out.println("***  7.  getTransactionByHash  ***");
-        testEthGetTransactionByHash(validTransactionHash);
+        testAppGetTransactionByHash(validTransactionHash);
 
         System.out.println("======================================");
         System.out.println("***  8.  getTransactionCount   ***");
         Credentials credentials = Credentials.create(privateKey);
         String validAccount = credentials.getAddress();
-        DefaultBlockParameter param = DefaultBlockParameterName.valueOf("latest");
-        testEthGetTransactionCount(validAccount, param);
+        DefaultBlockParameter param = DefaultBlockParameterName.LATEST;
+        testAppGetTransactionCount(validAccount, param);
 
         System.out.println("======================================");
         System.out.println("***  9.  getTransactionReceipt ***");
-        String validContractAddress = testEthGetTransactionReceipt(validTransactionHash);
+        String validContractAddress = testAppGetTransactionReceipt(validTransactionHash);
 
         System.out.println("======================================");
         System.out.println("***  10.  getCode               ***");
-        DefaultBlockParameter parameter = DefaultBlockParameterName.valueOf("latest");
-        testEthGetCode(validContractAddress, parameter);
+        DefaultBlockParameter parameter = DefaultBlockParameterName.LATEST;
+        testAppGetCode(validContractAddress, parameter);
 
         System.out.println("======================================");
         System.out.println("***  11. eth_call                  ***");
@@ -192,23 +193,27 @@ public class InterfaceTest {
         if (appMetaData == null) {
             System.out.println("the result is null");
         } else {
-            System.out.println("BasicToken: "
-                    + appMetaData.getEthMetaDataResult().basicToken);
+            System.out.println("TokenName: "
+                    + appMetaData.getAppMetaDataResult().tokenName);
+            System.out.println("TokenSymbol: "
+                    + appMetaData.getAppMetaDataResult().tokenSymbol);
+            System.out.println("TokenAvatar: "
+                    + appMetaData.getAppMetaDataResult().tokenAvatar);
             System.out.println("ChainName: "
-                    + appMetaData.getEthMetaDataResult().chainName);
+                    + appMetaData.getAppMetaDataResult().chainName);
             System.out.println("Genesis TS: "
-                    + appMetaData.getEthMetaDataResult().genesisTimestamp);
+                    + appMetaData.getAppMetaDataResult().genesisTimestamp);
             System.out.println("Operator: "
-                    + appMetaData.getEthMetaDataResult().operator);
+                    + appMetaData.getAppMetaDataResult().operator);
             System.out.println("Website: "
-                    + appMetaData.getEthMetaDataResult().website);
+                    + appMetaData.getAppMetaDataResult().website);
             System.out.println("Block Interval: "
-                    + appMetaData.getEthMetaDataResult().blockInterval);
+                    + appMetaData.getAppMetaDataResult().blockInterval);
             System.out.println("Chain Id: "
-                    + appMetaData.getEthMetaDataResult().chainId);
+                    + appMetaData.getAppMetaDataResult().chainId);
             System.out.println("Validators: ");
 
-            for (Address validator : appMetaData.getEthMetaDataResult().validators) {
+            for (Address validator : appMetaData.getAppMetaDataResult().validators) {
                 System.out.println("Address: " + validator.toString());
             }
         }
@@ -237,7 +242,7 @@ public class InterfaceTest {
     }
 
     //3.  getBlockByNumber
-    public static String testEthGetBlockByNumber(
+    public static String testAppGetBlockByNumber(
             BigInteger validBlockNumber, boolean isfullTranobj)
             throws Exception {
         AppBlock appBlock = service.appGetBlockByNumber(
@@ -254,7 +259,7 @@ public class InterfaceTest {
     }
 
     //4.  cita_getBlockByHash
-    public static String testEthGetBlockByHash(
+    public static String testAppGetBlockByHash(
             String validBlockHash, boolean isfullTran)
             throws Exception {
         AppBlock appBlock = service
@@ -272,7 +277,7 @@ public class InterfaceTest {
 
 
     //5.  sendRawTransaction
-    public static String testEthSendRawTransaction(
+    public static String testAppSendRawTransaction(
             String rawData) throws Exception {
         AppSendTransaction appSendTx = service
                 .appSendRawTransaction(rawData).send();
@@ -291,12 +296,12 @@ public class InterfaceTest {
 
 
     //6.  getTransactionByHash
-    public static void testEthGetTransactionByHash(
+    public static void testAppGetTransactionByHash(
             String validTransactionHash) throws Exception {
         AppTransaction appTransaction = service.appGetTransactionByHash(
                 validTransactionHash).send();
 
-        if (appTransaction.getTransaction() != null) {
+        if (appTransaction.getTransaction() == null) {
             System.out.println("the result is null");
         } else {
             org.nervos.appchain.protocol.core.methods.response.Transaction transaction
@@ -311,7 +316,7 @@ public class InterfaceTest {
 
 
     //7.  getTransactionCount
-    public static void testEthGetTransactionCount(
+    public static void testAppGetTransactionCount(
             String validAccount, DefaultBlockParameter param) throws Exception {
         AppGetTransactionCount appGetTransactionCount = service.appGetTransactionCount(
                 validAccount, param).send();
@@ -325,12 +330,12 @@ public class InterfaceTest {
     }
 
     //8.  getTransactionReceipt
-    public static String testEthGetTransactionReceipt(
+    public static String testAppGetTransactionReceipt(
             String validTransactionHash) throws Exception {
         AppGetTransactionReceipt appGetTransactionReceipt = service.appGetTransactionReceipt(
                 validTransactionHash).send();
 
-        if (appGetTransactionReceipt.getTransactionReceipt() != null) {
+        if (appGetTransactionReceipt.getTransactionReceipt() == null) {
             System.out.println("the result is null");
             return null;
         } else {
@@ -357,7 +362,7 @@ public class InterfaceTest {
     }
 
     //9.  eth_getCode
-    public static void testEthGetCode(
+    public static void testAppGetCode(
             String validContractAddress, DefaultBlockParameter param)
             throws Exception {
         AppGetCode appGetCode = service

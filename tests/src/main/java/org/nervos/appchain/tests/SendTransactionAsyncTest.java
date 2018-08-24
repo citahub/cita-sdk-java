@@ -94,7 +94,7 @@ public class SendTransactionAsyncTest {
             public TransactionReceipt call() {
                 TransactionReceipt receipt = null;
                 try {
-                    transferSync(payerKey, payeeAddr, value);
+                    receipt = transferSync(payerKey, payeeAddr, value);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -115,13 +115,13 @@ public class SendTransactionAsyncTest {
         Future<TransactionReceipt> receiptFuture =
                 transferAsync(payerKey, payeeAddr, valueWei).sendAsync();
 
-        try {
-            System.out.println("Waiting 10s to get receipt...");
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+//        try {
+//            System.out.println("Waiting 10s to get receipt...");
+//            Thread.sleep(20000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
 
         try {
             TransactionReceipt receipt = receiptFuture.get();

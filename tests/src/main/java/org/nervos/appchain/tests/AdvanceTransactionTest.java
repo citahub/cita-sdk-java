@@ -142,13 +142,13 @@ public class AdvanceTransactionTest {
         service.appSendRawTransaction(rawTx).send();
     }
 
-    // eth_call
+    // appCall
     private String call(
             String from, String contractAddress, String callData)
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
         return service.appCall(
-                call, DefaultBlockParameterName.fromString("latest")).send().getValue();
+                call, DefaultBlockParameterName.LATEST).send().getValue();
     }
 
     // Get transaction receipt
@@ -161,7 +161,7 @@ public class AdvanceTransactionTest {
     public void runContract() throws Exception {
         final boolean isEd25519AndBlake2b = this.isEd25519AndBlake2b;
         long dealWithCount = 0;
-        String ethCallResult;
+        String appCallResult;
         String from = "0x0dbd369a741319fa5107733e2c9db9929093e3c7";
         long startBlock = TestUtil.getCurrentHeight(service).longValue();
         long oldBlock = startBlock;
@@ -285,16 +285,16 @@ public class AdvanceTransactionTest {
             );
 
             String getCallData = FunctionEncoder.encode(getCall);
-            ethCallResult = call(from, contractAddress, getCallData);
-            String ethCallResultReadable = FunctionReturnDecoder.decode(
-                    ethCallResult, getCall.getOutputParameters())
+            appCallResult = call(from, contractAddress, getCallData);
+            String appCallResultReadable = FunctionReturnDecoder.decode(
+                    appCallResult, getCall.getOutputParameters())
                     .get(0).toString();
-            System.out.println("ethCallResult: " + ethCallResultReadable);
-            if (ethCallResult == null || ethCallResult.length() < 3) {
+            System.out.println("appCallResult: " + appCallResultReadable);
+            if (appCallResult == null || appCallResult.length() < 3) {
                 continue;
             }
-            dealWithCount = Long.valueOf(ethCallResult.substring(2), 16);
-            System.out.println("eth_call result: " + dealWithCount);
+            dealWithCount = Long.valueOf(appCallResult.substring(2), 16);
+            System.out.println("app_call result: " + dealWithCount);
             if (dealWithCount == this.sendCount * this.threadCount) {
                 break;
             }
