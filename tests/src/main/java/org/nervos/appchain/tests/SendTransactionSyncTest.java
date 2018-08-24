@@ -73,11 +73,11 @@ public class SendTransactionSyncTest {
                 "");
 
         String rawTx = tx.sign(payerKey, false, false);
-        AppSendTransaction ethSendTrasnction = service.appSendRawTransaction(rawTx).send();
+        AppSendTransaction appSendTrasnction = service.appSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
                 .waitForTransactionReceipt(
-                        ethSendTrasnction.getSendTransactionResult().getHash());
+                        appSendTrasnction.getSendTransactionResult().getHash());
         return txReceipt;
     }
 
