@@ -1,7 +1,7 @@
 # nervosj
 [![Build Status](https://travis-ci.org/cryptape/nervosj.svg?branch=android)](https://travis-ci.org/cryptape/nervosj)
 ## Introduction
-nervosj, originally adapted from Ethereum Web3j, is a Java library for working with Smart Contract and integrating with clients on Nervos network.
+nervosj, originally adapted from Ethereum Web3j, is a Java library for working with Smart Contract and integrating with clients which include Android Applications on Nervos network.
 ## Features
 - Complete implementation of Nervos JSON-RPC API over HTTP.
 - Auto-generation of Java smart contract wrappers to create, deploy, transact with and call smart contracts from native Java code (Solidity and Truffle definition formats supported).
@@ -25,6 +25,13 @@ Or build your own Nervos AppChain net:
 Please find more information in [how to set up client in your local](https://docs.nervos.org/Nervos-AppChain-Docs/#/quick-start/deploy-appchain).  
 
 ### Get started
+
+#### Integrate Android
+
+An Android Application can communicate easily with AppChain through nervosj. You can get all jar files of every library through command `gradle shadowJar`, but abi, core, crypto, protobuf and utils will be only needed by Android.  
+
+We will upload these jar files to maven and gradle server as soon as possible so that you can integrate nervosj by gradle dependent in build.gradle file.
+
 #### Deploy smart contract
 Similar as Ethereum, smart contracts are deployed in Nervos AppChain network by sending transactions. Nervos AppChain transaction is defined in [Transaction.java](https://github.com/cryptape/nervosj/blob/master/core/src/main/java/org/nervosj/protocol/core/methods/request/Transaction.java).  
 In Nervos transaction, there are 3 special parameters:  
