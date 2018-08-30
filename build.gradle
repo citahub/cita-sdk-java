@@ -44,7 +44,7 @@ allprojects {
     targetCompatibility = 1.7
 
     group 'org.nervos'
-    version '0.17.1-android'
+    version '0.18-android'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
