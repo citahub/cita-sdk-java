@@ -21,7 +21,7 @@ import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
-public class TokenCodegenTest {
+public class TokenCodegenExample {
     private static Properties props;
     private static String testNetIpAddr;
     private static int chainId;
@@ -125,7 +125,7 @@ public class TokenCodegenTest {
         Map<Credentials, Long> accountTokens =
                 testAccounts.stream().collect(
                         Collectors.toMap(Function.identity(),
-                                TokenCodegenTest::getBalance));
+                                TokenCodegenExample::getBalance));
         long tokens = 0;
         long totalToken = accountTokens.values().stream().reduce(tokens, (x, y) -> x + y);
         return totalToken == 10000;
@@ -232,7 +232,7 @@ public class TokenCodegenTest {
         CompletableFuture<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, 1000000L, nonce, validUtilBlock,
                 version, value, chainId).sendAsync();
-        TokenCodegenTest tokenCodegenTest = new TokenCodegenTest();
+        TokenCodegenExample tokenCodegenExample = new TokenCodegenExample();
 
         tokenFuture.whenCompleteAsync((contract, exception) -> {
             if (exception != null) {
@@ -248,7 +248,7 @@ public class TokenCodegenTest {
             try {
                 System.out.println("Contract initial state: ");
                 printBalanceInfo();
-                tokenCodegenTest.randomTransferToken();
+                tokenCodegenExample.randomTransferToken();
             } catch (Exception e) {
                 System.out.println("Failed to get accounts balances");
                 e.printStackTrace();
@@ -272,7 +272,7 @@ public class TokenCodegenTest {
         CompletableFuture<TransactionReceipt> execute() throws Exception {
             Token tokenContract = new Token(token.getContractAddress(), service,
                     new CitaTransactionManager(service, from, 5, 3000));
-            long currentHeight = TokenCodegenTest.this.getCurrentHeight().longValue();
+            long currentHeight = TokenCodegenExample.this.getCurrentHeight().longValue();
             return tokenContract.transfer(
                     this.to.getAddress(), BigInteger.valueOf(tokens), 100000L,
                     BigInteger.valueOf(Math.abs(random.nextLong())),

@@ -15,14 +15,12 @@ public class Runner {
     private static String USAGE = "Usage: nervosj version|wallet|solidity ...";
 
     private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
-            + "              _      _____ _     _        \n"
-            + "             | |    |____ (_)   (_)       \n"
-            + "__      _____| |__      / /_     _   ___  \n"
-            + "\\ \\ /\\ / / _ \\ '_ \\     \\ \\ |   | | / _ \\ \n"
-            + " \\ V  V /  __/ |_) |.___/ / | _ | || (_) |\n"
-            + "  \\_/\\_/ \\___|_.__/ \\____/| |(_)|_| \\___/ \n"
-            + "                         _/ |             \n"
-            + "                        |__/              \n";
+            + "                                       _\n"
+            + " _ __    ___  _ __ __   __ ___   ___  (_)\n"
+            + "| \'_ \\  / _ \\| \'__|\\ \\ / // _ \\ / __| | |\n"
+            + "| | | ||  __/| |    \\ V /| (_) |\\__ \\ | |\n"
+            + "|_| |_| \\___||_|     \\_/  \\___/ |___/_/ |\n"
+            + "                                    |__/";
 
     public static void main(String[] args) throws Exception {
         System.out.println(LOGO);
