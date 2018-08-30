@@ -16,7 +16,7 @@ import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.response.PollingTransactionReceiptProcessor;
 import org.nervos.appchain.utils.Convert;
 
-public class SendTransactionAsyncTest {
+public class SendTransactionAsyncExample {
     static String testNetAddr;
     static String payerKey;
     static String payeeKey;
