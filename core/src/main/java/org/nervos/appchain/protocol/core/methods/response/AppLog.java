@@ -18,9 +18,9 @@ import org.nervos.appchain.protocol.core.Response;
 /**
  * Log object returned by:
  * <ul>
- * <li>eth_getFilterChanges</li>
- * <li>eth_getFilterLogs</li>
- * <li>eth_getLogs</li>
+ * <li>getFilterChanges</li>
+ * <li>getFilterLogs</li>
+ * <li>getLogs</li>
  * </ul>
  *
  * <p>See
