@@ -26,7 +26,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 
 
-public class TokenTransactionTest {
+public class TokenTransactionExample {
     private static Properties props;
     private static String testNetIpAddr;
     private static int chainId;

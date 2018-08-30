@@ -14,7 +14,7 @@ import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.response.PollingTransactionReceiptProcessor;
 import org.nervos.appchain.utils.Convert;
 
-public class SendTransactionSyncTest {
+public class SendTransactionSyncExample {
 
     static String testNetAddr;
     static String payerKey;
@@ -73,11 +73,11 @@ public class SendTransactionSyncTest {
                 "");
 
         String rawTx = tx.sign(payerKey, false, false);
-        AppSendTransaction ethSendTrasnction = service.appSendRawTransaction(rawTx).send();
+        AppSendTransaction appSendTrasnction = service.appSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
                 .waitForTransactionReceipt(
-                        ethSendTrasnction.getSendTransactionResult().getHash());
+                        appSendTrasnction.getSendTransactionResult().getHash());
         return txReceipt;
     }
 
