@@ -15,7 +15,7 @@ import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
-public class TokenFilterTest {
+public class TokenFilterCodeGenExample {
     private static Properties props;
     private static String testNetIpAddr;
     private static int chainId;
@@ -107,7 +107,7 @@ public class TokenFilterTest {
                 service, citaTxManager, 1000000L, nonce,
                 validUtilBlock, version,
                 value, chainId).sendAsync();
-        TokenFilterTest tokenFilterTest = new TokenFilterTest();
+        TokenFilterCodeGenExample tokenFilterCodeGenExample = new TokenFilterCodeGenExample();
 
         tokenFuture.whenCompleteAsync((contract, exception) -> {
             if (exception != null) {
@@ -121,7 +121,7 @@ public class TokenFilterTest {
 
             try {
                 System.out.println("Contract initial state: ");
-                tokenFilterTest.randomTransferToken();
+                tokenFilterCodeGenExample.randomTransferToken();
             } catch (Exception e) {
                 System.out.println("Failed to get accounts balances");
                 e.printStackTrace();
@@ -143,12 +143,13 @@ public class TokenFilterTest {
         }
 
         CompletableFuture<TransactionReceipt> execute() {
-            Token tokenContract = TokenFilterTest.this.token;
+            Token tokenContract = TokenFilterCodeGenExample.this.token;
             long validUtilBlock = TestUtil.getValidUtilBlock(
-                    TokenFilterTest.this.service).longValue();
+                    TokenFilterCodeGenExample.this.service).longValue();
             BigInteger nonce = TestUtil.getNonce();
             return tokenContract.transfer(
-                    this.to.getAddress(), BigInteger.valueOf(tokens), TokenFilterTest.this.quota,
+                    this.to.getAddress(), BigInteger.valueOf(tokens),
+                    TokenFilterCodeGenExample.this.quota,
                     nonce, validUtilBlock, version, chainId, value).sendAsync();
         }
 

@@ -37,34 +37,34 @@ import rx.Observable;
 /**
  * JSON-RPC 2.0 factory implementation.
  */
-public class JsonRpc2_0Web3j implements Nervosj {
+public class JsonRpc2_0Nervosj implements Nervosj {
 
     public static final int DEFAULT_BLOCK_TIME = 15 * 1000;
 
     protected final NervosjService nervosjService;
-    private final JsonRpc2_0Rx web3jRx;
+    private final JsonRpc2_0Rx nervosjRx;
     private final long blockTime;
 
-    public JsonRpc2_0Web3j(NervosjService nervosjService) {
+    public JsonRpc2_0Nervosj(NervosjService nervosjService) {
         this(nervosjService, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
     }
 
-    public JsonRpc2_0Web3j(NervosjService nervosjService, long pollingInterval) {
+    public JsonRpc2_0Nervosj(NervosjService nervosjService, long pollingInterval) {
         this(nervosjService, pollingInterval, Async.defaultExecutorService());
     }
 
-    public JsonRpc2_0Web3j(
+    public JsonRpc2_0Nervosj(
             NervosjService nervosjService, long pollingInterval,
             ScheduledExecutorService scheduledExecutorService) {
         this.nervosjService = nervosjService;
-        this.web3jRx = new JsonRpc2_0Rx(this, scheduledExecutorService);
+        this.nervosjRx = new JsonRpc2_0Rx(this, scheduledExecutorService);
         this.blockTime = pollingInterval;
     }
 
     @Override
     public Request<?, Web3ClientVersion> web3ClientVersion() {
         return new Request<>(
-                "web3_clientVersion",
+                "clientVersion",
                 Collections.<String>emptyList(),
                 nervosjService,
                 Web3ClientVersion.class);
@@ -73,7 +73,7 @@ public class JsonRpc2_0Web3j implements Nervosj {
     @Override
     public Request<?, Web3Sha3> web3Sha3(String data) {
         return new Request<>(
-                "web3_sha3",
+                "sha3",
                 Arrays.asList(data),
                 nervosjService,
                 Web3Sha3.class);
@@ -96,7 +96,7 @@ public class JsonRpc2_0Web3j implements Nervosj {
     @Override
     public Request<?, AppAccounts> appAccounts() {
         return new Request<>(
-                "eth_accounts",
+                "accounts",
                 Collections.<String>emptyList(),
                 nervosjService,
                 AppAccounts.class);
@@ -105,7 +105,7 @@ public class JsonRpc2_0Web3j implements Nervosj {
     @Override
     public Request<?, AppSign> appSign(String address, String sha3HashOfDataToSign) {
         return new Request<>(
-                "eth_sign",
+                "sign",
                 Arrays.asList(address, sha3HashOfDataToSign),
                 nervosjService,
                 AppSign.class);
@@ -170,18 +170,6 @@ public class JsonRpc2_0Web3j implements Nervosj {
                 nervosjService,
                 AppGetCode.class);
     }
-
-
-    //    @Override
-    //    public Request<?, org.nervosj.protocol.core.methods.response.EthSendTransaction>
-    //            ethSendTransaction(
-    //            Transaction transaction) {
-    //        return new Request<>(
-    //                "eth_sendTransaction",
-    //                Arrays.asList(transaction),
-    //                nervosjService,
-    //                org.nervosj.protocol.core.methods.response.EthSendTransaction.class);
-    //    }
 
     @Override
     public Request<?, AppSendTransaction>
@@ -269,7 +257,7 @@ public class JsonRpc2_0Web3j implements Nervosj {
 
     public Request<?, AppFilter> appNewPendingTransactionFilter() {
         return new Request<>(
-                "eth_newPendingTransactionFilter",
+                "newPendingTransactionFilter",
                 Collections.<String>emptyList(),
                 nervosjService,
                 AppFilter.class);
@@ -314,49 +302,49 @@ public class JsonRpc2_0Web3j implements Nervosj {
 
     @Override
     public Observable<String> appBlockHashObservable() {
-        return web3jRx.appBlockHashObservable(blockTime);
+        return nervosjRx.appBlockHashObservable(blockTime);
     }
 
     @Override
     public Observable<String> appPendingTransactionHashObservable() {
-        return web3jRx.appPendingTransactionHashObservable(blockTime);
+        return nervosjRx.appPendingTransactionHashObservable(blockTime);
     }
 
     @Override
     public Observable<Log> appLogObservable(
             org.nervos.appchain.protocol.core.methods.request.AppFilter appFilter) {
-        return web3jRx.appLogObservable(appFilter, blockTime);
+        return nervosjRx.appLogObservable(appFilter, blockTime);
     }
 
     @Override
     public Observable<Transaction>
             transactionObservable() {
-        return web3jRx.transactionObservable(blockTime);
+        return nervosjRx.transactionObservable(blockTime);
     }
 
     @Override
     public Observable<Transaction>
             pendingTransactionObservable() {
-        return web3jRx.pendingTransactionObservable(blockTime);
+        return nervosjRx.pendingTransactionObservable(blockTime);
     }
 
     @Override
     public Observable<AppBlock> blockObservable(boolean fullTransactionObjects) {
-        return web3jRx.blockObservable(fullTransactionObjects, blockTime);
+        return nervosjRx.blockObservable(fullTransactionObjects, blockTime);
     }
 
     @Override
     public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
-        return web3jRx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
+        return nervosjRx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
     }
 
     @Override
     public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
-        return web3jRx.replayBlocksObservable(startBlock, endBlock,
+        return nervosjRx.replayBlocksObservable(startBlock, endBlock,
                 fullTransactionObjects, ascending);
     }
 
@@ -364,33 +352,33 @@ public class JsonRpc2_0Web3j implements Nervosj {
     public Observable<Transaction>
             replayTransactionsObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        return web3jRx.replayTransactionsObservable(startBlock, endBlock);
+        return nervosjRx.replayTransactionsObservable(startBlock, endBlock);
     }
 
     @Override
     public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
             Observable<AppBlock> onCompleteObservable) {
-        return web3jRx.catchUpToLatestBlockObservable(
+        return nervosjRx.catchUpToLatestBlockObservable(
                 startBlock, fullTransactionObjects, onCompleteObservable);
     }
 
     @Override
     public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return web3jRx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
+        return nervosjRx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
     }
 
     @Override
     public Observable<Transaction>
             catchUpToLatestTransactionObservable(DefaultBlockParameter startBlock) {
-        return web3jRx.catchUpToLatestTransactionObservable(startBlock);
+        return nervosjRx.catchUpToLatestTransactionObservable(startBlock);
     }
 
     @Override
     public Observable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return web3jRx.catchUpToLatestAndSubscribeToNewBlocksObservable(
+        return nervosjRx.catchUpToLatestAndSubscribeToNewBlocksObservable(
                 startBlock, fullTransactionObjects, blockTime);
     }
 
@@ -398,7 +386,7 @@ public class JsonRpc2_0Web3j implements Nervosj {
     public Observable<Transaction>
             catchUpToLatestAndSubscribeToNewTransactionsObservable(
             DefaultBlockParameter startBlock) {
-        return web3jRx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
+        return nervosjRx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
                 startBlock, blockTime);
     }
 }

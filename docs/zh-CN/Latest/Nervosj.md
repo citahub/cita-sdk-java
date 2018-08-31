@@ -14,11 +14,13 @@ web3j接口继承了Ethereum和web3jRx两个接口，web3j的实现类（比如J
 [appGetBlockByNumber](Nervosj?id=requestlt-appblockgt-appgetblockbynumber-defaultblockparameter-defaultblockparameter-boolean-returnfulltransactionobjects)  
 [appGetTransactionByHash](Nervosj?id=requestlt-apptransactiongt-appgettransactionbyhashstring-transactionhash)  
 [appGetTransactionReceipt](Nervosj?id=requestlt-appgettransactionreceiptgt-appgettransactionreceiptstring-transactionhash)  
-[appNewFilter](Nervosj?id=requestlt-appfiltergt-appnewfilterorgnervosjprotocolcoremethodsrequestappfilter-appfilter)  
 [appNewBlockFilter](Nervosj?id=requestlt-appfiltergt-appnewblockfilter)  
+[appBlockHashObservable](Nervosj?id=observableltstringgt-appblockhashobservable)  
+[appNewFilter](Nervosj?id=requestlt-appfiltergt-appnewfilterorgnervosjprotocolcoremethodsrequestappfilter-appfilter)  
 [appUninstallFilter](Nervosj?id=requestlt-appuninstallfiltergt-appuninstallfilterbiginteger-filterid)  
 [appGetFilterChanges](Nervosj?id=requestlt-apploggt-appgetfilterchangesbiginteger-filterid)  
 [appGetFilterLogs](Nervosj?id=requestlt-apploggt-appgetfilterlogsbiginteger-filterid)  
+[appLogObservable](Nervosj?id=observableltloggt-applogobservableappfilter-appfilter)  
 
 #### `Nervosj build (NervosjService nervosj)`
 根据Web3jService类型实例化web3j。  
@@ -260,22 +262,6 @@ Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 AppGetTransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send();
 ```
-#### `Request<?, AppFilter> appNewFilter(org.nervosj.protocol.core.methods.request.AppFilter appFilter)`
-创建一个新的Nervos过滤器。  
-
-**参数**  
-appFilter - 针对于Nervos智能合约event的过滤器（定义在Request中的appFilter）  
-
-**返回值**  
-Request<?, AppFilter>  
-
-**示例**  
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
-org.nervosj.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
-AppFilter appFilter = service.appNewFilter(txHash).send();
-BigInteger filterId = appFilter.getFilterId();
-```
 
 #### `Request<?, AppFilter> appNewBlockFilter()`
 创建一个新的块过滤器，当有新的块写入时通知。  
@@ -290,6 +276,42 @@ Request<?, AppFilter>
 ```
 Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
 AppFilter appFilter = service.appNewBlockFilter().send();
+BigInteger filterId = appFilter.getFilterId();
+```
+
+#### `Observable<String> appBlockHashObservable()`
+新建一个Block Filter来监听新增块的哈希，返回一个Observable，可以用交互的形式来监听块高的变化。
+
+**参数**  
+无   
+
+**返回值**  
+Observable<?, AppLog>  
+
+**示例**  
+```
+Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+Observable blockFitlerObservable = service.appBlockHashObservable();
+AppLog logs = service.appGetFilterLogs(filterId).send();
+        blockFitlerObservable.subscribe(block -> {
+            System.out.println(block.toString());
+        });
+```
+
+#### `Request<?, AppFilter> appNewFilter(org.nervosj.protocol.core.methods.request.AppFilter appFilter)`
+创建一个新的Event过滤器以用来监听合约中的Event。  
+
+**参数**  
+appFilter - 针对于Nervos智能合约event的过滤器（定义在Request中的appFilter）  
+
+**返回值**  
+Request<?, AppFilter>  
+
+**示例**  
+```
+Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+org.nervosj.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
+AppFilter appFilter = service.appNewFilter(txHash).send();
 BigInteger filterId = appFilter.getFilterId();
 ```
 
@@ -325,6 +347,7 @@ BigInteger filterId = {your filter Id };
 AppLog logs = service.appGetFilterChanges(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
+
 #### `Request<?, AppLog> appGetFilterLogs(BigInteger filterId)`
 根据过滤器Id查询log，返回符合输入filter Id的所有log。  
 
@@ -342,3 +365,26 @@ AppLog logs = service.appGetFilterLogs(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
 
+#### `Observable<Log> appLogObservable(AppFilter appFilter)`
+根据AppFilter来安装一个新的Filter用以获取历史log和监听新的Log，返回一个Observable以交互的模式监听Log。
+
+**参数**  
+AppFilter - 过滤器可以由`appNewFilter`来新建     
+
+**返回值**  
+Observable<Log>  
+
+**示例**  
+```
+Observable appLogObservable = service.appLogObservable(filter);
+            Observable<String> reponse = appLogObservable.map(
+                    (log) -> {
+                        EventValues eventValues = staticExtractEventParameters(event, (Log)log);
+                        return (String) eventValues.getIndexedValues().get(0).getValue();;
+                    }
+                    );
+
+            reponse.subscribe(x -> {
+                System.out.println(x);
+            });
+```

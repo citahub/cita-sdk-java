@@ -14,7 +14,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.http.HttpService;
 
 
-public class TokenAccountTest {
+public class TokenAccountExample {
 
     private static Properties props;
     private static String testNetIpAddr;
@@ -70,7 +70,7 @@ public class TokenAccountTest {
                 .send().getTransactionReceipt().get();
     }
 
-    public TokenAccountTest() throws Exception {
+    public TokenAccountExample() throws Exception {
         account = new Account(privateKey, service);
         tokenContract = new CompiledContract(new File(solPath));
 
@@ -181,25 +181,25 @@ public class TokenAccountTest {
     //CHECKSTYLE:OFF
     private static String deployContractAndCallMethodFromSolidity()
             throws Exception {
-        TokenAccountTest tokenAccountTest = new TokenAccountTest();
-        String contractAddr = tokenAccountTest.deployContract(solPath);
-        tokenAccountTest.getBalance(fromAddress);
-        tokenAccountTest.getBalance(toAddress);
-        tokenAccountTest.transfer(toAddress, BigInteger.valueOf(1200));
-        tokenAccountTest.getBalance(fromAddress);
-        tokenAccountTest.getBalance(toAddress);
-        tokenAccountTest.storeAbiToBlockchain();
-        tokenAccountTest.getAbi();
+        TokenAccountExample tokenAccountExample = new TokenAccountExample();
+        String contractAddr = tokenAccountExample.deployContract(solPath);
+        tokenAccountExample.getBalance(fromAddress);
+        tokenAccountExample.getBalance(toAddress);
+        tokenAccountExample.transfer(toAddress, BigInteger.valueOf(1200));
+        tokenAccountExample.getBalance(fromAddress);
+        tokenAccountExample.getBalance(toAddress);
+        tokenAccountExample.storeAbiToBlockchain();
+        tokenAccountExample.getAbi();
         return contractAddr;
     }
     //CHECKSTYLE:ON
 
     private static void callContractMethodFromRemoteAbi(String contractAddress)
             throws Exception {
-        TokenAccountTest tokenAccountTest = new TokenAccountTest();
-        tokenAccountTest.contractAddress = contractAddress;
-        tokenAccountTest.transferRemote(toAddress, BigInteger.valueOf(500));
-        tokenAccountTest.getBalanceRemote(fromAddress);
-        tokenAccountTest.getBalanceRemote(toAddress);
+        TokenAccountExample tokenAccountExample = new TokenAccountExample();
+        tokenAccountExample.contractAddress = contractAddress;
+        tokenAccountExample.transferRemote(toAddress, BigInteger.valueOf(500));
+        tokenAccountExample.getBalanceRemote(fromAddress);
+        tokenAccountExample.getBalanceRemote(toAddress);
     }
 }

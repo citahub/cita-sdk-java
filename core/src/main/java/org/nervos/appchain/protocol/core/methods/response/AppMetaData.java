@@ -4,9 +4,9 @@ import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.protocol.core.Response;
 
 
-public class AppMetaData extends Response<AppMetaData.EthMetaDataResult> {
+public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
 
-    public EthMetaDataResult getEthMetaDataResult() {
+    public AppMetaDataResult getAppMetaDataResult() {
         return getResult();
     }
 
@@ -14,15 +14,16 @@ public class AppMetaData extends Response<AppMetaData.EthMetaDataResult> {
         return getResult() == null;
     }
 
-    public static class EthMetaDataResult {
+    public static class AppMetaDataResult {
         public int chainId;
         public String chainName;
-        public String operator;    //运营方
-        public String website;     //网站
+        public String operator;
+        public String website;
         public String genesisTimestamp;
-        public String basicToken;
-        public Address[] validators;
         public int blockInterval;
+        public String tokenName;
+        public String tokenSymbol;
+        public String tokenAvatar;
+        public Address[] validators;
     }
-
 }

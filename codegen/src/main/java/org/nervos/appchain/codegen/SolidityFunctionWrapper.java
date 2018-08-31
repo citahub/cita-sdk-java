@@ -57,7 +57,7 @@ import rx.functions.Func1;
 public class SolidityFunctionWrapper extends Generator {
 
     private static final String BINARY = "BINARY";
-    private static final String WEB3J = "nervosj";
+    private static final String NERVOSJ = "nervosj";
     private static final String CREDENTIALS = "credentials";
     private static final String TRANSACTION_MANAGER = "transactionManager";
     private static final String INITIAL_VALUE = "initialWeiValue";
@@ -256,12 +256,12 @@ public class SolidityFunctionWrapper extends Generator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, WEB3J)
+                .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
                 .addStatement("super($N, $N, $N, $N, $N, $N)",
-                        BINARY, CONTRACT_ADDRESS, WEB3J, authName, GAS_PRICE, GAS_LIMIT)
+                        BINARY, CONTRACT_ADDRESS, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT)
                 .build();
     }
 
@@ -269,10 +269,10 @@ public class SolidityFunctionWrapper extends Generator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, WEB3J)
+                .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addStatement("super($N, $N, $N, $N)",
-                        BINARY, CONTRACT_ADDRESS, WEB3J, authName)
+                        BINARY, CONTRACT_ADDRESS, NERVOSJ, authName)
                 .build();
     }
 
@@ -319,11 +319,11 @@ public class SolidityFunctionWrapper extends Generator {
         if (isPayable) {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, encodedConstructor, $L)",
-                    className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
+                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
         } else {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, encodedConstructor)",
-                    className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, BINARY);
+                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY);
         }
 
         return methodBuilder.build();
@@ -340,7 +340,7 @@ public class SolidityFunctionWrapper extends Generator {
         methodBuilder.addStatement(
                 "return deployRemoteCall"
                         + "($L.class, $L, $L, $L, $L, $L, $L, $L, $L, $L, encodedConstructor)",
-                className, WEB3J, authName, QUOTA, NONCE, VALID_UNTIL_BLOCK,
+                className, NERVOSJ, authName, QUOTA, NONCE, VALID_UNTIL_BLOCK,
                 VERSION, CHAIN_ID, VALUE, BINARY);
         return methodBuilder.build();
     }
@@ -351,11 +351,11 @@ public class SolidityFunctionWrapper extends Generator {
         if (isPayable) {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, \"\", $L)",
-                    className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
+                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
         } else {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, \"\")",
-                    className, WEB3J, authName, GAS_PRICE, GAS_LIMIT, BINARY);
+                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY);
         }
 
         return methodBuilder.build();
@@ -367,7 +367,7 @@ public class SolidityFunctionWrapper extends Generator {
         methodBuilder.addStatement(
                 "return deployRemoteCall"
                         + "($L.class, $L, $L, $L, $L, $L, $L, $L, $L, $L, \"\")",
-                className, WEB3J, authName, QUOTA, NONCE,
+                className, NERVOSJ, authName, QUOTA, NONCE,
                 VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE, BINARY);
         return methodBuilder.build();
     }
@@ -378,7 +378,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
-                .addParameter(Nervosj.class, WEB3J)
+                .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT);
@@ -396,7 +396,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
-                .addParameter(Nervosj.class, WEB3J)
+                .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(Long.class, QUOTA)
                 .addParameter(BigInteger.class, NONCE)
@@ -413,12 +413,12 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(TypeVariableName.get(className, Type.class))
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, WEB3J)
+                .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
                 .addStatement("return new $L($L, $L, $L, $L, $L)", className,
-                        CONTRACT_ADDRESS, WEB3J, authName, GAS_PRICE, GAS_LIMIT)
+                        CONTRACT_ADDRESS, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT)
                 .build();
     }
 
@@ -428,10 +428,10 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(TypeVariableName.get(className, Type.class))
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, WEB3J)
+                .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addStatement("return new $L($L, $L, $L)", className,
-                        CONTRACT_ADDRESS, WEB3J, authName)
+                        CONTRACT_ADDRESS, NERVOSJ, authName)
                 .build();
     }
 
@@ -671,7 +671,7 @@ public class SolidityFunctionWrapper extends Generator {
             buildVariableLengthReturnFunctionConstructor(
                     methodBuilder, functionName, inputParams, outputParameterTypes);
 
-            buildTupleResultContainer(methodBuilder, parameterizedTupleType);
+            buildTupleResultContainer(methodBuilder, parameterizedTupleType, outputParameterTypes);
         }
     }
 
@@ -964,30 +964,54 @@ public class SolidityFunctionWrapper extends Generator {
     }
 
     private void buildTupleResultContainer(
-            MethodSpec.Builder methodBuilder, ParameterizedTypeName tupleType)
+            MethodSpec.Builder methodBuilder, ParameterizedTypeName tupleType,
+            List<TypeName> outputParameterTypes)
             throws ClassNotFoundException {
 
         List<TypeName> typeArguments = tupleType.typeArguments;
 
         CodeBlock.Builder tupleConstructor = CodeBlock.builder();
         tupleConstructor.addStatement(
-                        "$T results = executeCallMultipleValueReturn(function);",
-                        ParameterizedTypeName.get(List.class, Type.class))
+                "$T results = executeCallMultipleValueReturn(function);",
+                ParameterizedTypeName.get(List.class, Type.class))
                 .add("return new $T(", tupleType)
                 .add("$>$>");
 
-        String resultString = "\n($T) results.get($L)";
+        String resultStringSimple = "\n($T) results.get($L)";
         if (useNativeJavaTypes) {
-            resultString += ".getValue()";
+            resultStringSimple += ".getValue()";
         }
 
+        String resultStringNativeList =
+                "\nconvertToNative(($T) results.get($L).getValue())";
+
         int size = typeArguments.size();
-        for (int i = 0; i < size - 1; i++) {
+        ClassName classList = ClassName.get(List.class);
+
+        for (int i = 0; i < size; i++) {
+            TypeName param = outputParameterTypes.get(i);
+            TypeName convertTo = typeArguments.get(i);
+
+            String resultString = resultStringSimple;
+
+            // If we use native java types we need to convert
+            // elements of arrays to native java types too
+            if (useNativeJavaTypes && param instanceof ParameterizedTypeName) {
+                ParameterizedTypeName oldContainer = (ParameterizedTypeName)param;
+                ParameterizedTypeName newContainer = (ParameterizedTypeName)convertTo;
+                if (newContainer.rawType.compareTo(classList) == 0
+                        && newContainer.typeArguments.size() == 1) {
+                    convertTo = ParameterizedTypeName.get(classList,
+                            oldContainer.typeArguments.get(0));
+                    resultString = resultStringNativeList;
+                }
+            }
+
             tupleConstructor
-                    .add(resultString + ", ", typeArguments.get(i), i);
+                    .add(resultString, convertTo, i);
+            tupleConstructor.add(i < size - 1 ? ", " : ");\n");
         }
-        tupleConstructor
-                .add(resultString + ");\n", typeArguments.get(size - 1), size - 1);
+
         tupleConstructor.add("$<$<");
 
         TypeSpec callableType = TypeSpec.anonymousClassBuilder("")

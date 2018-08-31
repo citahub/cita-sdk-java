@@ -37,7 +37,7 @@ public class RawResponseTest extends ResponseTester {
             + "     \"receiptsRoot\":\"0x918334ef71e85bed370065d1f2758d1eb3f089f7e5323a78a633de7a5f07f371\","
             + "     \"gasUsed\":\"0x132bd\","
             + "     \"proof\":"
-            + "         {\"Tendermint\":{"
+            + "         {\"Bft\":{"
             + "             \"proposal\":\"0xe1b9bba13cb64a920c04f3abc2ea0a98d2db4fb65d233df3afc31c5321bb6054\","
             + "             \"height\":261976,"
             + "             \"round\":0,"

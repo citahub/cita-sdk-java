@@ -23,7 +23,7 @@ public class RequestTest extends RequestTester {
         nervosj.web3ClientVersion().send();
 
         verifyResult(
-                "{\"jsonrpc\":\"2.0\",\"method\":\"web3_clientVersion\",\"params\":[],\"id\":1}");
+                "{\"jsonrpc\":\"2.0\",\"method\":\"clientVersion\",\"params\":[],\"id\":1}");
     }
 
     @Test
@@ -31,7 +31,7 @@ public class RequestTest extends RequestTester {
         nervosj.web3Sha3("0x68656c6c6f20776f726c64").send();
 
         verifyResult(
-                "{\"jsonrpc\":\"2.0\",\"method\":\"web3_sha3\","
+                "{\"jsonrpc\":\"2.0\",\"method\":\"sha3\","
                         + "\"params\":[\"0x68656c6c6f20776f726c64\"],\"id\":1}");
     }
 
@@ -47,7 +47,7 @@ public class RequestTest extends RequestTester {
     public void testAppAccounts() throws Exception {
         nervosj.appAccounts().send();
 
-        verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"eth_accounts\",\"params\":[],\"id\":1}");
+        verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"accounts\",\"params\":[],\"id\":1}");
     }
 
     @Test
@@ -93,7 +93,7 @@ public class RequestTest extends RequestTester {
         nervosj.appSign("0x8a3106a3e50576d4b6794a0e74d3bb5f8c9acaab",
                 "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470").send();
 
-        verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"eth_sign\","
+        verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"sign\","
                 + "\"params\":[\"0x8a3106a3e50576d4b6794a0e74d3bb5f8c9acaab\","
                 + "\"0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470\"],"
                 + "\"id\":1}");
@@ -189,7 +189,7 @@ public class RequestTest extends RequestTester {
     public void testAppNewPendingTransactionFilter() throws Exception {
         nervosj.appNewPendingTransactionFilter().send();
 
-        verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"eth_newPendingTransactionFilter\","
+        verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"newPendingTransactionFilter\","
                 + "\"params\":[],\"id\":1}");
     }
 

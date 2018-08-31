@@ -1,3 +1,5 @@
+description 'Several examples to use nervosj to interact with AppChain'
+
 dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
     compile project(':core')

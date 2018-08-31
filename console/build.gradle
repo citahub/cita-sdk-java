@@ -1,7 +1,7 @@
-apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 
-description 'nervos command line tools'
+description 'nervosj command line tools'
 
 dependencies {
     compile project(':codegen'),
