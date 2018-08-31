@@ -15,11 +15,35 @@ Java 8
 Gradle 4.3
 
 ### Install
-`git clone https://github.com/cryptape/nervosj.git`
-`gradle shadowJar` to generate a jar file for nervosj.  
+Install from repositories:  
+maven
+```
+<dependency>
+  <groupId>org.nervos</groupId>
+  <artifactId>core</artifactId>
+  <version>0.18</version>
+</dependency>
+```
+Gradle
+```
+compile 'org.nervos:core:0.18'
+```
+Scala SBT
+```
+libraryDependencies += "org.nervos" % "core" % "0.18"
+```
+Install manually  
+If you want to generate the jar and import manually.  
+```
+git clone https://github.com/cryptape/nervosj.git
+gradle shadowJar
+```
+
+Please refer to branch Android for usage for Android version.
+  
 ### Test net
 Use Nervos AppChain test net (recommended):  
-http://121.196.200.225:1337 is provided as a testnet for tests.
+http://121.196.200.225:1337 is provided as a test net.
 
 Or build your own Nervos AppChain net:  
 Please find more information in [how to set up client in your local](https://docs.nervos.org/Nervos-AppChain-Docs/#/quick-start/deploy-appchain).
@@ -78,7 +102,7 @@ Please check [TokenTransactionTest.java](https://github.com/cryptape/nervosj/blo
 ### Working with smart contract with nervosj wrapper
 Besides interacting with smart contracts by sending transactions with binary code, nervosj provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.  
 
-Run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar`.  
+Download Nervosj jar flie from release page or run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar`.  
 
 Usage of console-version-all is shown below:  
 ```
