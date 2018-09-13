@@ -49,7 +49,7 @@ public class Account {
 
     /// TODO: get contract address from receipt after deploy, then return contract name
     public AppSendTransaction deploy(
-            File contractFile, BigInteger nonce, long quota,
+            File contractFile, String nonce, long quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
@@ -60,7 +60,7 @@ public class Account {
     }
 
     public CompletableFuture<AppSendTransaction> deployAsync(
-            File contractFile, BigInteger nonce, long quota,
+            File contractFile, String nonce, long quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
@@ -74,7 +74,7 @@ public class Account {
     // sendTransaction: nonce and quota is necessary
     public Object callContract(
             String contractAddress, String funcName,
-            BigInteger nonce, long quota, int version,
+            String nonce, long quota, int version,
             int chainId, String value, Object... args)
             throws Exception {
         if (abi == null) {
@@ -88,7 +88,7 @@ public class Account {
 
     public Object callContract(
             String contractAddress, AbiDefinition functionAbi,
-            BigInteger nonce, long quota,
+            String nonce, long quota,
             int version,int chainId, String value, Object... args)
             throws Exception {
         List<Type> params = new ArrayList<>();
@@ -139,7 +139,7 @@ public class Account {
     }
 
     public Object sendTransaction(
-            String contractAddress, Function func, BigInteger nonce,
+            String contractAddress, Function func, String nonce,
             long quota, int version, int chainId, String value)
             throws IOException {
         String data = FunctionEncoder.encode(func);
@@ -149,7 +149,7 @@ public class Account {
     }
 
     public Object uploadAbi(
-            String contractAddress, String abi, BigInteger nonce, long quota,
+            String contractAddress, String abi, String nonce, long quota,
             int version, int chainId, String value) throws Exception {
         String data = hex_remove_0x(contractAddress) + hex_remove_0x(bytesToHexStr(abi.getBytes()));
         return this.transactionManager.sendTransaction(

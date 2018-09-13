@@ -44,7 +44,7 @@ public class ClientTransactionManager extends TransactionManager {
 
         // Note: useless for use, just for compile
         Transaction transaction = new Transaction(
-                to, BigInteger.valueOf(1), 1000000, 99, 0, 1, "0", data);
+                to, "1", 1000000, 99, 0, 1, "0", data);
 
         //there is no method sendTransaction in cita so remote this
         return nervosj.appSendRawTransaction("fake data")

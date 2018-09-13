@@ -57,7 +57,7 @@ public class TokenFilterObservableExample {
     public static String deployContract(String contractCode) throws IOException {
         String txHash = "";
         long validUntilBlock = TestUtil.getValidUtilBlock(service).longValue();
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
         Transaction txToDeployContract = Transaction
                 .createContractTransaction(
                         nonce, quota, validUntilBlock,
@@ -123,7 +123,8 @@ public class TokenFilterObservableExample {
         long currentHeight = service.appBlockNumber()
                 .send().getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
+
         long quota = 1000000;
 
         Transaction tx = Transaction.createFunctionCallTransaction(

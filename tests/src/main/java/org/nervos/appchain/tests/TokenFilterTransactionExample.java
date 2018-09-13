@@ -62,7 +62,7 @@ public class TokenFilterTransactionExample {
     private static String deployContract(String contractCode) throws IOException {
         String txHash = "";
         long validUntilBlock = TestUtil.getValidUtilBlock(service).longValue();
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
         Transaction txToDeployContract = Transaction
                 .createContractTransaction(
                         nonce, quota, validUntilBlock,
@@ -172,7 +172,7 @@ public class TokenFilterTransactionExample {
         long currentHeight = service.appBlockNumber()
                 .send().getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
+        String nonce = String.valueOf(Math.abs(random.nextLong()));
         long quota = 1000000;
 
         Transaction tx = Transaction.createFunctionCallTransaction(
