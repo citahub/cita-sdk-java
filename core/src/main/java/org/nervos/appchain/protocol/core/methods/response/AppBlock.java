@@ -243,13 +243,14 @@ public class AppBlock extends Response<AppBlock.Block> {
         private String receiptsRoot;
         private String gasUsed;
         private Proof proof;
+        private String proposer;
 
 
         public Header() {
         }
 
         public Header(long timestamp, String prevHash, String number, String stateRoot,
-                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof) {
+                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof, String proposer) {
             this.timestamp = timestamp;
             this.prevHash = prevHash;
             this.number = number;
@@ -258,6 +259,7 @@ public class AppBlock extends Response<AppBlock.Block> {
             this.receiptsRoot = receiptsRoot;
             this.gasUsed = gasUsed;
             this.proof = proof;
+            this.proposer = proposer;
         }
 
         public Long getTimestamp() {
@@ -330,6 +332,18 @@ public class AppBlock extends Response<AppBlock.Block> {
 
         public void setProof(Proof proof) {
             this.proof = proof;
+        }
+
+        public void setTimestamp(Long timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public String getProposer() {
+            return proposer;
+        }
+
+        public void setProposer(String proposer) {
+            this.proposer = proposer;
         }
 
         @Override
@@ -571,6 +585,7 @@ public class AppBlock extends Response<AppBlock.Block> {
                 String transactionsRoot = headerNode.get("transactionsRoot").asText();
                 String receiptsRoot = headerNode.get("receiptsRoot").asText();
                 String gasUsed = headerNode.get("gasUsed").asText();
+                String proposer = headerNode.get("proposer").asText();
 
                 //proof tendermint
                 JsonNode proofNode = node.get("header").get("proof").get("Bft");
@@ -607,7 +622,7 @@ public class AppBlock extends Response<AppBlock.Block> {
                                 new TendermintCommit[tendermintCommits.size()]));
 
                 Header header = new Header(timeStamp, prevHash, number, stateRoot,
-                        transactionsRoot, receiptsRoot, gasUsed, new Proof(tendermint));
+                        transactionsRoot, receiptsRoot, gasUsed, new Proof(tendermint), proposer);
                 Body body = new Body(transactionObjs);
                 return new Block(blockVersion, blockHash, header, body);
             } else {
