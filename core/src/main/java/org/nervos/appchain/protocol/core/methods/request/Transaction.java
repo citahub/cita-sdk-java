@@ -10,6 +10,7 @@ import org.abstractj.kalium.keys.SigningKey;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.crypto.ECKeyPair;
+import org.nervos.appchain.crypto.Keys;
 import org.nervos.appchain.crypto.Sign;
 import org.nervos.appchain.crypto.Signature;
 import org.nervos.appchain.protobuf.Blockchain;
@@ -18,6 +19,7 @@ import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.utils.Numeric;
 
 import static org.abstractj.kalium.encoders.Encoder.HEX;
+import static org.nervos.appchain.utils.Numeric.cleanHexPrefix;
 
 /**
  * Transaction request object used the below methods.
@@ -58,14 +60,15 @@ public class Transaction {
         }
 
         this.value = processValue(value);
+        this.to = processTo(to);
     }
 
     public static String processValue(String value) {
         String result = "";
-        if (value.matches("0[xX][0-9a-fA-F]+")) {
-            result = value.substring(2);
-        } else if (value == null || value.equals("")) {
+        if (value == null || value.equals("")) {
             result = "0";
+        } else if (value.matches("0[xX][0-9a-fA-F]+")) {
+            result = value.substring(2);
         } else {
             result = new BigInteger(value).toString(16);
         }
@@ -79,6 +82,15 @@ public class Transaction {
             System.out.println("Value is set as 0");
             return  "0";
         }
+    }
+
+    public static String processTo(String to) {
+        if (!Keys.verifyAddress(to)) {
+            if (!to.matches("^(0x|0X)?")) {
+                throw new IllegalArgumentException("Address is not in correct format.");
+            }
+        }
+        return cleanHexPrefix(to).toLowerCase();
     }
 
     public static Transaction createContractTransaction(
@@ -135,7 +147,7 @@ public class Transaction {
 
     private static String convert(BigInteger value) {
         if (value != null) {
-            return Numeric.cleanHexPrefix(Numeric.encodeQuantity(value));
+            return cleanHexPrefix(Numeric.encodeQuantity(value));
         } else {
             return null;  // we don't want the field to be encoded if not present
         }
@@ -145,7 +157,7 @@ public class Transaction {
     * sign consists of 3 parts:
     * 1. serialize raw transaction
     * 2. get signature from transaction
-    * 3. serialize unverified transaction with serilized raw transaction and signaure
+    * 3. add serialized raw transaction and signature together
     * */
     public String sign(String privateKey, boolean isEd25519AndBlake2b, boolean isByteArray) {
         byte[] tx = this.serializeRawTransaction(isByteArray);
@@ -176,12 +188,12 @@ public class Transaction {
         if (isByteArray) {
             strbyte = getData().getBytes();
         } else {
-            strbyte = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(getData()));
+            strbyte = ConvertStrByte.hexStringToBytes(cleanHexPrefix(getData()));
         }
         ByteString bdata = ByteString.copyFrom(strbyte);
 
         byte[] byteValue = ConvertStrByte.hexStringToBytes(
-                Numeric.cleanHexPrefix(getValue()), 256);
+                cleanHexPrefix(getValue()), 256);
         ByteString bvalue = ByteString.copyFrom(byteValue);
 
         builder.setData(bdata);
@@ -203,6 +215,12 @@ public class Transaction {
     }
 
     public byte[] getSignature(String privateKey, byte[] tx, boolean isEd25519AndBlake2b) {
+
+        if (!Keys.verifyPrivateKey(privateKey)) {
+            throw new IllegalArgumentException("private key is not in correct format.");
+        }
+        privateKey = privateKey.toLowerCase();
+
         Hash hash = new Hash();
         byte[] sig;
 
