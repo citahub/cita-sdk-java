@@ -326,7 +326,8 @@ public class ResponseTest extends ResponseTester {
                 "0x62d54aa5b82a5813c87a3a4d1d2c3a02e6c88f037c8fb2461e5116e7a9dc2149",
                 "0x918334ef71e85bed370065d1f2758d1eb3f089f7e5323a78a633de7a5f07f371",
                 "0x132bd",
-                new AppBlock.Proof(tendermint)
+                new AppBlock.Proof(tendermint),
+                "0xee01b9ba97671e8a1891e85b206b499f106822a1"
         );
 
         List<AppBlock.TransactionObject> transactionObjects = new ArrayList<>();
