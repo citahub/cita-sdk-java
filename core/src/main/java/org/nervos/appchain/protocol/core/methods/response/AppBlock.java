@@ -212,8 +212,8 @@ public class AppBlock extends Response<AppBlock.Block> {
 
         @Override
         public int hashCode() {
-            int result = getTendermint() != null ? getTendermint().hashCode() : 0;
-            return result;
+            return getTendermint() != null
+                    ? getTendermint().hashCode() : 0;
         }
 
         @Override
@@ -249,8 +249,9 @@ public class AppBlock extends Response<AppBlock.Block> {
         public Header() {
         }
 
-        public Header(long timestamp, String prevHash, String number, String stateRoot,
-                      String transactionsRoot, String receiptsRoot, String gasUsed, Proof proof, String proposer) {
+        public Header(long timestamp, String prevHash, String number,
+                      String stateRoot, String transactionsRoot, String receiptsRoot,
+                      String gasUsed, Proof proof, String proposer) {
             this.timestamp = timestamp;
             this.prevHash = prevHash;
             this.number = number;
@@ -267,6 +268,10 @@ public class AppBlock extends Response<AppBlock.Block> {
         }
 
         public void setTimestamp(long timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public void setTimestamp(Long timestamp) {
             this.timestamp = timestamp;
         }
 
@@ -332,10 +337,6 @@ public class AppBlock extends Response<AppBlock.Block> {
 
         public void setProof(Proof proof) {
             this.proof = proof;
-        }
-
-        public void setTimestamp(Long timestamp) {
-            this.timestamp = timestamp;
         }
 
         public String getProposer() {
