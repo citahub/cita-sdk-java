@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -17,46 +16,33 @@ import java.util.stream.Collectors;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenCodegenExample {
-    private static Properties props;
-    private static String testNetIpAddr;
+    private static Config conf;
     private static int chainId;
     private static int version;
     private static String creatorPrivateKey;
     private static Credentials creator;
     private static ArrayList<Credentials> testAccounts = new ArrayList<>();
     private static Nervosj service;
-    private static Random random;
-    private static BigInteger quota;
+    private static Long quotaDeployment;
     private static String value;
     private static Token token;
 
-    private static final String configPath =
-            "tests/src/main/resources/config.properties";
-
     static {
-        try {
-            props = Config.load(configPath);
-        } catch (Exception e) {
-            System.out.println("Failed to read properties from config file");
-            e.printStackTrace();
-        }
+        conf= new Config();
+        conf.buildService(false);
 
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
-        creatorPrivateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
+        chainId = Integer.parseInt(conf.chainId);
+        version = Integer.parseInt(conf.version);
+        creatorPrivateKey = conf.primaryPrivKey;
         creator = Credentials.create(creatorPrivateKey);
         loadAccounts();
 
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
-        random = new Random(System.currentTimeMillis());
-        quota = BigInteger.valueOf(1000000);
+        service = conf.service;
+        quotaDeployment = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
     }
 
@@ -64,18 +50,14 @@ public class TokenCodegenExample {
         testAccounts.add(creator);
 
         List<String> accounts = new ArrayList<String>();
-        String testAcct1 = props.getProperty(Config.TEST_PRIVATE_KEY_1);
-        String testAcct2 = props.getProperty(Config.TEST_PRIVATE_KEY_2);
+        String testAcct1 = conf.auxPrivKey1;
+        String testAcct2 = conf.auxPrivKey2;
         accounts.add(testAcct1);
         accounts.add(testAcct2);
         accounts.stream().map(Credentials::create).forEach(c -> testAccounts.add(c));
     }
 
-    static BigInteger getCurrentHeight() throws Exception {
-        return service.appBlockNumber().send().getBlockNumber();
-    }
-
-    static long getBalance(Credentials credentials) {
+    private static long getBalance(Credentials credentials) {
         long accountBalance = 0;
         try {
             CompletableFuture<BigInteger> balanceFuture = token.getBalance(
@@ -90,7 +72,7 @@ public class TokenCodegenExample {
         return accountBalance;
     }
 
-    static void printBalanceInfo() {
+    private static void printBalanceInfo() {
         for (Credentials credentials : testAccounts) {
             System.out.println("Address: " + credentials.getAddress()
                     + " Balance: " + getBalance(credentials));
@@ -101,7 +83,7 @@ public class TokenCodegenExample {
      * Waiting for tx complete.
      * Interact with chain to get the accounts' balances and then update the local state
      * */
-    static void waitToGetToken() {
+    private static void waitToGetToken() {
         try {
             while (!isTokenTransferComplete()) {
                 System.out.println("wait to get account token");
@@ -121,7 +103,7 @@ public class TokenCodegenExample {
      * it is way verifying tx in the chain
      * by checking if the total token keeps the same as initial token.
      */
-    static boolean isTokenTransferComplete() {
+    private static boolean isTokenTransferComplete() {
         Map<Credentials, Long> accountTokens =
                 testAccounts.stream().collect(
                         Collectors.toMap(Function.identity(),
@@ -222,15 +204,14 @@ public class TokenCodegenExample {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         TransactionManager citaTxManager = new CitaTransactionManager(
                 service, creator, 5, 3000);
-        long currentheight = getCurrentHeight().longValue();
-        long validUtilBlock = currentheight + 88;
-        BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
+        BigInteger nonce = TestUtil.getNonce();
 
         CompletableFuture<Token> tokenFuture = Token.deploy(
-                service, citaTxManager, 1000000L, nonce, validUtilBlock,
+                service, citaTxManager, quotaDeployment, nonce,
+                TestUtil.getValidUtilBlock(service).longValue(),
                 version, value, chainId).sendAsync();
         TokenCodegenExample tokenCodegenExample = new TokenCodegenExample();
 
@@ -272,11 +253,11 @@ public class TokenCodegenExample {
         CompletableFuture<TransactionReceipt> execute() throws Exception {
             Token tokenContract = new Token(token.getContractAddress(), service,
                     new CitaTransactionManager(service, from, 5, 3000));
-            long currentHeight = TokenCodegenExample.this.getCurrentHeight().longValue();
+
             return tokenContract.transfer(
-                    this.to.getAddress(), BigInteger.valueOf(tokens), 100000L,
-                    BigInteger.valueOf(Math.abs(random.nextLong())),
-                    currentHeight + 88,
+                    this.to.getAddress(), BigInteger.valueOf(tokens), quotaDeployment,
+                    TestUtil.getNonce(),
+                    TestUtil.getValidUtilBlock(service).longValue(),
                     0, chainId, value).sendAsync();
         }
 

@@ -23,7 +23,7 @@ public class SendTransactionSyncExample {
     static int chainId;
     static int version;
     static Properties props;
-    static long quota;
+    static long quotaToTransfer;
 
     static Nervosj service;
 
@@ -35,7 +35,7 @@ public class SendTransactionSyncExample {
         payeeAddr = props.getProperty(Config.TEST_ADDR_1);
         chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
         version = Integer.parseInt(props.getProperty(Config.VERSION));
-        quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA));
+        quotaToTransfer = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA_Deployment));
 
         HttpService.setDebug(false);
         service = Nervosj.build(new HttpService(testNetAddr));
@@ -66,7 +66,7 @@ public class SendTransactionSyncExample {
 
         Transaction tx = new Transaction(payeeAddr,
                 TestUtil.getNonce(),
-                quota,
+                quotaToTransfer,
                 TestUtil.getValidUtilBlock(service).longValue(),
                 version, chainId,
                 value,

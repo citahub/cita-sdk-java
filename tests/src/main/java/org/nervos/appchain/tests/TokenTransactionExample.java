@@ -6,8 +6,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
-import java.util.Random;
 
 import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.FunctionReturnDecoder;
@@ -23,60 +21,44 @@ import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 
 
 public class TokenTransactionExample {
-    private static Properties props;
-    private static String testNetIpAddr;
     private static int chainId;
     private static int version;
     private static String privateKey;
     private static String fromAddress;
     private static String toAddress;
     private static String binPath;
-
-    private static final String configPath
-            = "tests/src/main/resources/config.properties";
-
-    private static Random random;
-    private static BigInteger quota;
+    private static Long quota;
     private static String value;
     private static Nervosj service;
 
     static {
-        try {
-            props = Config.load(configPath);
-        } catch (Exception e) {
-            System.out.println("Failed to read properties from config file");
-            e.printStackTrace();
-        }
+        Config conf = new Config();
+        conf.buildService(false);
 
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
-        privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        fromAddress = props.getProperty(Config.SENDER_ADDR);
-        toAddress = props.getProperty(Config.TEST_ADDR_1);
-        binPath = props.getProperty(Config.TOKEN_BIN);
+        chainId = Integer.parseInt(conf.chainId);
+        version = Integer.parseInt(conf.version);
+        privateKey = conf.primaryPrivKey;
+        fromAddress = conf.primaryAddr;
+        toAddress = conf.auxAddr1;
+        binPath = conf.tokenBin;
 
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
-        random = new Random(System.currentTimeMillis());
-        quota = BigInteger.valueOf(1000000);
+        service = conf.service;
+        quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
     }
 
-    static String loadContractCode(String binPath) throws Exception {
+    private static String loadContractCode(String binPath) throws Exception {
         return new String(Files.readAllBytes(Paths.get(binPath)));
     }
 
-    static String deployContract(String contractCode) throws Exception {
+    private static String deployContract(String contractCode) throws Exception {
         long currentHeight = service.appBlockNumber().send()
                 .getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
-        long quota = 9999999;
+        BigInteger nonce = TestUtil.getNonce();
         Transaction tx = Transaction.createContractTransaction(
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
@@ -85,7 +67,7 @@ public class TokenTransactionExample {
                 .send().getSendTransactionResult().getHash();
     }
 
-    static TransactionReceipt getTransactionReceipt(String txHash)
+    private static TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
         return service.appGetTransactionReceipt(txHash)
                 .send().getTransactionReceipt().get();
@@ -96,8 +78,7 @@ public class TokenTransactionExample {
         long currentHeight = service.appBlockNumber()
                 .send().getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
-        long quota = 1000000;
+        BigInteger nonce = TestUtil.getNonce();
 
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,
@@ -108,7 +89,7 @@ public class TokenTransactionExample {
                 .send().getSendTransactionResult().getHash();
     }
 
-    static String transfer(
+    private static String transfer(
             String contractAddr, String toAddr, BigInteger value) throws Exception {
         Function transferFunc = new Function(
                 "transfer",
@@ -120,14 +101,14 @@ public class TokenTransactionExample {
     }
 
     //eth_call
-    static String call(
+    private static String call(
             String from, String contractAddress, String callData)
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
         return service.appCall(call, DefaultBlockParameter.valueOf("latest")).send().getValue();
     }
 
-    static String getBalance(String fromAddr, String contractAddress) throws Exception {
+    private static String getBalance(String fromAddr, String contractAddress) throws Exception {
         Function getBalanceFunc = new Function(
                 "getBalance",
                 Arrays.asList(new Address(fromAddr)),

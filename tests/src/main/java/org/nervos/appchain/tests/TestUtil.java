@@ -15,7 +15,7 @@ public class TestUtil {
         return getCurrentHeight(service, 3);
     }
 
-    static BigInteger getCurrentHeight(Nervosj service, int retry) {
+    private static BigInteger getCurrentHeight(Nervosj service, int retry) {
         int count = 0;
         long height = -1;
         while (count < retry) {
