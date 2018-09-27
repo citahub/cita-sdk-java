@@ -16,7 +16,7 @@ public class BlockFilterObservableExample {
     public static void main(String[] args) {
         Observable blockFitlerObservable = service.appBlockHashObservable();
         blockFitlerObservable.subscribe(block ->
-            System.out.println(block.toString())
+                System.out.println(block.toString())
         );
     }
 }

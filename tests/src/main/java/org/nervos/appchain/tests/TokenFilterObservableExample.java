@@ -185,7 +185,7 @@ public class TokenFilterObservableExample {
                     );
 
             reponse.subscribe(x ->
-                System.out.println(
+                    System.out.println(
                         "(Transfer Object)From: " + x.from
                         + " To: " + x.to + " Value: " + x.value)
             );

@@ -1,10 +1,10 @@
 package org.nervos.appchain.tests;
 
-import org.nervos.appchain.protocol.Nervosj;
-import org.nervos.appchain.protocol.http.HttpService;
-
 import java.io.FileInputStream;
 import java.util.Properties;
+
+import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.http.HttpService;
 
 public class Config {
 

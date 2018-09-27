@@ -130,7 +130,7 @@ public class InterfaceTest {
         String signedTx = rtx.sign(privateKey, false, false);
         Optional<String> optionTxHash = testAppSendRawTransaction(signedTx);
 
-        if(optionTxHash.isPresent()) {
+        if (optionTxHash.isPresent()) {
             validTransactionHash = optionTxHash.get();
         } else {
             System.out.println("Failed to get deployment tx hash, maybe it failed to be validated");
@@ -153,7 +153,7 @@ public class InterfaceTest {
 
         System.out.println("======================================");
         System.out.println("***  9.  getTransactionReceipt ***");
-        String validContractAddress ="";
+        String validContractAddress = "";
         Optional<String> contractAddrOptional = testAppGetTransactionReceipt(validTransactionHash);
         if (contractAddrOptional.isPresent()) {
             validContractAddress = contractAddrOptional.get();

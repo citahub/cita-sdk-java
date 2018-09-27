@@ -32,7 +32,7 @@ public class TokenCodegenExample {
     private static Token token;
 
     static {
-        conf= new Config();
+        conf = new Config();
         conf.buildService(false);
 
         chainId = Integer.parseInt(conf.chainId);
