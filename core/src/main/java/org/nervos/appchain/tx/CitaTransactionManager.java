@@ -97,4 +97,12 @@ public class CitaTransactionManager extends TransactionManager {
     public String getFromAddress() {
         return credentials.getAddress();
     }
+
+    public String getFromAddress(boolean isCredential) {
+        if (isCredential) {
+            return credentials.getAddress();
+        } else {
+            return signature.getAddress();
+        }
+    }
 }
