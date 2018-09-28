@@ -25,5 +25,7 @@ public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
         public String tokenSymbol;
         public String tokenAvatar;
         public Address[] validators;
+        public int version;
+        public int economicalModel;
     }
 }

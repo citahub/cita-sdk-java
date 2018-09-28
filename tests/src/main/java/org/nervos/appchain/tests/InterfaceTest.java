@@ -223,6 +223,10 @@ public class InterfaceTest {
             System.out.println("Validators: ");
             Arrays.asList(appMetaData.getAppMetaDataResult().validators)
                     .forEach(x -> System.out.println("Address: " + x.toString()));
+            System.out.println("Version: "
+                    + appMetaData.getAppMetaDataResult().version);
+            System.out.println("Economical Model: "
+                    + appMetaData.getAppMetaDataResult().economicalModel);
         }
     }
 
