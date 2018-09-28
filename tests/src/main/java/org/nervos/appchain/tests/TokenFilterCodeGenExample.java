@@ -1,7 +1,6 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -11,13 +10,10 @@ import org.nervos.appchain.protocol.Nervosj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenFilterCodeGenExample {
-    private static Properties props;
-    private static String testNetIpAddr;
     private static int chainId;
     private static int version;
     private static String payerPrivateKey;
@@ -30,22 +26,17 @@ public class TokenFilterCodeGenExample {
     private static final String configPath = "tests/src/main/resources/config.properties";
 
     static {
-        try {
-            props = Config.load(configPath);
-        } catch (Exception e) {
-            System.out.println("Failed to read properties from config file");
-            e.printStackTrace();
-        }
 
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
-        payerPrivateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        payeePrivateKey = props.getProperty(Config.TEST_PRIVATE_KEY_1);
+        Config conf = new Config();
+        conf.buildService(false);
 
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
-        quota = 1000000L;
+        chainId = Integer.parseInt(conf.chainId);
+        version = Integer.parseInt(conf.version);
+        payerPrivateKey = conf.primaryPrivKey;
+        payeePrivateKey = conf.auxPrivKey1;
+
+        service = conf.service;
+        quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
     }
 
@@ -89,7 +80,7 @@ public class TokenFilterCodeGenExample {
             System.out.println("Transaction " + event.toString() + " is being executing.");
             event.execute();
             try {
-                Thread.sleep(10000);
+                TimeUnit.SECONDS.sleep(10);
             } catch (Exception e) {
                 System.out.println("Thread interrupted.");
             }
@@ -142,14 +133,14 @@ public class TokenFilterCodeGenExample {
             this.tokens = tokens;
         }
 
-        CompletableFuture<TransactionReceipt> execute() {
+        void execute() {
             Token tokenContract = TokenFilterCodeGenExample.this.token;
             long validUtilBlock = TestUtil.getValidUtilBlock(
                     TokenFilterCodeGenExample.this.service).longValue();
             BigInteger nonce = TestUtil.getNonce();
-            return tokenContract.transfer(
+            tokenContract.transfer(
                     this.to.getAddress(), BigInteger.valueOf(tokens),
-                    TokenFilterCodeGenExample.this.quota,
+                    TokenFilterCodeGenExample.quota,
                     nonce, validUtilBlock, version, chainId, value).sendAsync();
         }
 

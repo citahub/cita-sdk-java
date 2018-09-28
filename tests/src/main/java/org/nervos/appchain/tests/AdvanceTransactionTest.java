@@ -5,7 +5,6 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Random;
 
 import org.nervos.appchain.abi.FunctionEncoder;
@@ -18,33 +17,33 @@ import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 
 public class AdvanceTransactionTest {
-    static final String configPath = "tests/src/main/resources/config.properties";
 
-    static Properties props;
-    static Nervosj service;
-    static String senderPrivateKey;
-    static int version;
-    static int chainId;
+    private static Nervosj service;
+    private static String senderPrivateKey;
+    private static int version;
+    private static int chainId;
+    private static long quota;
+    private static String value = "0";
 
     static {
-        props = Config.load(configPath);
-        service = Nervosj.build(new HttpService(props.getProperty(Config.TEST_NET_ADDR)));
-        senderPrivateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
+        Config conf = new Config();
+        conf.buildService(false);
+        service = conf.service;
+        senderPrivateKey = conf.primaryPrivKey;
+        version = Integer.parseInt(conf.version);
+        chainId = Integer.parseInt(conf.chainId);
+        quota = Long.parseLong(conf.defaultQuotaDeployment);
     }
 
     private Random random;
-    private long quota = 50000;
     private long validUntilBlock;
     private int sendCount;
     private int threadCount;
     private boolean isEd25519AndBlake2b;
     private String contractAddress;
-    private String value = "0";
+
 
     public AdvanceTransactionTest(int sdCount, int thdCount, boolean isEd25519AndBlake2b) {
         try {
@@ -77,7 +76,7 @@ public class AdvanceTransactionTest {
                 + "4b2c0e537643ad06bd44e4fb85b76114f99d8750029";
         BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
         Transaction tx = Transaction.createContractTransaction(
-                nonce, 99999, this.validUntilBlock,
+                nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
 
         String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
