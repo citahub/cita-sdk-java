@@ -20,6 +20,8 @@ public class Config {
     public static final String TOKEN_BIN = "TokenBin";
     public static final String TOKEN_ABI = "TokenAbi";
     public static final String DEFAULT_QUOTA = "DefaultQuota";
+    public static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
+    public static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
 
     public static Properties load(String path) {
         props = new Properties();
