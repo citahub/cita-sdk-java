@@ -399,7 +399,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(Nervosj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(Long.class, QUOTA)
-                .addParameter(BigInteger.class, NONCE)
+                .addParameter(String.class, NONCE)
                 .addParameter(Long.class, VALID_UNTIL_BLOCK)
                 .addParameter(Integer.class, VERSION)
                 .addParameter(String.class, VALUE)
@@ -690,7 +690,7 @@ public class SolidityFunctionWrapper extends Generator {
         }
 
         methodBuilder.addParameter(Long.class, QUOTA)
-                .addParameter(BigInteger.class, NONCE)
+                .addParameter(String.class, NONCE)
                 .addParameter(Long.class, VALID_UNTIL_BLOCK)
                 .addParameter(Integer.class, VERSION)
                 .addParameter(Integer.class, CHAIN_ID)
