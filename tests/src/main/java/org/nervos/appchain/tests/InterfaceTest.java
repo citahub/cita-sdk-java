@@ -61,7 +61,7 @@ public class InterfaceTest {
         HttpService.setDebug(false);
         service = NervosjFactory.build(new HttpService(testNetAddr));
         privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA));
+        quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA_Deployment));
         version = Integer.parseInt(props.getProperty(Config.VERSION));
         chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
         value = "0";
@@ -216,6 +216,11 @@ public class InterfaceTest {
             for (Address validator : appMetaData.getAppMetaDataResult().validators) {
                 System.out.println("Address: " + validator.toString());
             }
+
+            System.out.println("Version: "
+                    + appMetaData.getAppMetaDataResult().version);
+            System.out.println("Economical Model: "
+                    + appMetaData.getAppMetaDataResult().economicalModel);
         }
     }
 
