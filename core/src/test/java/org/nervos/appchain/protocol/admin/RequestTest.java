@@ -48,7 +48,7 @@ public class RequestTest extends RequestTester {
         web3j.personalSendTransaction(
                 new Transaction(
                         "FROM",
-                        BigInteger.ONE,
+                        "1",
                         BigInteger.TEN.longValue(),
                         BigInteger.ONE.longValue(),
                         0,

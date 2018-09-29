@@ -42,7 +42,6 @@ public class TokenAccountExample {
         value = "0";
     }
 
-
     private static TransactionReceipt waitToGetReceipt(
             String hash) throws Exception {
         Thread.sleep(10_000);

@@ -30,7 +30,7 @@ import rx.functions.Func1;
  * <p><strong>Do not modify!</strong>
  * <p>Please use the <a href="https://github.com/cryptape/nervosj/tree/master/codegen">codegen module</a> to update.
  *
- * <p>Generated with nervosj version 0.17.
+ * <p>Generated with nervosj version 0.18.
  */
 public class Token extends Contract {
     private static final String BINARY = "6060604052341561000f57600080fd5b600160a060020a033316600090815260208190526040902061271090556101df8061003b6000396000f3006060604052600436106100565763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166327e235e3811461005b578063a9059cbb1461008c578063f8b2cb4f146100c2575b600080fd5b341561006657600080fd5b61007a600160a060020a03600435166100e1565b60405190815260200160405180910390f35b341561009757600080fd5b6100ae600160a060020a03600435166024356100f3565b604051901515815260200160405180910390f35b34156100cd57600080fd5b61007a600160a060020a0360043516610198565b60006020819052908152604090205481565b600160a060020a03331660009081526020819052604081205482901080159061011c5750600082115b1561018e57600160a060020a033381166000818152602081905260408082208054879003905592861680825290839020805486019055917fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef9085905190815260200160405180910390a3506001610192565b5060005b92915050565b600160a060020a0316600090815260208190526040902054905600a165627a7a72305820f59b7130870eee8f044b129f4a20345ffaff662707fc0758133cd16684bc3b160029";
@@ -81,7 +81,7 @@ public class Token extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, Long quota, BigInteger nonce, Long validUntilBlock, Integer version, Integer chainId, String value) {
+    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, Long quota, String nonce, Long validUntilBlock, Integer version, Integer chainId, String value) {
         Function function = new Function(
                 "transfer",
                 Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(_to),
@@ -97,7 +97,7 @@ public class Token extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public static RemoteCall<Token> deploy(Nervosj nervosj, TransactionManager transactionManager, Long quota, BigInteger nonce, Long validUntilBlock, Integer version, String value, Integer chainId) {
+    public static RemoteCall<Token> deploy(Nervosj nervosj, TransactionManager transactionManager, Long quota, String nonce, Long validUntilBlock, Integer version, String value, Integer chainId) {
         return deployRemoteCall(Token.class, nervosj, transactionManager, quota, nonce, validUntilBlock, version, chainId, value, BINARY, "");
     }
 

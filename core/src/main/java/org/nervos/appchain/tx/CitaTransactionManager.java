@@ -62,7 +62,7 @@ public class CitaTransactionManager extends TransactionManager {
     // adapt to cita
     @Override
     public AppSendTransaction sendTransaction(
-            String to, String data, long quota, BigInteger nonce,
+            String to, String data, long quota, String nonce,
             long validUntilBlock, int version, int chainId, String value)
             throws IOException {
         Transaction transaction = new Transaction(
@@ -79,7 +79,7 @@ public class CitaTransactionManager extends TransactionManager {
 
     // adapt to cita
     public CompletableFuture<AppSendTransaction> sendTransactionAsync(
-            String to, String data, long quota, BigInteger nonce,
+            String to, String data, long quota, String nonce,
             long validUntilBlock, int version, int chainId, String value) {
         Transaction transaction = new Transaction(
                 to, nonce, quota, validUntilBlock,

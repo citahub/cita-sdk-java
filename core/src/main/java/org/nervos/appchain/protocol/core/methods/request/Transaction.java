@@ -32,7 +32,7 @@ import static org.nervos.appchain.utils.Numeric.cleanHexPrefix;
 public class Transaction {
 
     private String to;
-    private BigInteger nonce;  // nonce field is not present on eth_call/eth_estimateGas
+    private String nonce;  // nonce field is not present on eth_call/eth_estimateGas
     private long quota;  // gas
     private long validUntilBlock;
     private int version = 0;
@@ -45,7 +45,7 @@ public class Transaction {
                     "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 16);
 
     public Transaction(
-            String to, BigInteger nonce, long quota, long validUntilBlock,
+            String to, String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String data) {
         this.to = to;
         this.nonce = nonce;
@@ -94,19 +94,19 @@ public class Transaction {
     }
 
     public static Transaction createContractTransaction(
-            BigInteger nonce, long quota, long validUntilBlock,
+            String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String init) {
         return new Transaction("", nonce, quota, validUntilBlock, version, chainId, value, init);
     }
 
     public static Transaction createFunctionCallTransaction(
-            String to, BigInteger nonce, long quota, long validUntilBlock,
+            String to, String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String data) {
         return new Transaction(to, nonce, quota, validUntilBlock, version, chainId, value, data);
     }
 
     public static Transaction createFunctionCallTransaction(
-            String to, BigInteger nonce, long quota, long validUntilBlock,
+            String to, String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value,  byte[] data) {
 
         return new Transaction(
@@ -118,7 +118,7 @@ public class Transaction {
     }
 
     public String getNonce() {
-        return convert(nonce);
+        return nonce;
     }
 
     public long getQuota() {
@@ -143,14 +143,6 @@ public class Transaction {
 
     public String getValue() {
         return value;
-    }
-
-    private static String convert(BigInteger value) {
-        if (value != null) {
-            return cleanHexPrefix(Numeric.encodeQuantity(value));
-        } else {
-            return null;  // we don't want the field to be encoded if not present
-        }
     }
 
     /*

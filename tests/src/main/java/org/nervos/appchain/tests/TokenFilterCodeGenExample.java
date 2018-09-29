@@ -92,7 +92,7 @@ public class TokenFilterCodeGenExample {
         TransactionManager citaTxManager = new CitaTransactionManager(
                 service, Credentials.create(payerPrivateKey), 5, 3000);
         long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
 
         CompletableFuture<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, 1000000L, nonce,
@@ -137,7 +137,8 @@ public class TokenFilterCodeGenExample {
             Token tokenContract = TokenFilterCodeGenExample.this.token;
             long validUtilBlock = TestUtil.getValidUtilBlock(
                     TokenFilterCodeGenExample.this.service).longValue();
-            BigInteger nonce = TestUtil.getNonce();
+
+            String nonce = TestUtil.getNonce();
             tokenContract.transfer(
                     this.to.getAddress(), BigInteger.valueOf(tokens),
                     TokenFilterCodeGenExample.quota,

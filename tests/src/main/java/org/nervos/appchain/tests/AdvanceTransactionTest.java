@@ -74,7 +74,7 @@ public class AdvanceTransactionTest {
                 + "490565b60008055565b8181018281101560ca57fe5b929150"
                 + "505600a165627a7a72305820870dd43666c8c38bef68662f8"
                 + "4b2c0e537643ad06bd44e4fb85b76114f99d8750029";
-        BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
+        String nonce = String.valueOf(Math.abs(this.random.nextLong()));
         Transaction tx = Transaction.createContractTransaction(
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
@@ -97,7 +97,7 @@ public class AdvanceTransactionTest {
 
         String resetFuncData = FunctionEncoder.encode(resetFunc);
 
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress,
                 nonce,
@@ -124,7 +124,7 @@ public class AdvanceTransactionTest {
         );
         String addFuncData = FunctionEncoder.encode(addFunc);
 
-        BigInteger nonce = BigInteger.valueOf(
+        String nonce = String.valueOf(
                 Math.abs(this.random.nextLong()));
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress,

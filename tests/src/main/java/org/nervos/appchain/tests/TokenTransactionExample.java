@@ -58,7 +58,8 @@ public class TokenTransactionExample {
         long currentHeight = service.appBlockNumber().send()
                 .getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
+
         Transaction tx = Transaction.createContractTransaction(
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
@@ -78,7 +79,7 @@ public class TokenTransactionExample {
         long currentHeight = service.appBlockNumber()
                 .send().getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
 
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,

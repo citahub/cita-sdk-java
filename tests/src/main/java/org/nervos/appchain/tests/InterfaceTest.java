@@ -121,8 +121,9 @@ public class InterfaceTest {
                 + "15050565b600160a060020a03166000908152602081905260"
                 + "40902054905600a165627a7a72305820f59b7130870eee8f0"
                 + "44b129f4a20345ffaff662707fc0758133cd16684bc3b160029";
-        BigInteger nonce = TestUtil.getNonce();
-        BigInteger validUtil = TestUtil.getValidUtilBlock(conf.service);
+
+        String nonce = TestUtil.getNonce();
+        BigInteger validUtil = TestUtil.getValidUtilBlock(service);
 
         Transaction rtx = Transaction.createContractTransaction(
                 nonce, quotaToDeploy, validUtil.longValue(),

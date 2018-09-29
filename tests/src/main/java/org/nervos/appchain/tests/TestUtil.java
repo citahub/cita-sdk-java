@@ -6,9 +6,9 @@ import java.util.Random;
 import org.nervos.appchain.protocol.Nervosj;
 
 public class TestUtil {
-    static BigInteger getNonce() {
+    static String getNonce() {
         Random random = new Random(System.currentTimeMillis());
-        return BigInteger.valueOf(Math.abs(random.nextLong()));
+        return String.valueOf(Math.abs(random.nextLong()));
     }
 
     static BigInteger getCurrentHeight(Nervosj service) {

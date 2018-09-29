@@ -57,7 +57,7 @@ public abstract class TransactionManager {
     // adapt to cita
     protected TransactionReceipt executeTransaction(
             String to, String data, long quota,
-            BigInteger nonce, long validUntilBlock,
+            String nonce, long validUntilBlock,
             int version, int chainId, String value)
             throws IOException, TransactionException {
         AppSendTransaction appSendTransaction = sendTransaction(
@@ -69,7 +69,7 @@ public abstract class TransactionManager {
     // only CitaTransactionManager will override this method
     public AppSendTransaction sendTransaction(
             String to, String data, long quota,
-            BigInteger nonce, long validUntilBlock,
+            String nonce, long validUntilBlock,
             int version, int chainId, String value)
             throws IOException {
         return new AppSendTransaction();

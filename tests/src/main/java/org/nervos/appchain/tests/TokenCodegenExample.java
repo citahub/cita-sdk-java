@@ -207,7 +207,8 @@ public class TokenCodegenExample {
     public static void main(String[] args) {
         TransactionManager citaTxManager = new CitaTransactionManager(
                 service, creator, 5, 3000);
-        BigInteger nonce = TestUtil.getNonce();
+
+        String nonce = TestUtil.getNonce();
 
         CompletableFuture<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, quotaDeployment, nonce,

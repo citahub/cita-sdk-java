@@ -243,7 +243,7 @@ public abstract class Contract extends ManagedTransaction {
 
     // adapt to cita
     TransactionReceipt executeTransaction(
-            String data, long quota, BigInteger nonce, long validUntilBlock,
+            String data, long quota, String nonce, long validUntilBlock,
             int version , int chainId, String value)
             throws TransactionException, IOException {
         return sendAdaptToCita(
@@ -279,7 +279,7 @@ public abstract class Contract extends ManagedTransaction {
     }
 
     protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
-            Function function, long quota, BigInteger nonce,
+            Function function, long quota, String nonce,
             long validUntilBlock, int version,
             int chainId, String value) {
         return new RemoteCall<>(
@@ -306,7 +306,7 @@ public abstract class Contract extends ManagedTransaction {
 
     private static <T extends Contract> T create(
             T contract, String binary, String encodedConstructor,
-            long quota, BigInteger nonce, long validUntilBlock,
+            long quota, String nonce, long validUntilBlock,
             int version, int chainId, String value)
             throws IOException, TransactionException {
         TransactionReceipt transactionReceipt =
@@ -377,7 +377,7 @@ public abstract class Contract extends ManagedTransaction {
     protected static <T extends Contract> T deploy(
             Class<T> type,
             Nervosj nervosj, TransactionManager transactionManager,
-            long quota, BigInteger nonce, long validUntilBlock,
+            long quota, String nonce, long validUntilBlock,
             int version, String binary, int chainId,
             String value, String encodedConstructor)
             throws IOException, TransactionException {
@@ -402,7 +402,7 @@ public abstract class Contract extends ManagedTransaction {
     protected static <T extends Contract> RemoteCall<T>
                     deployRemoteCall(
             Class<T> type, Nervosj nervosj, TransactionManager transactionManager,
-            long quota, BigInteger nonce, long validUntilBlock,
+            long quota, String nonce, long validUntilBlock,
             int version, int chainId, String value,
             String binary, String encodedConstructor) {
         return new RemoteCall<>(() -> deploy(
