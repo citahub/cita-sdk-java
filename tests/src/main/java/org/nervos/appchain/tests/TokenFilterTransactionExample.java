@@ -19,6 +19,7 @@ import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.abi.datatypes.Event;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
+import org.nervos.appchain.crypto.Hash;
 import org.nervos.appchain.protocol.Nervosj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.Request;
@@ -45,7 +46,7 @@ public class TokenFilterTransactionExample {
 
     static {
         Config config = new Config();
-        config.buildService(false);
+        config.buildService(true);
 
         chainId = Integer.parseInt(config.chainId);
         version = Integer.parseInt(config.version);
@@ -99,7 +100,12 @@ public class TokenFilterTransactionExample {
     private static AppFilter createNewFilter(Event event, String contractAddr) throws IOException {
         AppFilter filter = new AppFilter(DefaultBlockParameterName.EARLIEST,
                 DefaultBlockParameterName.LATEST, contractAddr);
+        // 1. Only indexed parameter can be added into topic.
+        // 2. Data in topic must be 256-bit long.
+        // 3. Parameters are in order.
         filter.addSingleTopic(EventEncoder.encode(event));
+        filter.addNullTopic();
+        filter.addSingleTopic("0x000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa18");
         return filter;
     }
 
