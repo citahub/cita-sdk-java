@@ -79,8 +79,10 @@ public class Transaction {
             return result;
         } else {
             System.out.println("Value you input is out of bound");
-            System.out.println("Value is set as 0");
-            return  "0";
+            throw new IllegalArgumentException(
+                    "Value you input for the transaction is out of bound. "
+                            + "\nThe upper bound of value is: " + MAX_VALUE.toString(16)
+                            + " (" + MAX_VALUE + ")");
         }
     }
 
