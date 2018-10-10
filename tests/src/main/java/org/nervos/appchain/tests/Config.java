@@ -23,6 +23,7 @@ public class Config {
     public static final String TOKEN_ABI = "TokenAbi";
     public static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
     public static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
+    private static final String ADMIN_PRIVATE_KEY = "AdminPrivateKey";
 
     private Properties props;
     public String chainId;
@@ -40,6 +41,8 @@ public class Config {
     public String defaultQuotaTransfer;
     public String defaultQuotaDeployment;
     public Nervosj service;
+    public String adminPrivateKey;
+
 
     public Config() {
         props = load();
@@ -95,6 +98,7 @@ public class Config {
         tokenAbi = props.getProperty(TOKEN_ABI);
         defaultQuotaTransfer = props.getProperty(DEFAULT_QUOTA_Transfer);
         defaultQuotaDeployment = props.getProperty(DEFAULT_QUOTA_Deployment);
+        adminPrivateKey = props.getProperty(ADMIN_PRIVATE_KEY);
     }
 
 }
