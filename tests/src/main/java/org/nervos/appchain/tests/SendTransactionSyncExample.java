@@ -1,7 +1,6 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.Properties;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.Nervosj;
@@ -10,35 +9,31 @@ import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.response.PollingTransactionReceiptProcessor;
 import org.nervos.appchain.utils.Convert;
 
 public class SendTransactionSyncExample {
 
-    static String testNetAddr;
     static String payerKey;
     static String payeeKey;
     static String payeeAddr;
     static int chainId;
     static int version;
-    static Properties props;
     static long quotaToTransfer;
 
     static Nervosj service;
 
     static {
-        props = Config.load();
-        testNetAddr = props.getProperty(Config.TEST_NET_ADDR);
-        payerKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        payeeKey = props.getProperty(Config.TEST_PRIVATE_KEY_1);
-        payeeAddr = props.getProperty(Config.TEST_ADDR_1);
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        quotaToTransfer = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA_Deployment));
+        Config conf = new Config();
+        conf.buildService(false);
 
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetAddr));
+        payerKey = conf.primaryPrivKey;
+        payeeKey = conf.auxPrivKey1;
+        payeeAddr = conf.auxAddr1;
+        chainId = Integer.parseInt(conf.chainId);
+        version = Integer.parseInt(conf.version);
+        quotaToTransfer = Long.parseLong(conf.defaultQuotaDeployment);
+        service = conf.service;
     }
 
     static BigInteger getBalance(String address) {
