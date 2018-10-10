@@ -1,15 +1,15 @@
 package org.nervos.appchain.protocol.system;
+
 import java.io.IOException;
 import java.math.BigInteger;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
 import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.FunctionReturnDecoder;
 import org.nervos.appchain.abi.TypeReference;
@@ -21,31 +21,27 @@ import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint64;
 import org.nervos.appchain.abi.datatypes.generated.Uint8;
 import org.nervos.appchain.protocol.Nervosj;
-import org.nervos.appchain.protocol.core.DefaultBlockParameter;
-import org.nervos.appchain.protocol.core.Request;
-import org.nervos.appchain.protocol.core.Response;
-import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
-import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionReceipt;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.utils.Collection;
-import org.nervos.appchain.utils.Convert;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
+
 import static org.nervos.appchain.protocol.system.Util.addUpTo64Hex;
 import static org.nervos.appchain.protocol.system.Util.getNonce;
+
 /**
  * TODO: code refactor
  * messy, refactor it later.
  * **/
+
 public class AppChainjSystemContract implements AppChainSystemContract {
     private Nervosj service;
+
     public AppChainjSystemContract(Nervosj service) {
         this.service = service;
     }
+
     public List<String> listNode(String from) throws IOException {
         String callData = AppChainSystemContract.encodeCall(NODE_MANAGER_LIST_NODE);
         AppCall callResult = AppChainSystemContract.sendCall(
@@ -62,6 +58,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                 .map(Address::getValue)
                 .collect(Collectors.toList());
     }
+
     public int getStatus(String from) throws IOException {
         Function callFunc = new Function(
                 NODE_MANAGER_GET_STATUS,
@@ -83,6 +80,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
         }
         return Integer.parseInt(resultTypes.get(0).getValue().toString());
     }
+
     public List<BigInteger> listStake(String from) throws IOException {
         String callData = AppChainSystemContract.encodeCall(NODE_MANAGER_LIST_STAKE);
         AppCall callResult = AppChainSystemContract.sendCall(
@@ -100,6 +98,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                 .map(Uint64::getValue)
                 .collect(Collectors.toList());
     }
+
     public int stakePermillage(String from) throws IOException {
         Function callFunc = new Function(
                 NODE_MANAGER_STAKE_PERMILLAGE,
@@ -114,6 +113,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                 ));
         return Integer.parseInt(resultTypes.get(0).getValue().toString());
     }
+
     public int getQuotaPrice(String from) throws IOException {
         String callData = AppChainSystemContract.encodeCall(PRICE_MANAGER_GET_QUOTA_PRICE);
         AppCall callResult = AppChainSystemContract.sendCall(
@@ -127,6 +127,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
         return Integer.parseInt(
                 resultTypes.get(0).getValue().toString());
     }
+
     public boolean approveNode(
             String nodeAddr, String adminPrivatekey)
             throws IOException, InterruptedException {
@@ -136,12 +137,14 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                 Collections.emptyList());
         String funcData = FunctionEncoder.encode(func);
         Long validUtilBlock = Util.getValidUtilBlock(service).longValue();
+
         //send tx to approve node
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000,
                 validUtilBlock, 0, 1, "0", funcData);
         String signedTx = tx.sign(adminPrivatekey);
         AppSendTransaction appTx = service.appSendRawTransaction(signedTx).send();
+
         //1. check tx validated
         if (appTx.getError() != null) {
             String message = appTx.getError().getMessage();
@@ -151,6 +154,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
             return false;
         }
         String txHash = appTx.getSendTransactionResult().getHash();
+
         //2. check receipt error and logs
         int count = 0;
         while (true) {
@@ -175,19 +179,24 @@ public class AppChainjSystemContract implements AppChainSystemContract {
         }
         return false;
     }
+
     public boolean deleteNode(
             String nodeAddr, String adminPrivatekey)
             throws IOException, InterruptedException {
+
         Function func = new Function(
                 NODE_MANAGER_DELETE_NODE,
                 Arrays.asList(new Address(nodeAddr)),
                 Collections.emptyList());
+
         String funcData = FunctionEncoder.encode(func);
+
         Long validUtilBlock = Util.getValidUtilBlock(service).longValue();
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
                 0, 1, "0", funcData);
         String signedTx = tx.sign(adminPrivatekey);
+
         //send tx to delete node.
         AppSendTransaction appSendTransaction =
                 service.appSendRawTransaction(signedTx).send();
@@ -223,21 +232,26 @@ public class AppChainjSystemContract implements AppChainSystemContract {
         }
         return false;
     }
+
     public boolean setStake(
             String nodeAddr, int stake, String adminPrivatekey)
             throws IOException, InterruptedException {
+
         Function func = new Function(
                 NODE_MANAGER_SET_STAKE,
                 Arrays.asList(new Address(nodeAddr), new Uint64(stake)),
                 Collections.emptyList());
         String funcData = FunctionEncoder.encode(func);
+
         Long validUtilBlock = Util.getValidUtilBlock(service).longValue();
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
                 0, 1, "0", funcData);
         String rawTx = tx.sign(adminPrivatekey);
+
         AppSendTransaction appSendTransaction =
                 service.appSendRawTransaction(rawTx).send();
+
         if (appSendTransaction.getError() != null) {
             String message = appSendTransaction.getError().getMessage();
             System.out.println(
@@ -245,7 +259,9 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                             + nodeAddr + "). Error message: " + message);
             return false;
         }
+
         String txHash = appSendTransaction.getSendTransactionResult().getHash();
+
         int count = 0;
         while (true) {
             Optional<TransactionReceipt> receipt = service
