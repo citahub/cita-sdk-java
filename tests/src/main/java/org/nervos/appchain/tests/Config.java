@@ -9,20 +9,21 @@ import org.nervos.appchain.protocol.http.HttpService;
 public class Config {
 
     private static final String configPath = "tests/src/main/resources/config.properties";
-    public static final String CHAIN_ID = "ChainId";
-    public static final String VERSION = "Version";
-    public static final String TEST_NET_ADDR = "TestNetIpAddr";
-    public static final String SENDER_PRIVATE_KEY = "SenderPrivateKey";
-    public static final String SENDER_ADDR = "SenderAddress";
-    public static final String TEST_PRIVATE_KEY_1 = "TestPrivateKey1";
-    public static final String TEST_ADDR_1 = "TestAddress1";
-    public static final String TEST_PRIVATE_KEY_2 = "TestPrivateKey2";
-    public static final String TEST_ADDR_2 = "TestAddress2";
-    public static final String TOKEN_SOLIDITY = "TokenSolidity";
-    public static final String TOKEN_BIN = "TokenBin";
-    public static final String TOKEN_ABI = "TokenAbi";
-    public static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
-    public static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
+    private static final String CHAIN_ID = "ChainId";
+    private static final String VERSION = "Version";
+    private static final String TEST_NET_ADDR = "TestNetIpAddr";
+    private static final String SENDER_PRIVATE_KEY = "SenderPrivateKey";
+    private static final String SENDER_ADDR = "SenderAddress";
+    private static final String TEST_PRIVATE_KEY_1 = "TestPrivateKey1";
+    private static final String TEST_ADDR_1 = "TestAddress1";
+    private static final String TEST_PRIVATE_KEY_2 = "TestPrivateKey2";
+    private static final String TEST_ADDR_2 = "TestAddress2";
+    private static final String TOKEN_SOLIDITY = "TokenSolidity";
+    private static final String TOKEN_BIN = "TokenBin";
+    private static final String TOKEN_ABI = "TokenAbi";
+    private static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
+    private static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
+    private static final String ADMIN_PRIVATE_KEY = "AdminPrivateKey";
 
     private Properties props;
     public String chainId;
@@ -40,6 +41,8 @@ public class Config {
     public String defaultQuotaTransfer;
     public String defaultQuotaDeployment;
     public Nervosj service;
+    public String adminPrivateKey;
+
 
     public Config() {
         props = load();
@@ -95,6 +98,7 @@ public class Config {
         tokenAbi = props.getProperty(TOKEN_ABI);
         defaultQuotaTransfer = props.getProperty(DEFAULT_QUOTA_Transfer);
         defaultQuotaDeployment = props.getProperty(DEFAULT_QUOTA_Deployment);
+        adminPrivateKey = props.getProperty(ADMIN_PRIVATE_KEY);
     }
 
 }
