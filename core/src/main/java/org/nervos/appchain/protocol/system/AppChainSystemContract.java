@@ -24,6 +24,8 @@ public interface AppChainSystemContract {
     DefaultBlockParameter DEFAULT_BLOCK_PARAMETER
             = DefaultBlockParameter.valueOf("latest");
 
+    Long DEFAULT_QUOTA = 10000000L;
+
     //Node manager
     String NODE_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff020001";
     String NODE_MANAGER_LIST_NODE = "listNode";

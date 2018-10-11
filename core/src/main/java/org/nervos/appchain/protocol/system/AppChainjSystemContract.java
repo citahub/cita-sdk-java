@@ -29,13 +29,14 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
 import static org.nervos.appchain.protocol.system.Util.addUpTo64Hex;
 import static org.nervos.appchain.protocol.system.Util.getNonce;
+import static org.nervos.appchain.protocol.system.Util.getValidUtilBlock;
 
 /**
  * TODO: code refactor
  * messy, refactor it later.
  * **/
 
-public class AppChainjSystemContract implements AppChainSystemContract {
+public class AppChainjSystemContract implements AppChainSystemContract, AppChainSystemAddress {
     private Nervosj service;
 
     public AppChainjSystemContract(Nervosj service) {
@@ -136,7 +137,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                 Arrays.asList(new Address(nodeAddr)),
                 Collections.emptyList());
         String funcData = FunctionEncoder.encode(func);
-        Long validUtilBlock = Util.getValidUtilBlock(service).longValue();
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
 
         //send tx to approve node
         Transaction tx = new Transaction(
@@ -191,7 +192,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
 
         String funcData = FunctionEncoder.encode(func);
 
-        Long validUtilBlock = Util.getValidUtilBlock(service).longValue();
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
                 0, 1, "0", funcData);
@@ -243,7 +244,7 @@ public class AppChainjSystemContract implements AppChainSystemContract {
                 Collections.emptyList());
         String funcData = FunctionEncoder.encode(func);
 
-        Long validUtilBlock = Util.getValidUtilBlock(service).longValue();
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
                 0, 1, "0", funcData);
@@ -284,5 +285,14 @@ public class AppChainjSystemContract implements AppChainSystemContract {
             }
         }
         return false;
+    }
+
+    public Transaction constructStoreTransaction(
+            String data, int version, int chainId) {
+        Transaction tx = new Transaction(
+                STORE_ADDR, getNonce(), DEFAULT_QUOTA,
+                getValidUtilBlock(service).longValue(),
+                version, chainId, "0", data);
+        return tx;
     }
 }
