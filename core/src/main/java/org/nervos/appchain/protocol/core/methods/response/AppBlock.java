@@ -612,8 +612,12 @@ public class AppBlock extends Response<AppBlock.Block> {
                 while (txNodes.hasNext()) {
                     JsonNode txNode = txNodes.next();
                     TransactionObject txToAdd = new TransactionObject();
-                    txToAdd.setHash(txNode.get("hash").asText());
-                    txToAdd.setContent(txNode.get("content").asText());
+                    if (txNode.get("hash") == null && txNode.get("content") == null) {
+                        txToAdd.setHash(txNode.asText());
+                    } else {
+                        txToAdd.setHash(txNode.get("hash").asText());
+                        txToAdd.setContent(txNode.get("content").asText());
+                    }
                     transactionObjs.add(txToAdd);
                 }
 
