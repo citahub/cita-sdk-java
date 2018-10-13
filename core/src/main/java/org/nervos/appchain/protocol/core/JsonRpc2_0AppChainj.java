@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.nervos.appchain.protocol.Nervosj;
-import org.nervos.appchain.protocol.NervosjService;
+import org.nervos.appchain.protocol.AppChainj;
+import org.nervos.appchain.protocol.AppChainjService;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.response.AppAccounts;
 import org.nervos.appchain.protocol.core.methods.response.AppBlock;
@@ -27,8 +27,6 @@ import org.nervos.appchain.protocol.core.methods.response.AppUninstallFilter;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.NetPeerCount;
 import org.nervos.appchain.protocol.core.methods.response.Transaction;
-import org.nervos.appchain.protocol.core.methods.response.Web3ClientVersion;
-import org.nervos.appchain.protocol.core.methods.response.Web3Sha3;
 import org.nervos.appchain.protocol.rx.JsonRpc2_0Rx;
 import org.nervos.appchain.utils.Async;
 import org.nervos.appchain.utils.Numeric;
@@ -37,55 +35,36 @@ import rx.Observable;
 /**
  * JSON-RPC 2.0 factory implementation.
  */
-public class JsonRpc2_0Nervosj implements Nervosj {
+public class JsonRpc2_0AppChainj implements AppChainj {
 
     public static final int DEFAULT_BLOCK_TIME = 15 * 1000;
 
-    protected final NervosjService nervosjService;
-    private final JsonRpc2_0Rx nervosjRx;
+    protected final AppChainjService appChainjService;
+    private final JsonRpc2_0Rx appChainjRx;
     private final long blockTime;
 
-    public JsonRpc2_0Nervosj(NervosjService nervosjService) {
-        this(nervosjService, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
+    public JsonRpc2_0AppChainj(AppChainjService appChainjService) {
+        this(appChainjService, DEFAULT_BLOCK_TIME, Async.defaultExecutorService());
     }
 
-    public JsonRpc2_0Nervosj(NervosjService nervosjService, long pollingInterval) {
-        this(nervosjService, pollingInterval, Async.defaultExecutorService());
+    public JsonRpc2_0AppChainj(AppChainjService appChainjService, long pollingInterval) {
+        this(appChainjService, pollingInterval, Async.defaultExecutorService());
     }
 
-    public JsonRpc2_0Nervosj(
-            NervosjService nervosjService, long pollingInterval,
+    public JsonRpc2_0AppChainj(
+            AppChainjService appChainjService, long pollingInterval,
             ScheduledExecutorService scheduledExecutorService) {
-        this.nervosjService = nervosjService;
-        this.nervosjRx = new JsonRpc2_0Rx(this, scheduledExecutorService);
+        this.appChainjService = appChainjService;
+        this.appChainjRx = new JsonRpc2_0Rx(this, scheduledExecutorService);
         this.blockTime = pollingInterval;
     }
-
-    @Override
-    public Request<?, Web3ClientVersion> web3ClientVersion() {
-        return new Request<>(
-                "clientVersion",
-                Collections.<String>emptyList(),
-                nervosjService,
-                Web3ClientVersion.class);
-    }
-
-    @Override
-    public Request<?, Web3Sha3> web3Sha3(String data) {
-        return new Request<>(
-                "sha3",
-                Arrays.asList(data),
-                nervosjService,
-                Web3Sha3.class);
-    }
-
 
     @Override
     public Request<?, NetPeerCount> netPeerCount() {
         return new Request<>(
                 "peerCount",
                 Collections.<String>emptyList(),
-                nervosjService,
+                appChainjService,
                 NetPeerCount.class);
     }
 
@@ -98,7 +77,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "accounts",
                 Collections.<String>emptyList(),
-                nervosjService,
+                appChainjService,
                 AppAccounts.class);
     }
 
@@ -107,7 +86,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "sign",
                 Arrays.asList(address, sha3HashOfDataToSign),
-                nervosjService,
+                appChainjService,
                 AppSign.class);
     }
 
@@ -116,7 +95,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getMetaData",
                 Arrays.asList(defaultBlockParameter.getValue()),
-                nervosjService,
+                appChainjService,
                 AppMetaData.class);
     }
 
@@ -125,7 +104,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "blockNumber",
                 Collections.<String>emptyList(),
-                nervosjService,
+                appChainjService,
                 AppBlockNumber.class);
     }
 
@@ -135,7 +114,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getBalance",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
-                nervosjService,
+                appChainjService,
                 AppGetBalance.class);
     }
 
@@ -145,7 +124,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getAbi",
                 Arrays.asList(contractAddress, defaultBlockParameter.getValue()),
-                nervosjService,
+                appChainjService,
                 AppGetAbi.class);
     }
 
@@ -156,7 +135,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getTransactionCount",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
-                nervosjService,
+                appChainjService,
                 AppGetTransactionCount.class);
     }
 
@@ -167,7 +146,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getCode",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
-                nervosjService,
+                appChainjService,
                 AppGetCode.class);
     }
 
@@ -178,7 +157,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "sendRawTransaction",
                 Arrays.asList(signedTransactionData),
-                nervosjService,
+                appChainjService,
                 AppSendTransaction.class);
     }
 
@@ -188,7 +167,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "call",
                 Arrays.asList(call, defaultBlockParameter),
-                nervosjService,
+                appChainjService,
                 AppCall.class);
     }
 
@@ -201,7 +180,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
                 Arrays.asList(
                         blockHash,
                         returnFullTransactionObjects),
-                nervosjService,
+                appChainjService,
                 AppBlock.class);
     }
 
@@ -214,7 +193,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
                 Arrays.asList(
                         defaultBlockParameter.getValue(),
                         returnFullTransactionObjects),
-                nervosjService,
+                appChainjService,
                 AppBlock.class);
     }
 
@@ -223,7 +202,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getTransaction",
                 Arrays.asList(transactionHash),
-                nervosjService,
+                appChainjService,
                 AppTransaction.class);
     }
 
@@ -232,7 +211,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getTransactionReceipt",
                 Arrays.asList(transactionHash),
-                nervosjService,
+                appChainjService,
                 AppGetTransactionReceipt.class);
     }
 
@@ -242,7 +221,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "newFilter",
                 Arrays.asList(appFilter),
-                nervosjService,
+                appChainjService,
                 AppFilter.class);
     }
 
@@ -251,7 +230,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "newBlockFilter",
                 Collections.<String>emptyList(),
-                nervosjService,
+                appChainjService,
                 AppFilter.class);
     }
 
@@ -259,7 +238,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "newPendingTransactionFilter",
                 Collections.<String>emptyList(),
-                nervosjService,
+                appChainjService,
                 AppFilter.class);
     }
 
@@ -268,7 +247,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "uninstallFilter",
                 Arrays.asList(Numeric.encodeQuantity(filterId)),
-                nervosjService,
+                appChainjService,
                 AppUninstallFilter.class);
     }
 
@@ -277,7 +256,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getFilterChanges",
                 Arrays.asList(Numeric.encodeQuantity(filterId)),
-                nervosjService,
+                appChainjService,
                 AppLog.class);
     }
 
@@ -286,7 +265,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getFilterLogs",
                 Arrays.asList(Numeric.encodeQuantity(filterId)),
-                nervosjService,
+                appChainjService,
                 AppLog.class);
     }
 
@@ -296,55 +275,55 @@ public class JsonRpc2_0Nervosj implements Nervosj {
         return new Request<>(
                 "getLogs",
                 Arrays.asList(appFilter),
-                nervosjService,
+                appChainjService,
                 AppLog.class);
     }
 
     @Override
     public Observable<String> appBlockHashObservable() {
-        return nervosjRx.appBlockHashObservable(blockTime);
+        return appChainjRx.appBlockHashObservable(blockTime);
     }
 
     @Override
     public Observable<String> appPendingTransactionHashObservable() {
-        return nervosjRx.appPendingTransactionHashObservable(blockTime);
+        return appChainjRx.appPendingTransactionHashObservable(blockTime);
     }
 
     @Override
     public Observable<Log> appLogObservable(
             org.nervos.appchain.protocol.core.methods.request.AppFilter appFilter) {
-        return nervosjRx.appLogObservable(appFilter, blockTime);
+        return appChainjRx.appLogObservable(appFilter, blockTime);
     }
 
     @Override
     public Observable<Transaction>
             transactionObservable() {
-        return nervosjRx.transactionObservable(blockTime);
+        return appChainjRx.transactionObservable(blockTime);
     }
 
     @Override
     public Observable<Transaction>
             pendingTransactionObservable() {
-        return nervosjRx.pendingTransactionObservable(blockTime);
+        return appChainjRx.pendingTransactionObservable(blockTime);
     }
 
     @Override
     public Observable<AppBlock> blockObservable(boolean fullTransactionObjects) {
-        return nervosjRx.blockObservable(fullTransactionObjects, blockTime);
+        return appChainjRx.blockObservable(fullTransactionObjects, blockTime);
     }
 
     @Override
     public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
-        return nervosjRx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
+        return appChainjRx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
     }
 
     @Override
     public Observable<AppBlock> replayBlocksObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
-        return nervosjRx.replayBlocksObservable(startBlock, endBlock,
+        return appChainjRx.replayBlocksObservable(startBlock, endBlock,
                 fullTransactionObjects, ascending);
     }
 
@@ -352,33 +331,33 @@ public class JsonRpc2_0Nervosj implements Nervosj {
     public Observable<Transaction>
             replayTransactionsObservable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        return nervosjRx.replayTransactionsObservable(startBlock, endBlock);
+        return appChainjRx.replayTransactionsObservable(startBlock, endBlock);
     }
 
     @Override
     public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
             Observable<AppBlock> onCompleteObservable) {
-        return nervosjRx.catchUpToLatestBlockObservable(
+        return appChainjRx.catchUpToLatestBlockObservable(
                 startBlock, fullTransactionObjects, onCompleteObservable);
     }
 
     @Override
     public Observable<AppBlock> catchUpToLatestBlockObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return nervosjRx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
+        return appChainjRx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
     }
 
     @Override
     public Observable<Transaction>
             catchUpToLatestTransactionObservable(DefaultBlockParameter startBlock) {
-        return nervosjRx.catchUpToLatestTransactionObservable(startBlock);
+        return appChainjRx.catchUpToLatestTransactionObservable(startBlock);
     }
 
     @Override
     public Observable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return nervosjRx.catchUpToLatestAndSubscribeToNewBlocksObservable(
+        return appChainjRx.catchUpToLatestAndSubscribeToNewBlocksObservable(
                 startBlock, fullTransactionObjects, blockTime);
     }
 
@@ -386,7 +365,7 @@ public class JsonRpc2_0Nervosj implements Nervosj {
     public Observable<Transaction>
             catchUpToLatestAndSubscribeToNewTransactionsObservable(
             DefaultBlockParameter startBlock) {
-        return nervosjRx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
+        return appChainjRx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
                 startBlock, blockTime);
     }
 }

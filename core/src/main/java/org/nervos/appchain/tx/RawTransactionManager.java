@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.crypto.RawTransaction;
 import org.nervos.appchain.crypto.TransactionEncoder;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionCount;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
@@ -22,53 +22,53 @@ import org.nervos.appchain.utils.Numeric;
  */
 public class RawTransactionManager extends TransactionManager {
 
-    private final Nervosj nervosj;
+    private final AppChainj appChainj;
     final Credentials credentials;
 
     private final byte chainId;
 
-    public RawTransactionManager(Nervosj nervosj, Credentials credentials, byte chainId) {
-        super(nervosj, credentials.getAddress());
+    public RawTransactionManager(AppChainj appChainj, Credentials credentials, byte chainId) {
+        super(appChainj, credentials.getAddress());
 
-        this.nervosj = nervosj;
+        this.appChainj = appChainj;
         this.credentials = credentials;
 
         this.chainId = chainId;
     }
 
     public RawTransactionManager(
-            Nervosj nervosj, Credentials credentials, byte chainId,
+            AppChainj appChainj, Credentials credentials, byte chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(transactionReceiptProcessor, credentials.getAddress());
 
-        this.nervosj = nervosj;
+        this.appChainj = appChainj;
         this.credentials = credentials;
 
         this.chainId = chainId;
     }
 
     public RawTransactionManager(
-            Nervosj nervosj, Credentials credentials,
+            AppChainj appChainj, Credentials credentials,
             byte chainId, int attempts, long sleepDuration) {
-        super(nervosj, attempts, sleepDuration, credentials.getAddress());
+        super(appChainj, attempts, sleepDuration, credentials.getAddress());
 
-        this.nervosj = nervosj;
+        this.appChainj = appChainj;
         this.credentials = credentials;
 
         this.chainId = chainId;
     }
 
-    public RawTransactionManager(Nervosj nervosj, Credentials credentials) {
-        this(nervosj, credentials, ChainId.NONE);
+    public RawTransactionManager(AppChainj appChainj, Credentials credentials) {
+        this(appChainj, credentials, ChainId.NONE);
     }
 
     public RawTransactionManager(
-            Nervosj nervosj, Credentials credentials, int attempts, int sleepDuration) {
-        this(nervosj, credentials, ChainId.NONE, attempts, sleepDuration);
+            AppChainj appChainj, Credentials credentials, int attempts, int sleepDuration) {
+        this(appChainj, credentials, ChainId.NONE, attempts, sleepDuration);
     }
 
     protected BigInteger getNonce() throws IOException {
-        AppGetTransactionCount ethGetTransactionCount = nervosj.appGetTransactionCount(
+        AppGetTransactionCount ethGetTransactionCount = appChainj.appGetTransactionCount(
                 credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
         return ethGetTransactionCount.getTransactionCount();
@@ -105,6 +105,6 @@ public class RawTransactionManager extends TransactionManager {
 
         String hexValue = Numeric.toHexString(signedMessage);
 
-        return nervosj.appSendRawTransaction(hexValue).send();
+        return appChainj.appSendRawTransaction(hexValue).send();
     }
 }

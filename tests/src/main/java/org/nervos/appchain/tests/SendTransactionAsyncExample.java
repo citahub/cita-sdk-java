@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.concurrent.CompletableFuture;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.RemoteCall;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
@@ -21,7 +21,7 @@ public class SendTransactionAsyncExample {
     private static int version;
     private static long quotaToTransfer;
 
-    static Nervosj service;
+    static AppChainj service;
 
     static {
         Config conf = new Config();

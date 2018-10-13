@@ -306,7 +306,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                 + "        java.util.Arrays.<org.nervos.appchain.abi.TypeReference<?>>asList(new org.nervos.appchain.abi.TypeReference<org.nervos.appchain.abi.datatypes.generated.Uint256>() {}, new org.nervos.appchain.abi.TypeReference<org.nervos.appchain.abi.datatypes.Utf8String>() {}));\n"
                 + "    org.nervos.appchain.protocol.core.methods.request.AppFilter filter = new org.nervos.appchain.protocol.core.methods.request.AppFilter(startBlock, endBlock, getContractAddress());\n"
                 + "    filter.addSingleTopic(org.nervos.appchain.abi.EventEncoder.encode(event));\n"
-                + "    return nervosj.appLogObservable(filter).map(new rx.functions.Func1<org.nervos.appchain.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
+                + "    return appChainj.appLogObservable(filter).map(new rx.functions.Func1<org.nervos.appchain.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
                 + "      @java.lang.Override\n"
                 + "      public TransferEventResponse call(org.nervos.appchain.protocol.core.methods.response.Log log) {\n"
                 + "        org.nervos.appchain.abi.EventValues eventValues = extractEventParameters(event, log);\n"

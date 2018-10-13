@@ -3,7 +3,7 @@ package org.nervos.appchain.tx;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 
 /**
@@ -11,8 +11,8 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
  */
 public class ReadonlyTransactionManager extends TransactionManager {
 
-    public ReadonlyTransactionManager(Nervosj nervosj, String fromAddress) {
-        super(nervosj, fromAddress);
+    public ReadonlyTransactionManager(AppChainj appChainj, String fromAddress) {
+        super(appChainj, fromAddress);
     }
 
     @Override

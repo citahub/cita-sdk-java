@@ -3,7 +3,7 @@ package org.nervos.appchain.tests;
 import java.math.BigInteger;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
@@ -21,7 +21,7 @@ public class SendTransactionSyncExample {
     static int version;
     static long quotaToTransfer;
 
-    static Nervosj service;
+    static AppChainj service;
 
     static {
         Config conf = new Config();

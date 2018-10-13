@@ -3,12 +3,12 @@ package org.nervos.appchain.tests;
 import java.math.BigInteger;
 import java.util.List;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.system.AppChainjSystemContract;
 
 public class SystemContractExample {
 
-    static Nervosj service;
+    static AppChainj service;
     static String senderAddr;
     static String adminPriavteKey;
 

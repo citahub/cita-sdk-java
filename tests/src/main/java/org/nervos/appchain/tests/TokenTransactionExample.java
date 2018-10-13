@@ -16,7 +16,7 @@ import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
@@ -32,7 +32,7 @@ public class TokenTransactionExample {
     private static String binPath;
     private static Long quota;
     private static String value;
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
         Config conf = new Config();

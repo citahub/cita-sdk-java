@@ -19,7 +19,7 @@ import org.nervos.appchain.utils.Strings;
 public class TupleGenerator extends Generator {
 
     static final int LIMIT = 20;
-    static final String PACKAGE_NAME = "org.nervosj.tuples.generated";
+    static final String PACKAGE_NAME = "org.appChainj.tuples.generated";
     static final String CLASS_NAME = "Tuple";
 
     private static final String SIZE = "SIZE";

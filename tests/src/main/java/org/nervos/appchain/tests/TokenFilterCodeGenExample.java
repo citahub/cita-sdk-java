@@ -6,10 +6,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
-import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
@@ -18,7 +17,7 @@ public class TokenFilterCodeGenExample {
     private static int version;
     private static String payerPrivateKey;
     private static String payeePrivateKey;
-    private static Nervosj service;
+    private static AppChainj service;
     private static long quota;
     private static String value;
     private static Token token;

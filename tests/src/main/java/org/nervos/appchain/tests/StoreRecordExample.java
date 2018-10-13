@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.protobuf.Blockchain;
 import org.nervos.appchain.protobuf.ConvertStrByte;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.system.AppChainjSystemContract;
@@ -18,7 +18,7 @@ public class StoreRecordExample {
     private static int chainId;
     private static int version;
 
-    static Nervosj service;
+    static AppChainj service;
 
     static {
         Config conf = new Config();

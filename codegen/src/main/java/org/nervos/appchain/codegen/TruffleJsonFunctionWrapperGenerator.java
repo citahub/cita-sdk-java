@@ -222,7 +222,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
             this.schemaVersion = schemaVersion;
             this.updatedAt = updatedAt;
         }
-        
+
         public String getContractName() {
             return contractName;
         }
@@ -234,7 +234,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         public String getBytecode() {
             return bytecode;
         }
-        
+
         public NetworkInfo getNetwork(String networkId) {
             return networks == null ? null : networks.get(networkId);
         }
@@ -255,7 +255,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         }
 
         /*
-         * c.f., org.nervosj.tx.ChainId
+         * c.f., org.appChainj.tx.ChainId
          *
          * This should be updated with https://github.com/web3j/web3j/issues/234
          */
@@ -343,7 +343,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
             this.links = links;
             this.address = address;
         }
-        
+
         public String getAddress() {
             return address;
         }

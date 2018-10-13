@@ -20,7 +20,7 @@ import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint64;
 import org.nervos.appchain.abi.datatypes.generated.Uint8;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
@@ -37,9 +37,9 @@ import static org.nervos.appchain.protocol.system.Util.getValidUtilBlock;
  * **/
 
 public class AppChainjSystemContract implements AppChainSystemContract, AppChainSystemAddress {
-    private Nervosj service;
+    private AppChainj service;
 
-    public AppChainjSystemContract(Nervosj service) {
+    public AppChainjSystemContract(AppChainj service) {
         this.service = service;
     }
 

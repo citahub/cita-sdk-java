@@ -36,7 +36,7 @@ import org.nervos.appchain.abi.datatypes.StaticArray;
 import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.Utf8String;
 import org.nervos.appchain.abi.datatypes.generated.AbiTypes;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.ObjectMapperFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.RemoteCall;
@@ -57,7 +57,7 @@ import rx.functions.Func1;
 public class SolidityFunctionWrapper extends Generator {
 
     private static final String BINARY = "BINARY";
-    private static final String NERVOSJ = "nervosj";
+    private static final String NERVOSJ = "appChainj";
     private static final String CREDENTIALS = "credentials";
     private static final String TRANSACTION_MANAGER = "transactionManager";
     private static final String INITIAL_VALUE = "initialWeiValue";
@@ -79,7 +79,7 @@ public class SolidityFunctionWrapper extends Generator {
     private static final String CODEGEN_WARNING = "<p>Auto generated code.\n"
             + "<p><strong>Do not modify!</strong>\n"
             + "<p>Please use the "
-            + "<a href=\"https://github.com/cryptape/nervosj/tree/master/codegen\">"
+            + "<a href=\"https://github.com/cryptape/appChainj/tree/master/codegen\">"
             + "codegen module</a> to update.\n";
 
     private final boolean useNativeJavaTypes;
@@ -138,7 +138,7 @@ public class SolidityFunctionWrapper extends Generator {
             );
             classBuilder.addStaticBlock(staticInit.build());
 
-            // See org.nervosj.tx.Contract#getStaticDeployedAddress(String)
+            // See org.appChainj.tx.Contract#getStaticDeployedAddress(String)
             MethodSpec getAddress = MethodSpec
                     .methodBuilder("getStaticDeployedAddress")
                     .addModifiers(Modifier.PROTECTED)
@@ -185,13 +185,13 @@ public class SolidityFunctionWrapper extends Generator {
         String version;
 
         try {
-            // This only works if run as part of the nervosj command line tools which contains
+            // This only works if run as part of the appChainj command line tools which contains
             // a version.properties file
             version = Version.getVersion();
         } catch (IOException | NullPointerException e) {
             version = Version.DEFAULT;
         }
-        return "\n<p>Generated with nervosj version " + version + ".\n";
+        return "\n<p>Generated with appChainj version " + version + ".\n";
     }
 
     private FieldSpec createBinaryDefinition(String binary) {
@@ -256,7 +256,7 @@ public class SolidityFunctionWrapper extends Generator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, NERVOSJ)
+                .addParameter(AppChainj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
@@ -269,7 +269,7 @@ public class SolidityFunctionWrapper extends Generator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, NERVOSJ)
+                .addParameter(AppChainj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addStatement("super($N, $N, $N, $N)",
                         BINARY, CONTRACT_ADDRESS, NERVOSJ, authName)
@@ -378,7 +378,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
-                .addParameter(Nervosj.class, NERVOSJ)
+                .addParameter(AppChainj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT);
@@ -396,7 +396,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
-                .addParameter(Nervosj.class, NERVOSJ)
+                .addParameter(AppChainj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(Long.class, QUOTA)
                 .addParameter(String.class, NONCE)
@@ -413,7 +413,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(TypeVariableName.get(className, Type.class))
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, NERVOSJ)
+                .addParameter(AppChainj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
@@ -428,7 +428,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(TypeVariableName.get(className, Type.class))
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(Nervosj.class, NERVOSJ)
+                .addParameter(AppChainj.class, NERVOSJ)
                 .addParameter(authType, authName)
                 .addStatement("return new $L($L, $L, $L)", className,
                         CONTRACT_ADDRESS, NERVOSJ, authName)
@@ -781,7 +781,7 @@ public class SolidityFunctionWrapper extends Generator {
         observableMethodBuilder.addStatement("$1T filter = new $1T($2L, $3L, "
                 + "getContractAddress())", AppFilter.class, START_BLOCK, END_BLOCK)
                 .addStatement("filter.addSingleTopic($T.encode(event))", EventEncoder.class)
-                .addStatement("return nervosj.appLogObservable(filter).map($L)", converter);
+                .addStatement("return appChainj.appLogObservable(filter).map($L)", converter);
 
         return observableMethodBuilder
                 .build();

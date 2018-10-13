@@ -5,14 +5,14 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.response.AppBlock;
 import org.nervos.appchain.protocol.core.methods.response.AppFilter;
 import org.nervos.appchain.protocol.core.methods.response.AppLog;
 
 public class BlockFilterTransactionExample {
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
         Config conf = new Config();

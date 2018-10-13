@@ -3,7 +3,7 @@ package org.nervos.appchain.tests;
 import java.io.File;
 import java.math.BigInteger;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.account.Account;
 import org.nervos.appchain.protocol.account.CompiledContract;
 import org.nervos.appchain.protocol.core.methods.response.AbiDefinition;
@@ -21,7 +21,7 @@ public class TokenAccountExample {
 
     private static long quota;
     private static String value;
-    private static Nervosj service;
+    private static AppChainj service;
 
     private Account account;
     private CompiledContract tokenContract;

@@ -3,7 +3,7 @@ package org.nervos.appchain.protocol.system;
 import java.math.BigInteger;
 import java.util.Random;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.utils.Numeric;
 
 /**
@@ -17,11 +17,11 @@ public class Util {
         return String.valueOf(Math.abs(random.nextLong()));
     }
 
-    static BigInteger getCurrentHeight(Nervosj service) {
+    static BigInteger getCurrentHeight(AppChainj service) {
         return getCurrentHeight(service, 3);
     }
 
-    private static BigInteger getCurrentHeight(Nervosj service, int retry) {
+    private static BigInteger getCurrentHeight(AppChainj service, int retry) {
         int count = 0;
         long height = -1;
         while (count < retry) {
@@ -46,12 +46,12 @@ public class Util {
         return BigInteger.valueOf(height);
     }
 
-    static BigInteger getValidUtilBlock(Nervosj service, int validUntilBlock) {
+    static BigInteger getValidUtilBlock(AppChainj service, int validUntilBlock) {
         return getCurrentHeight(service).add(
                 BigInteger.valueOf(validUntilBlock));
     }
 
-    static BigInteger getValidUtilBlock(Nervosj service) {
+    static BigInteger getValidUtilBlock(AppChainj service) {
         return getCurrentHeight(service).add(BigInteger.valueOf(88));
     }
 

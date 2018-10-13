@@ -2,7 +2,7 @@ package org.nervos.appchain.tx.response;
 
 import java.io.IOException;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.exceptions.TransactionException;
 
@@ -12,8 +12,8 @@ import org.nervos.appchain.protocol.exceptions.TransactionException;
  */
 public class NoOpProcessor extends TransactionReceiptProcessor {
 
-    public NoOpProcessor(Nervosj nervosj) {
-        super(nervosj);
+    public NoOpProcessor(AppChainj appChainj) {
+        super(appChainj);
     }
 
     @Override

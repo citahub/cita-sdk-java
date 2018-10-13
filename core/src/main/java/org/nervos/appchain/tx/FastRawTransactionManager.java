@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.tx.response.TransactionReceiptProcessor;
 
 /**
@@ -15,24 +15,24 @@ public class FastRawTransactionManager extends RawTransactionManager {
 
     private volatile BigInteger nonce = BigInteger.valueOf(-1);
 
-    public FastRawTransactionManager(Nervosj nervosj, Credentials credentials, byte chainId) {
-        super(nervosj, credentials, chainId);
+    public FastRawTransactionManager(AppChainj appChainj, Credentials credentials, byte chainId) {
+        super(appChainj, credentials, chainId);
     }
 
-    public FastRawTransactionManager(Nervosj nervosj, Credentials credentials) {
-        super(nervosj, credentials);
-    }
-
-    public FastRawTransactionManager(
-            Nervosj nervosj, Credentials credentials,
-            TransactionReceiptProcessor transactionReceiptProcessor) {
-        super(nervosj, credentials, ChainId.NONE, transactionReceiptProcessor);
+    public FastRawTransactionManager(AppChainj appChainj, Credentials credentials) {
+        super(appChainj, credentials);
     }
 
     public FastRawTransactionManager(
-            Nervosj nervosj, Credentials credentials, byte chainId,
+            AppChainj appChainj, Credentials credentials,
             TransactionReceiptProcessor transactionReceiptProcessor) {
-        super(nervosj, credentials, chainId, transactionReceiptProcessor);
+        super(appChainj, credentials, ChainId.NONE, transactionReceiptProcessor);
+    }
+
+    public FastRawTransactionManager(
+            AppChainj appChainj, Credentials credentials, byte chainId,
+            TransactionReceiptProcessor transactionReceiptProcessor) {
+        super(appChainj, credentials, chainId, transactionReceiptProcessor);
     }
 
     @Override

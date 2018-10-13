@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
@@ -26,16 +26,16 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 
 /**
- * nervosj reactive API implementation.
+ * appChainj reactive API implementation.
  */
 public class JsonRpc2_0Rx {
 
-    private final Nervosj nervosj;
+    private final AppChainj appChainj;
     private final ScheduledExecutorService scheduledExecutorService;
     private final Scheduler scheduler;
 
-    public JsonRpc2_0Rx(Nervosj nervosj, ScheduledExecutorService scheduledExecutorService) {
-        this.nervosj = nervosj;
+    public JsonRpc2_0Rx(AppChainj appChainj, ScheduledExecutorService scheduledExecutorService) {
+        this.appChainj = appChainj;
         this.scheduledExecutorService = scheduledExecutorService;
         this.scheduler = Schedulers.from(scheduledExecutorService);
     }
@@ -43,7 +43,7 @@ public class JsonRpc2_0Rx {
     public Observable<String> appBlockHashObservable(long pollingInterval) {
         return Observable.create(subscriber -> {
             BlockFilter blockFilter = new BlockFilter(
-                    nervosj, subscriber::onNext);
+                    appChainj, subscriber::onNext);
             run(blockFilter, subscriber, pollingInterval);
         });
     }
@@ -51,7 +51,7 @@ public class JsonRpc2_0Rx {
     public Observable<String> appPendingTransactionHashObservable(long pollingInterval) {
         return Observable.create(subscriber -> {
             PendingTransactionFilter pendingTransactionFilter = new PendingTransactionFilter(
-                    nervosj, subscriber::onNext);
+                    appChainj, subscriber::onNext);
 
             run(pendingTransactionFilter, subscriber, pollingInterval);
         });
@@ -61,7 +61,7 @@ public class JsonRpc2_0Rx {
             AppFilter appFilter, long pollingInterval) {
         return Observable.create((Subscriber<? super Log> subscriber) -> {
             LogFilter logFilter = new LogFilter(
-                    nervosj, subscriber::onNext, appFilter);
+                    appChainj, subscriber::onNext, appFilter);
 
             run(logFilter, subscriber, pollingInterval);
         });
@@ -83,7 +83,7 @@ public class JsonRpc2_0Rx {
     public Observable<Transaction> pendingTransactionObservable(long pollingInterval) {
         return appPendingTransactionHashObservable(pollingInterval)
                 .flatMap(transactionHash ->
-                        nervosj.appGetTransactionByHash(transactionHash).observable())
+                        appChainj.appGetTransactionByHash(transactionHash).observable())
                 .map(appTransaction -> appTransaction.getTransaction().get());
     }
 
@@ -91,7 +91,8 @@ public class JsonRpc2_0Rx {
             boolean fullTransactionObjects, long pollingInterval) {
         return appBlockHashObservable(pollingInterval)
                 .flatMap(blockHash ->
-                        nervosj.appGetBlockByHash(blockHash, fullTransactionObjects).observable());
+                        appChainj.appGetBlockByHash(
+                                blockHash, fullTransactionObjects).observable());
     }
 
     public Observable<AppBlock> replayBlocksObservable(
@@ -130,12 +131,12 @@ public class JsonRpc2_0Rx {
 
         if (ascending) {
             return Observables.range(startBlockNumber, endBlockNumber)
-                    .flatMap(i -> nervosj.appGetBlockByNumber(
+                    .flatMap(i -> appChainj.appGetBlockByNumber(
                             new DefaultBlockParameterNumber(i),
                             fullTransactionObjects).observable());
         } else {
             return Observables.range(startBlockNumber, endBlockNumber, false)
-                    .flatMap(i -> nervosj.appGetBlockByNumber(
+                    .flatMap(i -> appChainj.appGetBlockByNumber(
                             new DefaultBlockParameterNumber(i),
                             fullTransactionObjects).observable());
         }
@@ -223,7 +224,7 @@ public class JsonRpc2_0Rx {
         if (defaultBlockParameter instanceof DefaultBlockParameterNumber) {
             return ((DefaultBlockParameterNumber) defaultBlockParameter).getBlockNumber();
         } else {
-            AppBlock latestEthBlock = nervosj.appGetBlockByNumber(
+            AppBlock latestEthBlock = appChainj.appGetBlockByNumber(
                     defaultBlockParameter, false).send();
             return latestEthBlock.getBlock().getHeader().getNumberDec();
         }

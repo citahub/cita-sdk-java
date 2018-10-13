@@ -3,11 +3,8 @@ package org.nervos.appchain.tests;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Properties;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.abi.EventEncoder;
@@ -18,7 +15,7 @@ import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.abi.datatypes.Event;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
@@ -26,7 +23,6 @@ import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionRecei
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 
 import rx.Observable;
 
@@ -39,7 +35,7 @@ public class TokenFilterObservableExample {
     private static String toAddress;
     private static Long quota;
     private static String value;
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
         Config conf = new Config();
