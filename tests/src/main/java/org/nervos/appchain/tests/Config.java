@@ -3,7 +3,7 @@ package org.nervos.appchain.tests;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.http.HttpService;
 
 public class Config {
@@ -40,7 +40,7 @@ public class Config {
     public String tokenAbi;
     public String defaultQuotaTransfer;
     public String defaultQuotaDeployment;
-    public Nervosj service;
+    public AppChainj service;
     public String adminPrivateKey;
 
 
@@ -56,7 +56,7 @@ public class Config {
 
     public void buildService(boolean debugMode) {
         HttpService.setDebug(debugMode);
-        this.service = Nervosj.build(new HttpService(this.ipAddr));
+        this.service = AppChainj.build(new HttpService(this.ipAddr));
     }
 
 

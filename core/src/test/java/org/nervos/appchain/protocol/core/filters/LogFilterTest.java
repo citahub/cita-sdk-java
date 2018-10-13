@@ -16,6 +16,6 @@ public class LogFilterTest extends FilterTester {
                 //CHECKSTYLE:ON
                 AppLog.class);
 
-        runTest(ethLog, nervosj.appLogObservable(new AppFilter().addSingleTopic("test")));
+        runTest(ethLog, appChainj.appLogObservable(new AppFilter().addSingleTopic("test")));
     }
 }

@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +18,7 @@ import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.abi.datatypes.Event;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
-import org.nervos.appchain.crypto.Hash;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
@@ -30,7 +28,6 @@ import org.nervos.appchain.protocol.core.methods.response.AppLog;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
@@ -42,7 +39,7 @@ public class TokenFilterTransactionExample {
     private static Random random;
     private static Long quota;
     private static String value;
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
         Config config = new Config();

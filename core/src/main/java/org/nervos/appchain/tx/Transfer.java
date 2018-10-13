@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.RemoteCall;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.exceptions.TransactionException;
@@ -24,8 +24,8 @@ public class Transfer extends ManagedTransaction {
     // This is the cost to send Ether between parties
     public static final BigInteger GAS_LIMIT = BigInteger.valueOf(21000);
 
-    public Transfer(Nervosj nervosj, TransactionManager transactionManager) {
-        super(nervosj, transactionManager);
+    public Transfer(AppChainj appChainj, TransactionManager transactionManager) {
+        super(appChainj, transactionManager);
     }
 
     /**
@@ -68,14 +68,14 @@ public class Transfer extends ManagedTransaction {
     }
 
     public static RemoteCall<TransactionReceipt> sendFunds(
-            Nervosj nervosj, Credentials credentials,
+            AppChainj appChainj, Credentials credentials,
             String toAddress, BigDecimal value, Convert.Unit unit) throws InterruptedException,
             IOException, TransactionException {
 
-        TransactionManager transactionManager = new RawTransactionManager(nervosj, credentials);
+        TransactionManager transactionManager = new RawTransactionManager(appChainj, credentials);
 
         return new RemoteCall<>(() ->
-                new Transfer(nervosj, transactionManager).send(toAddress, value, unit));
+                new Transfer(appChainj, transactionManager).send(toAddress, value, unit));
     }
 
     /**

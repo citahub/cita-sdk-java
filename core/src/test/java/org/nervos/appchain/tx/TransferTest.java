@@ -30,21 +30,21 @@ public class TransferTest extends ManagedTransactionTester {
 
     @Test
     public void testSendFunds() throws Exception {
-        assertThat(Transfer.sendFunds(nervosj, SampleKeys.CREDENTIALS, ADDRESS,
+        assertThat(Transfer.sendFunds(appChainj, SampleKeys.CREDENTIALS, ADDRESS,
                 BigDecimal.TEN, Convert.Unit.ETHER).send(),
                 is(transactionReceipt));
     }
 
     @Test
     public void testSendFundsAsync() throws  Exception {
-        assertThat(Transfer.sendFunds(nervosj, SampleKeys.CREDENTIALS, ADDRESS,
+        assertThat(Transfer.sendFunds(appChainj, SampleKeys.CREDENTIALS, ADDRESS,
                 BigDecimal.TEN, Convert.Unit.ETHER).send(),
                 is(transactionReceipt));
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public void testTransferInvalidValue() throws Exception {
-        Transfer.sendFunds(nervosj, SampleKeys.CREDENTIALS, ADDRESS,
+        Transfer.sendFunds(appChainj, SampleKeys.CREDENTIALS, ADDRESS,
                 new BigDecimal(0.1), Convert.Unit.WEI).send();
     }
 

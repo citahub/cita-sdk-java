@@ -89,7 +89,7 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
             String contractName, String inputFileName) throws Exception {
 
         testCodeGeneration(
-                contractName, inputFileName, "org.nervosj.unittests.java", JAVA_TYPES_ARG);
+                contractName, inputFileName, "org.appChainj.unittests.java", JAVA_TYPES_ARG);
 
     }
 
@@ -97,7 +97,8 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
             String contractName, String inputFileName) throws Exception {
 
         testCodeGeneration(
-                contractName, inputFileName, "org.nervosj.unittests.solidity", SOLIDITY_TYPES_ARG);
+                contractName, inputFileName,
+                "org.appChainj.unittests.solidity", SOLIDITY_TYPES_ARG);
     }
 
     private void testCodeGeneration(

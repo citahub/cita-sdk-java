@@ -2,7 +2,6 @@ package org.nervos.appchain.protocol.account;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.UnorderedEvent;
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
@@ -34,10 +33,10 @@ public class Account {
 
     private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
     private CitaTransactionManager transactionManager;
-    private Nervosj service;
+    private AppChainj service;
     private String abi;
 
-    public Account(String privateKey, Nervosj service) {
+    public Account(String privateKey, AppChainj service) {
         Credentials credentials = Credentials.create(privateKey);
         this.transactionManager = new CitaTransactionManager(service, credentials);
         this.service = service;
@@ -187,7 +186,7 @@ public class Account {
         }
 
         AppFilter filter = new AppFilter(start, end, contractAddress);
-        /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after nervosj fixed
+        /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after appChainj fixed
         filter.addSingleTopic(EventEncoder.encode(event));
         return this.service.appLogObservable(filter).map(log -> {
             EventValues eventValues = staticExtractEventParameters(event, log);

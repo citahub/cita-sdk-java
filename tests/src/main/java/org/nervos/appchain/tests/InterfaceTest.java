@@ -15,7 +15,7 @@ import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
@@ -37,7 +37,7 @@ public class InterfaceTest {
 
     private static int version;
     private static int chainId;
-    private static Nervosj service;
+    private static AppChainj service;
     private static String value;
     private static String privateKey;
     private static long quotaToDeploy;

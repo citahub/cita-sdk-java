@@ -3,7 +3,7 @@ package org.nervos.appchain.tx.response;
 import java.io.IOException;
 import java.util.Optional;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionReceipt;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.exceptions.TransactionException;
@@ -13,10 +13,10 @@ import org.nervos.appchain.protocol.exceptions.TransactionException;
  */
 public abstract class TransactionReceiptProcessor {
 
-    private final Nervosj nervosj;
+    private final AppChainj appChainj;
 
-    public TransactionReceiptProcessor(Nervosj nervosj) {
-        this.nervosj = nervosj;
+    public TransactionReceiptProcessor(AppChainj appChainj) {
+        this.appChainj = appChainj;
     }
 
     public abstract TransactionReceipt waitForTransactionReceipt(
@@ -26,7 +26,7 @@ public abstract class TransactionReceiptProcessor {
     Optional<TransactionReceipt> sendTransactionReceiptRequest(
             String transactionHash) throws IOException, TransactionException {
         AppGetTransactionReceipt transactionReceipt =
-                nervosj.appGetTransactionReceipt(transactionHash).send();
+                appChainj.appGetTransactionReceipt(transactionHash).send();
         if (transactionReceipt.hasError()) {
             throw new TransactionException("Error processing request: "
                     + transactionReceipt.getError().getMessage());

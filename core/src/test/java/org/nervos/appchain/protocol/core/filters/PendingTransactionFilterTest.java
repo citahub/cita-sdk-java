@@ -17,6 +17,6 @@ public class PendingTransactionFilterTest extends FilterTester {
                 //CHECKSTYLE:ON
                 AppLog.class);
 
-        runTest(ethLog, nervosj.appPendingTransactionHashObservable());
+        runTest(ethLog, appChainj.appPendingTransactionHashObservable());
     }
 }

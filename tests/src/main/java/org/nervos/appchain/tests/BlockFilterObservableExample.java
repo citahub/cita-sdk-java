@@ -1,11 +1,11 @@
 package org.nervos.appchain.tests;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 
 import rx.Observable;
 
 public class BlockFilterObservableExample {
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
         Config conf = new Config();

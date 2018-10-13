@@ -13,7 +13,7 @@ import org.nervos.appchain.utils.Async;
 /**
  * Base service implementation.
  */
-public abstract class Service implements NervosjService {
+public abstract class Service implements AppChainjService {
 
     protected final ObjectMapper objectMapper;
 

@@ -1,6 +1,5 @@
 package org.nervos.appchain.tests;
 
-import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,7 +11,7 @@ import org.nervos.appchain.abi.FunctionReturnDecoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
@@ -20,7 +19,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
 public class AdvanceTransactionTest {
 
-    private static Nervosj service;
+    private static AppChainj service;
     private static String senderPrivateKey;
     private static int version;
     private static int chainId;

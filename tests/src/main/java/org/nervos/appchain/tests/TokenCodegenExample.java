@@ -14,7 +14,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.tx.CitaTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
@@ -26,7 +26,7 @@ public class TokenCodegenExample {
     private static String creatorPrivateKey;
     private static Credentials creator;
     private static ArrayList<Credentials> testAccounts = new ArrayList<>();
-    private static Nervosj service;
+    private static AppChainj service;
     private static Long quotaDeployment;
     private static String value;
     private static Token token;

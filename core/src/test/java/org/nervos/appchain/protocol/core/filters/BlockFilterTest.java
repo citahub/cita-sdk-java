@@ -19,6 +19,6 @@ public class BlockFilterTest extends FilterTester {
                         + "]}",
                 AppLog.class);
 
-        runTest(appLog, nervosj.appBlockHashObservable());
+        runTest(appLog, appChainj.appBlockHashObservable());
     }
 }

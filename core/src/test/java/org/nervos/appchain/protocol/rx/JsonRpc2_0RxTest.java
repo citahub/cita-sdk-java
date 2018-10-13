@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
 
-import org.nervos.appchain.protocol.Nervosj;
-import org.nervos.appchain.protocol.NervosjService;
+import org.nervos.appchain.protocol.AppChainj;
+import org.nervos.appchain.protocol.AppChainjService;
 import org.nervos.appchain.protocol.ObjectMapperFactory;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
 import org.nervos.appchain.protocol.core.Request;
@@ -39,14 +39,17 @@ public class JsonRpc2_0RxTest {
 
     private final ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
 
-    private Nervosj nervosj;
+    private AppChainj appChainj;
 
-    private NervosjService nervosjService;
+    private AppChainjService appChainjService;
 
     @Before
     public void setUp() {
-        nervosjService = mock(NervosjService.class);
-        nervosj = Nervosj.build(nervosjService, 1000, Executors.newSingleThreadScheduledExecutor());
+        appChainjService = mock(AppChainjService.class);
+        appChainj = AppChainj.build(
+                appChainjService,
+                1000,
+                Executors.newSingleThreadScheduledExecutor());
     }
 
     @Test
@@ -55,12 +58,12 @@ public class JsonRpc2_0RxTest {
         List<AppBlock> appBlocks = Arrays.asList(createBlock(0), createBlock(1), createBlock(2));
 
         OngoingStubbing<AppBlock> stubbing =
-                when(nervosjService.send(any(Request.class), eq(AppBlock.class)));
+                when(appChainjService.send(any(Request.class), eq(AppBlock.class)));
         for (AppBlock appBlock : appBlocks) {
             stubbing = stubbing.thenReturn(appBlock);
         }
 
-        Observable<AppBlock> observable = nervosj.replayBlocksObservable(
+        Observable<AppBlock> observable = appChainj.replayBlocksObservable(
                 new DefaultBlockParameterNumber(BigInteger.ZERO),
                 new DefaultBlockParameterNumber(BigInteger.valueOf(2)),
                 false);
@@ -92,12 +95,12 @@ public class JsonRpc2_0RxTest {
         List<AppBlock> appBlocks = Arrays.asList(createBlock(2), createBlock(1), createBlock(0));
 
         OngoingStubbing<AppBlock> stubbing =
-                when(nervosjService.send(any(Request.class), eq(AppBlock.class)));
+                when(appChainjService.send(any(Request.class), eq(AppBlock.class)));
         for (AppBlock appBlock : appBlocks) {
             stubbing = stubbing.thenReturn(appBlock);
         }
 
-        Observable<AppBlock> observable = nervosj.replayBlocksObservable(
+        Observable<AppBlock> observable = appChainj.replayBlocksObservable(
                 new DefaultBlockParameterNumber(BigInteger.ZERO),
                 new DefaultBlockParameterNumber(BigInteger.valueOf(2)),
                 false, false);
@@ -140,7 +143,7 @@ public class JsonRpc2_0RxTest {
                 expected.get(6)); // subsequent block from new block observable
 
         OngoingStubbing<AppBlock> stubbing =
-                when(nervosjService.send(any(Request.class), eq(AppBlock.class)));
+                when(appChainjService.send(any(Request.class), eq(AppBlock.class)));
         for (AppBlock appBlock : appBlocks) {
             stubbing = stubbing.thenReturn(appBlock);
         }
@@ -159,16 +162,17 @@ public class JsonRpc2_0RxTest {
         AppUninstallFilter appUninstallFilter = objectMapper.readValue(
                 "{\"jsonrpc\":\"2.0\",\"id\":1,\"result\":true}", AppUninstallFilter.class);
 
-        when(nervosjService.send(any(Request.class), eq(AppFilter.class)))
+        when(appChainjService.send(any(Request.class), eq(AppFilter.class)))
                 .thenReturn(appFilter);
-        when(nervosjService.send(any(Request.class), eq(AppLog.class)))
+        when(appChainjService.send(any(Request.class), eq(AppLog.class)))
                 .thenReturn(appLog);
-        when(nervosjService.send(any(Request.class), eq(AppUninstallFilter.class)))
+        when(appChainjService.send(any(Request.class), eq(AppUninstallFilter.class)))
                 .thenReturn(appUninstallFilter);
 
-        Observable<AppBlock> observable = nervosj.catchUpToLatestAndSubscribeToNewBlocksObservable(
-                new DefaultBlockParameterNumber(BigInteger.ZERO),
-                false);
+        Observable<AppBlock> observable = appChainj
+                .catchUpToLatestAndSubscribeToNewBlocksObservable(
+                        new DefaultBlockParameterNumber(BigInteger.ZERO),
+                        false);
 
         CountDownLatch transactionLatch = new CountDownLatch(expected.size());
         CountDownLatch completedLatch = new CountDownLatch(1);

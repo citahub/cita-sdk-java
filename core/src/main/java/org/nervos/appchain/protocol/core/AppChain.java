@@ -25,12 +25,9 @@ import org.nervos.appchain.protocol.core.methods.response.Web3Sha3;
 
 
 /**
- * Core Ethereum JSON-RPC API.
+ * Core AppChain JSON-RPC API.
  */
 public interface AppChain {
-    Request<?, Web3ClientVersion> web3ClientVersion();
-
-    Request<?, Web3Sha3> web3Sha3(String data);
 
     Request<?, NetPeerCount> netPeerCount();
 

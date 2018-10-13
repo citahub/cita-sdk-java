@@ -10,7 +10,7 @@ import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Type;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
@@ -121,7 +121,7 @@ public interface AppChainSystemContract {
     }
 
     static AppCall sendCall(String from, String addr,
-                            String callData, Nervosj service)
+                            String callData, AppChainj service)
             throws IOException {
         Call call = new Call(from, addr, callData);
         return service.appCall(call, DEFAULT_BLOCK_PARAMETER).send();
