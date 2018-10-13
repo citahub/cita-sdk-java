@@ -1,11 +1,11 @@
-# appChainj
+# appchainj
 [![Build Status](https://travis-ci.org/cryptape/nervosj.svg?branch=master)](https://travis-ci.org/cryptape/nervosj)
 
 [English](https://github.com/cryptape/nervosj#introduction)  
 [中文](https://github.com/cryptape/nervosj#简介)
 
 ## Introduction
-AppChainj, originally adapted from Ethereum Web3j, is a Java library for working with Smart Contract and integrating with clients on Nervos layer2 network.
+appchainj, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on Nervos layer2 network.
 ## Features
 - Complete implementation of Nervos AppChain JSON-RPC API over HTTP.
 - Auto-generation of Java smart contract wrappers to create, deploy, transact with and call smart contracts from native Java code (Solidity and Truffle definition formats supported).
@@ -14,12 +14,12 @@ AppChainj, originally adapted from Ethereum Web3j, is a Java library for working
 ## Getting Started
 
 ### Prerequisites
-Java 8
-Gradle 4.3
+Java 8  
+Gradle 4.3  
 
 ### Install
-Install from repositories:
-maven
+Install from repositories:  
+maven  
 ```
 <dependency>
   <groupId>org.nervos</groupId>
@@ -102,8 +102,8 @@ String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionR
 ```
 Please check [TokenTransactionExample.java](https://github.com/cryptape/appChainj/blob/master/examples/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
 
-### Working with smart contract with appChainj wrapper
-Besides interacting with smart contracts by sending transactions with binary code, appChainj provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
+### Working with smart contract with appchainj wrapper
+Besides interacting with smart contracts by sending transactions with binary code, appchainj provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
 
 Download Nervosj jar file from release page or run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar`.
 
@@ -111,15 +111,15 @@ Usage of console-version-all is shown below:
 ```shell
 $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
 ```
-Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `appChainj/tests/src/main/resources`:
+Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `appchainj/tests/src/main/resources`:
 ```shell
 java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
 ```
 `Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/nervoj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos AppChain network.
-Please check [TokenCodegenExample.java](https://github.com/cryptape/appChainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
+Please check [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
 
 ### Working with smart contract with appChainj Account
-appChainj provides interface [Account](https://github.com/cryptape/appChainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
+appchainj provides interface [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
 
 Method of smart contract deployment:
 ```
@@ -135,12 +135,12 @@ public Object callContract(String contractAddress, String funcName, BigInteger n
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
 public Object callContract(String contractAddress, AbiDefinition functionAbi, BigInteger nonce, BigInteger quota, Object... args)
 ```
-While contract file is required when first deploy the contract, appChainj can get the abi file according to address when call methods in deployed contract.
-Please find complete code in [TokenAccountExample](https://github.com/cryptape/appChainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java).
+While contract file is required when first deploy the contract, appchainj can get the abi file according to address when call methods in deployed contract.
+Please find complete code in [TokenAccountExample](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java).
 
 
 ## 简介
-AppChainj 是对以太坊 Web3j 进行改写，适配 Nervos AppChain 的一个 Java 开发包。AppChainj 集成了与 Nervos AppChain 客户端交互的功能，可以用来对 Nervos AppChain 发送交易，系统配置，信息查询。
+appchainj 是对以太坊 Web3j 进行改写，适配 Nervos AppChain 的一个 Java 开发包。appchainj 集成了与 Nervos AppChain 客户端交互的功能，可以用来对 Nervos AppChain 发送交易，系统配置，信息查询。
 ## 特性
 - 通过 HTTP 协议，实现了 Nervos AppChain 所定义的所有 JSON-RPC 方法。
 - 可以通过 Solidity 智能合约生成该合约的 Java 类。这个智能合约的 Java 类作为 java 对只能合约的包裹层，可以使开发和通过 java 方便地对智能合约进行部署和合约方法的调用（支持Solidity 和 Truffle 的格式）。
@@ -172,7 +172,7 @@ libraryDependencies += "org.nervos" % "core" % "0.18"
 手动安装  
 如果你想使用最新的 AppChain，编译 AppChain 生成 jar 包，并手动引入。
 ```
-git clone https://github.com/cryptape/appChainj.git
+git clone https://github.com/cryptape/appchainj.git
 gradle shadowJar
 ```
 
@@ -187,7 +187,7 @@ http://121.196.200.225:1337
 
 ### 快速教程
 #### 部署智能合约
-与以太坊类似，智能合约是通过发送交易来部署的。Nervos AppChain 交易对象定义在 [Transaction.java](https://github.com/cryptape/appChainj/blob/master/core/src/main/java/org/appChainj/protocol/core/methods/request/Transaction.java)。
+与以太坊类似，智能合约是通过发送交易来部署的。Nervos AppChain 交易对象定义在 [Transaction.java](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/appchainj/protocol/core/methods/request/Transaction.java)。
 在 Nervos AppChain 交易中，有三个特殊的参数：
 - nonce： 随机数或者通过特定的逻辑生成的随机信息，nonce是为了避免重放攻击。
 - quota： 交易执行费用，也就是矿工费，就像以太坊中的 gasPrice * gasLimit。
@@ -234,26 +234,26 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-请在 [TokenTransactionExample.java](https://github.com/cryptape/appChainj/blob/master/examples/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) 中查看完整代码。
+请在 [TokenTransactionExample.java](https://github.com/cryptape/appchainj/blob/master/examples/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) 中查看完整代码。
 
-### 通过 AppChainj 中的 wrapper 与智能合约交互
-以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，AppChainj 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 AppChainj 生成的 java 类，可以方便对合约进行部署和函数调用。
+### 通过 appchainj 中的 wrapper 与智能合约交互
+以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，appchainj 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 appchainj 生成的 java 类，可以方便对合约进行部署和函数调用。
 
-在 release 页面下载 AppChainj 的 jar 包，或者在源项目中运行 `gradle shadowJar` 生成 jar 包，jar包会在 `console/build/libs` 中生成，名字是 `console-version-all.jar`。
+在 release 页面下载 appchainj 的 jar 包，或者在源项目中运行 `gradle shadowJar` 生成 jar 包，jar包会在 `console/build/libs` 中生成，名字是 `console-version-all.jar`。
 
 solidity 合约转化为 java 类操作如下：
 ```shell
 $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
 ```
-这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `appChainj/tests/src/main/resources` 生成对应的 java 类，命令如下：
+这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `appchainj/tests/src/main/resources` 生成对应的 java 类，命令如下：
 ```
 java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
 ```
 `Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 Nervos Appchain 中应该使用 [CitaTransactionManager](https://github.com/cryptape/nervoj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) 而不是 TransactionManager。
-请在 [TokenCodegenExample.java](https://github.com/cryptape/appChainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
+请在 [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
 
 ### 通过 AppChainj 中的 Account 与智能合约交互
-AppChainj 还提供了接口 [Account](https://github.com/cryptape/appChainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
+appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
 
 合约部署示例代码：
 ```java
@@ -269,5 +269,5 @@ public Object callContract(String contractAddress, String funcName, BigInteger n
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
 public Object callContract(String contractAddress, AbiDefinition functionAbi, BigInteger nonce, BigInteger quota, Object... args)
 ```
-虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 AppChainj 通过 Nervos AppChain 提供的 getAbi 接口根据合约地址得到对应的 abi。  
-请在 [TokenAccountExample](https://github.com/cryptape/appChainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java) 中查看完整代码。
+虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 appchainj 通过 Nervos AppChain 提供的 getAbi 接口根据合约地址得到对应的 abi。  
+请在 [TokenAccountExample](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java) 中查看完整代码。
