@@ -9,7 +9,7 @@ import org.nervos.appchain.protocol.core.Response;
 /**
  * Services API.
  */
-public interface NervosjService {
+public interface AppChainjService {
     <T extends Response> T send(
             Request request, Class<T> responseType) throws IOException;
 

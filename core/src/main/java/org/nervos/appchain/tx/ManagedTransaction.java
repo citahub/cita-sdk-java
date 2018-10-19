@@ -3,7 +3,7 @@ package org.nervos.appchain.tx;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.protocol.exceptions.TransactionException;
 
@@ -17,14 +17,14 @@ public abstract class ManagedTransaction {
 
     public static final BigInteger GAS_PRICE = BigInteger.valueOf(22_000_000_000L);
 
-    protected Nervosj nervosj;
+    protected AppChainj appChainj;
 
     protected TransactionManager transactionManager;
 
 
-    protected ManagedTransaction(Nervosj nervosj, TransactionManager transactionManager) {
+    protected ManagedTransaction(AppChainj appChainj, TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
-        this.nervosj = nervosj;
+        this.appChainj = appChainj;
     }
 
     protected TransactionReceipt send(
@@ -38,7 +38,7 @@ public abstract class ManagedTransaction {
 
     // adapt to cita
     protected TransactionReceipt sendAdaptToCita(
-            String to, String data, long quota, BigInteger nonce,
+            String to, String data, long quota, String nonce,
             long validUntilBlock, int version , int chainId, String value)
             throws IOException, TransactionException {
         return transactionManager.executeTransaction(

@@ -2,7 +2,6 @@ package org.nervos.appchain.protocol.account;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.UnorderedEvent;
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
@@ -34,10 +33,10 @@ public class Account {
 
     private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
     private CitaTransactionManager transactionManager;
-    private Nervosj service;
+    private AppChainj service;
     private String abi;
 
-    public Account(String privateKey, Nervosj service) {
+    public Account(String privateKey, AppChainj service) {
         Credentials credentials = Credentials.create(privateKey);
         this.transactionManager = new CitaTransactionManager(service, credentials);
         this.service = service;
@@ -49,7 +48,7 @@ public class Account {
 
     /// TODO: get contract address from receipt after deploy, then return contract name
     public AppSendTransaction deploy(
-            File contractFile, BigInteger nonce, long quota,
+            File contractFile, String nonce, long quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
@@ -60,7 +59,7 @@ public class Account {
     }
 
     public CompletableFuture<AppSendTransaction> deployAsync(
-            File contractFile, BigInteger nonce, long quota,
+            File contractFile, String nonce, long quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
@@ -74,7 +73,7 @@ public class Account {
     // sendTransaction: nonce and quota is necessary
     public Object callContract(
             String contractAddress, String funcName,
-            BigInteger nonce, long quota, int version,
+            String nonce, long quota, int version,
             int chainId, String value, Object... args)
             throws Exception {
         if (abi == null) {
@@ -88,7 +87,7 @@ public class Account {
 
     public Object callContract(
             String contractAddress, AbiDefinition functionAbi,
-            BigInteger nonce, long quota,
+            String nonce, long quota,
             int version,int chainId, String value, Object... args)
             throws Exception {
         List<Type> params = new ArrayList<>();
@@ -139,7 +138,7 @@ public class Account {
     }
 
     public Object sendTransaction(
-            String contractAddress, Function func, BigInteger nonce,
+            String contractAddress, Function func, String nonce,
             long quota, int version, int chainId, String value)
             throws IOException {
         String data = FunctionEncoder.encode(func);
@@ -149,7 +148,7 @@ public class Account {
     }
 
     public Object uploadAbi(
-            String contractAddress, String abi, BigInteger nonce, long quota,
+            String contractAddress, String abi, String nonce, long quota,
             int version, int chainId, String value) throws Exception {
         String data = hex_remove_0x(contractAddress) + hex_remove_0x(bytesToHexStr(abi.getBytes()));
         return this.transactionManager.sendTransaction(
@@ -187,7 +186,7 @@ public class Account {
         }
 
         AppFilter filter = new AppFilter(start, end, contractAddress);
-        /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after nervosj fixed
+        /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after appChainj fixed
         filter.addSingleTopic(EventEncoder.encode(event));
         return this.service.appLogObservable(filter).map(log -> {
             EventValues eventValues = staticExtractEventParameters(event, log);

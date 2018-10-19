@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Properties;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +15,7 @@ import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Uint;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
@@ -33,35 +32,27 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 import org.nervos.appchain.protocol.core.methods.response.NetPeerCount;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 
 public class InterfaceTest {
 
-    private static String testNetAddr;
     private static int version;
     private static int chainId;
-    private static Nervosj service;
+    private static AppChainj service;
     private static String value;
     private static String privateKey;
-    private static Properties props;
-    private static long quota;
-    private static final String configPath = "tests/src/main/resources/config.properties";
+    private static long quotaToDeploy;
     private static String validTransactionHash;
 
+    private static Config conf;
+
     static {
-        try {
-            props = Config.load(configPath);
-        } catch (Exception e) {
-            System.out.println("Failed to get props from config file");
-            System.exit(1);
-        }
-        testNetAddr = props.getProperty(Config.TEST_NET_ADDR);
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetAddr));
-        privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
+        conf = new Config();
+        conf.buildService(false);
+        service = conf.service;
+        privateKey = conf.primaryPrivKey;
+        quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
+        version = Integer.parseInt(conf.version);
+        chainId = Integer.parseInt(conf.chainId);
         value = "0";
     }
 
@@ -91,12 +82,19 @@ public class InterfaceTest {
         System.out.println("======================================");
         System.out.println("***  4.  getBlockByNumber     ***");
         boolean returnFullTransactions = true;
-        String validBlockHash = testAppGetBlockByNumber(
-                validBlockNumber, returnFullTransactions).get();
+        Optional<String> blockByNumberOptionalHash = testAppGetBlockByNumber(
+                validBlockNumber, returnFullTransactions);
+        String blockHash = "";
+        if (blockByNumberOptionalHash.isPresent()) {
+            blockHash = blockByNumberOptionalHash.get();
+        } else {
+            System.out.println("Failed to get block by number: " + validBlockNumber);
+            System.exit(1);
+        }
 
         System.out.println("======================================");
         System.out.println("***  5.  getBlockByHash       ***");
-        testAppGetBlockByHash(validBlockHash, returnFullTransactions);
+        testAppGetBlockByHash(blockHash, returnFullTransactions);
 
         //because unsigned transaction is not supported in cita, there is no method sendTransaction.
         System.out.println("======================================");
@@ -123,15 +121,23 @@ public class InterfaceTest {
                 + "15050565b600160a060020a03166000908152602081905260"
                 + "40902054905600a165627a7a72305820f59b7130870eee8f0"
                 + "44b129f4a20345ffaff662707fc0758133cd16684bc3b160029";
-        BigInteger nonce = TestUtil.getNonce();
+
+        String nonce = TestUtil.getNonce();
         BigInteger validUtil = TestUtil.getValidUtilBlock(service);
 
         Transaction rtx = Transaction.createContractTransaction(
-                nonce, quota, validUtil.longValue(),
+                nonce, quotaToDeploy, validUtil.longValue(),
                 version, chainId, value, code);
         String signedTx = rtx.sign(privateKey, false, false);
+        Optional<String> optionTxHash = testAppSendRawTransaction(signedTx);
 
-        validTransactionHash = testAppSendRawTransaction(signedTx).get();
+        if (optionTxHash.isPresent()) {
+            validTransactionHash = optionTxHash.get();
+        } else {
+            System.out.println("Failed to get deployment tx hash, maybe it failed to be validated");
+            System.exit(1);
+        }
+
         System.out.println("waiting for tx into chain ...");
         Thread.sleep(8000);
 
@@ -148,7 +154,14 @@ public class InterfaceTest {
 
         System.out.println("======================================");
         System.out.println("***  9.  getTransactionReceipt ***");
-        String validContractAddress = testAppGetTransactionReceipt(validTransactionHash).get();
+        String validContractAddress = "";
+        Optional<String> contractAddrOptional = testAppGetTransactionReceipt(validTransactionHash);
+        if (contractAddrOptional.isPresent()) {
+            validContractAddress = contractAddrOptional.get();
+        } else {
+            System.out.println("Failed to get address from tx receipt");
+            System.exit(1);
+        }
 
         System.out.println("======================================");
         System.out.println("***  10.  getCode               ***");
@@ -171,7 +184,7 @@ public class InterfaceTest {
 
 
     //0.  getBalance
-    static void testGetBalance() throws Exception {
+    private static void testGetBalance() throws Exception {
         Credentials c = Credentials.create(privateKey);
         String addr = c.getAddress();
         AppGetBalance appGetbalance = service.appGetBalance(
@@ -185,7 +198,7 @@ public class InterfaceTest {
     }
 
     //1.  getMetaData
-    static void testMetaData() throws Exception {
+    private static void testMetaData() throws Exception {
         AppMetaData appMetaData = service.appMetaData(DefaultBlockParameterName.LATEST).send();
         if (appMetaData == null) {
             System.out.println("the result is null");
@@ -210,19 +223,22 @@ public class InterfaceTest {
                     + appMetaData.getAppMetaDataResult().chainId);
             System.out.println("Validators: ");
             Arrays.asList(appMetaData.getAppMetaDataResult().validators)
-                    .stream()
                     .forEach(x -> System.out.println("Address: " + x.toString()));
+            System.out.println("Version: "
+                    + appMetaData.getAppMetaDataResult().version);
+            System.out.println("Economical Model: "
+                    + appMetaData.getAppMetaDataResult().economicalModel);
         }
     }
 
     //1.  net_peerCount
-    static void testNetPeerCount() throws Exception {
+    private static void testNetPeerCount() throws Exception {
         NetPeerCount netPeerCount = service.netPeerCount().send();
         System.out.println("net_peerCount:" + netPeerCount.getQuantity());
     }
 
     //2.  blockNumber
-    static BigInteger testBlockNumber() throws Exception {
+    private static BigInteger testBlockNumber() throws Exception {
 
         AppBlockNumber appBlockNumber = service.appBlockNumber().send();
 
@@ -238,7 +254,7 @@ public class InterfaceTest {
     }
 
     //3.  getBlockByNumber
-    public static Optional<String> testAppGetBlockByNumber(
+    private static Optional<String> testAppGetBlockByNumber(
             BigInteger validBlockNumber, boolean isfullTranobj)
             throws Exception {
         AppBlock appBlock = service.appGetBlockByNumber(
@@ -255,7 +271,7 @@ public class InterfaceTest {
     }
 
     //4.  cita_getBlockByHash
-    public static Optional<String> testAppGetBlockByHash(
+    private static void testAppGetBlockByHash(
             String validBlockHash, boolean isfullTran)
             throws Exception {
         AppBlock appBlock = service
@@ -263,17 +279,15 @@ public class InterfaceTest {
 
         if (appBlock.isEmpty()) {
             System.out.println("the result is null");
-            return Optional.empty();
         } else {
             AppBlock.Block block = appBlock.getBlock();
             printBlock(block);
-            return Optional.of(block.getHash());
         }
     }
 
 
     //5.  sendRawTransaction
-    public static Optional<String> testAppSendRawTransaction(
+    private static Optional<String> testAppSendRawTransaction(
             String rawData) throws Exception {
         AppSendTransaction appSendTx = service
                 .appSendRawTransaction(rawData).send();
@@ -292,7 +306,7 @@ public class InterfaceTest {
 
 
     //6.  getTransactionByHash
-    public static void testAppGetTransactionByHash(
+    private static void testAppGetTransactionByHash(
             String validTransactionHash) throws Exception {
         AppTransaction appTransaction = service.appGetTransactionByHash(
                 validTransactionHash).send();
@@ -312,7 +326,7 @@ public class InterfaceTest {
 
 
     //7.  getTransactionCount
-    public static void testAppGetTransactionCount(
+    private static void testAppGetTransactionCount(
             String validAccount, DefaultBlockParameter param) throws Exception {
         AppGetTransactionCount appGetTransactionCount = service.appGetTransactionCount(
                 validAccount, param).send();
@@ -326,7 +340,7 @@ public class InterfaceTest {
     }
 
     //8.  getTransactionReceipt
-    public static Optional<String> testAppGetTransactionReceipt(
+    private static Optional<String> testAppGetTransactionReceipt(
             String validTransactionHash) throws Exception {
         AppGetTransactionReceipt appGetTransactionReceipt = service.appGetTransactionReceipt(
                 validTransactionHash).send();
@@ -339,12 +353,17 @@ public class InterfaceTest {
             TransactionReceipt transactionReceipt =
                     appGetTransactionReceipt.getTransactionReceipt().get();
             printTransactionReceiptInfo(transactionReceipt);
+            if (transactionReceipt.getErrorMessage() != null) {
+                System.out.println("Transaction failed.");
+                System.out.println("Error Message: " + transactionReceipt.getErrorMessage());
+                System.exit(1);
+            }
             return Optional.of(transactionReceipt.getContractAddress());
         }
 
     }
 
-    public static void printTransactionReceiptInfo(
+    private static void printTransactionReceiptInfo(
             TransactionReceipt transactionReceipt) {
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -358,7 +377,7 @@ public class InterfaceTest {
     }
 
     //9.  eth_getCode
-    public static void testAppGetCode(
+    private static void testAppGetCode(
             String validContractAddress, DefaultBlockParameter param)
             throws Exception {
         AppGetCode appGetCode = service
@@ -381,7 +400,7 @@ public class InterfaceTest {
     }
 
     //10.  call
-    public static void testAppCall(
+    private static void testAppCall(
             String fromaddress, String contractAddress, String encodedFunction,
             DefaultBlockParameter param) throws Exception {
         AppCall appCall = service.appCall(

@@ -3,27 +3,21 @@ package org.nervos.appchain.tests;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.response.AppBlock;
 import org.nervos.appchain.protocol.core.methods.response.AppFilter;
 import org.nervos.appchain.protocol.core.methods.response.AppLog;
-import org.nervos.appchain.protocol.http.HttpService;
 
 public class BlockFilterTransactionExample {
-    private static Properties props;
-    private static String testNetIpAddr;
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
-        props = Config.load();
-        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
-
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
+        Config conf = new Config();
+        conf.buildService(false);
+        service = conf.service;
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

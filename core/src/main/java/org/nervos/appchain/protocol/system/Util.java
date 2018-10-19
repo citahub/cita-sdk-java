@@ -1,11 +1,17 @@
-package org.nervos.appchain.tests;
+package org.nervos.appchain.protocol.system;
 
 import java.math.BigInteger;
 import java.util.Random;
 
 import org.nervos.appchain.protocol.AppChainj;
+import org.nervos.appchain.utils.Numeric;
 
-public class TestUtil {
+/**
+ * remove this class later.
+ * **/
+
+public class Util {
+
     static String getNonce() {
         Random random = new Random(System.currentTimeMillis());
         return String.valueOf(Math.abs(random.nextLong()));
@@ -47,5 +53,14 @@ public class TestUtil {
 
     static BigInteger getValidUtilBlock(AppChainj service) {
         return getCurrentHeight(service).add(BigInteger.valueOf(88));
+    }
+
+    static String addUpTo64Hex(String hexStr) {
+        String result = Numeric.cleanHexPrefix(hexStr);
+        int len = 64 - result.length();
+        for (int i = 0; i < len; i++) {
+            result = "0" + result;
+        }
+        return Numeric.prependHexPrefix(result);
     }
 }

@@ -18,11 +18,11 @@ for target in ${targets}; do
     solc --bin --abi --optimize --overwrite ${fileName}.sol -o build/
     echo "Complete"
 
-    echo "Generating nervosj bindings"
-    nervosj solidity generate \
+    echo "Generating appChainj bindings"
+    appChainj solidity generate \
         build/${fileName}.bin \
         build/${fileName}.abi \
-        -p org.nervosj.generated \
+        -p org.appChainj.generated \
         -o ../../../../../../integration-tests/src/test/java/ > /dev/null
     echo "Complete"
 

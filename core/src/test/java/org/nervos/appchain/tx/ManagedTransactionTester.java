@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.Before;
 
 import org.nervos.appchain.crypto.SampleKeys;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionCount;
@@ -22,11 +22,11 @@ public abstract class ManagedTransactionTester {
 
     static final String ADDRESS = "0x3d6cb163f7c72d20b0fcd6baae5889329d138a4a";
     static final String TRANSACTION_HASH = "0xHASH";
-    protected Nervosj nervosj;
+    protected AppChainj appChainj;
 
     @Before
     public void setUp() throws Exception {
-        nervosj = mock(Nervosj.class);
+        appChainj = mock(AppChainj.class);
     }
 
     void prepareTransaction(TransactionReceipt transactionReceipt) throws IOException {
@@ -43,7 +43,8 @@ public abstract class ManagedTransactionTester {
         Request<?, AppGetTransactionCount> transactionCountRequest = mock(Request.class);
         when(transactionCountRequest.send())
                 .thenReturn(ethGetTransactionCount);
-        when(nervosj.appGetTransactionCount(SampleKeys.ADDRESS, DefaultBlockParameterName.PENDING))
+        when(appChainj.appGetTransactionCount(
+                SampleKeys.ADDRESS, DefaultBlockParameterName.PENDING))
                 .thenReturn((Request) transactionCountRequest);
     }
 
@@ -57,7 +58,7 @@ public abstract class ManagedTransactionTester {
 
         Request<?, AppSendTransaction> rawTransactionRequest = mock(Request.class);
         when(rawTransactionRequest.send()).thenReturn(ethSendTransaction);
-        when(nervosj.appSendRawTransaction(any(String.class)))
+        when(appChainj.appSendRawTransaction(any(String.class)))
                 .thenReturn((Request) rawTransactionRequest);
     }
 
@@ -69,7 +70,7 @@ public abstract class ManagedTransactionTester {
         Request<?, AppGetTransactionReceipt> getTransactionReceiptRequest = mock(Request.class);
         when(getTransactionReceiptRequest.send())
                 .thenReturn(ethGetTransactionReceipt);
-        when(nervosj.appGetTransactionReceipt(TRANSACTION_HASH))
+        when(appChainj.appGetTransactionReceipt(TRANSACTION_HASH))
                 .thenReturn((Request) getTransactionReceiptRequest);
     }
 }

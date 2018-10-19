@@ -2,22 +2,16 @@ package org.nervos.appchain.tests;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.util.Properties;
-import java.util.Random;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.account.Account;
 import org.nervos.appchain.protocol.account.CompiledContract;
 import org.nervos.appchain.protocol.core.methods.response.AbiDefinition;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
-
 
 public class TokenAccountExample {
 
-    private static Properties props;
-    private static String testNetIpAddr;
     private static int chainId;
     private static int version;
     private static String privateKey;
@@ -25,42 +19,27 @@ public class TokenAccountExample {
     private static String toAddress;
     private static String solPath;
 
-    private static final String configPath = "tests/src/main/resources/config.properties";
-
-    private static Random random;
     private static long quota;
     private static String value;
-    private static Nervosj service;
+    private static AppChainj service;
 
     private Account account;
     private CompiledContract tokenContract;
     private String contractAddress;
 
     static {
-        try {
-            props = Config.load(configPath);
-        } catch (Exception e) {
-            System.out.println("Failed to read properties from config file");
-            e.printStackTrace();
-        }
+        Config conf = new Config();
+        conf.buildService(false);
 
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
-        privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        fromAddress = props.getProperty(Config.SENDER_ADDR);
-        toAddress = props.getProperty(Config.TEST_ADDR_1);
-        solPath = props.getProperty(Config.TOKEN_SOLIDITY);
-
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
-        random = new Random(System.currentTimeMillis());
-        quota = 1000000L;
+        chainId = Integer.parseInt(conf.chainId);
+        version = Integer.parseInt(conf.version);
+        privateKey = conf.primaryPrivKey;
+        fromAddress = conf.primaryAddr;
+        toAddress = conf.auxAddr1;
+        solPath = conf.tokenSolidity;
+        service = conf.service;
+        quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
-    }
-
-    private static BigInteger randomNonce() {
-        return BigInteger.valueOf(Math.abs(random.nextLong()));
     }
 
     private static TransactionReceipt waitToGetReceipt(
@@ -78,7 +57,7 @@ public class TokenAccountExample {
 
     public String deployContract(String path) throws Exception {
         AppSendTransaction ethSendTransaction = account.deploy(
-                new File(path), randomNonce(), quota, version, chainId, value);
+                new File(path), TestUtil.getNonce(), quota, version, chainId, value);
         TransactionReceipt receipt = waitToGetReceipt(
                 ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {
@@ -97,7 +76,7 @@ public class TokenAccountExample {
         AbiDefinition transfer = tokenContract.getFunctionAbi("transfer", 2);
         AppSendTransaction ethSendTransaction = (AppSendTransaction)
                 account.callContract(
-                        contractAddress, transfer, randomNonce(),
+                        contractAddress, transfer, TestUtil.getNonce(),
                         quota, version, chainId, value, toAddress, amount);
         TransactionReceipt receipt = waitToGetReceipt(
                 ethSendTransaction.getSendTransactionResult().getHash());
@@ -113,7 +92,7 @@ public class TokenAccountExample {
     public void getBalance(String address) throws Exception {
         AbiDefinition getBalance = tokenContract.getFunctionAbi("getBalance", 1);
         Object object = account.callContract(
-                contractAddress, getBalance, randomNonce(),
+                contractAddress, getBalance, TestUtil.getNonce(),
                 quota, version, chainId, value, address);
         System.out.println(address + " has "
                 + object.toString() + " tokens");
@@ -121,7 +100,7 @@ public class TokenAccountExample {
 
     public void transferRemote(String toAddress, BigInteger amount) throws Exception {
         AppSendTransaction ethSendTransaction = (AppSendTransaction) account.callContract(
-                contractAddress, "transfer", randomNonce(),
+                contractAddress, "transfer", TestUtil.getNonce(),
                 quota, version, chainId, value, toAddress, amount);
         TransactionReceipt receipt = waitToGetReceipt(
                 ethSendTransaction.getSendTransactionResult().getHash());
@@ -136,7 +115,7 @@ public class TokenAccountExample {
 
     public void getBalanceRemote(String address) throws Exception {
         Object object = account.callContract(
-                contractAddress, "getBalance", randomNonce(),
+                contractAddress, "getBalance", TestUtil.getNonce(),
                 quota, version, chainId, value, address);
         System.out.println(address + " has " + object.toString() + " tokens");
     }
@@ -145,7 +124,7 @@ public class TokenAccountExample {
         AppSendTransaction ethSendTransaction =
                 (AppSendTransaction) account.uploadAbi(
                         contractAddress, tokenContract.getAbi(),
-                        randomNonce(), quota, version, chainId, value);
+                        TestUtil.getNonce(), quota, version, chainId, value);
         TransactionReceipt receipt = waitToGetReceipt(
                 ethSendTransaction.getSendTransactionResult().getHash());
         if (receipt.getErrorMessage() != null) {

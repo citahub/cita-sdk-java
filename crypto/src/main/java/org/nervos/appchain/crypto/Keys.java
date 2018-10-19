@@ -31,6 +31,9 @@ public class Keys {
     static final int PUBLIC_KEY_LENGTH_IN_HEX = PUBLIC_KEY_SIZE << 1;
     public static final int PRIVATE_KEY_LENGTH_IN_HEX = PRIVATE_KEY_SIZE << 1;
 
+    static final String ADDR_REGEX = "^(0x|0X)?[a-fA-F0-9]{40}$";
+    static final String PRIVATE_KEY_REGEX = "^(0x|0X)?[a-fA-F0-9]{64}$";
+
     static {
         Security.addProvider(new BouncyCastleProvider());
     }
@@ -103,5 +106,13 @@ public class Keys {
         BigInteger publicKey = Numeric.toBigInt(input, PRIVATE_KEY_SIZE, PUBLIC_KEY_SIZE);
 
         return new ECKeyPair(privateKey, publicKey);
+    }
+
+    public static boolean verifyAddress(String address) {
+        return address.matches(ADDR_REGEX);
+    }
+
+    public static boolean verifyPrivateKey(String privateKey) {
+        return privateKey.matches(PRIVATE_KEY_REGEX);
     }
 }

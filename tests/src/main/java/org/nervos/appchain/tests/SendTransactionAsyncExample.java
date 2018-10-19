@@ -1,48 +1,41 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.RemoteCall;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetBalance;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 import org.nervos.appchain.tx.response.PollingTransactionReceiptProcessor;
 import org.nervos.appchain.utils.Convert;
 
 public class SendTransactionAsyncExample {
-    static String testNetAddr;
-    static String payerKey;
-    static String payeeKey;
-    static String payeeAddr;
-    static int chainId;
-    static int version;
-    static Properties props;
-    static long quota;
+    private static String payerKey;
+    private static String payeeAddr;
+    private static int chainId;
+    private static int version;
+    private static long quotaToTransfer;
 
-    static Nervosj service;
+    static AppChainj service;
 
     static {
-        props = Config.load();
-        testNetAddr = props.getProperty(Config.TEST_NET_ADDR);
-        payerKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        payeeKey = props.getProperty(Config.TEST_PRIVATE_KEY_1);
-        payeeAddr = props.getProperty(Config.TEST_ADDR_1);
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        quota = Long.parseLong(props.getProperty(Config.DEFAULT_QUOTA));
+        Config conf = new Config();
+        conf.buildService(false);
+        payerKey = conf.primaryPrivKey;
+        payeeAddr = conf.auxAddr1;
+        chainId = Integer.parseInt(conf.chainId);
+        version = Integer.parseInt(conf.version);
+        quotaToTransfer = Long.parseLong(conf.defaultQuotaTransfer);
 
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetAddr));
+        service = conf.service;
     }
 
-    static BigInteger getBalance(String address) {
+    private static BigInteger getBalance(String address) {
         BigInteger balance = null;
         try {
             AppGetBalance response = service.appGetBalance(
@@ -55,7 +48,7 @@ public class SendTransactionAsyncExample {
         return balance;
     }
 
-    static TransactionReceipt transferSync(
+    private static TransactionReceipt transferSync(
             String payerKey, String payeeAddr, String value)
             throws Exception {
         PollingTransactionReceiptProcessor txProcessor =
@@ -66,7 +59,7 @@ public class SendTransactionAsyncExample {
 
         Transaction tx = new Transaction(payeeAddr,
                 TestUtil.getNonce(),
-                quota,
+                quotaToTransfer,
                 TestUtil.getValidUtilBlock(service).longValue(),
                 version, chainId,
                 value,
@@ -83,7 +76,7 @@ public class SendTransactionAsyncExample {
         return txReceipt;
     }
 
-    static CompletableFuture<TransactionReceipt> transferAsync(
+    private static CompletableFuture<TransactionReceipt> transferAsync(
             String payerKey, String payeeAddr, String value) {
         return new RemoteCall<>(
                 () -> transferSync(payerKey, payeeAddr, value)).sendAsync();

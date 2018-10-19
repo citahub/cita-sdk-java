@@ -138,7 +138,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.lang.Long quota, java.math.BigInteger nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.lang.Integer chainId, java.lang.String value) {\n"
+                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.lang.Long quota, java.lang.String nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.lang.Integer chainId, java.lang.String value) {\n"
                         + "  org.nervos.appchain.abi.datatypes.Function function = new org.nervos.appchain.abi.datatypes.Function(\n"
                         + "      \"functionName\", \n"
                         + "      java.util.Arrays.<org.nervos.appchain.abi.datatypes.Type>asList(new org.nervos.appchain.abi.datatypes.generated.Uint8(param)), \n"
@@ -165,7 +165,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.lang.Long quota, java.math.BigInteger nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.lang.Integer chainId, java.lang.String value) {\n"
+                "public org.nervos.appchain.protocol.core.RemoteCall<org.nervos.appchain.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.lang.Long quota, java.lang.String nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.lang.Integer chainId, java.lang.String value) {\n"
                         + "  org.nervos.appchain.abi.datatypes.Function function = new org.nervos.appchain.abi.datatypes.Function(\n"
                         + "      \"functionName\", \n"
                         + "      java.util.Arrays.<org.nervos.appchain.abi.datatypes.Type>asList(new org.nervos.appchain.abi.datatypes.generated.Uint8(param)), \n"
@@ -306,7 +306,7 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                 + "        java.util.Arrays.<org.nervos.appchain.abi.TypeReference<?>>asList(new org.nervos.appchain.abi.TypeReference<org.nervos.appchain.abi.datatypes.generated.Uint256>() {}, new org.nervos.appchain.abi.TypeReference<org.nervos.appchain.abi.datatypes.Utf8String>() {}));\n"
                 + "    org.nervos.appchain.protocol.core.methods.request.AppFilter filter = new org.nervos.appchain.protocol.core.methods.request.AppFilter(startBlock, endBlock, getContractAddress());\n"
                 + "    filter.addSingleTopic(org.nervos.appchain.abi.EventEncoder.encode(event));\n"
-                + "    return nervosj.appLogObservable(filter).map(new rx.functions.Func1<org.nervos.appchain.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
+                + "    return appChainj.appLogObservable(filter).map(new rx.functions.Func1<org.nervos.appchain.protocol.core.methods.response.Log, TransferEventResponse>() {\n"
                 + "      @java.lang.Override\n"
                 + "      public TransferEventResponse call(org.nervos.appchain.protocol.core.methods.response.Log log) {\n"
                 + "        org.nervos.appchain.abi.EventValues eventValues = extractEventParameters(event, log);\n"

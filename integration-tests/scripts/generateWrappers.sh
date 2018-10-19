@@ -11,10 +11,10 @@ simplestorage/build/SimpleStorage
 
 for target in ${targets}; do
 
-    nervosj solidity generate \
+    appChainj solidity generate \
         ../../codegen/src/test/resources/solidity/${target}.bin \
         ../../codegen/src/test/resources/solidity/${target}.abi \
-        -o /Users/Conor/code/java/nervosj/integration-tests/src/test/java \
-        -p org.nervosj.generated
+        -o /Users/Conor/code/java/appChainj/integration-tests/src/test/java \
+        -p org.appChainj.generated
 
 done

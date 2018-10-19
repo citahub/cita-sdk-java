@@ -12,7 +12,7 @@ import static org.nervos.appchain.utils.Collection.tail;
  */
 public class Runner {
 
-    private static String USAGE = "Usage: nervosj version|wallet|solidity ...";
+    private static String USAGE = "Usage: appChainj version|wallet|solidity ...";
 
     private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
             + "                                       _\n"

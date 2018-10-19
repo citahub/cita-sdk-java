@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +18,7 @@ import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.abi.datatypes.Event;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
@@ -29,45 +28,42 @@ import org.nervos.appchain.protocol.core.methods.response.AppLog;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.protocol.http.HttpService;
 
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
 public class TokenFilterTransactionExample {
-    private static Properties props;
-    private static String testNetIpAddr;
     private static int chainId;
     private static int version;
     private static String privateKey;
     private static String toAddress;
     private static Random random;
-    private static BigInteger quota;
+    private static Long quota;
     private static String value;
-    private static Nervosj service;
+    private static AppChainj service;
 
     static {
-        props = Config.load();
-        chainId = Integer.parseInt(props.getProperty(Config.CHAIN_ID));
-        version = Integer.parseInt(props.getProperty(Config.VERSION));
-        testNetIpAddr = props.getProperty(Config.TEST_NET_ADDR);
-        privateKey = props.getProperty(Config.SENDER_PRIVATE_KEY);
-        toAddress = props.getProperty(Config.TEST_ADDR_1);
+        Config config = new Config();
+        config.buildService(true);
 
-        HttpService.setDebug(false);
-        service = Nervosj.build(new HttpService(testNetIpAddr));
+        chainId = Integer.parseInt(config.chainId);
+        version = Integer.parseInt(config.version);
+        privateKey = config.primaryPrivKey;
+        toAddress = config.auxAddr1;
+
+        service = config.service;
         random = new Random(System.currentTimeMillis());
-        quota = BigInteger.valueOf(1000000);
+        quota = Long.parseLong(config.defaultQuotaDeployment);
         value = "0";
     }
 
 
-    public static String deployContract(String contractCode) throws IOException {
+    private static String deployContract(String contractCode) throws IOException {
         String txHash = "";
         long validUntilBlock = TestUtil.getValidUtilBlock(service).longValue();
-        BigInteger nonce = TestUtil.getNonce();
+        String nonce = TestUtil.getNonce();
         Transaction txToDeployContract = Transaction
                 .createContractTransaction(
-                        nonce, quota.longValue(), validUntilBlock,
+                        nonce, quota, validUntilBlock,
                         version, chainId, value, contractCode);
         String signedTx = txToDeployContract.sign(privateKey);
         AppSendTransaction appSendTransaction = service.appSendRawTransaction(signedTx).send();
@@ -80,7 +76,7 @@ public class TokenFilterTransactionExample {
         return txHash;
     }
 
-    public static String getContractAddr(String txHash) throws IOException {
+    private static String getContractAddr(String txHash) throws IOException {
         AppGetTransactionReceipt transactionReceipt
                 = service.appGetTransactionReceipt(txHash).send();
         Optional<TransactionReceipt> receipt = transactionReceipt.getTransactionReceipt();
@@ -91,29 +87,34 @@ public class TokenFilterTransactionExample {
         return receipt.get().getContractAddress();
     }
 
-    public static Event createEvent() {
+    private static Event createEvent() {
         return new Event("Transfer",
                 Arrays.asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
                 Arrays.asList(new TypeReference<Uint256>() {}));
     }
 
     //create a Request.AppFilter to be sent with service.
-    public static AppFilter createNewFilter(Event event, String contractAddr) throws IOException {
+    private static AppFilter createNewFilter(Event event, String contractAddr) throws IOException {
         AppFilter filter = new AppFilter(DefaultBlockParameterName.EARLIEST,
                 DefaultBlockParameterName.LATEST, contractAddr);
+        // 1. Only indexed parameter can be added into topic.
+        // 2. Data in topic must be 256-bit long.
+        // 3. Parameters are in order.
         filter.addSingleTopic(EventEncoder.encode(event));
+        filter.addNullTopic();
+        filter.addSingleTopic("0x000000000000000000000000bac68e5cb986ead0253e0632da1131a0a96efa18");
         return filter;
     }
 
     //this will call JSON RPC "newFilter" and get the filterId.
-    public static String newFilter(AppFilter appFilter) throws IOException {
+    private static String newFilter(AppFilter appFilter) throws IOException {
         org.nervos.appchain.protocol.core.methods.response.AppFilter responseFilter
                 = service.appNewFilter(appFilter).send();
         return responseFilter.getFilterId().toString();
     }
 
     //this will call JSON RPC "getFilterChanges"
-    public static List<TransferEventResponse>
+    private static List<TransferEventResponse>
             getFilterChanges(Event event, String filterId) throws IOException {
         List<TransferEventResponse> responseList = new ArrayList<>();
         Request<?, AppLog> req = service
@@ -137,7 +138,7 @@ public class TokenFilterTransactionExample {
     }
 
     //this will call JSON RPC "getFilterLogs" to get logs
-    public static List<TransferEventResponse>
+    private static List<TransferEventResponse>
             getFilterLogs(Event event, AppFilter appFilter) throws IOException {
         List<TransferEventResponse> responseList = new ArrayList<>();
         AppLog responseAppLog = service.appGetLogs(appFilter).send();
@@ -158,7 +159,7 @@ public class TokenFilterTransactionExample {
         return responseList;
     }
 
-    static String transfer(
+    private static void transfer(
             String contractAddr, String toAddr, BigInteger value) throws Exception {
         Function transferFunc = new Function(
                 "transfer",
@@ -166,15 +167,15 @@ public class TokenFilterTransactionExample {
                 Collections.emptyList()
         );
         String funcCallData = FunctionEncoder.encode(transferFunc);
-        return contractFunctionCall(contractAddr, funcCallData);
+        contractFunctionCall(contractAddr, funcCallData);
     }
 
-    static String contractFunctionCall(
+    private static void contractFunctionCall(
             String contractAddress, String funcCallData) throws Exception {
         long currentHeight = service.appBlockNumber()
                 .send().getBlockNumber().longValue();
         long validUntilBlock = currentHeight + 80;
-        BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
+        String nonce = String.valueOf(Math.abs(random.nextLong()));
         long quota = 1000000;
 
         Transaction tx = Transaction.createFunctionCallTransaction(
@@ -182,8 +183,7 @@ public class TokenFilterTransactionExample {
                 version, chainId, value, funcCallData);
         String rawTx = tx.sign(privateKey, false, false);
 
-        return service.appSendRawTransaction(rawTx)
-                .send().getSendTransactionResult().getHash();
+        service.appSendRawTransaction(rawTx).send();
     }
 
     public static void main(String[] args) {
@@ -251,7 +251,7 @@ public class TokenFilterTransactionExample {
                         + " to: " + response.to
                         + " value: " + response.value);
             }
-            System.out.println("Filter Id" + filterId);
+            System.out.println("Filter Id " + filterId);
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("IO Exception: maybe tx is not deployed successfully");

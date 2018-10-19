@@ -10,7 +10,7 @@ import rx.Observable;
 /**
  * The Observables JSON-RPC client event API.
  */
-public interface NervosjRx {
+public interface AppChainjRx {
 
     /**
      * Create an observable to filter for specific log events on the blockchain.

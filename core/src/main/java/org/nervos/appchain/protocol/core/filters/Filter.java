@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.Response;
 import org.nervos.appchain.protocol.core.methods.response.AppFilter;
@@ -26,15 +26,15 @@ public abstract class Filter<T> {
 
     private static final Logger log = LoggerFactory.getLogger(Filter.class);
 
-    final Nervosj nervosj;
+    final AppChainj appChainj;
     final Callback<T> callback;
 
     private volatile BigInteger filterId;
 
     private ScheduledFuture<?> schedule;
 
-    public Filter(Nervosj nervosj, Callback<T> callback) {
-        this.nervosj = nervosj;
+    public Filter(AppChainj appChainj, Callback<T> callback) {
+        this.appChainj = appChainj;
         this.callback = callback;
     }
 
@@ -103,7 +103,7 @@ public abstract class Filter<T> {
     private void pollFilter(AppFilter appFilter) {
         AppLog appLog = null;
         try {
-            appLog = nervosj.appGetFilterChanges(filterId).send();
+            appLog = appChainj.appGetFilterChanges(filterId).send();
         } catch (IOException e) {
             throwException(e);
         }
@@ -123,7 +123,7 @@ public abstract class Filter<T> {
 
         AppUninstallFilter appUninstallFilter = null;
         try {
-            appUninstallFilter = nervosj.appUninstallFilter(filterId).send();
+            appUninstallFilter = appChainj.appUninstallFilter(filterId).send();
         } catch (IOException e) {
             throwException(e);
         }

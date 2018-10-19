@@ -6,11 +6,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.nervos.appchain.protocol.NervosjService;
+import org.nervos.appchain.protocol.AppChainjService;
 import org.nervos.appchain.protocol.admin.methods.response.NewAccountIdentifier;
 import org.nervos.appchain.protocol.admin.methods.response.PersonalListAccounts;
 import org.nervos.appchain.protocol.admin.methods.response.PersonalUnlockAccount;
-import org.nervos.appchain.protocol.core.JsonRpc2_0Nervosj;
+import org.nervos.appchain.protocol.core.JsonRpc2_0AppChainj;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
@@ -18,10 +18,10 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 /**
  * JSON-RPC 2.0 factory implementation for common Parity and Geth.
  */
-public class JsonRpc2_0Admin extends JsonRpc2_0Nervosj implements Admin {
+public class JsonRpc2_0Admin extends JsonRpc2_0AppChainj implements Admin {
 
-    public JsonRpc2_0Admin(NervosjService nervosjService) {
-        super(nervosjService);
+    public JsonRpc2_0Admin(AppChainjService appChainjService) {
+        super(appChainjService);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Nervosj implements Admin {
         return new Request<>(
                 "personal_listAccounts",
                 Collections.<String>emptyList(),
-                nervosjService,
+                appChainjService,
                 PersonalListAccounts.class);
     }
 
@@ -38,7 +38,7 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Nervosj implements Admin {
         return new Request<>(
                 "personal_newAccount",
                 Arrays.asList(password),
-                nervosjService,
+                appChainjService,
                 NewAccountIdentifier.class);
     }
 
@@ -62,7 +62,7 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Nervosj implements Admin {
         return new Request<>(
                 "personal_unlockAccount",
                 attributes,
-                nervosjService,
+                appChainjService,
                 PersonalUnlockAccount.class);
     }
 
@@ -79,7 +79,7 @@ public class JsonRpc2_0Admin extends JsonRpc2_0Nervosj implements Admin {
         return new Request<>(
                 "personal_sendTransaction",
                 Arrays.asList(transaction, passphrase),
-                nervosjService,
+                appChainjService,
                 AppSendTransaction.class);
     }
 

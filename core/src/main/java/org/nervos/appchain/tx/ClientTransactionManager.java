@@ -3,7 +3,7 @@ package org.nervos.appchain.tx;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import org.nervos.appchain.protocol.Nervosj;
+import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.tx.response.TransactionReceiptProcessor;
@@ -15,25 +15,25 @@ import org.nervos.appchain.tx.response.TransactionReceiptProcessor;
  */
 public class ClientTransactionManager extends TransactionManager {
 
-    private final Nervosj nervosj;
+    private final AppChainj appChainj;
 
     public ClientTransactionManager(
-            Nervosj nervosj, String fromAddress) {
-        super(nervosj, fromAddress);
-        this.nervosj = nervosj;
+            AppChainj appChainj, String fromAddress) {
+        super(appChainj, fromAddress);
+        this.appChainj = appChainj;
     }
 
     public ClientTransactionManager(
-            Nervosj nervosj, String fromAddress, int attempts, int sleepDuration) {
-        super(nervosj, attempts, sleepDuration, fromAddress);
-        this.nervosj = nervosj;
+            AppChainj appChainj, String fromAddress, int attempts, int sleepDuration) {
+        super(appChainj, attempts, sleepDuration, fromAddress);
+        this.appChainj = appChainj;
     }
 
     public ClientTransactionManager(
-            Nervosj nervosj, String fromAddress,
+            AppChainj appChainj, String fromAddress,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(transactionReceiptProcessor, fromAddress);
-        this.nervosj = nervosj;
+        this.appChainj = appChainj;
     }
 
     @Override
@@ -44,10 +44,10 @@ public class ClientTransactionManager extends TransactionManager {
 
         // Note: useless for use, just for compile
         Transaction transaction = new Transaction(
-                to, BigInteger.valueOf(1), 1000000, 99, 0, 1, "0", data);
+                to, "1", 1000000, 99, 0, 1, "0", data);
 
         //there is no method sendTransaction in cita so remote this
-        return nervosj.appSendRawTransaction("fake data")
+        return appChainj.appSendRawTransaction("fake data")
                 .send();
     }
 }

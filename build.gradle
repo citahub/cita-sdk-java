@@ -44,7 +44,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'org.nervos'
-    version '0.18'
+    version '0.19'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
@@ -139,7 +139,7 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
         publications {
             mavenJava(MavenPublication) {
                 groupId 'org.nervos'
-                version '0.18'
+                version '0.19'
                 from components.java
 
                 artifact sourcesJar {

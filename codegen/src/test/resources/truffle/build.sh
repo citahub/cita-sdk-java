@@ -9,10 +9,10 @@ for target in ${targets}; do
     fileName=$(basename $target)
 
     cd $dirName
-    echo "Generating nervosj bindings"
-    nervosj truffle generate \
+    echo "Generating appChainj bindings"
+    appChainj truffle generate \
         build/contracts/${fileName}.json \
-        -p org.nervosj.generated \
+        -p org.appChainj.generated \
         -o ../../../../../../integration-tests/src/test/java/ > /dev/null
     echo "Complete"
 

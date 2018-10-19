@@ -10,4 +10,6 @@ TestAddress2=0x1c6eebf136ee234caff3a95e0d9d22e40c9ac4ca
 TokenSolidity=tests/src/main/resources/Token.sol
 TokenBin=tests/src/main/resources/Token.bin
 TokenAbi=tests/src/main/resources/Token.abi
-DefaultQuota=999999
+QuotaForTransfer=21000
+QuotaForDeployment=10000000
+AdminPrivateKey=0x5a0257a4778057a8a7d97809bd209055b2fbafa654ce7d31ec7191066b9225e6
