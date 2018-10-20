@@ -1,8 +1,8 @@
 # appchainj
-[![Build Status](https://travis-ci.org/cryptape/nervosj.svg?branch=master)](https://travis-ci.org/cryptape/nervosj)
+[![Build Status](https://travis-ci.org/cryptape/appchainj.svg?branch=master)](https://travis-ci.org/cryptape/appchainj) 
 
-[English](https://github.com/cryptape/nervosj#introduction)  
-[中文](https://github.com/cryptape/nervosj#简介)
+[English](https://github.com/cryptape/appchainj#introduction)  
+[中文](https://github.com/cryptape/appchainj#简介)
 
 ## Introduction
 appchainj, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on Nervos layer2 network.
@@ -24,16 +24,16 @@ maven
 <dependency>
   <groupId>org.nervos</groupId>
   <artifactId>core</artifactId>
-  <version>0.18</version>
+  <version>0.19</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'org.nervos:core:0.18'
+compile 'org.nervos:core:0.19'
 ```
 Scala SBT
 ```
-libraryDependencies += "org.nervos" % "core" % "0.18"
+libraryDependencies += "org.nervos" % "core" % "0.19"
 ```
 Install manually
 If you want to generate the jar and import manually.
@@ -118,7 +118,7 @@ java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/ma
 `Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/nervoj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos AppChain network.
 Please check [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
 
-### Working with smart contract with appChainj Account
+### Working with smart contract with appChainj Account (Test)
 appchainj provides interface [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
 
 Method of smart contract deployment:
@@ -158,16 +158,16 @@ Gradle 4.3
 <dependency>
   <groupId>org.nervos</groupId>
   <artifactId>core</artifactId>
-  <version>0.18</version>
+  <version>0.19</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'org.nervos:core:0.18'
+compile 'org.nervos:core:0.19'
 ```
 Scala SBT
 ```
-libraryDependencies += "org.nervos" % "core" % "0.18"
+libraryDependencies += "org.nervos" % "core" % "0.19"
 ```
 手动安装  
 如果你想使用最新的 AppChain，编译 AppChain 生成 jar 包，并手动引入。
@@ -252,7 +252,7 @@ java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/ma
 `Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 Nervos Appchain 中应该使用 [CitaTransactionManager](https://github.com/cryptape/nervoj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) 而不是 TransactionManager。
 请在 [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
 
-### 通过 AppChainj 中的 Account 与智能合约交互
+### 通过 AppChainj 中的 Account 与智能合约交互（测试阶段）
 appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
 
 合约部署示例代码：
