@@ -176,7 +176,7 @@ public class Sign {
         // The header byte: 0x1B = first key with even y, 0x1C = first key with odd y,
         //                  0x1D = second key with even y, 0x1E = second key with odd y
         //if (header < 27 || header > 34) {
-        if (header < 0 || header > 34) {
+        if (header < 0 || header > 7) {
             throw new SignatureException("Header byte out of range: " + header);
         }
 
