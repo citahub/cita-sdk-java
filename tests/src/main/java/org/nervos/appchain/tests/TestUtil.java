@@ -1,11 +1,44 @@
 package org.nervos.appchain.tests;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Random;
 
+import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.protocol.AppChainj;
+import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
+import org.nervos.appchain.utils.Numeric;
 
 public class TestUtil {
+
+    static byte[] convertHexToBytes(String hex) {
+        String clearedStr = Numeric.cleanHexPrefix(hex);
+        return ConvertStrByte.hexStringToBytes(clearedStr);
+    }
+
+    static int getVersion(AppChainj service) {
+        AppMetaData appMetaData = null;
+        try {
+            appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return appMetaData.getAppMetaDataResult().getVersion();
+    }
+
+    static int getChainId(AppChainj service) {
+        AppMetaData appMetaData = null;
+        try {
+            appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+        return appMetaData.getAppMetaDataResult().getChainId();
+    }
+
     static String getNonce() {
         Random random = new Random(System.currentTimeMillis());
         return String.valueOf(Math.abs(random.nextLong()));

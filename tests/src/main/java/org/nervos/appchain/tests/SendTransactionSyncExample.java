@@ -17,6 +17,7 @@ public class SendTransactionSyncExample {
     static String payerKey;
     static String payeeKey;
     static String payeeAddr;
+    static String payeeAddr_1;
     static int chainId;
     static int version;
     static long quotaToTransfer;
@@ -30,10 +31,11 @@ public class SendTransactionSyncExample {
         payerKey = conf.primaryPrivKey;
         payeeKey = conf.auxPrivKey1;
         payeeAddr = conf.auxAddr1;
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
+        payeeAddr_1 = conf.auxAddr2;
         quotaToTransfer = Long.parseLong(conf.defaultQuotaDeployment);
         service = conf.service;
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
     static BigInteger getBalance(String address) {
@@ -79,8 +81,12 @@ public class SendTransactionSyncExample {
     public static void main(String[] args) throws Exception {
         Credentials payerCredential = Credentials.create(payerKey);
         String payerAddr = payerCredential.getAddress();
-        System.out.println(Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-        System.out.println(Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
+        System.out.println(payerAddr + ": "
+                + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+        System.out.println(payeeAddr + ": "
+                + Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
+        System.out.println(payeeAddr_1 + ": "
+                + Convert.fromWei(getBalance(payeeAddr_1).toString(), Convert.Unit.ETHER));
 
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
@@ -88,10 +94,19 @@ public class SendTransactionSyncExample {
         TransactionReceipt txReceipt = transferSync(payerKey, payeeAddr, valueWei);
 
         if (txReceipt.getErrorMessage() == null) {
-            System.out.println(
-                    Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-            System.out.println(
-                    Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
+            System.out.println(payerAddr + ": "
+                    + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+            System.out.println(payeeAddr + ": "
+                    + Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
+        }
+
+        TransactionReceipt txReceipt1 = transferSync(payerKey, payeeAddr_1, valueWei);
+
+        if (txReceipt1.getErrorMessage() == null) {
+            System.out.println(payerAddr + ": "
+                    + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+            System.out.println(payeeAddr_1 + ": "
+                    + Convert.fromWei(getBalance(payeeAddr_1).toString(), Convert.Unit.ETHER));
         }
     }
 }

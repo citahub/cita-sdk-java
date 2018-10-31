@@ -28,11 +28,10 @@ public class SendTransactionAsyncExample {
         conf.buildService(false);
         payerKey = conf.primaryPrivKey;
         payeeAddr = conf.auxAddr1;
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
         quotaToTransfer = Long.parseLong(conf.defaultQuotaTransfer);
-
         service = conf.service;
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
     private static BigInteger getBalance(String address) {

@@ -26,8 +26,8 @@ public class StoreRecordExample {
         service = conf.service;
 
         payerKey = conf.primaryPrivKey;
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
     public static void main(String[] args)

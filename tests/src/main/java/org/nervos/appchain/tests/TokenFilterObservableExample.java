@@ -41,13 +41,14 @@ public class TokenFilterObservableExample {
         Config conf = new Config();
         conf.buildService(false);
 
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
         privateKey = conf.primaryPrivKey;
         toAddress = conf.auxAddr1;
         service = conf.service;
         quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
+
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
     public static String deployContract(String contractCode) throws IOException {

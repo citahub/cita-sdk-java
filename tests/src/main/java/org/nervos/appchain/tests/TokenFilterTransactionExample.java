@@ -45,15 +45,15 @@ public class TokenFilterTransactionExample {
         Config config = new Config();
         config.buildService(true);
 
-        chainId = Integer.parseInt(config.chainId);
-        version = Integer.parseInt(config.version);
         privateKey = config.primaryPrivKey;
         toAddress = config.auxAddr1;
-
         service = config.service;
         random = new Random(System.currentTimeMillis());
         quota = Long.parseLong(config.defaultQuotaDeployment);
         value = "0";
+
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
 

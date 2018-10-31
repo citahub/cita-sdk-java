@@ -31,13 +31,13 @@ public class TokenAccountExample {
         Config conf = new Config();
         conf.buildService(false);
 
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
         privateKey = conf.primaryPrivKey;
         fromAddress = conf.primaryAddr;
         toAddress = conf.auxAddr1;
         solPath = conf.tokenSolidity;
         service = conf.service;
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
         quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
     }
