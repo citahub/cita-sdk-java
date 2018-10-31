@@ -559,8 +559,10 @@ public class ResponseTest extends ResponseTester {
                         + "        \"transactionIndex\":  \"0x1\",\n"
                         + "        \"blockHash\": \"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b\",\n"
                         + "        \"blockNumber\": \"0xb\",\n"
-                        + "        \"cumulativeGasUsed\": \"0x33bc\",\n"
-                        + "        \"gasUsed\": \"0x4dc\",\n"
+                        + "        \"cumulativeGasUsed\": \"\",\n"
+                        + "        \"cumulativeQuotaUsed\": \"0x33bc\",\n"
+                        + "        \"gasUsed\": \"\",\n"
+                        + "        \"quotaUsed\": \"0x4dc\",\n"
                         + "        \"contractAddress\": \"0xb60e8dd61c5d32be8058bb8eb970870f07233155\",\n"
                         + "        \"root\": \"9307ba10e41ecf3d40507fc908655fe72fc129d46f6d99baf7605d0e29184911\",\n"
                         + "        \"from\":\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\n"
@@ -589,7 +591,9 @@ public class ResponseTest extends ResponseTester {
                         "0x1",
                         "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
                         "0xb",
+                        "",
                         "0x33bc",
+                        "",
                         "0x4dc",
                         "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
                         "9307ba10e41ecf3d40507fc908655fe72fc129d46f6d99baf7605d0e29184911",
@@ -636,8 +640,10 @@ public class ResponseTest extends ResponseTester {
                         + "        \"transactionIndex\":  \"0x1\",\n"
                         + "        \"blockHash\": \"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b\",\n"
                         + "        \"blockNumber\": \"0xb\",\n"
-                        + "        \"cumulativeGasUsed\": \"0x33bc\",\n"
-                        + "        \"gasUsed\": \"0x4dc\",\n"
+                        + "        \"cumulativeGasUsed\": \"\",\n"
+                        + "        \"cumulativeQuotaUsed\": \"0x33bc\",\n"
+                        + "        \"gasUsed\": \"\",\n"
+                        + "        \"quotaUsed\": \"0x4dc\",\n"
                         + "        \"contractAddress\": \"0xb60e8dd61c5d32be8058bb8eb970870f07233155\",\n"
                         + "        \"status\": \"0x1\",\n"
                         + "        \"from\":\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\n"
@@ -666,7 +672,9 @@ public class ResponseTest extends ResponseTester {
                         "0x1",
                         "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
                         "0xb",
+                        "",
                         "0x33bc",
+                        "",
                         "0x4dc",
                         "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
                         null,

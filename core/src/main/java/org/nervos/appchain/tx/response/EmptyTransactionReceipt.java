@@ -73,32 +73,32 @@ public class EmptyTransactionReceipt extends TransactionReceipt {
     }
 
     @Override
-    public BigInteger getCumulativeGasUsed() {
+    public BigInteger getCumulativeQuotaUsed() {
         throw unsupportedOperation();
     }
 
     @Override
-    public String getCumulativeGasUsedRaw() {
+    public String getCumulativeQuotaUsedRaw() {
         throw unsupportedOperation();
     }
 
     @Override
-    public void setCumulativeGasUsed(String cumulativeGasUsed) {
+    public void setCumulativeQuotaUsed(String cumulativeGasUsed) {
         throw unsupportedOperation();
     }
 
     @Override
-    public BigInteger getGasUsed() {
+    public BigInteger getQuotaUsed() {
         throw unsupportedOperation();
     }
 
     @Override
-    public String getGasUsedRaw() {
+    public String getQuotaUsedRaw() {
         throw unsupportedOperation();
     }
 
     @Override
-    public void setGasUsed(String gasUsed) {
+    public void setQuotaUsed(String gasUsed) {
         throw unsupportedOperation();
     }
 

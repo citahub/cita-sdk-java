@@ -13,12 +13,13 @@ public class TransactionReceipt {
     private String transactionIndex;
     private String blockHash;
     private String blockNumber;
+    //gas rather than quota is used as of 0.20
     private String cumulativeGasUsed;
+    private String cumulativeQuotaUsed;
     private String gasUsed;
+    private String quotaUsed;
     private String contractAddress;
     private String root;
-    // status is only present on Byzantium transactions onwards
-    // see EIP 658 https://github.com/ethereum/EIPs/pull/658
     private String status;
     private String from;
     private String to;
@@ -31,15 +32,17 @@ public class TransactionReceipt {
 
     public TransactionReceipt(String transactionHash, String transactionIndex,
                               String blockHash, String blockNumber, String cumulativeGasUsed,
-                              String gasUsed, String contractAddress,
-                              String root, String status, String from, String to,
-                              List<Log> logs, String logsBloom, String errorMessage) {
+                              String cumulativeQuotaUsed, String gasUsed, String quotaUsed,
+                              String contractAddress, String root, String status, String from,
+                              String to, List<Log> logs, String logsBloom, String errorMessage) {
         this.transactionHash = transactionHash;
         this.transactionIndex = transactionIndex;
         this.blockHash = blockHash;
         this.blockNumber = blockNumber;
         this.cumulativeGasUsed = cumulativeGasUsed;
+        this.cumulativeQuotaUsed = cumulativeQuotaUsed;
         this.gasUsed = gasUsed;
+        this.quotaUsed = quotaUsed;
         this.contractAddress = contractAddress;
         this.root = root;
         this.status = status;
@@ -91,7 +94,11 @@ public class TransactionReceipt {
     }
 
     public BigInteger getCumulativeGasUsed() {
-        return Numeric.decodeQuantity(cumulativeGasUsed);
+        if (this.cumulativeGasUsed != null) {
+            return Numeric.decodeQuantity(cumulativeGasUsed);
+        } else {
+            return null;
+        }
     }
 
     public String getCumulativeGasUsedRaw() {
@@ -102,8 +109,28 @@ public class TransactionReceipt {
         this.cumulativeGasUsed = cumulativeGasUsed;
     }
 
+    public BigInteger getCumulativeQuotaUsed() {
+        if (this.cumulativeQuotaUsed != null) {
+            return Numeric.decodeQuantity(cumulativeQuotaUsed);
+        } else {
+            return null;
+        }
+    }
+
+    public String getCumulativeQuotaUsedRaw() {
+        return cumulativeQuotaUsed;
+    }
+
+    public void setCumulativeQuotaUsed(String cumulativeQuotaUsed) {
+        this.cumulativeQuotaUsed = cumulativeQuotaUsed;
+    }
+
     public BigInteger getGasUsed() {
-        return Numeric.decodeQuantity(gasUsed);
+        if (this.gasUsed != null) {
+            return Numeric.decodeQuantity(gasUsed);
+        } else {
+            return null;
+        }
     }
 
     public String getGasUsedRaw() {
@@ -112,6 +139,22 @@ public class TransactionReceipt {
 
     public void setGasUsed(String gasUsed) {
         this.gasUsed = gasUsed;
+    }
+
+    public BigInteger getQuotaUsed() {
+        if (this.quotaUsed != null) {
+            return Numeric.decodeQuantity(quotaUsed);
+        } else {
+            return null;
+        }
+    }
+
+    public String getQuotaUsedRaw() {
+        return quotaUsed;
+    }
+
+    public void setQuotaUsed(String quotaUsed) {
+        this.quotaUsed = quotaUsed;
     }
 
     public String getContractAddress() {
@@ -208,9 +251,17 @@ public class TransactionReceipt {
                 ? !blockNumber.equals(that.blockNumber) : that.blockNumber != null) {
             return false;
         }
+        if (cumulativeQuotaUsed != null
+                ? !cumulativeQuotaUsed.equals(that.cumulativeQuotaUsed)
+                : that.cumulativeQuotaUsed != null) {
+            return false;
+        }
         if (cumulativeGasUsed != null
                 ? !cumulativeGasUsed.equals(that.cumulativeGasUsed)
                 : that.cumulativeGasUsed != null) {
+            return false;
+        }
+        if (quotaUsed != null ? !quotaUsed.equals(that.quotaUsed) : that.quotaUsed != null) {
             return false;
         }
         if (gasUsed != null ? !gasUsed.equals(that.gasUsed) : that.gasUsed != null) {
@@ -252,7 +303,9 @@ public class TransactionReceipt {
         result = 31 * result + (transactionIndex != null ? transactionIndex.hashCode() : 0);
         result = 31 * result + (getBlockHash() != null ? getBlockHash().hashCode() : 0);
         result = 31 * result + (blockNumber != null ? blockNumber.hashCode() : 0);
+        result = 31 * result + (cumulativeQuotaUsed != null ? cumulativeQuotaUsed.hashCode() : 0);
         result = 31 * result + (cumulativeGasUsed != null ? cumulativeGasUsed.hashCode() : 0);
+        result = 31 * result + (quotaUsed != null ? quotaUsed.hashCode() : 0);
         result = 31 * result + (gasUsed != null ? gasUsed.hashCode() : 0);
         result = 31 * result + (getContractAddress() != null ? getContractAddress().hashCode() : 0);
         result = 31 * result + (getRoot() != null ? getRoot().hashCode() : 0);
