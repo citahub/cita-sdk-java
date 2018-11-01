@@ -14,19 +14,26 @@ import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.FunctionReturnDecoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Address;
+import org.nervos.appchain.abi.datatypes.Array;
 import org.nervos.appchain.abi.datatypes.DynamicArray;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.abi.datatypes.Uint;
+import org.nervos.appchain.abi.datatypes.Utf8String;
+import org.nervos.appchain.abi.datatypes.generated.Bytes32;
+import org.nervos.appchain.abi.datatypes.generated.Bytes4;
 import org.nervos.appchain.abi.datatypes.generated.Uint64;
 import org.nervos.appchain.abi.datatypes.generated.Uint8;
+import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
+import org.nervos.appchain.protocol.system.entities.QueryInfoResult;
 import org.nervos.appchain.utils.Convert;
+import org.nervos.appchain.utils.Numeric;
 
 import static org.nervos.appchain.protocol.system.Util.addUpTo64Hex;
 import static org.nervos.appchain.protocol.system.Util.getNonce;
@@ -533,6 +540,129 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
                 .collect(Collectors.toList());
     }
 
+    public boolean newPermission(
+            String name, List<String> addrs, List<String> funcs,
+            String adminPrivatekey, int version, int chainId)
+            throws IOException, InterruptedException{
+
+        String nameHex = addUpTo64Hex(ConvertStrByte.stringToHexString(name));
+        byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
+
+        List<Address> addrsToAdd = addrs
+                .stream().map(Address::new)
+                .collect(Collectors.toList());
+
+        List<Bytes4> funcToAdd = funcs
+                .stream()
+                .map(Util::generateFunSig)
+                .map(Numeric::cleanHexPrefix)
+                .map(ConvertStrByte::hexStringToBytes)
+                .map(Bytes4::new)
+                .collect(Collectors.toList());
+
+        Function func = new Function(
+                PERMISSION_MANAGER_NEW_PERMISSION,
+                Arrays.asList(
+                        new Bytes32(nameBytes),
+                        new DynamicArray<Address>(addrsToAdd),
+                        new DynamicArray<Bytes4>(funcToAdd)),
+                Collections.emptyList());
+
+        String funcData = FunctionEncoder.encode(func);
+
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
+        Transaction tx = new Transaction(
+                PERMISSION_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
+                version, chainId, "0", funcData);
+
+        String rawTx = tx.sign(adminPrivatekey);
+
+        AppSendTransaction appSendTransaction =
+                service.appSendRawTransaction(rawTx).send();
+
+        if (appSendTransaction.getError() != null) {
+            String message = appSendTransaction.getError().getMessage();
+            System.out.println(
+                    "Failed to set permission " + name
+                            + " for addrs " + addrs
+                            + " and funcs" + funcs
+                            + ". Error message: " + message);
+            return false;
+        }
+        String txHash = appSendTransaction.getSendTransactionResult().getHash();
+
+        int count = 0;
+
+        while (true) {
+            Optional<TransactionReceipt> receipt = service
+                    .appGetTransactionReceipt(txHash)
+                    .send().getTransactionReceipt();
+            if (receipt.isPresent()) {
+                TransactionReceipt txReceipt = receipt.get();
+                if (txReceipt.getErrorMessage() != null) {
+                    return false;
+                }
+                List<Log> logs = txReceipt.getLogs();
+                String addrToCompare = addUpTo64Hex(name);
+                return logs.get(0).getTopics().contains(addrToCompare);
+            } else {
+                TimeUnit.SECONDS.sleep(3);
+                count++;
+                if (count > 5) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+
+//    public List<String> queryAllAccounts() {}
+//    public List<String> queryPermissions(String account) {}
+//    public List<String> queryAccounts(String permission) {}
+//    public boolean checkPermission(String account, String permission) {}
+//    public boolean checkResource(String account, String contractAddr, String func) {}
+//    public boolean inPermission(String permission, String contractAddr, String func) {}
+
+    public QueryInfoResult queryInfo(String from, String permissionAddr) throws IOException {
+
+        Function callFunc = new Function(
+                PERMISSION_MANAGER_QUERY_INFO,
+                Arrays.asList(new Address(permissionAddr)),
+                Collections.emptyList());
+        String callData = FunctionEncoder.encode(callFunc);
+
+        AppCall callResult = AppChainSystemContract.sendCall(
+                from, PERMISSION_MANAGER_ADDR, callData, service);
+
+        List<Type> resultTypes = FunctionReturnDecoder.decode(
+                callResult.getValue(),
+                AppChainSystemContract.convert(
+                        Arrays.asList(
+                                new TypeReference<Bytes32>() {},
+                                new TypeReference<DynamicArray<Address>>() {},
+                                new TypeReference<DynamicArray<Bytes4>>() {}
+                        )
+                )
+        );
+        Bytes32 name =
+                (Bytes32) resultTypes.get(0).getValue();
+
+        ArrayList<Address> contractAddrs =
+                (ArrayList<Address>) resultTypes.get(1).getValue();
+
+        ArrayList<Bytes4> funcs =
+                (ArrayList<Bytes4>) resultTypes.get(2).getValue();
+
+        return new QueryInfoResult(
+                name.toString(),
+                contractAddrs.stream().map(x -> x.toString()).collect(Collectors.toList()),
+                funcs.stream().map(x -> x.getValue().toString()).collect(Collectors.toList()));
+    }
+
+
+//    public List<String> queryName() {}
+//    public List<String> queryResource() {}
 
     public Transaction constructStoreTransaction(
             String data, int version, int chainId) {

@@ -1,9 +1,15 @@
 package org.nervos.appchain.protocol.system;
 
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
+import org.nervos.appchain.abi.FunctionEncoder;
+import org.nervos.appchain.abi.datatypes.Address;
+import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.protocol.AppChainj;
+import org.nervos.appchain.utils.Collection;
 import org.nervos.appchain.utils.Numeric;
 
 /**
@@ -62,5 +68,11 @@ public class Util {
             result = "0" + result;
         }
         return Numeric.prependHexPrefix(result);
+    }
+
+
+    static String generateFunSig(String funcName) {
+        Function func = new Function(funcName, Collections.emptyList(), Collections.emptyList());
+        return FunctionEncoder.encode(func);
     }
 }

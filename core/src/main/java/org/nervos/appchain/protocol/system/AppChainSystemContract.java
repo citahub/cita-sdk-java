@@ -52,7 +52,7 @@ public interface AppChainSystemContract {
     String PRICE_MANAGER_GET_QUOTA_PRICE = "getQuotaPrice";
 
     //Permission manager
-    String PERMISSION_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff020010";
+    String PERMISSION_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff020004";
     //Permission manager manipulation
     String PERMISSION_MANAGER_NEW_PERMISSION = "newPermission";
     String PERMISSION_MANAGER_DELETE_PERMISSION = "deletePermission";
