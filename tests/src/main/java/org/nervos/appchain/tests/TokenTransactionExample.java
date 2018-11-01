@@ -38,8 +38,6 @@ public class TokenTransactionExample {
         Config conf = new Config();
         conf.buildService(false);
 
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
         privateKey = conf.primaryPrivKey;
         fromAddress = conf.primaryAddr;
         toAddress = conf.auxAddr1;
@@ -48,6 +46,8 @@ public class TokenTransactionExample {
         service = conf.service;
         quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
     private static String loadContractCode(String binPath) throws Exception {

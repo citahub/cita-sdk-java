@@ -20,18 +20,13 @@ import org.nervos.appchain.utils.Numeric;
 /**
  * Block object returned by:
  * <ul>
- * <li>eth_getBlockByHash</li>
- * <li>eth_getBlockByNumber</li>
- * <li>eth_getUncleByBlockHashAndIndex</li>
- * <li>eth_getUncleByBlockNumberAndIndex</li>
+ * <li>getBlockByHash</li>
+ * <li>getBlockByNumber</li>
  * </ul>
  *
  * <p>See
- * <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyhash">docs</a>
+ * <a href="https://docs.nervos.org/cita/#/./rpc_guide/rpc?id=getblockbyhash">docs</a>
  * for further details.</p>
- *
- * <p>See the following <a href="https://github.com/ethcore/parity/issues/2401">issue</a> for
- * details on additional Parity fields present in EthBlock.</p>
  */
 public class AppBlock extends Response<AppBlock.Block> {
 
@@ -567,6 +562,25 @@ public class AppBlock extends Response<AppBlock.Block> {
     }
 
     public static class ResponseDeserialiser extends JsonDeserializer<Block> {
+        //block meta
+        String blockVersion;
+        String blockHash;
+
+        //block header
+        Long timeStamp;
+        String prevHash;
+        String number;
+        String stateRoot;
+        String transactionsRoot;
+        String receiptsRoot;
+        String quotaUsed;
+
+        //proof tendermint
+        String proposer;
+        String proposal;
+        String height;
+        String round;
+
         @Override
         public Block deserialize(
                 JsonParser jsonParser,
@@ -574,25 +588,32 @@ public class AppBlock extends Response<AppBlock.Block> {
             if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
                 JsonNode node = jsonParser.getCodec().readTree(jsonParser);
                 //block meta
-                String blockVersion = node.get("version").asText();
-                String blockHash = node.get("hash").asText();
+                blockVersion = node.get("version").asText();
+                blockHash = node.get("hash").asText();
 
                 //block header
                 JsonNode headerNode = node.get("header");
-                Long timeStamp = headerNode.get("timestamp").asLong();
-                String prevHash = headerNode.get("prevHash").asText();
-                String number = headerNode.get("number").asText();
-                String stateRoot = headerNode.get("stateRoot").asText();
-                String transactionsRoot = headerNode.get("transactionsRoot").asText();
-                String receiptsRoot = headerNode.get("receiptsRoot").asText();
-                String gasUsed = headerNode.get("gasUsed").asText();
-                String proposer = headerNode.get("proposer").asText();
+                timeStamp = headerNode.get("timestamp").asLong();
+                prevHash = headerNode.get("prevHash").asText();
+                number = headerNode.get("number").asText();
+                stateRoot = headerNode.get("stateRoot").asText();
+                transactionsRoot = headerNode.get("transactionsRoot").asText();
+                receiptsRoot = headerNode.get("receiptsRoot").asText();
+
+                //pre 0.20 gasUsed. 0.20 quotaUsed
+                if (headerNode.get("gasUsed") != null) {
+                    quotaUsed = headerNode.get("gasUsed").asText();
+                } else {
+                    quotaUsed = headerNode.get("quotaUsed").asText();
+                }
+
+                proposer = headerNode.get("proposer").asText();
 
                 //proof tendermint
                 JsonNode proofNode = node.get("header").get("proof").get("Bft");
-                String proposal = proofNode.get("proposal").asText();
-                String height = proofNode.get("height").asText();
-                String round = proofNode.get("round").asText();
+                proposal = proofNode.get("proposal").asText();
+                height = proofNode.get("height").asText();
+                round = proofNode.get("round").asText();
 
                 //proof tendermint commits
                 List<TendermintCommit> tendermintCommits = new ArrayList<>();
@@ -627,7 +648,7 @@ public class AppBlock extends Response<AppBlock.Block> {
                                 new TendermintCommit[tendermintCommits.size()]));
 
                 Header header = new Header(timeStamp, prevHash, number, stateRoot,
-                        transactionsRoot, receiptsRoot, gasUsed, new Proof(tendermint), proposer);
+                        transactionsRoot, receiptsRoot, quotaUsed, new Proof(tendermint), proposer);
                 Body body = new Body(transactionObjs);
                 return new Block(blockVersion, blockHash, header, body);
             } else {

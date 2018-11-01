@@ -130,7 +130,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean approveNode(
-            String nodeAddr, String adminPrivatekey)
+            String nodeAddr, String adminPrivatekey, int version, int chainId)
             throws IOException, InterruptedException {
         Function func = new Function(
                 NODE_MANAGER_APPROVE_NODE,
@@ -142,7 +142,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
         //send tx to approve node
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000,
-                validUtilBlock, 0, 1, "0", funcData);
+                validUtilBlock, version, chainId, "0", funcData);
         String signedTx = tx.sign(adminPrivatekey);
         AppSendTransaction appTx = service.appSendRawTransaction(signedTx).send();
 
@@ -182,7 +182,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean deleteNode(
-            String nodeAddr, String adminPrivatekey)
+            String nodeAddr, String adminPrivatekey, int version, int chainId)
             throws IOException, InterruptedException {
 
         Function func = new Function(
@@ -195,7 +195,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
         Long validUtilBlock = getValidUtilBlock(service).longValue();
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
-                0, 1, "0", funcData);
+                version, chainId, "0", funcData);
         String signedTx = tx.sign(adminPrivatekey);
 
         //send tx to delete node.
@@ -235,7 +235,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean setStake(
-            String nodeAddr, int stake, String adminPrivatekey)
+            String nodeAddr, int stake, String adminPrivatekey, int version, int chainId)
             throws IOException, InterruptedException {
 
         Function func = new Function(
@@ -247,7 +247,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
         Long validUtilBlock = getValidUtilBlock(service).longValue();
         Transaction tx = new Transaction(
                 NODE_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
-                0, 1, "0", funcData);
+                version, chainId, "0", funcData);
         String rawTx = tx.sign(adminPrivatekey);
 
         AppSendTransaction appSendTransaction =

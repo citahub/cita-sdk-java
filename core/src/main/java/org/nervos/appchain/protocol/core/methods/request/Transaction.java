@@ -14,7 +14,6 @@ import org.nervos.appchain.crypto.Keys;
 import org.nervos.appchain.crypto.Sign;
 import org.nervos.appchain.crypto.Signature;
 import org.nervos.appchain.protobuf.Blockchain;
-import org.nervos.appchain.protobuf.Blockchain.Crypto;
 import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.utils.Numeric;
 
@@ -192,12 +191,25 @@ public class Transaction {
 
         builder.setData(bdata);
         builder.setNonce(getNonce());
-        builder.setTo(getTo());
         builder.setValidUntilBlock(get_valid_until_block());
         builder.setQuota(getQuota());
-        builder.setVersion(getVersion());
-        builder.setChainId(getChainId());
         builder.setValue(bvalue);
+        builder.setVersion(getVersion());
+
+        /*
+        * version 0: cita 0.19
+        * version 1: cita 0.20
+        * */
+        if (getVersion() == 0) {
+            builder.setTo(getTo());
+            builder.setChainId(getChainId());
+        } else if (getVersion() == 1) {
+            builder.setToV1(ByteString.copyFrom(
+                    ConvertStrByte.hexStringToBytes(getTo())));
+            builder.setChainIdV1(ByteString.copyFrom(
+                    ConvertStrByte.hexStringToBytes(
+                            cleanHexPrefix(Integer.toHexString(getChainId())), 256)));
+        }
 
         return builder.build().toByteArray();
     }
@@ -243,7 +255,7 @@ public class Transaction {
                     Blockchain.UnverifiedTransaction.newBuilder();
             builder.setTransaction(transaction);
             builder.setSignature(ByteString.copyFrom(sig));
-            builder.setCrypto(Crypto.SECP);
+            builder.setCrypto(Blockchain.Crypto.SECP);
             utx = builder.build();
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();

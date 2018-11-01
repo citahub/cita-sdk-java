@@ -7,7 +7,7 @@ enum ProofType {
 }
 
 message Proof {
-    bytes content = 1; 
+    bytes content = 1;
     ProofType type = 2;
 }
 
@@ -41,7 +41,7 @@ message RichStatus {
 
 enum Crypto {
     SECP = 0;
-    SM2 = 1; 
+    SM2 = 1;
 }
 
 message Transaction {
@@ -53,6 +53,8 @@ message Transaction {
     bytes value = 6;
     uint32 chain_id = 7;
     uint32 version = 8;
+    bytes to_v1 = 9;
+    bytes chain_id_v1 = 10;
 }
 
 message UnverifiedTransaction {
