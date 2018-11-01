@@ -26,6 +26,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppCall;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
+import org.nervos.appchain.utils.Convert;
 
 import static org.nervos.appchain.protocol.system.Util.addUpTo64Hex;
 import static org.nervos.appchain.protocol.system.Util.getNonce;
@@ -286,6 +287,252 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
         }
         return false;
     }
+
+    public boolean setBql(
+            BigInteger bqlToSet, String adminPrivatekey, int version, int chainId)
+            throws IOException, InterruptedException {
+        Function func = new Function(
+                QUOTA_MANAGER_SET_BQL,
+                Arrays.asList(new Uint(bqlToSet)),
+                Collections.emptyList());
+
+        String funcData = FunctionEncoder.encode(func);
+
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
+        Transaction tx = new Transaction(
+                QUOTA_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
+                version, chainId, "0", funcData);
+
+        String rawTx = tx.sign(adminPrivatekey);
+
+        AppSendTransaction appSendTransaction =
+                service.appSendRawTransaction(rawTx).send();
+
+        if (appSendTransaction.getError() != null) {
+            String message = appSendTransaction.getError().getMessage();
+            System.out.println(
+                    "Failed to set bql " + bqlToSet + ". Error message: " + message);
+            return false;
+        }
+        String txHash = appSendTransaction.getSendTransactionResult().getHash();
+
+        int count = 0;
+
+        while (true) {
+            Optional<TransactionReceipt> receipt = service
+                    .appGetTransactionReceipt(txHash)
+                    .send().getTransactionReceipt();
+            if (receipt.isPresent()) {
+                TransactionReceipt txReceipt = receipt.get();
+                if (txReceipt.getErrorMessage() != null) {
+                    return false;
+                }
+                List<Log> logs = txReceipt.getLogs();
+                String bqlToCompare = bqlToSet.toString(16);
+                bqlToCompare = addUpTo64Hex(bqlToCompare);
+                return logs.get(0).getTopics().contains(bqlToCompare);
+            } else {
+                TimeUnit.SECONDS.sleep(3);
+                count++;
+                if (count > 5) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean setDefaultAql(
+            BigInteger defaultAqlToSet, String adminPrivatekey, int version, int chainId)
+            throws IOException, InterruptedException {
+        Function func = new Function(
+                QUOTA_MANAGER_SET_DEFAULT_AQL,
+                Arrays.asList(new Uint(defaultAqlToSet)),
+                Collections.emptyList());
+
+        String funcData = FunctionEncoder.encode(func);
+
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
+        Transaction tx = new Transaction(
+                QUOTA_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
+                version, chainId, "0", funcData);
+
+        String rawTx = tx.sign(adminPrivatekey);
+
+        AppSendTransaction appSendTransaction =
+                service.appSendRawTransaction(rawTx).send();
+
+        if (appSendTransaction.getError() != null) {
+            String message = appSendTransaction.getError().getMessage();
+            System.out.println(
+                    "Failed to set default aql " + defaultAqlToSet + ". Error message: " + message);
+            return false;
+        }
+        String txHash = appSendTransaction.getSendTransactionResult().getHash();
+
+        int count = 0;
+
+        while (true) {
+            Optional<TransactionReceipt> receipt = service
+                    .appGetTransactionReceipt(txHash)
+                    .send().getTransactionReceipt();
+            if (receipt.isPresent()) {
+                TransactionReceipt txReceipt = receipt.get();
+                if (txReceipt.getErrorMessage() != null) {
+                    return false;
+                }
+                List<Log> logs = txReceipt.getLogs();
+                String defaultAqlToCompare = defaultAqlToSet.toString(16);
+                defaultAqlToCompare = addUpTo64Hex(defaultAqlToCompare);
+                return logs.get(0).getTopics().contains(defaultAqlToCompare);
+            } else {
+                TimeUnit.SECONDS.sleep(3);
+                count++;
+                if (count > 5) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean setAql(
+            String addrToSet, BigInteger aqlToSet, String adminPrivatekey, int version, int chainId)
+            throws IOException, InterruptedException {
+        Function func = new Function(
+                QUOTA_MANAGER_SET_AQL,
+                Arrays.asList(new Address(addrToSet), new Uint(aqlToSet)),
+                Collections.emptyList());
+
+        String funcData = FunctionEncoder.encode(func);
+
+        Long validUtilBlock = getValidUtilBlock(service).longValue();
+        Transaction tx = new Transaction(
+                QUOTA_MANAGER_ADDR, getNonce(), 10000000, validUtilBlock,
+                version, chainId, "0", funcData);
+
+        String rawTx = tx.sign(adminPrivatekey);
+
+        AppSendTransaction appSendTransaction =
+                service.appSendRawTransaction(rawTx).send();
+
+        if (appSendTransaction.getError() != null) {
+            String message = appSendTransaction.getError().getMessage();
+            System.out.println(
+                    "Failed to set aql " + aqlToSet
+                            + " for addr " + addrToSet + ". Error message: " + message);
+            return false;
+        }
+        String txHash = appSendTransaction.getSendTransactionResult().getHash();
+
+        int count = 0;
+
+        while (true) {
+            Optional<TransactionReceipt> receipt = service
+                    .appGetTransactionReceipt(txHash)
+                    .send().getTransactionReceipt();
+            if (receipt.isPresent()) {
+                TransactionReceipt txReceipt = receipt.get();
+                if (txReceipt.getErrorMessage() != null) {
+                    return false;
+                }
+                List<Log> logs = txReceipt.getLogs();
+                String addrToCompare = addUpTo64Hex(addrToSet);
+                return logs.get(0).getTopics().contains(addrToCompare);
+            } else {
+                TimeUnit.SECONDS.sleep(3);
+                count++;
+                if (count > 5) {
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int getBql(String from) throws IOException {
+        String callData = AppChainSystemContract.encodeCall(QUOTA_MANAGER_GET_BQL);
+        AppCall callResult = AppChainSystemContract.sendCall(
+                from, QUOTA_MANAGER_ADDR, callData, service);
+        List<Type> resultTypes =
+                FunctionReturnDecoder.decode(callResult.getValue(),
+                        AppChainSystemContract.convert(
+                                Arrays.asList(new TypeReference<Uint>() {})
+                        )
+                );
+        return Integer.parseInt(
+                resultTypes.get(0).getValue().toString());
+    }
+
+    public int getDefaultAql(String from) throws IOException {
+        String callData = AppChainSystemContract.encodeCall(QUOTA_MANAGER_GET_DEFAULT_AQL);
+        AppCall callResult = AppChainSystemContract.sendCall(
+                from, QUOTA_MANAGER_ADDR, callData, service);
+        List<Type> resultTypes =
+                FunctionReturnDecoder.decode(callResult.getValue(),
+                        AppChainSystemContract.convert(
+                                Arrays.asList(new TypeReference<Uint>() {})
+                        )
+                );
+        return Integer.parseInt(
+                resultTypes.get(0).getValue().toString());
+    }
+
+    public int getAql(String from, String addressToQuery) throws IOException {
+        Function callFunc = new Function(
+                QUOTA_MANAGER_GET_AQL,
+                Arrays.asList(new Address(addressToQuery)),
+                Collections.emptyList());
+
+        String callData = FunctionEncoder.encode(callFunc);
+
+        AppCall callResult = AppChainSystemContract.sendCall(
+                from, QUOTA_MANAGER_ADDR, callData, service);
+
+        List<Type> resultTypes =
+                FunctionReturnDecoder.decode(callResult.getValue(),
+                        AppChainSystemContract.convert(
+                                Arrays.asList(new TypeReference<Uint>() {})
+                        )
+                );
+        return Integer.parseInt(
+                resultTypes.get(0).getValue().toString());
+    }
+
+    public List<String> getAccounts(String from) throws IOException {
+        String callData = AppChainSystemContract.encodeCall(QUOTA_MANAGER_GET_ACCOUNTS);
+        AppCall callResult = AppChainSystemContract.sendCall(
+                from, QUOTA_MANAGER_ADDR, callData, service);
+        List<Type> resultTypes = FunctionReturnDecoder.decode(
+                callResult.getValue(),
+                AppChainSystemContract.convert(
+                        Arrays.asList(new TypeReference<DynamicArray<Address>>() {})
+                )
+        );
+        ArrayList<Address> results =
+                (ArrayList<Address>) resultTypes.get(0).getValue();
+        return results.stream()
+                .map(Address::getValue)
+                .collect(Collectors.toList());
+    }
+
+    public List<BigInteger> getQuotas(String from) throws IOException {
+        String callData = AppChainSystemContract.encodeCall(QUOTA_MANAGER_GET_QUOTAS);
+        AppCall callResult = AppChainSystemContract.sendCall(
+                from, QUOTA_MANAGER_ADDR, callData, service);
+        List<Type> resultTypes = FunctionReturnDecoder.decode(
+                callResult.getValue(),
+                AppChainSystemContract.convert(
+                        Arrays.asList(new TypeReference<DynamicArray<Uint>>() {})
+                )
+        );
+        ArrayList<Uint> results =
+                (ArrayList<Uint>) resultTypes.get(0).getValue();
+        return results.stream()
+                .map(Uint::getValue)
+                .collect(Collectors.toList());
+    }
+
 
     public Transaction constructStoreTransaction(
             String data, int version, int chainId) {
