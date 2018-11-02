@@ -1,39 +1,39 @@
-web3j接口继承了Ethereum和web3jRx两个接口，web3j的实现类（比如JsonRpc2_0Web3j），提供了方法以发送交易的方式对合约进行部署和函数调用。web3中没有提供将solidity合约转换为java类的方法，所以对合约的操作必须依赖合约或者合约函数的二进制码，即手动拼接参数。
+Appchainj 接口继承了 Appchain 和 AppchainjRx 两个接口，Appchainj 的实现类（比如JsonRpc2_0Appchainj），提供了方法以发送交易的方式对合约进行部署和函数调用。Appchainj 中没有提供将 solidity 合约转换为 java 类的方法，所以对合约的操作必须依赖合约或者合约函数的二进制码，即手动拼接参数。
 
-[build](Nervosj?id=appChainj-build-nervosjservice-appChainj)
-[netPeer](Nervosj?id=requestlt-netpeercountgt-netpeer)
-[appMetaData](Nervosj?id=requestlt-appmetadatagt-appmetadatadefaultblockparameter-defaultblockparameter)
-[appBlockNumber](Nervosj?id=requestlt-appblocknumbergt-appblocknumber)
-[appGetBalance](Nervosj?id=requestlt-appgetbalancegt-appgetbalancestring-address-defaultblockparameter-defaultblockparameter)
-[appGetAbi](Nervosj?id=requestlt-appgetabigt-appgetabistring-contractaddress-defaultblockparameter-defaultblockparameter)
-[appGetTransactionCount](Nervosj?id=requestlt-appgettransactioncountgt-appgettransactioncountstring-address-defaultblockparameter-defaultblockparameter)
-[appGetCode](Nervosj?id=requestlt-appgetcodegt-appgetcodestring-address-defaultblockparameter-defaultblockparameter)
-[appSendRawTransaction](Nervosj?id=requestlt-appsendtransactiongt-appsendrawtransactionstring-signedtransactiondata)
-[appCall](Nervosj?id=requestlt-appcallgt-appcallcall-call-defaultblockparameter-defaultblockparameter)
-[appGetBlockByHash](Nervosj?id=requestlt-appblockgt-appgetblockbyhash-string-blockhash-boolean-returnfulltransactionobjects)
-[appGetBlockByNumber](Nervosj?id=requestlt-appblockgt-appgetblockbynumber-defaultblockparameter-defaultblockparameter-boolean-returnfulltransactionobjects)
-[appGetTransactionByHash](Nervosj?id=requestlt-apptransactiongt-appgettransactionbyhashstring-transactionhash)
-[appGetTransactionReceipt](Nervosj?id=requestlt-appgettransactionreceiptgt-appgettransactionreceiptstring-transactionhash)
-[appNewBlockFilter](Nervosj?id=requestlt-appfiltergt-appnewblockfilter)
-[appBlockHashObservable](Nervosj?id=observableltstringgt-appblockhashobservable)
-[appNewFilter](Nervosj?id=requestlt-appfiltergt-appnewfilterorgnervosjprotocolcoremethodsrequestappfilter-appfilter)
-[appUninstallFilter](Nervosj?id=requestlt-appuninstallfiltergt-appuninstallfilterbiginteger-filterid)
-[appGetFilterChanges](Nervosj?id=requestlt-apploggt-appgetfilterchangesbiginteger-filterid)
-[appGetFilterLogs](Nervosj?id=requestlt-apploggt-appgetfilterlogsbiginteger-filterid)
-[appLogObservable](Nervosj?id=observableltloggt-applogobservableappfilter-appfilter)
+[build](Nervosj?id=appChainj-build-nervosjservice-appChainj)  
+[netPeer](Nervosj?id=requestlt-netpeercountgt-netpeer)  
+[appMetaData](Nervosj?id=requestlt-appmetadatagt-appmetadatadefaultblockparameter-defaultblockparameter)  
+[appBlockNumber](Nervosj?id=requestlt-appblocknumbergt-appblocknumber)  
+[appGetBalance](Nervosj?id=requestlt-appgetbalancegt-appgetbalancestring-address-defaultblockparameter-defaultblockparameter)  
+[appGetAbi](Nervosj?id=requestlt-appgetabigt-appgetabistring-contractaddress-defaultblockparameter-defaultblockparameter)  
+[appGetTransactionCount](Nervosj?id=requestlt-appgettransactioncountgt-appgettransactioncountstring-address-defaultblockparameter-defaultblockparameter)  
+[appGetCode](Nervosj?id=requestlt-appgetcodegt-appgetcodestring-address-defaultblockparameter-defaultblockparameter)  
+[appSendRawTransaction](Nervosj?id=requestlt-appsendtransactiongt-appsendrawtransactionstring-signedtransactiondata) 
+[appCall](Nervosj?id=requestlt-appcallgt-appcallcall-call-defaultblockparameter-defaultblockparameter)  
+[appGetBlockByHash](Nervosj?id=requestlt-appblockgt-appgetblockbyhash-string-blockhash-boolean-returnfulltransactionobjects)  
+[appGetBlockByNumber](Nervosj?id=requestlt-appblockgt-appgetblockbynumber-defaultblockparameter-defaultblockparameter-boolean-returnfulltransactionobjects)  
+[appGetTransactionByHash](Nervosj?id=requestlt-apptransactiongt-appgettransactionbyhashstring-transactionhash)  
+[appGetTransactionReceipt](Nervosj?id=requestlt-appgettransactionreceiptgt-appgettransactionreceiptstring-transactionhash)  
+[appNewBlockFilter](Nervosj?id=requestlt-appfiltergt-appnewblockfilter)  
+[appBlockHashObservable](Nervosj?id=observableltstringgt-appblockhashobservable)  
+[appNewFilter](Nervosj?id=requestlt-appfiltergt-appnewfilterorgnervosjprotocolcoremethodsrequestappfilter-appfilter)  
+[appUninstallFilter](Nervosj?id=requestlt-appuninstallfiltergt-appuninstallfilterbiginteger-filterid)  
+[appGetFilterChanges](Nervosj?id=requestlt-apploggt-appgetfilterchangesbiginteger-filterid)  
+[appGetFilterLogs](Nervosj?id=requestlt-apploggt-appgetfilterlogsbiginteger-filterid)  
+[appLogObservable](Nervosj?id=observableltloggt-applogobservableappfilter-appfilter)  
 
-#### `Nervosj build (NervosjService appChainj)`
-根据Web3jService类型实例化web3j。
+#### `Appchainj build (AppchainjService appChainj)`
+根据 AppchainjService 类型实例化 appchainj。
 
 **参数**
-appChainj - web3jService实例
+appChainj - appchainjService 实例
 
 **返回值**
-Web3实例
+Appchainj 实例
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 ```
 #### `Request<?, NetPeerCount> netPeer()`
 获取当前连接节点数。
@@ -45,8 +45,8 @@ Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
 Request<?, NetPeerCount>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 NetPeerCount netPeerCount = service.netPeerCount().send();
 BigInteger peerCount = netPeerCount.getQuantity();
 ```
@@ -60,8 +60,8 @@ defaultBlockParamter - 块高度的接口：数字或者关键字
 Request<?, AppMetaData>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 DefaultBlockParameter defaultParam = DefaultBlockParameter.valueOf("latest");
 AppMetaDataResult result = service.appMetaData(defaultParam).send();
 int chainId = result.chainId;
@@ -78,8 +78,8 @@ String genesisTS = result.genesisTimestamp;
 Request<?, AppBlockNumber>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 AppBlockNumber result = service.appBlockNumber().send();
 BigInteger blockNumber = result.getBlockNumber();
 ```
@@ -94,9 +94,9 @@ defaultBlockParameter - 块高度的接口：数字或者关键字
 Request<?, AppGetBalance>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
-string addr = "{hex nervos address starting with 0x}";
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
 AppGetBalance getBalance = service.appGetBalance(addr, defaultBlockParamter).send();
 BigInteger balance = getBalance.getBalance();
@@ -113,9 +113,9 @@ defaultBlockParameter - 块高度的接口：数字或者关键字
 Request<?, AppGetAbi>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
-string addr = "{hex nervos address starting with 0x}";
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
 AppGetAbi getAbi = service.appGetAbi(addr, defaultBlockParamter).send();
 String abi = getAbi.getAbi();
@@ -132,9 +132,9 @@ defaultBlockParameter - 块高度的接口：数字或者关键字
 Request<?, AppGetTransactionCount>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
-string addr = "{hex nervos address starting with 0x}";
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
 AppGetTransactionCount getTransactionCount = service.appGetTransactionCount(addr, defaultBlockParamter).send();
 BigInteger txCount = getTransactionCount.getTransactionCount();
@@ -151,9 +151,9 @@ defaultBlockParameter - 块高度的接口：数字或者关键字
 Request<?, AppGetCode>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
-string addr = "{hex nervos address starting with 0x}";
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
 AppGetCode getCode = service.appGetCode(addr, defaultBlockParamter).send();
 Sring code = getCode.getCode();
@@ -169,13 +169,13 @@ signedTransaction - 经过签名的交易数据
 Request<?, AppSendTransaction>
 
 **示例**
-```
+```java
 //create a signed transaction
 Transaction tx = Transaction.createContractTransaction(BigInteger.valueOf(nonce), this.config.getQuota(), this.currentHeight + 88, 0, chainId, value, this.config.getCode());
 tx.sign(this.config.getPrivateKey(), false, false);
 
 //instantiate a Nervosj and send the transaction
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 AppSendTransaction sendTransaction = service.appSendRawTransaction(tx).send();
 
 //get hash of the transaction
@@ -193,8 +193,8 @@ defaultBlockParameter - 块高度的接口：数字或者关键字
 Request<?, AppCall>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 Call call = new Call(from, to, data);
 AppCall appCall = service.appCall(call, DefaultBlockParameter.valueOf("latest")).send();
 String result = call.getValue();
@@ -211,8 +211,8 @@ returnFullTransactionObjects - 是否返回交易信息 (True: 返回详细交�
 Request<?, AppBlock>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String blockHash = "{block hash to search}";
 AppBlock appBlock = service.appGetBlockByHash(blockHash, false).send();
 ```
@@ -228,8 +228,8 @@ returnFullTransactionObjects - 是否返回交易信息 (True: 返回详细交�
 Request<?, AppBlock>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 AppBlock appBlock = service.appGetBlockByHash(DefaultBlockParameter.valueOf("latest"), false).send();
 ```
 #### `Request<?, AppTransaction> appGetTransactionByHash(String transactionHash)`
@@ -242,8 +242,8 @@ transactionHash - 交易哈希
 Request<?, AppTransaction>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 AppTransaction responseTx = service.appGetTransactionByHash(txHash).send();
 ```
@@ -257,8 +257,8 @@ transactionHash - 交易哈希
 Request<?, AppGetTransactionReceipt>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 AppGetTransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send();
 ```
@@ -273,8 +273,8 @@ AppGetTransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).se
 Request<?, AppFilter>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 AppFilter appFilter = service.appNewBlockFilter().send();
 BigInteger filterId = appFilter.getFilterId();
 ```
@@ -289,8 +289,8 @@ BigInteger filterId = appFilter.getFilterId();
 Observable<?, AppLog>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 Observable blockFitlerObservable = service.appBlockHashObservable();
 AppLog logs = service.appGetFilterLogs(filterId).send();
         blockFitlerObservable.subscribe(block -> {
@@ -299,17 +299,17 @@ AppLog logs = service.appGetFilterLogs(filterId).send();
 ```
 
 #### `Request<?, AppFilter> appNewFilter(org.appChainj.protocol.core.methods.request.AppFilter appFilter)`
-创建一个新的Event过滤器以用来监听合约中的Event。
+创建一个新的过滤器以用来监听合约中的 emit 的 event。
 
 **参数**
-appFilter - 针对于Nervos智能合约event的过滤器（定义在Request中的appFilter）
+appFilter - 针对于 Appchain 智能合约 event 的过滤器（定义在 Request 中的 appFilter）
 
 **返回值**
 Request<?, AppFilter>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 org.appChainj.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
 AppFilter appFilter = service.appNewFilter(txHash).send();
 BigInteger filterId = appFilter.getFilterId();
@@ -325,14 +325,14 @@ filterId - 过滤器Id
 Request<?, AppUninstallFilter>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 BigInteger filterId = {your filter Id };
 AppUninstallFilter uninstallFilter = service.appUninstallFilter(filterId).send();
 ```
 
 #### `Request<?, AppLog> appGetFilterChanges(BigInteger filterId)`
-根据过滤器Id查询log，返回上一次查询之后的所有log。
+根据过滤器 Id 查询 log，返回上一次查询之后的所有 log。
 
 **参数**
 filterId - 过滤器Id
@@ -341,15 +341,15 @@ filterId - 过滤器Id
 Request<?, AppLog>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 BigInteger filterId = {your filter Id };
 AppLog logs = service.appGetFilterChanges(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
 
 #### `Request<?, AppLog> appGetFilterLogs(BigInteger filterId)`
-根据过滤器Id查询log，返回符合输入filter Id的所有log。
+根据过滤器 Id 查询 log，返回符合输入 filter Id 的所有log。
 
 **参数**
 filterId - 过滤器Id
@@ -358,15 +358,15 @@ filterId - 过滤器Id
 Request<?, AppLog>
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 BigInteger filterId = {your filter Id };
 AppLog logs = service.appGetFilterLogs(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
 
 #### `Observable<Log> appLogObservable(AppFilter appFilter)`
-根据AppFilter来安装一个新的Filter用以获取历史log和监听新的Log，返回一个Observable以交互的模式监听Log。
+根据 AppFilter 来安装一个新的 Filter 用以获取历史 log 和监听新的 Log，返回一个 Observable 以交互的模式监听 Log。
 
 **参数**
 AppFilter - 过滤器可以由`appNewFilter`来新建
@@ -375,7 +375,7 @@ AppFilter - 过滤器可以由`appNewFilter`来新建
 Observable<Log>
 
 **示例**
-```
+```java
 Observable appLogObservable = service.appLogObservable(filter);
             Observable<String> reponse = appLogObservable.map(
                     (log) -> {

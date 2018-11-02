@@ -1,7 +1,7 @@
-Account封装了TransactionManager（在Cita中使用的是CitaTransactionManager），通过web3和账户的私钥进行实例化。Account使用了CompiledContract类，可以直接从读取Solidity合约文件，生成ABI和BIN文件以供TransactionManager使用。
-[Account](Account?id=accountstring-privatekey-appChainj-service)
-[deploy](Account?id=appsendtransaction-deployfile-contractfile-biginteger-nonce-long-quota-int-version-int-chainid-string-value)
-[callContract](Account?id=object-callcontractstring-contractaddress-string-funcname-biginteger-nonce-long-quota-int-version-int-chainid-string-value-object-args)
+Account 封装了 TransactionManager（在 Cita 中使用的是 CitaTransactionManager），通过 Appchainj 和账户的私钥进行实例化。Account 使用了 CompiledContract 类，可以直接从读取 Solidity 合约文件，生成 ABI 和 BIN 文件以供 TransactionManager 使用。
+[Account](Account?id=accountstring-privatekey-appChainj-service)  
+[deploy](Account?id=appsendtransaction-deployfile-contractfile-biginteger-nonce-long-quota-int-version-int-chainid-string-value)  
+[callContract](Account?id=object-callcontractstring-contractaddress-string-funcname-biginteger-nonce-long-quota-int-version-int-chainid-string-value-object-args)  
 
 #### `Account(String privateKey, Nervosj service)`
 实例化Account对象。
@@ -14,9 +14,9 @@ service - Nervosj实例
 Account
 
 **示例**
-```
+```java
 String privateKey = "{private key}";
-Nervosj service  = Nervosj.build(new HttpService("127.0.0.1"));
+Appchainj service  = Appchainj.build(new HttpService("127.0.0.1"));
 Account account = new Account(privateKey, service);
 ```
 #### `AppSendTransaction deploy(File contractFile, BigInteger nonce, long quota, int version, int chainId, String value)`
@@ -34,9 +34,9 @@ value - 交易中原生token的数量
 AppSendTransaction
 
 **示例**
-```
+```java
 String privateKey = "{private key}";
-Nervosj service  = Nervosj.build(new HttpService("127.0.0.1"));
+Appchainj service  = Appchainj.build(new HttpService("127.0.0.1"));
 Account account = new Account(privateKey, service);
 AppSendTransaction appSendTransaction = account.deploy(new File(path), randomNonce(), quota, version, chainId, value);
 ```
@@ -57,9 +57,9 @@ value - 交易中原生token的数量
 Object
 
 **示例**
-```
+```java
 String privateKey = "{private key}";
-Nervosj service  = Nervosj.build(new HttpService("127.0.0.1"));
+Appchainj service  = Appchainj.build(new HttpService("127.0.0.1"));
 Account account = new Account(privateKey, service);
 AppSendTransaction appSendTransaction = (AppSendTransaction) account.callContract(contractAddress, transfer, randomNonce(), quota, version, chainId, value, toAddress, amount);
 ```
