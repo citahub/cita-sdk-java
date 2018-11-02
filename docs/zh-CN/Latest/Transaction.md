@@ -1,10 +1,10 @@
 Transction定义在core.request中，用于将交易数据封装并且签名（如果需要），交易数据或者签名后的交易数据被appCall()或者appSendRawTransaction()所使用进行合约的调用或者部署。
-[Transaction](Transaction?id=transactionstring-to-biginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-data)
-[createContractTransaction](Transaction?id=createcontracttransactionbiginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-init)
-[createFunctionCallTransaction](Transaction?id=createfunctioncalltransactionstring-to-biginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-data)
-[CitaTransactionManager](Transaction?id=citatransactionmanagernervosj-appChainj-credentials-credentials)
-[sendTransaction](Transaction?id=appsendtransaction-sendtransactionstring-to-string-data-long-quota-biginteger-nonce-long-validuntilblock-int-version-int-chainid-string-value)
-[sendTransactionAsync](Transaction?id=completablefuture-sendtransactionasyncstring-to-string-data-long-quota-biginteger-nonce-long-validuntilblock-int-version-int-chainid-string-value)
+[Transaction](Transaction?id=transactionstring-to-biginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-data)  
+[createContractTransaction](Transaction?id=createcontracttransactionbiginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-init)  
+[createFunctionCallTransaction](Transaction?id=createfunctioncalltransactionstring-to-biginteger-nonce-long-quota-long-valid_until_block-int-version-int-chainid-string-value-string-data)  
+[CitaTransactionManager](Transaction?id=citatransactionmanagernervosj-appChainj-credentials-credentials)  
+[sendTransaction](Transaction?id=appsendtransaction-sendtransactionstring-to-string-data-long-quota-biginteger-nonce-long-validuntilblock-int-version-int-chainid-string-value)  
+[sendTransactionAsync](Transaction?id=completablefuture-sendtransactionasyncstring-to-string-data-long-quota-biginteger-nonce-long-validuntilblock-int-version-int-chainid-string-value)  
 
 #### `Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
 根据参数新建一个交易。
@@ -23,8 +23,8 @@ data - 编码后交易数据（abi）
 Transaction实例
 
 **示例**
-```
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String to = "{address to which the tx is sent}";
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long quota = 9999;
@@ -51,9 +51,9 @@ init - 合约编码后数据（abi）
 Transaction实例
 
 **示例**
-```
-//create new appChainj service
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+```java
+//create new Appchainj service
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 
 //settings initiation
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
@@ -86,9 +86,9 @@ data - 编码后交易数据（abi）
 Transaction实例
 
 **示例**
-```
+```java
 //create new appChainj service
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 
 //settings initiation
 String to = "{smart contract address}";
@@ -106,23 +106,23 @@ String signedTx = txToDeployContract.sign(this.config.getPrivateKey(), false, fa
 AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 ```
 #### `CitaTransactionManager(Nervosj appChainj, Credentials credentials)`
-CitaTransactionManager继承自TransactionManager，进行了Nervos适配。由于在Nervos appchain中，没有支持sendTransaction()方法，所以私钥信息需要在实例化  CitaTransactionManager时传入，否则无法对交易签名。
+CitaTransactionManager 继承自 TransactionManager，进行了 Appchain 适配。由于在 Nervos appchain 中，没有支持 `sendTransaction()` 方法，所以私钥信息需要在实例化  CitaTransactionManager 时传入，否则无法对交易签名。
 
 **参数**
-appChainj - Nervosj实例
+appChainj - Appchainj实例
 credentials - 发起交易账户的credential
 
 **返回值**
-CitaTransctionManager实例
+CitaTransctionManager 实例
 
 **示例**
-```
+```java
 Credentials credentials = Credentials.create(privateKey);
-Nervosj service = Nervosj.build(new HttpService("127.0.0.1"));
+Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 CitaTransactionManager transactionManager = new CitaTransactionManager(service, credentials);
 ```
 #### `AppSendTransaction sendTransaction(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
-通过TransactionManager发送交易。
+通过 TransactionManager 发送交易。
 
 **参数**
 to - 交易将要的发送地址
@@ -138,7 +138,7 @@ value - 交易中原生token的数量
 AppSendTransaction
 
 **示例**
-```
+```java
 CitaTransactionManager transactionManager = new CitaTransactionManager(service, credentials);
 String to = "{address to which the contract is sent}";
 String contractBin = "{contract bin or function call bin}";
@@ -151,7 +151,7 @@ String value = "0";
 AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
 ```
 #### `CompletableFuture<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
-通过TransactionManager发送交易。
+通过 TransactionManager 发送交易。
 
 **参数**
 to - 交易将要的发送地址
@@ -167,7 +167,7 @@ value - 交易中原生token的数量
 AppSendTransaction
 
 **示例**
-```
+```java
 CitaTransactionManager transactionManager = new CitaTransactionManager(service, credentials);
 String to = "{address to which the contract is sent}";
 String contractBin = "{contract bin or function call bin}";

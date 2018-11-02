@@ -4,7 +4,7 @@
 
 var customization = {
 
-    name: 'Nervosj', // name of this document
+    name: 'Appchainj', // name of this document
 
-    homepage: 'NervosjAPI.md',// the home page, extension name '.md' cannot be omitted.
+    homepage: 'AppchainjAPI.md',// the home page, extension name '.md' cannot be omitted.
 }
