@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,7 +72,7 @@ public class ContractTest extends ManagedTransactionTester {
 
     @Test
     public void testGetContractTransactionReceipt() {
-        assertFalse(contract.getTransactionReceipt().isPresent());
+        assertNull(contract.getTransactionReceipt());
     }
 
     @Test
@@ -80,8 +81,8 @@ public class ContractTest extends ManagedTransactionTester {
         Contract deployedContract = deployContract(transactionReceipt);
 
         assertThat(deployedContract.getContractAddress(), is(ADDRESS));
-        assertTrue(deployedContract.getTransactionReceipt().isPresent());
-        assertThat(deployedContract.getTransactionReceipt().get(), equalTo(transactionReceipt));
+        Assert.assertNotNull(deployedContract.getTransactionReceipt());
+        assertThat(deployedContract.getTransactionReceipt(), equalTo(transactionReceipt));
     }
 
     private TransactionReceipt createTransactionReceipt() {

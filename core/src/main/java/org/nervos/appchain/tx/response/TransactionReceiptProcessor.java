@@ -1,7 +1,6 @@
 package org.nervos.appchain.tx.response;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionReceipt;
@@ -23,7 +22,7 @@ public abstract class TransactionReceiptProcessor {
             String transactionHash)
             throws IOException, TransactionException;
 
-    Optional<TransactionReceipt> sendTransactionReceiptRequest(
+    TransactionReceipt sendTransactionReceiptRequest(
             String transactionHash) throws IOException, TransactionException {
         AppGetTransactionReceipt transactionReceipt =
                 appChainj.appGetTransactionReceipt(transactionHash).send();

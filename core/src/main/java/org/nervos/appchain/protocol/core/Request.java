@@ -2,7 +2,7 @@ package org.nervos.appchain.protocol.core;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.nervos.appchain.protocol.AppChainjService;
@@ -70,7 +70,7 @@ public class Request<S, T extends Response> {
         return appChainjService.send(this, responseType);
     }
 
-    public CompletableFuture<T> sendAsync() {
+    public Future<T> sendAsync() {
         return  appChainjService.sendAsync(this, responseType);
     }
 

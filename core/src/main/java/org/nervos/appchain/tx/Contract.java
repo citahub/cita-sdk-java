@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
@@ -154,8 +153,8 @@ public abstract class Contract extends ManagedTransaction {
      *
      * @return the TransactionReceipt generated at contract deployment
      */
-    public Optional<TransactionReceipt> getTransactionReceipt() {
-        return Optional.ofNullable(transactionReceipt);
+    public TransactionReceipt getTransactionReceipt() {
+        return transactionReceipt;
     }
 
     /**
@@ -230,7 +229,7 @@ public abstract class Contract extends ManagedTransaction {
      *
      * @param data  to send in transaction
      * @param weiValue in Wei to send in transaction
-     * @return {@link Optional} containing our transaction receipt
+     * @return  containing our transaction receipt
      * @throws IOException                 if the call to the node fails
      * @throws TransactionException if the transaction was not mined while waiting
      */
@@ -250,8 +249,7 @@ public abstract class Contract extends ManagedTransaction {
                 contractAddress, data, quota, nonce, validUntilBlock, version, chainId, value);
     }
 
-    protected <T extends Type> RemoteCall<T>
-                executeRemoteCallSingleValueReturn(Function function) {
+    protected <T extends Type> RemoteCall<T> executeRemoteCallSingleValueReturn(Function function) {
         return new RemoteCall<>(
                 () -> executeCallSingleValueReturn(function));
     }
@@ -262,14 +260,12 @@ public abstract class Contract extends ManagedTransaction {
                 () -> executeCallSingleValueReturn(function, returnType));
     }
 
-    protected RemoteCall<List<Type>>
-                executeRemoteCallMultipleValueReturn(Function function) {
+    protected RemoteCall<List<Type>> executeRemoteCallMultipleValueReturn(Function function) {
         return new RemoteCall<>(
                 () -> executeCallMultipleValueReturn(function));
     }
 
-    protected RemoteCall<TransactionReceipt>
-                executeRemoteCallTransaction(Function function) {
+    protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(Function function) {
         return new RemoteCall<>(() -> executeTransaction(function));
     }
 
@@ -399,8 +395,7 @@ public abstract class Contract extends ManagedTransaction {
         }
     }
 
-    protected static <T extends Contract> RemoteCall<T>
-                    deployRemoteCall(
+    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
             Class<T> type, AppChainj appChainj, TransactionManager transactionManager,
             long quota, String nonce, long validUntilBlock,
             int version, int chainId, String value,
@@ -519,8 +514,7 @@ public abstract class Contract extends ManagedTransaction {
     }
 
     @SuppressWarnings("unchecked")
-    protected static <S extends Type, T>
-            List<T> convertToNative(List<S> arr) {
+    protected static <S extends Type, T> List<T> convertToNative(List<S> arr) {
         List<T> out = new ArrayList<T>();
         for (Iterator<S> it = arr.iterator(); it.hasNext(); ) {
             out.add((T)it.next().getValue());

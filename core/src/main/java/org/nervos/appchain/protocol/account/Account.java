@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
@@ -58,7 +58,7 @@ public class Account {
                         version, chainId, value);
     }
 
-    public CompletableFuture<AppSendTransaction> deployAsync(
+    public Future<AppSendTransaction> deployAsync(
             File contractFile, String nonce, long quota,
             int version, int chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {

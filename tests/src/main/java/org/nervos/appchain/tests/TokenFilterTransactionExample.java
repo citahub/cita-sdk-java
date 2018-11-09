@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -79,12 +78,12 @@ public class TokenFilterTransactionExample {
     private static String getContractAddr(String txHash) throws IOException {
         AppGetTransactionReceipt transactionReceipt
                 = service.appGetTransactionReceipt(txHash).send();
-        Optional<TransactionReceipt> receipt = transactionReceipt.getTransactionReceipt();
-        if (!receipt.isPresent()) {
+        TransactionReceipt receipt = transactionReceipt.getTransactionReceipt();
+        if (receipt == null) {
             System.out.println("Failed to get tx receipt from hash: " + txHash);
             return null;
         }
-        return receipt.get().getContractAddress();
+        return receipt.getContractAddress();
     }
 
     private static Event createEvent() {
@@ -114,8 +113,7 @@ public class TokenFilterTransactionExample {
     }
 
     //this will call JSON RPC "getFilterChanges"
-    private static List<TransferEventResponse>
-            getFilterChanges(Event event, String filterId) throws IOException {
+    private static List<TransferEventResponse> getFilterChanges(Event event, String filterId) throws IOException {
         List<TransferEventResponse> responseList = new ArrayList<>();
         Request<?, AppLog> req = service
                 .appGetFilterChanges(BigInteger.valueOf(Long.parseLong(filterId)));
@@ -138,8 +136,7 @@ public class TokenFilterTransactionExample {
     }
 
     //this will call JSON RPC "getFilterLogs" to get logs
-    private static List<TransferEventResponse>
-            getFilterLogs(Event event, AppFilter appFilter) throws IOException {
+    private static List<TransferEventResponse> getFilterLogs(Event event, AppFilter appFilter) throws IOException {
         List<TransferEventResponse> responseList = new ArrayList<>();
         AppLog responseAppLog = service.appGetLogs(appFilter).send();
         List<AppLog.LogResult> logResults = responseAppLog.getLogs();

@@ -3,11 +3,9 @@ package org.nervos.appchain.tests;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Address;
@@ -82,11 +80,11 @@ public class InterfaceTest {
         System.out.println("======================================");
         System.out.println("***  4.  getBlockByNumber     ***");
         boolean returnFullTransactions = true;
-        Optional<String> blockByNumberOptionalHash = testAppGetBlockByNumber(
+        String blockByNumberHash = testAppGetBlockByNumber(
                 validBlockNumber, returnFullTransactions);
         String blockHash = "";
-        if (blockByNumberOptionalHash.isPresent()) {
-            blockHash = blockByNumberOptionalHash.get();
+        if (blockByNumberHash != null) {
+            blockHash = blockByNumberHash;
         } else {
             System.out.println("Failed to get block by number: " + validBlockNumber);
             System.exit(1);
@@ -129,10 +127,10 @@ public class InterfaceTest {
                 nonce, quotaToDeploy, validUtil.longValue(),
                 version, chainId, value, code);
         String signedTx = rtx.sign(privateKey, false, false);
-        Optional<String> optionTxHash = testAppSendRawTransaction(signedTx);
+        String optionTxHash = testAppSendRawTransaction(signedTx);
 
-        if (optionTxHash.isPresent()) {
-            validTransactionHash = optionTxHash.get();
+        if (optionTxHash != null) {
+            validTransactionHash = optionTxHash;
         } else {
             System.out.println("Failed to get deployment tx hash, maybe it failed to be validated");
             System.exit(1);
@@ -155,9 +153,9 @@ public class InterfaceTest {
         System.out.println("======================================");
         System.out.println("***  9.  getTransactionReceipt ***");
         String validContractAddress = "";
-        Optional<String> contractAddrOptional = testAppGetTransactionReceipt(validTransactionHash);
-        if (contractAddrOptional.isPresent()) {
-            validContractAddress = contractAddrOptional.get();
+        String contractAddr = testAppGetTransactionReceipt(validTransactionHash);
+        if (contractAddr != null) {
+            validContractAddress = contractAddr;
         } else {
             System.out.println("Failed to get address from tx receipt");
             System.exit(1);
@@ -257,7 +255,7 @@ public class InterfaceTest {
     }
 
     //3.  getBlockByNumber
-    private static Optional<String> testAppGetBlockByNumber(
+    private static String testAppGetBlockByNumber(
             BigInteger validBlockNumber, boolean isfullTranobj)
             throws Exception {
         AppBlock appBlock = service.appGetBlockByNumber(
@@ -265,11 +263,11 @@ public class InterfaceTest {
 
         if (appBlock.isEmpty()) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             AppBlock.Block block = appBlock.getBlock();
             printBlock(block);
-            return Optional.of(block.getHash());
+            return block.getHash();
         }
     }
 
@@ -290,20 +288,20 @@ public class InterfaceTest {
 
 
     //5.  sendRawTransaction
-    private static Optional<String> testAppSendRawTransaction(
+    private static String testAppSendRawTransaction(
             String rawData) throws Exception {
         AppSendTransaction appSendTx = service
                 .appSendRawTransaction(rawData).send();
 
         if (appSendTx.isEmpty()) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             String hash = appSendTx.getSendTransactionResult().getHash();
             System.out.println("hash(Transaction):" + hash);
             System.out.println("status:"
                     + appSendTx.getSendTransactionResult().getStatus());
-            return Optional.of(hash);
+            return hash;
         }
     }
 
@@ -314,11 +312,11 @@ public class InterfaceTest {
         AppTransaction appTransaction = service.appGetTransactionByHash(
                 validTransactionHash).send();
 
-        if (!appTransaction.getTransaction().isPresent()) {
+        if (appTransaction.getTransaction() == null) {
             System.out.println("the result is null");
         } else {
             org.nervos.appchain.protocol.core.methods.response.Transaction transaction
-                    = appTransaction.getTransaction().get();
+                    = appTransaction.getTransaction();
             System.out.println("hash(Transaction):" + transaction.getHash());
             System.out.println("content:" + transaction.getContent());
             System.out.println("blockNumber(dec):" + transaction.getBlockNumber());
@@ -343,25 +341,25 @@ public class InterfaceTest {
     }
 
     //8.  getTransactionReceipt
-    private static Optional<String> testAppGetTransactionReceipt(
+    private static String testAppGetTransactionReceipt(
             String validTransactionHash) throws Exception {
         AppGetTransactionReceipt appGetTransactionReceipt = service.appGetTransactionReceipt(
                 validTransactionHash).send();
 
-        if (!appGetTransactionReceipt.getTransactionReceipt().isPresent()) {
+        if (appGetTransactionReceipt.getTransactionReceipt() == null) {
             System.out.println("the result is null");
-            return Optional.empty();
+            return null;
         } else {
             //is option_value is null return NoSuchElementException, else return option_value
             TransactionReceipt transactionReceipt =
-                    appGetTransactionReceipt.getTransactionReceipt().get();
+                    appGetTransactionReceipt.getTransactionReceipt();
             printTransactionReceiptInfo(transactionReceipt);
             if (transactionReceipt.getErrorMessage() != null) {
                 System.out.println("Transaction failed.");
                 System.out.println("Error Message: " + transactionReceipt.getErrorMessage());
                 System.exit(1);
             }
-            return Optional.of(transactionReceipt.getContractAddress());
+            return transactionReceipt.getContractAddress();
         }
 
     }

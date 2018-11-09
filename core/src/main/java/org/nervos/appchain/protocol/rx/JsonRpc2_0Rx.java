@@ -2,9 +2,9 @@ package org.nervos.appchain.protocol.rx;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.stream.Collectors;
 
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
@@ -84,7 +84,7 @@ public class JsonRpc2_0Rx {
         return appPendingTransactionHashObservable(pollingInterval)
                 .flatMap(transactionHash ->
                         appChainj.appGetTransactionByHash(transactionHash).observable())
-                .map(appTransaction -> appTransaction.getTransaction().get());
+                .map(appTransaction -> appTransaction.getTransaction());
     }
 
     public Observable<AppBlock> blockObservable(
@@ -233,8 +233,12 @@ public class JsonRpc2_0Rx {
     private static List<Transaction> toTransactions(AppBlock appBlock) {
         // If you ever see an exception thrown here, it's probably due to an incomplete chain in
         // Geth/Parity. You should resync to solve.
-        return appBlock.getBlock().getBody().getTransactions().stream()
-                .map(transactionResult -> (Transaction) transactionResult.get())
-                .collect(Collectors.toList());
+        List<AppBlock.TransactionObject> transactionResults = appBlock.getBlock().getBody().getTransactions();
+        List<Transaction> transactions = new ArrayList<Transaction>(transactionResults.size());
+
+        for (AppBlock.TransactionResult transactionResult : transactionResults) {
+            transactions.add((Transaction) transactionResult.get());
+        }
+        return transactions;
     }
 }

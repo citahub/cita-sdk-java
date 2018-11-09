@@ -2,7 +2,8 @@ package org.nervos.appchain.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,8 +39,13 @@ public abstract class Service implements AppChainjService {
     }
 
     @Override
-    public <T extends Response> CompletableFuture<T> sendAsync(
-            Request jsonRpc20Request, Class<T> responseType) {
-        return Async.run(() -> send(jsonRpc20Request, responseType));
+    public <T extends Response> Future<T> sendAsync(
+            final Request jsonRpc20Request, final Class<T> responseType) {
+        return Async.run(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return Service.this.send(jsonRpc20Request, responseType);
+            }
+        });
     }
 }
