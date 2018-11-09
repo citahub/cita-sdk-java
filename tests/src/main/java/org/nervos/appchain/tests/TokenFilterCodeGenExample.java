@@ -5,6 +5,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
+import io.reactivex.functions.Consumer;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
@@ -52,14 +54,18 @@ public class TokenFilterCodeGenExample {
     }
 
     private void eventObserve() {
-        rx.Observable<Token.TransferEventResponse> observable =
-                token.transferEventObservable(
+        Flowable<Token.TransferEventResponse> flowable =
+                token.transferEventFlowable(
                         DefaultBlockParameter.valueOf(BigInteger.ONE),
                         DefaultBlockParameterName.LATEST);
-        observable.subscribe(
-                event -> System.out.println(
-                        "Observable, TransferEvent(" + event._from + ", "
-                                + event._to + ", " + event._value.longValue() + ")"));
+        flowable.subscribe(new Consumer<Token.TransferEventResponse>() {
+            @Override
+            public void accept(Token.TransferEventResponse event) throws Exception {
+                System.out.println(
+                        "Flowable, TransferEvent(" + event._from + ", "
+                                + event._to + ", " + event._value.longValue() + ")");
+            }
+        });
     }
 
     private void randomTransferToken() {

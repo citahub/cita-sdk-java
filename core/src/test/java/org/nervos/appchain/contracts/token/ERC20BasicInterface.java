@@ -3,10 +3,10 @@ package org.nervos.appchain.contracts.token;
 import java.math.BigInteger;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.RemoteCall;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import rx.Observable;
 
 /**
  * Describes the Ethereum "Basic" subset of the ERC-20 token standard.
@@ -26,10 +26,10 @@ public interface ERC20BasicInterface<T> {
     RemoteCall<BigInteger> balanceOf(String who);
 
     RemoteCall<TransactionReceipt> transfer(String to, BigInteger value);
-    
+
     List<T> getTransferEvents(TransactionReceipt transactionReceipt);
 
-    Observable<T> transferEventObservable(DefaultBlockParameter startBlock,
-            DefaultBlockParameter endBlock);
+    Flowable<T> transferEventFlowable(DefaultBlockParameter startBlock,
+                                      DefaultBlockParameter endBlock);
 
 }

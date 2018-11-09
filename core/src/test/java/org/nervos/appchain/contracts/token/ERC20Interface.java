@@ -3,10 +3,10 @@ package org.nervos.appchain.contracts.token;
 import java.math.BigInteger;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.RemoteCall;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import rx.Observable;
 
 /**
  * The Ethereum ERC-20 token standard.
@@ -29,7 +29,7 @@ public interface ERC20Interface<R, T> extends ERC20BasicInterface<T> {
 
     List<R> getApprovalEvents(TransactionReceipt transactionReceipt);
 
-    Observable<R> approvalEventObservable(DefaultBlockParameter startBlock,
-            DefaultBlockParameter endBlock);
+    Flowable<R> approvalEventFlowable(DefaultBlockParameter startBlock,
+                                      DefaultBlockParameter endBlock);
 
 }

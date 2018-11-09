@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import io.reactivex.Flowable;
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
 import org.nervos.appchain.abi.TypeReference;
@@ -22,8 +24,6 @@ import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import org.nervos.appchain.tx.Contract;
 import org.nervos.appchain.tx.TransactionManager;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * <p>Auto generated code.
@@ -55,15 +55,15 @@ public class Token extends Contract {
         return responses;
     }
 
-    public Observable<TransferEventResponse> transferEventObservable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+    public Flowable<TransferEventResponse> transferEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         final Event event = new Event("Transfer",
                 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         AppFilter filter = new AppFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(event));
-        return appChainj.appLogObservable(filter).map(new Func1<Log, TransferEventResponse>() {
+        return appChainj.appLogFlowable(filter).map(new io.reactivex.functions.Function<Log, TransferEventResponse>() {
             @Override
-            public TransferEventResponse call(Log log) {
+            public TransferEventResponse apply(Log log) throws Exception {
                 EventValues eventValues = extractEventParameters(event, log);
                 TransferEventResponse typedResponse = new TransferEventResponse();
                 typedResponse._from = (String) eventValues.getIndexedValues().get(0).getValue();
@@ -112,5 +112,6 @@ public class Token extends Contract {
 
         public BigInteger _value;
     }
+
 }
 //CHECKSTYLE:ON
