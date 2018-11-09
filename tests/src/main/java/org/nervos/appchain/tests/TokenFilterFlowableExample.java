@@ -24,7 +24,6 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
-
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
 public class TokenFilterFlowableExample {

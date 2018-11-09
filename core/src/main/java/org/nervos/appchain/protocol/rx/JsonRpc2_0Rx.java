@@ -6,7 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 
-import io.reactivex.*;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.Scheduler;
+
 import io.reactivex.functions.Cancellable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -15,7 +20,11 @@ import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterNumber;
-import org.nervos.appchain.protocol.core.filters.*;
+import org.nervos.appchain.protocol.core.filters.BlockFilter;
+import org.nervos.appchain.protocol.core.filters.Callback;
+import org.nervos.appchain.protocol.core.filters.Filter;
+import org.nervos.appchain.protocol.core.filters.LogFilter;
+import org.nervos.appchain.protocol.core.filters.PendingTransactionFilter;
 import org.nervos.appchain.protocol.core.methods.request.AppFilter;
 import org.nervos.appchain.protocol.core.methods.response.AppBlock;
 import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
@@ -41,8 +50,7 @@ public class JsonRpc2_0Rx {
 
     public Flowable<String> appBlockHashFlowable(long pollingInterval) {
         return Flowable.create(subscriber -> {
-            BlockFilter blockFilter = new BlockFilter(
-                    appChainj, new Callback<String>() {
+            BlockFilter blockFilter = new BlockFilter(appChainj, new Callback<String>() {
                 @Override
                 public void onEvent(final String value) {
                     subscriber.onNext(value);
@@ -61,13 +69,11 @@ public class JsonRpc2_0Rx {
         }, BackpressureStrategy.BUFFER);
     }
 
-    public Flowable<Log> appLogFlowable(
-            AppFilter appFilter, long pollingInterval) {
+    public Flowable<Log> appLogFlowable(AppFilter appFilter, long pollingInterval) {
         return Flowable.create(new FlowableOnSubscribe<Log>() {
             @Override
             public void subscribe(FlowableEmitter<Log> emitter) throws Exception {
-                final LogFilter logFilter = new LogFilter(
-                        appChainj, new Callback<Log>() {
+                final LogFilter logFilter = new LogFilter(appChainj, new Callback<Log>() {
                     @Override
                     public void onEvent(Log value) {
                         emitter.onNext(value);

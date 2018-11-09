@@ -151,9 +151,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Request<?, AppSendTransaction>
-    appSendRawTransaction(
-            String signedTransactionData) {
+    public Request<?, AppSendTransaction> appSendRawTransaction(String signedTransactionData) {
         return new Request<>(
                 "sendRawTransaction",
                 Arrays.asList(signedTransactionData),
@@ -162,8 +160,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Request<?, AppCall> appCall(
-            Call call, DefaultBlockParameter defaultBlockParameter) {
+    public Request<?, AppCall> appCall(Call call, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "call",
                 Arrays.asList(call, defaultBlockParameter),
@@ -173,8 +170,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
 
 
     @Override
-    public Request<?, AppBlock> appGetBlockByHash(
-            String blockHash, boolean returnFullTransactionObjects) {
+    public Request<?, AppBlock> appGetBlockByHash(String blockHash, boolean returnFullTransactionObjects) {
         return new Request<>(
                 "getBlockByHash",
                 Arrays.asList(
@@ -296,14 +292,12 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Flowable<Transaction>
-    transactionFlowable() {
+    public Flowable<Transaction> transactionFlowable() {
         return appChainjRx.transactionFlowable(blockTime);
     }
 
     @Override
-    public Flowable<Transaction>
-    pendingTransactionFlowable() {
+    public Flowable<Transaction> pendingTransactionFlowable() {
         return appChainjRx.pendingTransactionFlowable(blockTime);
     }
 
@@ -328,9 +322,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Flowable<Transaction>
-    replayTransactionsFlowable(
-            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+    public Flowable<Transaction> replayTransactionsFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
         return appChainjRx.replayTransactionsFlowable(startBlock, endBlock);
     }
 
@@ -349,8 +341,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Flowable<Transaction>
-    catchUpToLatestTransactionFlowable(DefaultBlockParameter startBlock) {
+    public Flowable<Transaction> catchUpToLatestTransactionFlowable(DefaultBlockParameter startBlock) {
         return appChainjRx.catchUpToLatestTransactionFlowable(startBlock);
     }
 
@@ -362,8 +353,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Flowable<Transaction>
-    catchUpToLatestAndSubscribeToNewTransactionsFlowable(
+    public Flowable<Transaction> catchUpToLatestAndSubscribeToNewTransactionsFlowable(
             DefaultBlockParameter startBlock) {
         return appChainjRx.catchUpToLatestAndSubscribeToNewTransactionsFlowable(
                 startBlock, blockTime);

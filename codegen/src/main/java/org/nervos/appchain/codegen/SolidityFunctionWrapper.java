@@ -760,10 +760,10 @@ public class SolidityFunctionWrapper extends Generator {
 
         TypeSpec converter = TypeSpec.anonymousClassBuilder("")
                 .addSuperinterface(ParameterizedTypeName.get(
-                        ClassName.get(Function.class),
+                        ClassName.get(io.reactivex.functions.Function.class),
                         ClassName.get(Log.class),
                         ClassName.get("", responseClassName)))
-                .addMethod(MethodSpec.methodBuilder("call")
+                .addMethod(MethodSpec.methodBuilder("apply")
                         .addAnnotation(Override.class)
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(Log.class, "log")

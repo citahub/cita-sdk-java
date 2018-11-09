@@ -1,16 +1,16 @@
 package org.nervos.appchain.utils;
 
-import io.reactivex.Flowable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
-import io.reactivex.functions.Consumer;
-import org.junit.Test;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -65,8 +65,7 @@ public class FlowablesTests {
                         results.add(result);
                         transactionLatch.countDown();
                     }
-                }
-                ,
+                },
                 new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {

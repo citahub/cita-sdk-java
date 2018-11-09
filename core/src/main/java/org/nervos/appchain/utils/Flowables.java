@@ -1,11 +1,11 @@
 package org.nervos.appchain.utils;
 
+import java.math.BigInteger;
+
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
-
-import java.math.BigInteger;
 
 /**
  * Flowable utility functions.
@@ -38,8 +38,7 @@ public class Flowables {
             return Flowable.create(new FlowableOnSubscribe<BigInteger>() {
                 @Override
                 public void subscribe(FlowableEmitter<BigInteger> emitter) throws Exception {
-                    for (BigInteger i = startValue; i.compareTo(endValue) < 1 && !emitter.isCancelled();
-                         i = i.add(BigInteger.ONE)) {
+                    for (BigInteger i = startValue; i.compareTo(endValue) < 1 && !emitter.isCancelled(); i = i.add(BigInteger.ONE)) {
                         emitter.onNext(i);
                     }
                     if (!emitter.isCancelled()) {
@@ -51,8 +50,7 @@ public class Flowables {
             return Flowable.create(new FlowableOnSubscribe<BigInteger>() {
                 @Override
                 public void subscribe(FlowableEmitter<BigInteger> emitter) throws Exception {
-                    for (BigInteger i = endValue;  i.compareTo(startValue) > -1 && !emitter.isCancelled();
-                         i = i.subtract(BigInteger.ONE)) {
+                    for (BigInteger i = endValue;  i.compareTo(startValue) > -1 && !emitter.isCancelled(); i = i.subtract(BigInteger.ONE)) {
                         emitter.onNext(i);
                     }
                     if (!emitter.isCancelled()) {
