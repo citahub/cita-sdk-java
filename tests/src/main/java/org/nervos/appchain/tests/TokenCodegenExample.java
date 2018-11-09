@@ -1,11 +1,7 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
@@ -60,17 +56,18 @@ public class TokenCodegenExample {
     }
 
     private static long getBalance(Credentials credentials) {
-        BigInteger accountBalance = BigInteger.ZERO;
+        long accountBalance = 0;
         try {
-            accountBalance = token.getBalance(
-                    credentials.getAddress()).send();
+            Future<BigInteger> balanceFuture = token.getBalance(
+                    credentials.getAddress()).sendAsync();
+            accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
         } catch (Exception e) {
             System.out.println("Failed to get balance of account: "
                     + credentials.getAddress());
             e.printStackTrace();
             System.exit(1);
         }
-        return accountBalance.longValue();
+        return accountBalance;
     }
 
     private static void printBalanceInfo() {
@@ -221,7 +218,7 @@ public class TokenCodegenExample {
 
         System.out.println("Wait 10s for contract to be deployed...");
         Thread.sleep(10000);
-        token = tokenFuture.get();
+        Token token = tokenFuture.get();
         if (token != null) {
             System.out.println("contract deployment success. Contract address: "
                     + token.getContractAddress());

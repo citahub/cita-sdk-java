@@ -38,39 +38,38 @@ import org.nervos.appchain.utils.Numeric;
 public abstract class Contract extends ManagedTransaction {
 
     // https://www.reddit.com/r/ethereum/comments/5g8ia6/attention_miners_we_recommend_raising_gas_limit/
-    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(4_300_000);
 
     protected final String contractBinary;
     protected String contractAddress;
-    protected BigInteger gasPrice;
-    protected BigInteger gasLimit;
+    protected String nonce;
+    protected long quota;
     protected TransactionReceipt transactionReceipt;
     protected Map<String, String> deployedAddresses;
 
     protected Contract(String contractBinary, String contractAddress,
                        AppChainj appChainj, TransactionManager transactionManager,
-                       BigInteger gasPrice, BigInteger gasLimit) {
+                       String nonce, long quota) {
         super(appChainj, transactionManager);
 
         //this.contractAddress = ensResolver.resolve(contractAddress);
 
         this.contractAddress = contractAddress;
         this.contractBinary = contractBinary;
-        this.gasPrice = gasPrice;
-        this.gasLimit = gasLimit;
+        this.nonce = nonce;
+        this.quota = quota;
     }
 
     protected Contract(String contractBinary, String contractAddress,
                        AppChainj appChainj, TransactionManager transactionManager) {
         this(contractBinary, contractAddress, appChainj,
-                transactionManager, BigInteger.ZERO, BigInteger.ZERO);
+                transactionManager, "", 0);
     }
 
     @Deprecated
     protected Contract(String contractAddress,
                        AppChainj appChainj, TransactionManager transactionManager) {
         this("", contractAddress, appChainj,
-                transactionManager, BigInteger.ZERO, BigInteger.ZERO);
+                transactionManager, "", 0);
     }
 
     public void setContractAddress(String contractAddress) {
@@ -187,6 +186,33 @@ public abstract class Contract extends ManagedTransaction {
         return executeCall(function);
     }
 
+    protected TransactionReceipt executeTransaction(
+            Function function)
+            throws IOException, TransactionException {
+        return executeTransaction(function, "0");
+    }
+
+    private TransactionReceipt executeTransaction(
+            Function function, String weiValue)
+            throws IOException, TransactionException {
+        return executeTransaction(FunctionEncoder.encode(function), weiValue);
+    }
+
+    /**
+     * Given the duration required to execute a transaction.
+     *
+     * @param data  to send in transaction
+     * @return  containing our transaction receipt
+     * @throws IOException                 if the call to the node fails
+     * @throws TransactionException if the transaction was not mined while waiting
+     */
+    TransactionReceipt executeTransaction(
+            String data, String weiValue)
+            throws TransactionException, IOException {
+
+        return send(contractAddress, data, quota, nonce, 0, 1, BigInteger.ONE, weiValue);
+    }
+
     TransactionReceipt executeTransaction(
             String data, long quota, String nonce, long validUntilBlock,
             int version , BigInteger chainId, String value)
@@ -209,6 +235,15 @@ public abstract class Contract extends ManagedTransaction {
     protected RemoteCall<List<Type>> executeRemoteCallMultipleValueReturn(Function function) {
         return new RemoteCall<>(
                 () -> executeCallMultipleValueReturn(function));
+    }
+
+    protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(Function function) {
+        return new RemoteCall<>(() -> executeTransaction(function));
+    }
+
+    protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
+            Function function, String weiValue) {
+        return new RemoteCall<>(() -> executeTransaction(function, weiValue));
     }
 
     protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
