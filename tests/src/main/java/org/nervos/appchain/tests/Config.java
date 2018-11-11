@@ -21,6 +21,7 @@ public class Config {
     private static final String TOKEN_SOLIDITY = "TokenSolidity";
     private static final String TOKEN_BIN = "TokenBin";
     private static final String TOKEN_ABI = "TokenAbi";
+    private static final String SIMPLE_DATA_BIN = "SimpleDataBin";
     private static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
     private static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
     private static final String ADMIN_PRIVATE_KEY = "AdminPrivateKey";
@@ -38,6 +39,7 @@ public class Config {
     public String tokenSolidity;
     public String tokenBin;
     public String tokenAbi;
+    public String simpleBin;
     public String defaultQuotaTransfer;
     public String defaultQuotaDeployment;
     public AppChainj service;
@@ -96,6 +98,7 @@ public class Config {
         tokenSolidity = props.getProperty(TOKEN_SOLIDITY);
         tokenBin = props.getProperty(TOKEN_BIN);
         tokenAbi = props.getProperty(TOKEN_ABI);
+        simpleBin = props.getProperty(SIMPLE_DATA_BIN);
         defaultQuotaTransfer = props.getProperty(DEFAULT_QUOTA_Transfer);
         defaultQuotaDeployment = props.getProperty(DEFAULT_QUOTA_Deployment);
         adminPrivateKey = props.getProperty(ADMIN_PRIVATE_KEY);
