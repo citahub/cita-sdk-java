@@ -1,6 +1,7 @@
 package org.nervos.appchain.protocol.core.methods.request;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.protobuf.ByteString;
@@ -47,7 +48,6 @@ public class Transaction {
             String to, String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String data) {
         this.to = to;
-        this.nonce = nonce;
         this.quota = quota;
         this.version = version;
         this.validUntilBlock = validUntilBlock;
@@ -58,13 +58,22 @@ public class Transaction {
             this.data = Numeric.prependHexPrefix(data);
         }
 
+        this.nonce = processNonce(nonce);
         this.value = processValue(value);
         this.to = processTo(to);
     }
 
-    public static String processValue(String value) {
+    private static String processNonce(String nonce) {
+        if (nonce == null || nonce.isEmpty()) {
+            Random random = new Random(System.currentTimeMillis());
+            return String.valueOf(Math.abs(random.nextLong()));
+        }
+        return nonce;
+    }
+
+    private static String processValue(String value) {
         String result = "";
-        if (value == null || value.equals("")) {
+        if (value == null || value.isEmpty()) {
             result = "0";
         } else if (value.matches("0[xX][0-9a-fA-F]+")) {
             result = value.substring(2);
@@ -85,7 +94,7 @@ public class Transaction {
         }
     }
 
-    public static String processTo(String to) {
+    private static String processTo(String to) {
         if (!Keys.verifyAddress(to)) {
             if (!to.matches("^(0x|0X)?")) {
                 throw new IllegalArgumentException("Address is not in correct format.");
