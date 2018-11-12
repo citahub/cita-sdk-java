@@ -109,6 +109,13 @@ public class Transaction {
         return new Transaction("", nonce, quota, validUntilBlock, version, chainId, value, init);
     }
 
+    public static Transaction createContractTransaction(
+            String nonce, long quota, long validUntilBlock,
+            int version, int chainId, String value, String contractCode, String constructorCode) {
+        String init = contractCode + Numeric.cleanHexPrefix(constructorCode);
+        return new Transaction("", nonce, quota, validUntilBlock, version, chainId, value, init);
+    }
+
     public static Transaction createFunctionCallTransaction(
             String to, String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String data) {
