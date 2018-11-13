@@ -24,16 +24,16 @@ maven
 <dependency>
   <groupId>org.nervos</groupId>
   <artifactId>core</artifactId>
-  <version>0.19</version>
+  <version>0.20</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'org.nervos:core:0.19'
+compile 'org.nervos:core:0.20'
 ```
 Scala SBT
 ```
-libraryDependencies += "org.nervos" % "core" % "0.19"
+libraryDependencies += "org.nervos" % "core" % "0.20"
 ```
 Install manually
 If you want to generate the jar and import manually.
