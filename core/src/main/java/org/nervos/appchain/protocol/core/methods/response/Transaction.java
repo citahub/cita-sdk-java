@@ -1,8 +1,16 @@
 package org.nervos.appchain.protocol.core.methods.response;
 
 import java.math.BigInteger;
+import java.security.SignatureException;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import org.nervos.appchain.crypto.Keys;
+import org.nervos.appchain.crypto.Sign;
+import org.nervos.appchain.protobuf.Blockchain;
+import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.utils.Numeric;
+import org.nervos.appchain.utils.TransactionUtil;
 
 /**
  * Transaction object used by both {@link AppTransaction} and {@link AppBlock}.
@@ -68,6 +76,16 @@ public class Transaction {
 
     public String getIndex() {
         return index;
+    }
+
+    public boolean verifySignature(String addr)
+            throws InvalidProtocolBufferException, SignatureException {
+        return TransactionUtil.verifySignature(addr, content);
+    }
+
+    public org.nervos.appchain.protocol.core.methods.request.Transaction
+            decodeContent() throws InvalidProtocolBufferException {
+        return TransactionUtil.decodeContent(content);
     }
 
     @Override
