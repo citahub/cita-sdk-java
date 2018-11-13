@@ -22,8 +22,6 @@ public class TokenFilterCodeGenExample {
     private static String value;
     private static Token token;
 
-    private static final String configPath = "tests/src/main/resources/config.properties";
-
     static {
 
         Config conf = new Config();
