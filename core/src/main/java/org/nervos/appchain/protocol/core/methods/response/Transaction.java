@@ -10,6 +10,7 @@ import org.nervos.appchain.crypto.Sign;
 import org.nervos.appchain.protobuf.Blockchain;
 import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.utils.Numeric;
+import org.nervos.appchain.utils.TransactionUtil;
 
 /**
  * Transaction object used by both {@link AppTransaction} and {@link AppBlock}.
@@ -79,85 +80,12 @@ public class Transaction {
 
     public boolean verifySignature(String addr)
             throws InvalidProtocolBufferException, SignatureException {
-
-        if (!addr.matches("0[xX][0-9a-fA-F]+")) {
-            throw new IllegalArgumentException("Address should be in hex.");
-        }
-
-        if (addr.length() != 42) {
-            throw new IllegalArgumentException("Length of address should be 20 bytes");
-        }
-
-        byte[] contentBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(content));
-        Blockchain.UnverifiedTransaction unverifiedTx
-                = Blockchain.UnverifiedTransaction.parseFrom(contentBytes);
-
-        //signature = r (32 byte) + s (32 byte) + v (1 byte)
-        ByteString sigByteString = unverifiedTx.getSignature();
-        byte[] sigBytes = sigByteString.toByteArray();
-        String sig = ConvertStrByte.bytesToHexString(sigBytes);
-
-        if (sig.length() != 130) {
-            throw new IllegalArgumentException("Transaction signature is not in correct format");
-        }
-
-        String r = sig.substring(0, 64);
-        String s = sig.substring(64, 128);
-        String v = sig.substring(128);
-
-        byte[] bytesR = ConvertStrByte.hexStringToBytes(r);
-        byte[] bytesS = ConvertStrByte.hexStringToBytes(s);
-        byte[] bytesV = ConvertStrByte.hexStringToBytes(v);
-        byte byteV = bytesV[0];
-
-        String recoveredPubKey = Sign.signedMessageToKey(
-                unverifiedTx.getTransaction().toByteArray(),
-                new Sign.SignatureData(byteV, bytesR, bytesS)).toString(16);
-
-        String recoveredAddr = Keys.getAddress(recoveredPubKey);
-
-        return recoveredAddr.equals(Numeric.cleanHexPrefix(addr));
+        return TransactionUtil.verifySignature(addr, content);
     }
 
     public org.nervos.appchain.protocol.core.methods.request.Transaction
             decodeContent() throws InvalidProtocolBufferException {
-
-        Blockchain.UnverifiedTransaction unverifiedTx
-                = Blockchain.UnverifiedTransaction.parseFrom(
-                        ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(content)));
-
-        Blockchain.Transaction blockChainTx = unverifiedTx.getTransaction();
-
-        int version = blockChainTx.getVersion();
-        String nonce = blockChainTx.getNonce();
-        long quota = blockChainTx.getQuota();
-        long validUntilBlock = blockChainTx.getValidUntilBlock();
-        String data = bytestringToString(blockChainTx.getData());
-        String value = bytestringToString(blockChainTx.getValue());
-
-        String to = null;
-        Integer chainId = null;
-
-        //version 0: cita 0.19
-        //version 1: cita 0.20
-        if (version == 0) {
-            to = blockChainTx.getTo();
-            chainId = blockChainTx.getChainId();
-        } else if (version == 1) {
-            to = bytestringToString(blockChainTx.getToV1());
-            chainId = Integer.parseInt(bytestringToString(blockChainTx.getChainIdV1()));
-        }
-
-        if (chainId == null || to == null) {
-            throw new NullPointerException("Cannot get chainId or to from chain.");
-        }
-
-        return new org.nervos.appchain.protocol.core.methods.request.Transaction(
-                to, nonce, quota, validUntilBlock, version, chainId, value, data);
-    }
-
-    private static String bytestringToString(ByteString byteStr) {
-        return ConvertStrByte.bytesToHexString(byteStr.toByteArray());
+        return TransactionUtil.decodeContent(content);
     }
 
     @Override
