@@ -51,9 +51,9 @@ public class InterfaceTest {
         service = conf.service;
         privateKey = conf.primaryPrivKey;
         quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
-        version = Integer.parseInt(conf.version);
-        chainId = Integer.parseInt(conf.chainId);
         value = "0";
+        version = TestUtil.getVersion(service);
+        chainId = TestUtil.getChainId(service);
     }
 
     public static void main(String[] args) throws Exception {
@@ -203,31 +203,34 @@ public class InterfaceTest {
         if (appMetaData == null) {
             System.out.println("the result is null");
         } else {
-            System.out.println("TokenName: "
-                    + appMetaData.getAppMetaDataResult().tokenName);
-            System.out.println("TokenSymbol: "
-                    + appMetaData.getAppMetaDataResult().tokenSymbol);
-            System.out.println("TokenAvator: "
-                    + appMetaData.getAppMetaDataResult().tokenAvatar);
-            System.out.println("ChainName: "
-                    + appMetaData.getAppMetaDataResult().chainName);
-            System.out.println("Genesis TS: "
-                    + appMetaData.getAppMetaDataResult().genesisTimestamp);
-            System.out.println("Operator: "
-                    + appMetaData.getAppMetaDataResult().operator);
-            System.out.println("Website: "
-                    + appMetaData.getAppMetaDataResult().website);
-            System.out.println("Block Interval: "
-                    + appMetaData.getAppMetaDataResult().blockInterval);
-            System.out.println("Chain Id: "
-                    + appMetaData.getAppMetaDataResult().chainId);
-            System.out.println("Validators: ");
-            Arrays.asList(appMetaData.getAppMetaDataResult().validators)
-                    .forEach(x -> System.out.println("Address: " + x.toString()));
             System.out.println("Version: "
-                    + appMetaData.getAppMetaDataResult().version);
+                    + appMetaData.getAppMetaDataResult().getVersion());
+            version = appMetaData.getAppMetaDataResult().getVersion();
+            System.out.println("TokenName: "
+                    + appMetaData.getAppMetaDataResult().getTokenName());
+            System.out.println("TokenSymbol: "
+                    + appMetaData.getAppMetaDataResult().getTokenSymbol());
+            System.out.println("TokenAvator: "
+                    + appMetaData.getAppMetaDataResult().getTokenAvatar());
+            System.out.println("ChainName: "
+                    + appMetaData.getAppMetaDataResult().getChainName());
+            System.out.println("Genesis TS: "
+                    + appMetaData.getAppMetaDataResult().getGenesisTimestamp());
+            System.out.println("Operator: "
+                    + appMetaData.getAppMetaDataResult().getOperator());
+            System.out.println("Website: "
+                    + appMetaData.getAppMetaDataResult().getWebsite());
+            System.out.println("Block Interval: "
+                    + appMetaData.getAppMetaDataResult().getBlockInterval());
+            System.out.println("Chain Id: "
+                    + appMetaData.getAppMetaDataResult().getChainId());
+            System.out.println("Validators: ");
+            Arrays.asList(appMetaData.getAppMetaDataResult().getValidators())
+                    .forEach(x -> System.out.println("Address: " + x.toString()));
             System.out.println("Economical Model: "
-                    + appMetaData.getAppMetaDataResult().economicalModel);
+                    + appMetaData.getAppMetaDataResult().getEconomicalModel());
+            System.out.println("Chain Id V1: "
+                    + appMetaData.getAppMetaDataResult().getChainIdV1());
         }
     }
 

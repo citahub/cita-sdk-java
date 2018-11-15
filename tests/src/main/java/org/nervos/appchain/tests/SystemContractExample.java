@@ -11,6 +11,8 @@ public class SystemContractExample {
     static AppChainj service;
     static String senderAddr;
     static String adminPriavteKey;
+    static int version;
+    static int chainId;
 
     static {
         Config conf = new Config();
@@ -18,6 +20,8 @@ public class SystemContractExample {
         service = conf.service;
         senderAddr = conf.primaryAddr;
         adminPriavteKey = conf.adminPrivateKey;
+        version = TestUtil.getVersion(service);
+        chainId = TestUtil.getChainId(service);
     }
 
     public static void main(String[] args) throws Exception {
@@ -43,7 +47,7 @@ public class SystemContractExample {
 
         //test approve node
         boolean approved = sysContract.approveNode(
-                "0xe2066149012e6c1505e3549d103068bd0f2f0577", adminPriavteKey);
+                "0xe2066149012e6c1505e3549d103068bd0f2f0577", adminPriavteKey, version, chainId);
         if (approved) {
             System.out.println(
                     "Node(0xe2066149012e6c1505e3549d103068bd0f2f0577) "
@@ -52,7 +56,7 @@ public class SystemContractExample {
 
         //test for delete node
         boolean deleted = sysContract.deleteNode(
-                "0xe2066149012e6c1505e3549d103068bd0f2f0577", adminPriavteKey);
+                "0xe2066149012e6c1505e3549d103068bd0f2f0577", adminPriavteKey, version, chainId);
         if (deleted) {
             System.out.println(
                     "Node(0xe2066149012e6c1505e3549d103068bd0f2f0577) "

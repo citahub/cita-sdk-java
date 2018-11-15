@@ -4,16 +4,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.nervos.appchain.abi.FunctionEncoder;
+import org.nervos.appchain.abi.FunctionReturnDecoder;
 import org.nervos.appchain.abi.TypeReference;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.protocol.AppChainj;
+import org.nervos.appchain.protocol.AppChainjService;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.methods.request.Call;
+import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
+import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
+import org.nervos.appchain.protocol.core.methods.response.Log;
+import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
+
+import static org.nervos.appchain.protocol.system.Util.getNonce;
+import static org.nervos.appchain.protocol.system.Util.getValidUtilBlock;
 
 /**
  * Please check system smart contracts at
@@ -52,7 +63,7 @@ public interface AppChainSystemContract {
     String PRICE_MANAGER_GET_QUOTA_PRICE = "getQuotaPrice";
 
     //Permission manager
-    String PERMISSION_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff020010";
+    String PERMISSION_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff020004";
     //Permission manager manipulation
     String PERMISSION_MANAGER_NEW_PERMISSION = "newPermission";
     String PERMISSION_MANAGER_DELETE_PERMISSION = "deletePermission";
@@ -64,16 +75,20 @@ public interface AppChainSystemContract {
     String PERMISSION_MANAGER_CANCEL_AUTHORIZATION = "cancelAuthorization";
     String PERMISSION_MANAGER_CANCEL_AUTHORIZATIONS = "cancelAuthorizations";
     String PERMISSION_MANAGER_CLEAR_AUTHORIZATION = "clearAuthorization";
+
     //Permission manager query
-    String PERMISSION_MANAGER_QUERY_ALL_ACCOUNTS = "queryAllAccounts";
-    String PERMISSION_MANAGER_QUERY_PERMISSION = "queryPermissions";
-    String PERMISSION_MANAGER_QUERY_ACCOUNTS = "queryAccounts";
-    String PERMISSION_MANAGER_CHECK_PERMISSON = "checkPermission";
-    String PERMISSION_MANAGER_CHECK_RESOURCE = "checkResource";
     String PERMISSION_MANAGER_IN_PERMISSION = "inPermission";
     String PERMISSION_MANAGER_QUERY_INFO = "queryInfo";
     String PERMISSION_MANAGER_QUERY_NAME = "queryName";
     String PERMISSION_MANAGER_QUERY_RESOURCE = "queryResource";
+
+    //Auth manager query
+    String Authorization_MANAGER_ADDRESS = "0xffffffffffffffffffffffffffffffffff020006";
+    String Authorization_MANAGER_QUERY_ALL_ACCOUNTS = "queryAllAccounts";
+    String Authorization_MANAGER_QUERY_PERMISSION = "queryPermissions";
+    String Authorization_MANAGER_QUERY_ACCOUNTS = "queryAccounts";
+    String Authorization_MANAGER_CHECK_PERMISSON = "checkPermission";
+    String Authorization_MANAGER_CHECK_RESOURCE = "checkResource";
 
     //User manager
     String USER_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff020010";
@@ -119,6 +134,95 @@ public interface AppChainSystemContract {
         );
         return FunctionEncoder.encode(func);
     }
+
+    static String sendTxAndGetHash(
+            String contractAddr,
+            AppChainj service,
+            String adminKey,
+            String funcData,
+            int version,
+            int chainId)
+            throws IOException {
+
+        Transaction tx = new Transaction(
+                contractAddr,
+                getNonce(),
+                10000000,
+                getValidUtilBlock(service).longValue(),
+                version,
+                chainId,
+                "0",
+                funcData);
+
+        AppSendTransaction appSendTransaction =
+                service.appSendRawTransaction(tx.sign(adminKey)).send();
+
+        if (appSendTransaction.getError() != null) {
+            String message = appSendTransaction.getError().getMessage();
+            System.out.println("Failed to get hash. Error message: " + message);
+            return "";
+        }
+        return appSendTransaction.getSendTransactionResult().getHash();
+    }
+
+    static boolean checkReceipt(AppChainj service, String hash)
+            throws IOException, InterruptedException {
+        int count = 0;
+        while (true) {
+            Optional<TransactionReceipt> receipt
+                    = service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
+
+            if (receipt.isPresent()) {
+                TransactionReceipt txReceipt = receipt.get();
+                if (txReceipt.getErrorMessage() != null) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                if (count > 5) {
+                    break;
+                }
+                count++;
+                TimeUnit.SECONDS.sleep(5);
+            }
+        }
+        return false;
+    }
+
+    static Log getReceiptLog(AppChainj service, String hash, int logIndex)
+            throws IOException, InterruptedException {
+        int count = 0;
+        while (true) {
+            Optional<TransactionReceipt> receipt
+                    = service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
+
+            if (receipt.isPresent()) {
+                TransactionReceipt txReceipt = receipt.get();
+                if (txReceipt.getErrorMessage() != null) {
+                    return null;
+                } else {
+                    List<Log> logs = txReceipt.getLogs();
+                    return logs.get(logIndex);
+                }
+            } else {
+                if (count > 5) {
+                    break;
+                }
+                count++;
+                TimeUnit.SECONDS.sleep(5);
+            }
+        }
+        return null;
+    }
+
+    static List<Type> decodeCallResult(AppCall appCall, List<TypeReference<?>> outputParameters) {
+        return FunctionReturnDecoder.decode(
+                appCall.getValue(),
+                AppChainSystemContract.convert(outputParameters)
+        );
+    }
+
 
     static AppCall sendCall(String from, String addr,
                             String callData, AppChainj service)

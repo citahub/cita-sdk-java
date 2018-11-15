@@ -1,6 +1,7 @@
 package org.nervos.appchain.protocol.core.methods.request;
 
 import java.math.BigInteger;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.google.protobuf.ByteString;
@@ -14,7 +15,6 @@ import org.nervos.appchain.crypto.Keys;
 import org.nervos.appchain.crypto.Sign;
 import org.nervos.appchain.crypto.Signature;
 import org.nervos.appchain.protobuf.Blockchain;
-import org.nervos.appchain.protobuf.Blockchain.Crypto;
 import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.utils.Numeric;
 
@@ -48,7 +48,6 @@ public class Transaction {
             String to, String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String data) {
         this.to = to;
-        this.nonce = nonce;
         this.quota = quota;
         this.version = version;
         this.validUntilBlock = validUntilBlock;
@@ -59,13 +58,22 @@ public class Transaction {
             this.data = Numeric.prependHexPrefix(data);
         }
 
+        this.nonce = processNonce(nonce);
         this.value = processValue(value);
         this.to = processTo(to);
     }
 
-    public static String processValue(String value) {
+    private static String processNonce(String nonce) {
+        if (nonce == null || nonce.isEmpty()) {
+            Random random = new Random(System.currentTimeMillis());
+            return String.valueOf(Math.abs(random.nextLong()));
+        }
+        return nonce;
+    }
+
+    private static String processValue(String value) {
         String result = "";
-        if (value == null || value.equals("")) {
+        if (value == null || value.isEmpty()) {
             result = "0";
         } else if (value.matches("0[xX][0-9a-fA-F]+")) {
             result = value.substring(2);
@@ -86,7 +94,7 @@ public class Transaction {
         }
     }
 
-    public static String processTo(String to) {
+    private static String processTo(String to) {
         if (!Keys.verifyAddress(to)) {
             if (!to.matches("^(0x|0X)?")) {
                 throw new IllegalArgumentException("Address is not in correct format.");
@@ -98,6 +106,13 @@ public class Transaction {
     public static Transaction createContractTransaction(
             String nonce, long quota, long validUntilBlock,
             int version, int chainId, String value, String init) {
+        return new Transaction("", nonce, quota, validUntilBlock, version, chainId, value, init);
+    }
+
+    public static Transaction createContractTransaction(
+            String nonce, long quota, long validUntilBlock,
+            int version, int chainId, String value, String contractCode, String constructorCode) {
+        String init = contractCode + Numeric.cleanHexPrefix(constructorCode);
         return new Transaction("", nonce, quota, validUntilBlock, version, chainId, value, init);
     }
 
@@ -192,12 +207,25 @@ public class Transaction {
 
         builder.setData(bdata);
         builder.setNonce(getNonce());
-        builder.setTo(getTo());
         builder.setValidUntilBlock(get_valid_until_block());
         builder.setQuota(getQuota());
-        builder.setVersion(getVersion());
-        builder.setChainId(getChainId());
         builder.setValue(bvalue);
+        builder.setVersion(getVersion());
+
+        /*
+        * version 0: cita 0.19
+        * version 1: cita 0.20
+        * */
+        if (getVersion() == 0) {
+            builder.setTo(getTo());
+            builder.setChainId(getChainId());
+        } else if (getVersion() == 1) {
+            builder.setToV1(ByteString.copyFrom(
+                    ConvertStrByte.hexStringToBytes(getTo())));
+            builder.setChainIdV1(ByteString.copyFrom(
+                    ConvertStrByte.hexStringToBytes(
+                            cleanHexPrefix(Integer.toHexString(getChainId())), 256)));
+        }
 
         return builder.build().toByteArray();
     }
@@ -243,7 +271,7 @@ public class Transaction {
                     Blockchain.UnverifiedTransaction.newBuilder();
             builder.setTransaction(transaction);
             builder.setSignature(ByteString.copyFrom(sig));
-            builder.setCrypto(Crypto.SECP);
+            builder.setCrypto(Blockchain.Crypto.SECP);
             utx = builder.build();
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();

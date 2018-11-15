@@ -31,8 +31,8 @@ public class AdvanceTransactionTest {
         conf.buildService(false);
         service = conf.service;
         senderPrivateKey = conf.primaryPrivKey;
-        version = Integer.parseInt(conf.version);
-        chainId = Integer.parseInt(conf.chainId);
+        version = TestUtil.getVersion(service);
+        chainId = TestUtil.getChainId(service);
         quota = Long.parseLong(conf.defaultQuotaDeployment);
     }
 

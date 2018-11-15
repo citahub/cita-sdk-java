@@ -24,16 +24,16 @@ maven
 <dependency>
   <groupId>org.nervos</groupId>
   <artifactId>core</artifactId>
-  <version>0.19</version>
+  <version>0.20</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'org.nervos:core:0.19'
+compile 'org.nervos:core:0.20'
 ```
 Scala SBT
 ```
-libraryDependencies += "org.nervos" % "core" % "0.19"
+libraryDependencies += "org.nervos" % "core" % "0.20"
 ```
 Install manually
 If you want to generate the jar and import manually.
@@ -49,11 +49,11 @@ Use Nervos AppChain test net (recommended):
 http://121.196.200.225:1337 is provided as a test net.
 
 Or build your own Nervos AppChain net:
-Please find more information in [how to set up client in your local](https://docs.nervos.org/Nervos-AppChain-Docs/#/quick-start/deploy-appchain).
+Please find more information in [how to set up client in your local](https://docs.nervos.org/cita/#/en/develop/chain/getting_started).
 
 ### Get started
 #### Deploy smart contract
-Similar as Ethereum, smart contracts are deployed in Nervos AppChain network by sending transactions. Nervos AppChain transaction is defined in [Transaction.java](https://github.com/cryptape/appChainj/blob/master/core/src/main/java/org/appChainj/protocol/core/methods/request/Transaction.java).
+Similar as Ethereum, smart contracts are deployed in Nervos AppChain network by sending transactions. Nervos AppChain transaction is defined in [Transaction.java](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/core/methods/request/Transaction.java).  
 In Nervos transaction, there are 3 special parameters:
 - nonce: generated randomly or depend on specific logic to avoid replay attack.
 - quota: transaction execution fee for operation, like gasPrice * gasLimit in Ethereum.
@@ -70,7 +70,8 @@ Construct a transaction with generated binary code and other 3 parameters.
 ```java
 long currentHeight = currentBlockNumber();
 long validUntilBlock = currentHeight + 80;
-BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
+Random random = new Random(System.currentTimeMillis());
+String nonce = String.valueOf(Math.abs(random.nextLong()));
 long quota = 1000000;
 Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, contractCode);
 ```
@@ -100,7 +101,7 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-Please check [TokenTransactionExample.java](https://github.com/cryptape/appChainj/blob/master/examples/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
+Please check [TokenTransactionExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
 
 ### Working with smart contract with appchainj wrapper
 Besides interacting with smart contracts by sending transactions with binary code, appchainj provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
@@ -115,25 +116,25 @@ Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under 
 ```shell
 java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
 ```
-`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/nervoj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos AppChain network.
-Please check [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
+`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos AppChain network.
+Please check [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
 
 ### Working with smart contract with appChainj Account (Test)
 appchainj provides interface [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
 
 Method of smart contract deployment:
-```
+```java
 // Deploy contract in sync and async way.
-public EthSendTransaction deploy(File contractFile, BigInteger nonce, BigInteger quota)
+public AppSendTransaction deploy(File contractFile, String nonce, BigInteger quota)
 
-public CompletableFuture<EthSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota)
+public CompletableFuture<AppSendTransaction> deployAsync(File contractFile, String nonce, BigInteger quota)
 ```
 Method of smart contract method call:
-```
-public Object callContract(String contractAddress, String funcName, BigInteger nonce, BigInteger quota, Object... args)
+```java
+public Object callContract(String contractAddress, String funcName, String nonce, BigInteger quota, Object... args)
 
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
-public Object callContract(String contractAddress, AbiDefinition functionAbi, BigInteger nonce, BigInteger quota, Object... args)
+public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
 While contract file is required when first deploy the contract, appchainj can get the abi file according to address when call methods in deployed contract.
 Please find complete code in [TokenAccountExample](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java).
@@ -149,7 +150,7 @@ appchainj 是对以太坊 Web3j 进行改写，适配 Nervos AppChain 的一个 
 ## 开始
 
 ### 预装组件
-Java 8
+Java 8  
 Gradle 4.3
 
 ### 安装
@@ -183,11 +184,11 @@ gradle shadowJar
 http://121.196.200.225:1337  
 
 或者可以部署你自己的 Nervos AppChain：  
-如果需要了解怎么部署 Nervos AppChain 网络，请查阅[怎么在本地部署 Nervos AppChain](https://docs.nervos.org/Nervos-AppChain-Docs/#/quick-start/deploy-appchain)。
+如果需要了解怎么部署 Nervos AppChain 网络，请查阅[怎么在本地部署 Nervos AppChain](https://docs.nervos.org/cita/#/chain/getting_started)。
 
 ### 快速教程
 #### 部署智能合约
-与以太坊类似，智能合约是通过发送交易来部署的。Nervos AppChain 交易对象定义在 [Transaction.java](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/appchainj/protocol/core/methods/request/Transaction.java)。
+与以太坊类似，智能合约是通过发送交易来部署的。Nervos AppChain 交易对象定义在 [Transaction.java](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/core/methods/request/Transaction.java)。
 在 Nervos AppChain 交易中，有三个特殊的参数：
 - nonce： 随机数或者通过特定的逻辑生成的随机信息，nonce是为了避免重放攻击。
 - quota： 交易执行费用，也就是矿工费，就像以太坊中的 gasPrice * gasLimit。
@@ -204,7 +205,8 @@ $solc example.sol --bin
 ```java
 long currentHeight = currentBlockNumber();
 long validUntilBlock = currentHeight + 80;
-BigInteger nonce = BigInteger.valueOf(Math.abs(random.nextLong()));
+Random random = new Random(System.currentTimeMillis());
+String nonce = String.valueOf(Math.abs(random.nextLong()));
 long quota = 1000000;
 Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, contractCode);
 ```
@@ -234,7 +236,7 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-请在 [TokenTransactionExample.java](https://github.com/cryptape/appchainj/blob/master/examples/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) 中查看完整代码。
+请在 [TokenTransactionExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) 中查看完整代码。
 
 ### 通过 appchainj 中的 wrapper 与智能合约交互
 以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，appchainj 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 appchainj 生成的 java 类，可以方便对合约进行部署和函数调用。
@@ -249,8 +251,8 @@ $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes]
 ```
 java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
 ```
-`Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 Nervos Appchain 中应该使用 [CitaTransactionManager](https://github.com/cryptape/nervoj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) 而不是 TransactionManager。
-请在 [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/benchmark/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
+`Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 Nervos Appchain 中应该使用 [CitaTransactionManager](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) 而不是 TransactionManager。
+请在 [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
 
 ### 通过 AppChainj 中的 Account 与智能合约交互（测试阶段）
 appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
@@ -258,16 +260,16 @@ appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blo
 合约部署示例代码：
 ```java
 // Deploy contract in sync and async way.
-public AppSendTransaction deploy(File contractFile, BigInteger nonce, BigInteger quota)
+public AppSendTransaction deploy(File contractFile, String nonce, BigInteger quota)
 
-public CompletableFuture<AppSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota)
+public CompletableFuture<AppSendTransaction> deployAsync(File contractFile, String nonce, BigInteger quota)
 ```
 合约函数调用示例代码：
 ```java
-public Object callContract(String contractAddress, String funcName, BigInteger nonce, BigInteger quota, Object... args)
+public Object callContract(String contractAddress, String funcName, String nonce, BigInteger quota, Object... args)
 
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
-public Object callContract(String contractAddress, AbiDefinition functionAbi, BigInteger nonce, BigInteger quota, Object... args)
+public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
 虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 appchainj 通过 Nervos AppChain 提供的 getAbi 接口根据合约地址得到对应的 abi。  
 请在 [TokenAccountExample](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java) 中查看完整代码。

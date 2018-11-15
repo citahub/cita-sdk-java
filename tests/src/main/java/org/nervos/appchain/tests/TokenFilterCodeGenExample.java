@@ -22,21 +22,19 @@ public class TokenFilterCodeGenExample {
     private static String value;
     private static Token token;
 
-    private static final String configPath = "tests/src/main/resources/config.properties";
-
     static {
 
         Config conf = new Config();
         conf.buildService(false);
 
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
         payerPrivateKey = conf.primaryPrivKey;
         payeePrivateKey = conf.auxPrivKey1;
 
         service = conf.service;
         quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
     }
 
     static long getBalance(Credentials credentials) {
@@ -108,6 +106,16 @@ public class TokenFilterCodeGenExample {
             token = contract;
             System.out.println("Contract deployment success. Contract address: "
                     + contract.getContractAddress());
+
+            //in cita 0.20, it seems that contract is not ready even if address is returned.
+            try {
+                System.out.println("waiting for transaction in the block");
+                TimeUnit.SECONDS.sleep(4);
+            } catch (Exception e) {
+                System.out.println("interrupted when waiting for transactions written into block");
+                e.printStackTrace();
+                System.exit(1);
+            }
 
             try {
                 System.out.println("Contract initial state: ");

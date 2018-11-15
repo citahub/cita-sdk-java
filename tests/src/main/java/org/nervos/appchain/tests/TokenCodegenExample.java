@@ -35,13 +35,13 @@ public class TokenCodegenExample {
         conf = new Config();
         conf.buildService(false);
 
-        chainId = Integer.parseInt(conf.chainId);
-        version = Integer.parseInt(conf.version);
         creatorPrivateKey = conf.primaryPrivKey;
         creator = Credentials.create(creatorPrivateKey);
         loadAccounts();
 
         service = conf.service;
+        chainId = TestUtil.getChainId(service);
+        version = TestUtil.getVersion(service);
         quotaDeployment = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
     }
@@ -226,6 +226,13 @@ public class TokenCodegenExample {
             token = contract;
             System.out.println("Contract deployment success. Contract address: "
                     + contract.getContractAddress());
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Interrupted when waiting blocks written in.");
+                System.exit(1);
+            }
 
             try {
                 System.out.println("Contract initial state: ");
@@ -259,7 +266,7 @@ public class TokenCodegenExample {
                     this.to.getAddress(), BigInteger.valueOf(tokens), quotaDeployment,
                     TestUtil.getNonce(),
                     TestUtil.getValidUtilBlock(service).longValue(),
-                    0, chainId, value).sendAsync();
+                    version, chainId, value).sendAsync();
         }
 
         @Override
