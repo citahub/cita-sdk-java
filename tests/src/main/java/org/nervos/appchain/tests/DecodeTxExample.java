@@ -60,7 +60,6 @@ public class DecodeTxExample {
         AppTransaction appTx = service.appGetTransactionByHash(hash).send();
         org.nervos.appchain.protocol.core.methods.response.Transaction tx
                 = appTx.getTransaction();
-
         System.out.println(new Gson().toJson(tx.decodeContent()));
     }
 }
