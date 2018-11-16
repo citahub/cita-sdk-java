@@ -59,7 +59,6 @@ public class DecodeTxExample {
         org.nervos.appchain.protocol.core.methods.response.Transaction tx
                 = appTx.getTransaction();
 
-<<<<<<< HEAD
         //decode from response transaction's content
         Transaction decodedTx = tx.decodeContent();
         System.out.println("version: " + decodedTx.getVersion());
@@ -70,42 +69,5 @@ public class DecodeTxExample {
         System.out.println("value: " + decodedTx.getValue());
         System.out.println("chainId: " + decodedTx.getChainId());
         System.out.println("to: " + decodedTx.getTo());
-=======
-        UnverifiedTransaction unverifiedTransaction
-                = UnverifiedTransaction.parseFrom(
-                TestUtil.convertHexToBytes(tx.getContent()));
-
-
-        System.out.println("version:"
-                + unverifiedTransaction.getTransaction().getVersion());
-
-        System.out.println("validUntilBlock: "
-                + unverifiedTransaction.getTransaction().getValidUntilBlock());
-
-        System.out.println("nonce:"
-                + unverifiedTransaction.getTransaction().getNonce());
-
-        System.out.println("chainId: "
-                + unverifiedTransaction.getTransaction().getChainId());
-
-        System.out.println("to:"
-                + unverifiedTransaction.getTransaction().getTo());
-
-        System.out.println("chainId: "
-                + ConvertStrByte.bytesToHexString(
-                unverifiedTransaction.getTransaction().getChainIdV1().toByteArray()));
-
-        System.out.println("to:"
-                + ConvertStrByte.bytesToHexString(
-                unverifiedTransaction.getTransaction().getToV1().toByteArray()));
-
-        System.out.println("Content: " + tx.getContent());
-
-        //verify signature of transaction fetched from chain by hash
-        ECKeyPair pair = ECKeyPair.create(TestUtil.convertHexToBytes(privateKey));
-        boolean isValid = VerifySignatureExample.verfiySig(
-                unverifiedTransaction, pair.getPublicKey().toString(16));
-        System.out.println("Verified or not: " + isValid);
->>>>>>> Replace CompletableFuture with Future and delete Optional
     }
 }

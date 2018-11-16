@@ -79,9 +79,9 @@ public class SimpleDataExample {
     private static void getTransactionReceipt(String hash) throws IOException {
         AppGetTransactionReceipt txReceipt
                 = service.appGetTransactionReceipt(hash).send();
-        if (txReceipt.getTransactionReceipt().isPresent()) {
-            if (txReceipt.getTransactionReceipt().get().getErrorMessage() == null) {
-                contractAddr = txReceipt.getTransactionReceipt().get().getContractAddress();
+        if (txReceipt.getTransactionReceipt() != null) {
+            if (txReceipt.getTransactionReceipt().getErrorMessage() == null) {
+                contractAddr = txReceipt.getTransactionReceipt().getContractAddress();
             }
         } else {
             throw new IOException("Cannot get receipt for hash " + hash);
