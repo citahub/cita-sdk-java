@@ -127,7 +127,7 @@ Method of smart contract deployment:
 // Deploy contract in sync and async way.
 public AppSendTransaction deploy(File contractFile, String nonce, BigInteger quota)
 
-public Future<EthSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota)
+public Future<AppSendTransaction> deployAsync(File contractFile, String nonce, BigInteger quota)
 ```
 Method of smart contract method call:
 ```java
@@ -262,7 +262,7 @@ appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blo
 // Deploy contract in sync and async way.
 public AppSendTransaction deploy(File contractFile, String nonce, BigInteger quota)
 
-public Future<AppSendTransaction> deployAsync(File contractFile, BigInteger nonce, BigInteger quota)
+public Future<AppSendTransaction> deployAsync(File contractFile, String nonce, BigInteger quota)
 ```
 合约函数调用示例代码：
 ```java
