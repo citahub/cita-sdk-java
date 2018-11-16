@@ -75,21 +75,16 @@ public class FunctionEncoder {
         StringBuilder result = new StringBuilder();
         result.append(methodName);
         result.append("(");
-        List<String> types = new ArrayList<String>(parameters.size());
-        String params = "";
 
+        StringBuilder params = new StringBuilder();
         for (int i = 0; i < parameters.size(); i++) {
-            Type type = parameters.get(i);
-
-            params += type.getTypeAsString();
+            params.append(parameters.get(i).getTypeAsString());
             if (i + 1 < parameters.size()) {
-                params += ",";  // no whitespace
+                params.append(",");  // no whitespace
             }
-
-            types.add(type.getTypeAsString());
         }
 
-        result.append(params);
+        result.append(params.toString());
         result.append(")");
         return result.toString();
     }
