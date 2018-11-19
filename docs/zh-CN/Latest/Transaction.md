@@ -150,7 +150,7 @@ int chainId = 1;
 String value = "0";
 AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
 ```
-#### `CompletableFuture<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
+#### `Future<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
 通过 TransactionManager 发送交易。
 
 **参数**
@@ -177,5 +177,5 @@ long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
 int version = 0;
 int chainId = 1;
 String value = "0";
-CompletableFuture<AppSendTransaction> appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
+Future<AppSendTransaction> appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
 ```

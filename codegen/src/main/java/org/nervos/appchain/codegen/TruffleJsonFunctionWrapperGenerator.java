@@ -2,12 +2,13 @@ package org.nervos.appchain.codegen;
 
 import java.io.File;
 import java.io.IOException;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -121,12 +122,14 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         } else {
             String className = Strings.capitaliseFirstLetter(contractName);
             System.out.printf("Generating " + basePackageName + "." + className + " ... ");
-            Map<String, String> addresses;
+            Map<String, String> addresses = new HashMap<>();
             if (c.networks != null && !c.networks.isEmpty()) {
-                addresses = c.networks.entrySet().stream()
-                        .filter(e -> (e.getValue() != null && e.getValue().getAddress() != null))
-                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue().getAddress()
-                        ));
+                Set<Map.Entry<String, NetworkInfo>> entrySet = c.networks.entrySet();
+                for (Map.Entry<String, NetworkInfo> entry : entrySet) {
+                    if (entry.getValue() != null && entry.getValue().getAddress() != null) {
+                        addresses.put(entry.getKey(), entry.getValue().getAddress());
+                    }
+                }
             } else {
                 addresses = Collections.EMPTY_MAP;
             }
@@ -202,11 +205,11 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         }
 
         public Contract(String contractName, List<AbiDefinition> abi, String bytecode,
-                String deployedBytecode,
-                String sourceMap, String deployedSourceMap, String source, String sourcePath,
-                JsonNode ast,
-                Compiler compiler, Map<String, NetworkInfo> networks, String schemaVersion,
-                Date updatedAt) {
+                        String deployedBytecode,
+                        String sourceMap, String deployedSourceMap, String source, String sourcePath,
+                        JsonNode ast,
+                        Compiler compiler, Map<String, NetworkInfo> networks, String schemaVersion,
+                        Date updatedAt) {
             super();
             this.contractName = contractName;
             this.abi = abi;
@@ -337,7 +340,7 @@ public class TruffleJsonFunctionWrapperGenerator extends FunctionWrapperGenerato
         }
 
         public NetworkInfo(Map<String, JsonNode> events, Map<String, JsonNode> links,
-                String address) {
+                           String address) {
             super();
             this.events = events;
             this.links = links;

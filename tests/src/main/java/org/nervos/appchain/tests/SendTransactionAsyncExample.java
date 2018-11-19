@@ -1,7 +1,8 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
@@ -75,7 +76,7 @@ public class SendTransactionAsyncExample {
         return txReceipt;
     }
 
-    private static CompletableFuture<TransactionReceipt> transferAsync(
+    private static Future<TransactionReceipt> transferAsync(
             String payerKey, String payeeAddr, String value) {
         return new RemoteCall<>(
                 () -> transferSync(payerKey, payeeAddr, value)).sendAsync();
@@ -90,21 +91,20 @@ public class SendTransactionAsyncExample {
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
 
-        CompletableFuture<TransactionReceipt> receiptFuture =
+        Future<TransactionReceipt> receiptFuture =
                 transferAsync(payerKey, payeeAddr, valueWei);
-        receiptFuture.whenCompleteAsync((data, exception) -> {
-            if (exception == null) {
-                if (data.getErrorMessage() == null) {
-                    System.out.println(
-                            Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-                    System.out.println(
-                            Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
-                } else {
-                    System.out.println("Error get receipt: " + data.getErrorMessage());
-                }
+        try {
+            TransactionReceipt receipt = receiptFuture.get();
+            if (receipt.getErrorMessage() == null) {
+                System.out.println(
+                        Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+                System.out.println(
+                        Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
             } else {
-                System.out.println("Exception happens: " + exception);
+                System.out.println("Error get receipt: " + receipt.getErrorMessage());
             }
-        });
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

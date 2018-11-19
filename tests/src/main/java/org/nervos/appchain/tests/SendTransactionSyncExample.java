@@ -26,7 +26,7 @@ public class SendTransactionSyncExample {
 
     static {
         Config conf = new Config();
-        conf.buildService(false);
+        conf.buildService(true);
 
         payerKey = conf.primaryPrivKey;
         payeeKey = conf.auxPrivKey1;

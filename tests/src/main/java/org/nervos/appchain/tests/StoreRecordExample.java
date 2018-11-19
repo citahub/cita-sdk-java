@@ -60,7 +60,7 @@ public class StoreRecordExample {
 
         String serializedTx = service
                 .appGetTransactionByHash(hash).send()
-                .getTransaction().get().getContent();
+                .getTransaction().getContent();
 
         System.out.println(
                 "Unverified transaction(Content transaction): \n"

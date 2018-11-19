@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.abi.EventEncoder;
@@ -74,12 +73,12 @@ public class TokenFilterObservableExample {
     private static String getContractAddr(String txHash) throws IOException {
         AppGetTransactionReceipt transactionReceipt =
                 service.appGetTransactionReceipt(txHash).send();
-        Optional<TransactionReceipt> receipt = transactionReceipt.getTransactionReceipt();
-        if (!receipt.isPresent()) {
+        TransactionReceipt receipt = transactionReceipt.getTransactionReceipt();
+        if (receipt == null) {
             System.out.println("Failed to get tx receipt from hash: " + txHash);
             return null;
         }
-        return receipt.get().getContractAddress();
+        return receipt.getContractAddress();
     }
 
 
@@ -180,12 +179,12 @@ public class TokenFilterObservableExample {
                                 (BigInteger) eventValues.getNonIndexedValues().get(0).getValue();
                         return typedResponse;
                     }
-                    );
+            );
 
             reponse.subscribe(x ->
                     System.out.println(
-                        "(Transfer Object)From: " + x.from
-                        + " To: " + x.to + " Value: " + x.value)
+                            "(Transfer Object)From: " + x.from
+                                    + " To: " + x.to + " Value: " + x.value)
             );
 
 

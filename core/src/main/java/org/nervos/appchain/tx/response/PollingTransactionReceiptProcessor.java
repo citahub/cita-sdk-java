@@ -1,7 +1,6 @@
 package org.nervos.appchain.tx.response;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
@@ -34,18 +33,18 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
             String transactionHash, long sleepDuration, int attempts)
             throws IOException, TransactionException {
 
-        Optional<TransactionReceipt> receiptOptional =
+        TransactionReceipt receipt =
                 sendTransactionReceiptRequest(transactionHash);
         for (int i = 0; i < attempts; i++) {
-            if (!receiptOptional.isPresent()) {
+            if (receipt == null) {
                 try {
                     Thread.sleep(sleepDuration);
                 } catch (InterruptedException e) {
                     throw new TransactionException(e);
                 }
-                receiptOptional = sendTransactionReceiptRequest(transactionHash);
+                receipt = sendTransactionReceiptRequest(transactionHash);
             } else {
-                return receiptOptional.get();
+                return receipt;
             }
         }
 

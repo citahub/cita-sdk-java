@@ -3,7 +3,6 @@ package org.nervos.appchain.tx;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.nervos.appchain.crypto.Credentials;
@@ -36,7 +35,7 @@ public class Transfer extends ManagedTransaction {
      * @param value amount to send
      * @param unit of specified send
      *
-     * @return {@link Optional} containing our transaction receipt
+     * @return containing our transaction receipt
      * @throws ExecutionException if the computation threw an
      *                            exception
      * @throws InterruptedException if the current thread was interrupted

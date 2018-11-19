@@ -1,7 +1,7 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +40,7 @@ public class TokenFilterCodeGenExample {
     static long getBalance(Credentials credentials) {
         long accountBalance = 0;
         try {
-            CompletableFuture<BigInteger> balanceFuture =
+            Future<BigInteger> balanceFuture =
                     token.getBalance(credentials.getAddress()).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
         } catch (Exception e) {
@@ -85,48 +85,48 @@ public class TokenFilterCodeGenExample {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         TransactionManager citaTxManager = new CitaTransactionManager(
                 service, Credentials.create(payerPrivateKey), 5, 3000);
         long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
         String nonce = TestUtil.getNonce();
 
-        CompletableFuture<Token> tokenFuture = Token.deploy(
+        Future<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, 1000000L, nonce,
                 validUtilBlock, version,
                 value, chainId).sendAsync();
         TokenFilterCodeGenExample tokenFilterCodeGenExample = new TokenFilterCodeGenExample();
 
-        tokenFuture.whenCompleteAsync((contract, exception) -> {
-            if (exception != null) {
-                System.out.println("Failed to deploy the contract. Exception: " + exception);
-                exception.printStackTrace();
-                System.exit(1);
-            }
-            token = contract;
-            System.out.println("Contract deployment success. Contract address: "
-                    + contract.getContractAddress());
+        System.out.println("Wait 10s for contract to be deployed...");
+        Thread.sleep(10000);
+        Token token = tokenFuture.get();
+        if (token != null) {
+            System.out.println("contract deployment success. Contract address: "
+                    + token.getContractAddress());
+        } else {
+            System.out.println("Failed to deploy the contract.");
+            System.exit(1);
+        }
 
-            //in cita 0.20, it seems that contract is not ready even if address is returned.
-            try {
-                System.out.println("waiting for transaction in the block");
-                TimeUnit.SECONDS.sleep(4);
-            } catch (Exception e) {
-                System.out.println("interrupted when waiting for transactions written into block");
-                e.printStackTrace();
-                System.exit(1);
-            }
+        //in cita 0.20, it seems that contract is not ready even if address is returned.
+        try {
+            System.out.println("waiting for transaction in the block");
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception e) {
+            System.out.println("interrupted when waiting for transactions written into block");
+            e.printStackTrace();
+            System.exit(1);
+        }
 
-            try {
-                System.out.println("Contract initial state: ");
-                tokenFilterCodeGenExample.randomTransferToken();
-            } catch (Exception e) {
-                System.out.println("Failed to get accounts balances");
-                e.printStackTrace();
-                System.exit(1);
-            }
-            System.exit(0);
-        });
+        try {
+            System.out.println("Contract initial state: ");
+            tokenFilterCodeGenExample.randomTransferToken();
+        } catch (Exception e) {
+            System.out.println("Failed to get accounts balances");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.exit(0);
     }
 
     private class TransferEvent {

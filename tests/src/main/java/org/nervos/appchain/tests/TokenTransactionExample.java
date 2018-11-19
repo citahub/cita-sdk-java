@@ -71,7 +71,7 @@ public class TokenTransactionExample {
     private static TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
         return service.appGetTransactionReceipt(txHash)
-                .send().getTransactionReceipt().get();
+                .send().getTransactionReceipt();
     }
 
     static String contractFunctionCall(

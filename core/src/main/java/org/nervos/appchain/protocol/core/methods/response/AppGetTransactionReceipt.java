@@ -1,7 +1,6 @@
 package org.nervos.appchain.protocol.core.methods.response;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -17,8 +16,8 @@ import org.nervos.appchain.protocol.core.Response;
  */
 public class AppGetTransactionReceipt extends Response<TransactionReceipt> {
 
-    public Optional<TransactionReceipt> getTransactionReceipt() {
-        return Optional.ofNullable(getResult());
+    public TransactionReceipt getTransactionReceipt() {
+        return getResult();
     }
 
     public static class ResponseDeserialiser extends JsonDeserializer<TransactionReceipt> {

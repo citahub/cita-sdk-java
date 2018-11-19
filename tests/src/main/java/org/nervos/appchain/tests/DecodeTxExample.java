@@ -57,7 +57,7 @@ public class DecodeTxExample {
         //get response transaction
         AppTransaction appTx = service.appGetTransactionByHash(hash).send();
         org.nervos.appchain.protocol.core.methods.response.Transaction tx
-                = appTx.getTransaction().get();
+                = appTx.getTransaction();
 
         //decode from response transaction's content
         Transaction decodedTx = tx.decodeContent();

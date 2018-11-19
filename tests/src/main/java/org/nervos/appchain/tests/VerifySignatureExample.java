@@ -54,8 +54,8 @@ public class VerifySignatureExample {
     private static org.nervos.appchain.protocol.core.methods.response.Transaction
             getResponseTransaction(String hash) throws IOException {
         AppTransaction appTransaction = service.appGetTransactionByHash(hash).send();
-        if (appTransaction.getTransaction().isPresent()) {
-            return appTransaction.getTransaction().get();
+        if (appTransaction.getTransaction() != null) {
+            return appTransaction.getTransaction();
         } else {
             return null;
         }
