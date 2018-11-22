@@ -45,17 +45,6 @@ public abstract class TransactionManager {
     }
 
     protected TransactionReceipt executeTransaction(
-            BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, String value)
-            throws IOException, TransactionException {
-
-        AppSendTransaction ethSendTransaction = sendTransaction(
-                gasPrice, gasLimit, to, data, value);
-        return processResponse(ethSendTransaction);
-    }
-
-    // adapt to cita
-    protected TransactionReceipt executeTransaction(
             String to, String data, long quota,
             String nonce, long validUntilBlock,
             int version, int chainId, String value)
@@ -65,20 +54,8 @@ public abstract class TransactionManager {
         return processResponse(appSendTransaction);
     }
 
-    // adapt to cita, return empty EthSendTransaction default,
-    // only CitaTransactionManager will override this method
-    public AppSendTransaction sendTransaction(
-            String to, String data, long quota,
-            String nonce, long validUntilBlock,
-            int version, int chainId, String value)
-            throws IOException {
-        return new AppSendTransaction();
-    }
-
-    public abstract AppSendTransaction sendTransaction(
-            BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, String value)
-            throws IOException;
+    public abstract AppSendTransaction sendTransaction(String to, String data, long quota, String nonce, long validUntilBlock,
+            int version, int chainId, String value) throws IOException;
 
     public String getFromAddress() {
         return fromAddress;

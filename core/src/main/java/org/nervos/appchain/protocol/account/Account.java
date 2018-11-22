@@ -25,24 +25,24 @@ import org.nervos.appchain.protocol.core.methods.response.AbiDefinition;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
-import org.nervos.appchain.tx.CitaTransactionManager;
+import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.utils.TypedAbi;
 import rx.Observable;
 
 public class Account {
 
     private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
-    private CitaTransactionManager transactionManager;
+    private RawTransactionManager transactionManager;
     private AppChainj service;
     private String abi;
 
     public Account(String privateKey, AppChainj service) {
         Credentials credentials = Credentials.create(privateKey);
-        this.transactionManager = new CitaTransactionManager(service, credentials);
+        this.transactionManager = new RawTransactionManager(service, credentials);
         this.service = service;
     }
 
-    public CitaTransactionManager getTransactionManager() {
+    public RawTransactionManager getTransactionManager() {
         return transactionManager;
     }
 
