@@ -56,7 +56,7 @@ public class RawTransactionManager extends TransactionManager {
     @Override
     public AppSendTransaction sendTransaction(
             String to, String data, long quota, String nonce,
-            long validUntilBlock, int version, int chainId, String value)
+            long validUntilBlock, int version, BigInteger chainId, String value)
             throws IOException {
         Transaction transaction = new Transaction(
                 to, nonce, quota, validUntilBlock,
@@ -72,7 +72,7 @@ public class RawTransactionManager extends TransactionManager {
 
     public Future<AppSendTransaction> sendTransactionAsync(
             String to, String data, long quota, String nonce,
-            long validUntilBlock, int version, int chainId, String value) {
+            long validUntilBlock, int version, BigInteger chainId, String value) {
         Transaction transaction = new Transaction(
                 to, nonce, quota, validUntilBlock,
                 version, chainId, value, data);

@@ -25,7 +25,7 @@ public abstract class ManagedTransaction {
 
     protected TransactionReceipt send(
             String to, String data, long quota, String nonce,
-            long validUntilBlock, int version , int chainId, String value)
+            long validUntilBlock, int version , BigInteger chainId, String value)
             throws IOException, TransactionException {
         return transactionManager.executeTransaction(
                 to, data, quota, nonce, validUntilBlock, version, chainId, value);

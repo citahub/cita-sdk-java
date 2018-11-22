@@ -81,7 +81,7 @@ public class Token extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, Long quota, String nonce, Long validUntilBlock, Integer version, Integer chainId, String value) {
+    public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, Long quota, String nonce, Long validUntilBlock, Integer version, BigInteger chainId, String value) {
         Function function = new Function(
                 "transfer",
                 Arrays.<Type>asList(new org.nervos.appchain.abi.datatypes.Address(_to),
@@ -97,7 +97,7 @@ public class Token extends Contract {
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
-    public static RemoteCall<Token> deploy(AppChainj appChainj, TransactionManager transactionManager, Long quota, String nonce, Long validUntilBlock, Integer version, String value, Integer chainId) {
+    public static RemoteCall<Token> deploy(AppChainj appChainj, TransactionManager transactionManager, Long quota, String nonce, Long validUntilBlock, Integer version, String value, BigInteger chainId) {
         return deployRemoteCall(Token.class, appChainj, transactionManager, quota, nonce, validUntilBlock, version, chainId, value, BINARY, "");
     }
 

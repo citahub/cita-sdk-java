@@ -18,7 +18,7 @@ public class SendTransactionSyncExample {
     static String payeeKey;
     static String payeeAddr;
     static String payeeAddr_1;
-    static int chainId;
+    static BigInteger chainId;
     static int version;
     static long quotaToTransfer;
 

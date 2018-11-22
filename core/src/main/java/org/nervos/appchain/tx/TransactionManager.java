@@ -47,7 +47,7 @@ public abstract class TransactionManager {
     protected TransactionReceipt executeTransaction(
             String to, String data, long quota,
             String nonce, long validUntilBlock,
-            int version, int chainId, String value)
+            int version, BigInteger chainId, String value)
             throws IOException, TransactionException {
         AppSendTransaction appSendTransaction = sendTransaction(
                 to, data, quota, nonce, validUntilBlock, version, chainId, value);
@@ -55,7 +55,7 @@ public abstract class TransactionManager {
     }
 
     public abstract AppSendTransaction sendTransaction(String to, String data, long quota, String nonce, long validUntilBlock,
-            int version, int chainId, String value) throws IOException;
+            int version, BigInteger chainId, String value) throws IOException;
 
     public String getFromAddress() {
         return fromAddress;

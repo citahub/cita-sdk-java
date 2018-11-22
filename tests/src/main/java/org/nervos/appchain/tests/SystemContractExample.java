@@ -12,7 +12,7 @@ public class SystemContractExample {
     static String senderAddr;
     static String adminPriavteKey;
     static int version;
-    static int chainId;
+    static BigInteger chainId;
 
     static {
         Config conf = new Config();

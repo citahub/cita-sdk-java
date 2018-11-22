@@ -31,7 +31,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
 public class TokenFilterTransactionExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String toAddress;

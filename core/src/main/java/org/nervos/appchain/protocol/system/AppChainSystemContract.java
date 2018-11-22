@@ -1,6 +1,7 @@
 package org.nervos.appchain.protocol.system;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -139,7 +140,7 @@ public interface AppChainSystemContract {
             String adminKey,
             String funcData,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException {
 
         Transaction tx = new Transaction(

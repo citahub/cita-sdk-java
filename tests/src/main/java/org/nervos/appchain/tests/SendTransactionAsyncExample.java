@@ -18,7 +18,7 @@ import org.nervos.appchain.utils.Convert;
 public class SendTransactionAsyncExample {
     private static String payerKey;
     private static String payeeAddr;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static long quotaToTransfer;
 

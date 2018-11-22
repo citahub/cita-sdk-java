@@ -2,6 +2,9 @@ package org.nervos.appchain.protocol.core.methods.response;
 
 import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.protocol.core.Response;
+import org.nervos.appchain.utils.Numeric;
+
+import java.math.BigInteger;
 
 
 public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
@@ -15,7 +18,7 @@ public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
     }
 
     public static class AppMetaDataResult {
-        private int chainId;
+        private String chainId;
         private String chainName;
         private String operator;
         private String website;
@@ -29,15 +32,15 @@ public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
         private int economicalModel;
         private String chainIdV1;
 
-        public void setChainId(int chainId) {
+        public void setChainId(String chainId) {
             this.chainId = chainId;
         }
 
-        public int getChainId() {
+        public BigInteger getChainId() {
             if (this.version == 0) {
-                return this.chainId;
+                return Numeric.toBigInt(chainId);
             } else if (this.version == 1) {
-                return Integer.parseInt(this.chainIdV1);
+                return Numeric.toBigInt(this.chainIdV1);
             } else {
                 throw new IllegalArgumentException("version number can only be 1 or 2");
             }

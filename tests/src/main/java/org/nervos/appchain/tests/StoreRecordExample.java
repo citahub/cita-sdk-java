@@ -1,6 +1,7 @@
 package org.nervos.appchain.tests;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.protobuf.Blockchain;
@@ -15,7 +16,7 @@ import static org.nervos.appchain.utils.Numeric.cleanHexPrefix;
 public class StoreRecordExample {
 
     private static String payerKey;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
 
     static AppChainj service;
