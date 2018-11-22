@@ -51,7 +51,7 @@ public class Transaction {
         this.validUntilBlock = validUntilBlock;
         this.chainId = chainId;
         this.value = value;
-        this.data = data != null? prependHexPrefix(data) : "";
+        this.data = data != null ? prependHexPrefix(data) : "";
         this.nonce = processNonce(nonce);
         this.value = processValue(value);
         this.to = processTo(to);
@@ -110,7 +110,8 @@ public class Transaction {
         ByteString byteData = ByteString.copyFrom(isByteArray ? data.getBytes() : ConvertStrByte.hexStringToBytes(cleanHexPrefix(data)));
         ByteString byteValue = ByteString.copyFrom(ConvertStrByte.hexStringToBytes(cleanHexPrefix(value), 256));
 
-        builder.setData(byteData).setNonce(nonce).setValidUntilBlock(validUntilBlock).setQuota(quota).setValue(byteValue).setVersion(version);
+        builder.setData(byteData).setNonce(nonce).setValidUntilBlock(validUntilBlock)
+                .setQuota(quota).setValue(byteValue).setVersion(version);
 
 
         /*

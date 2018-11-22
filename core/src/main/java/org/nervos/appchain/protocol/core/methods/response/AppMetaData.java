@@ -1,10 +1,10 @@
 package org.nervos.appchain.protocol.core.methods.response;
 
+import java.math.BigInteger;
+
 import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.protocol.core.Response;
 import org.nervos.appchain.utils.Numeric;
-
-import java.math.BigInteger;
 
 
 public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
