@@ -1,6 +1,7 @@
 package org.nervos.appchain.tx;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
