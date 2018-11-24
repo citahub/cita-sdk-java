@@ -123,7 +123,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean approveNode(
-            String nodeAddr, String adminPrivatekey, int version, int chainId)
+            String nodeAddr, String adminPrivatekey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Address(nodeAddr));
         String funcData = AppChainSystemContract.encodeFunction(
@@ -136,7 +136,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean deleteNode(
-            String nodeAddr, String adminPrivatekey, int version, int chainId)
+            String nodeAddr, String adminPrivatekey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Address(nodeAddr));
         String funcData = AppChainSystemContract.encodeFunction(
@@ -148,7 +148,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean setStake(
-            String nodeAddr, int stake, String adminPrivatekey, int version, int chainId)
+            String nodeAddr, int stake, String adminPrivatekey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Arrays.asList(new Address(nodeAddr), new Uint64(stake));
         String funcData = AppChainSystemContract.encodeFunction(NODE_MANAGER_SET_STAKE, inputParameters);
@@ -159,7 +159,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean setBql(
-            BigInteger bqlToSet, String adminPrivatekey, int version, int chainId)
+            BigInteger bqlToSet, String adminPrivatekey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Uint(bqlToSet));
         String funcData = AppChainSystemContract.encodeFunction(QUOTA_MANAGER_SET_BQL, inputParameters);
@@ -171,7 +171,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean setDefaultAql(
-            BigInteger defaultAqlToSet, String adminPrivatekey, int version, int chainId)
+            BigInteger defaultAqlToSet, String adminPrivatekey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Uint(defaultAqlToSet));
         String funcData = AppChainSystemContract.encodeFunction(QUOTA_MANAGER_SET_DEFAULT_AQL, inputParameters);
@@ -183,7 +183,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
     }
 
     public boolean setAql(
-            String addrToSet, BigInteger aqlToSet, String adminPrivatekey, int version, int chainId)
+            String addrToSet, BigInteger aqlToSet, String adminPrivatekey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Arrays.asList(new Address(addrToSet), new Uint(aqlToSet));
         String funcData = AppChainSystemContract.encodeFunction(QUOTA_MANAGER_SET_AQL, inputParameters);
@@ -266,7 +266,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             List<String> funcs,
             String adminPrivatekey,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException, InterruptedException {
 
         String nameHex = addUpTo64Hex(ConvertStrByte.stringToHexString(name));
@@ -296,7 +296,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
         return log == null ? "" : log.getAddress();
     }
 
-    public boolean deletePermission(String permissionAddr, String adminKey, int version, int chainId)
+    public boolean deletePermission(String permissionAddr, String adminKey, int version, BigInteger chainId)
             throws Exception {
 
         List<Type> inputParameter = Collections.singletonList(new Address(permissionAddr));
@@ -314,7 +314,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             String permissionAddr,
             String adminKey,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException, InterruptedException {
 
         List<Address> addrsToAdd = new ArrayList<>();
@@ -346,7 +346,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             String permissionAddr,
             String adminKey,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException, InterruptedException {
 
         List<Address> addrsToAdd = new ArrayList<>();
@@ -377,7 +377,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             String permissionAddr,
             String adminKey,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException, InterruptedException {
 
         List<Type> inputParameters = Arrays.asList(
@@ -395,7 +395,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             List<String> permissionAddrs,
             String adminKey,
             int version,
-            int chainId) throws IOException, InterruptedException {
+            BigInteger chainId) throws IOException, InterruptedException {
 
         List<Address> permissionsToAdd = new ArrayList<>();
         for (String str : permissionAddrs) {
@@ -418,7 +418,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             String permissionAddr,
             String adminKey,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException, InterruptedException {
 
         List<Type> inputParameters = Arrays.asList(
@@ -437,7 +437,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             List<String> permissionAddrs,
             String adminKey,
             int version,
-            int chainId) throws IOException, InterruptedException {
+            BigInteger chainId) throws IOException, InterruptedException {
 
         List<Address> permissionToCancel = new ArrayList<>();
         for (String str : permissionAddrs) {
@@ -459,7 +459,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
             String addr,
             String adminKey,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Address(addr));
         String funcData = AppChainSystemContract.encodeFunction(
@@ -471,7 +471,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
 
 
     public boolean updatePermissionName(
-            String permissionAddr, String newPermissionName, String adminKey, int version, int chainId)
+            String permissionAddr, String newPermissionName, String adminKey, int version, BigInteger chainId)
             throws Exception {
 
         String nameHex = addUpTo64Hex(ConvertStrByte.stringToHexString(newPermissionName));
@@ -587,8 +587,7 @@ public class AppChainjSystemContract implements AppChainSystemContract, AppChain
         return new QueryResourceResult(contracts, functions);
     }
 
-    public Transaction constructStoreTransaction(
-            String data, int version, int chainId) {
+    public Transaction constructStoreTransaction(String data, int version, BigInteger chainId) {
         return new Transaction(
                 STORE_ADDR, getNonce(), DEFAULT_QUOTA,
                 getValidUtilBlock(service).longValue(),

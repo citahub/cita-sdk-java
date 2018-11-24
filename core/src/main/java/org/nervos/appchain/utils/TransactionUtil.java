@@ -1,5 +1,6 @@
 package org.nervos.appchain.utils;
 
+import java.math.BigInteger;
 import java.security.SignatureException;
 
 import com.google.protobuf.ByteString;
@@ -101,20 +102,20 @@ public class TransactionUtil {
         String nonce = blockChainTx.getNonce();
         long quota = blockChainTx.getQuota();
         long validUntilBlock = blockChainTx.getValidUntilBlock();
-        String data = bytestringToString(blockChainTx.getData());
-        String value = bytestringToString(blockChainTx.getValue());
+        String data = bytesToHexString(blockChainTx.getData());
+        String value = bytesToHexString(blockChainTx.getValue());
 
         String to = null;
-        Integer chainId = null;
+        BigInteger chainId = null;
 
         //version 0: cita 0.19
         //version 1: cita 0.20
         if (version == 0) {
             to = blockChainTx.getTo();
-            chainId = blockChainTx.getChainId();
+            chainId = BigInteger.valueOf(blockChainTx.getChainId());
         } else if (version == 1) {
-            to = bytestringToString(blockChainTx.getToV1());
-            chainId = Integer.parseInt(bytestringToString(blockChainTx.getChainIdV1()));
+            to = bytesToHexString(blockChainTx.getToV1());
+            chainId = Numeric.toBigInt(bytesToHexString(blockChainTx.getChainIdV1()));
         }
 
         if (chainId == null || to == null) {
@@ -125,7 +126,7 @@ public class TransactionUtil {
                 to, nonce, quota, validUntilBlock, version, chainId, value, data);
     }
 
-    private static String bytestringToString(ByteString byteStr) {
+    private static String bytesToHexString(ByteString byteStr) {
         return ConvertStrByte.bytesToHexString(byteStr.toByteArray());
     }
 

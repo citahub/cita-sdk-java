@@ -2,6 +2,7 @@ package org.nervos.appchain.protocol.account;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,7 @@ public class Account {
     /// TODO: get contract address from receipt after deploy, then return contract name
     public AppSendTransaction deploy(
             File contractFile, String nonce, long quota,
-            int version, int chainId, String value)
+            int version, BigInteger chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
@@ -60,7 +61,7 @@ public class Account {
 
     public Future<AppSendTransaction> deployAsync(
             File contractFile, String nonce, long quota,
-            int version, int chainId, String value)
+            int version, BigInteger chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
@@ -74,7 +75,7 @@ public class Account {
     public Object callContract(
             String contractAddress, String funcName,
             String nonce, long quota, int version,
-            int chainId, String value, Object... args)
+            BigInteger chainId, String value, Object... args)
             throws Exception {
         if (abi == null) {
             abi = getAbi(contractAddress);
@@ -88,7 +89,7 @@ public class Account {
     public Object callContract(
             String contractAddress, AbiDefinition functionAbi,
             String nonce, long quota,
-            int version,int chainId, String value, Object... args)
+            int version,BigInteger chainId, String value, Object... args)
             throws Exception {
         List<Type> params = new ArrayList<>();
         List<AbiDefinition.NamedType> inputs = functionAbi.getInputs();
@@ -139,7 +140,7 @@ public class Account {
 
     public Object sendTransaction(
             String contractAddress, Function func, String nonce,
-            long quota, int version, int chainId, String value)
+            long quota, int version, BigInteger chainId, String value)
             throws IOException {
         String data = FunctionEncoder.encode(func);
         return this.transactionManager.sendTransaction(
@@ -149,7 +150,7 @@ public class Account {
 
     public Object uploadAbi(
             String contractAddress, String abi, String nonce, long quota,
-            int version, int chainId, String value) throws Exception {
+            int version, BigInteger chainId, String value) throws Exception {
         String data = hex_remove_0x(contractAddress) + hex_remove_0x(bytesToHexStr(abi.getBytes()));
         return this.transactionManager.sendTransaction(
                 ABI_ADDRESS, data, quota, nonce, getValidUntilBlock(),

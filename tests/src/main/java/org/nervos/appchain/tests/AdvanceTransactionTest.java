@@ -1,5 +1,6 @@
 package org.nervos.appchain.tests;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class AdvanceTransactionTest {
     private static AppChainj service;
     private static String senderPrivateKey;
     private static int version;
-    private static int chainId;
+    private static BigInteger chainId;
     private static long quota;
     private static String value = "0";
 

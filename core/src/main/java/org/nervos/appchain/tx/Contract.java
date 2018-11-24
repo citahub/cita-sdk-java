@@ -189,7 +189,7 @@ public abstract class Contract extends ManagedTransaction {
 
     TransactionReceipt executeTransaction(
             String data, long quota, String nonce, long validUntilBlock,
-            int version , int chainId, String value)
+            int version , BigInteger chainId, String value)
             throws TransactionException, IOException {
         return send(
                 contractAddress, data, quota, nonce, validUntilBlock, version, chainId, value);
@@ -214,7 +214,7 @@ public abstract class Contract extends ManagedTransaction {
     protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
             Function function, long quota, String nonce,
             long validUntilBlock, int version,
-            int chainId, String value) {
+            BigInteger chainId, String value) {
         return new RemoteCall<>(
                 () -> executeTransaction(
                         FunctionEncoder.encode(function),
@@ -225,7 +225,7 @@ public abstract class Contract extends ManagedTransaction {
     private static <T extends Contract> T create(
             T contract, String binary, String encodedConstructor,
             long quota, String nonce, long validUntilBlock,
-            int version, int chainId, String value)
+            int version, BigInteger chainId, String value)
             throws IOException, TransactionException {
         TransactionReceipt transactionReceipt =
                 contract.executeTransaction(
@@ -247,7 +247,7 @@ public abstract class Contract extends ManagedTransaction {
             Class<T> type,
             AppChainj appChainj, TransactionManager transactionManager,
             long quota, String nonce, long validUntilBlock,
-            int version, String binary, int chainId,
+            int version, String binary, BigInteger chainId,
             String value, String encodedConstructor)
             throws IOException, TransactionException {
 
@@ -271,7 +271,7 @@ public abstract class Contract extends ManagedTransaction {
     protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
             Class<T> type, AppChainj appChainj, TransactionManager transactionManager,
             long quota, String nonce, long validUntilBlock,
-            int version, int chainId, String value,
+            int version, BigInteger chainId, String value,
             String binary, String encodedConstructor) {
         return new RemoteCall<>(() -> deploy(
                 type, appChainj, transactionManager, quota, nonce, validUntilBlock,

@@ -28,7 +28,7 @@ import rx.Observable;
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
 public class TokenFilterObservableExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String toAddress;

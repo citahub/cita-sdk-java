@@ -1,8 +1,10 @@
 package org.nervos.appchain.tests;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.Gson;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.nervos.appchain.crypto.ECKeyPair;
 import org.nervos.appchain.protobuf.Blockchain;
@@ -15,7 +17,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 
 public class DecodeTxExample {
     private static int version;
-    private static int chainId;
+    private static BigInteger chainId;
     private static AppChainj service;
     private static String privateKey;
     private static long quotaToDeploy;
@@ -26,7 +28,7 @@ public class DecodeTxExample {
         conf.buildService(false);
         service = conf.service;
         privateKey = conf.primaryPrivKey;
-        chainId = Integer.parseInt(conf.chainId);
+        chainId = new BigInteger(conf.chainId);
         payeeAddr = conf.auxAddr1;
         quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
         version = TestUtil.getVersion(service);
@@ -60,14 +62,6 @@ public class DecodeTxExample {
                 = appTx.getTransaction();
 
         //decode from response transaction's content
-        Transaction decodedTx = tx.decodeContent();
-        System.out.println("version: " + decodedTx.getVersion());
-        System.out.println("nonce: " + decodedTx.getNonce());
-        System.out.println("quota: " + decodedTx.getQuota());
-        System.out.println("ValidUntilBlock: " + decodedTx.get_valid_until_block());
-        System.out.println("data: " + decodedTx.getData());
-        System.out.println("value: " + decodedTx.getValue());
-        System.out.println("chainId: " + decodedTx.getChainId());
-        System.out.println("to: " + decodedTx.getTo());
+        System.out.println(new Gson().toJson(tx.decodeContent()));
     }
 }

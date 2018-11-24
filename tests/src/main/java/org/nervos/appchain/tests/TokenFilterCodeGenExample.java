@@ -13,7 +13,7 @@ import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenFilterCodeGenExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String payerPrivateKey;
     private static String payeePrivateKey;

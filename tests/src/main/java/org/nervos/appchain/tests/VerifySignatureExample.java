@@ -1,6 +1,7 @@
 package org.nervos.appchain.tests;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.protobuf.ConvertStrByte;
@@ -13,7 +14,7 @@ import org.nervos.appchain.utils.Numeric;
 public class VerifySignatureExample {
     private static String privateKey;
     private static String primaryAddr;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static AppChainj service;
     private static String to;

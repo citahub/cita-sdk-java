@@ -32,7 +32,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 * */
 
 public class SimpleDataExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String fromAddress;

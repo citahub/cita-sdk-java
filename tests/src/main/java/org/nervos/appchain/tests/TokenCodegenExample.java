@@ -20,7 +20,7 @@ import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenCodegenExample {
     private static Config conf;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String creatorPrivateKey;
     private static Credentials creator;

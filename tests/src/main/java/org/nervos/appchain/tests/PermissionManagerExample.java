@@ -1,5 +1,6 @@
 package org.nervos.appchain.tests;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -13,7 +14,7 @@ public class PermissionManagerExample {
     static String senderAddr;
     static String adminPriavteKey;
     static int version;
-    static int chainId;
+    static BigInteger chainId;
 
     static {
         Config conf = new Config();

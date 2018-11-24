@@ -403,7 +403,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(Long.class, VALID_UNTIL_BLOCK)
                 .addParameter(Integer.class, VERSION)
                 .addParameter(String.class, VALUE)
-                .addParameter(Integer.class, CHAIN_ID);
+                .addParameter(BigInteger.class, CHAIN_ID);
         return builder;
     }
 
@@ -693,7 +693,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(String.class, NONCE)
                 .addParameter(Long.class, VALID_UNTIL_BLOCK)
                 .addParameter(Integer.class, VERSION)
-                .addParameter(Integer.class, CHAIN_ID)
+                .addParameter(BigInteger.class, CHAIN_ID)
                 .addParameter(String.class, VALUE);
 
         String functionName = functionDefinition.getName();

@@ -34,7 +34,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 public class InterfaceTest {
 
     private static int version;
-    private static int chainId;
+    private static BigInteger chainId;
     private static AppChainj service;
     private static String value;
     private static String privateKey;
