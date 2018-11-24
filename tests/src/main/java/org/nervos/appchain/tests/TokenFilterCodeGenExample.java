@@ -9,7 +9,7 @@ import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
-import org.nervos.appchain.tx.CitaTransactionManager;
+import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenFilterCodeGenExample {
@@ -86,7 +86,7 @@ public class TokenFilterCodeGenExample {
 
 
     public static void main(String[] args) throws Exception {
-        TransactionManager citaTxManager = new CitaTransactionManager(
+        TransactionManager citaTxManager = new RawTransactionManager(
                 service, Credentials.create(payerPrivateKey), 5, 3000);
         long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
         String nonce = TestUtil.getNonce();

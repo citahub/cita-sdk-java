@@ -15,7 +15,7 @@ import java.util.concurrent.TimeoutException;
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.tx.CitaTransactionManager;
+import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenCodegenExample {
@@ -32,7 +32,7 @@ public class TokenCodegenExample {
 
     static {
         conf = new Config();
-        conf.buildService(false);
+        conf.buildService(true);
 
         creatorPrivateKey = conf.primaryPrivKey;
         creator = Credentials.create(creatorPrivateKey);
@@ -60,18 +60,17 @@ public class TokenCodegenExample {
     }
 
     private static long getBalance(Credentials credentials) {
-        long accountBalance = 0;
+        BigInteger accountBalance = BigInteger.ZERO;
         try {
-            Future<BigInteger> balanceFuture = token.getBalance(
-                    credentials.getAddress()).sendAsync();
-            accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
+            accountBalance = token.getBalance(
+                    credentials.getAddress()).send();
         } catch (Exception e) {
             System.out.println("Failed to get balance of account: "
                     + credentials.getAddress());
             e.printStackTrace();
             System.exit(1);
         }
-        return accountBalance;
+        return accountBalance.longValue();
     }
 
     private static void printBalanceInfo() {
@@ -209,7 +208,7 @@ public class TokenCodegenExample {
 
 
     public static void main(String[] args) throws Exception {
-        TransactionManager citaTxManager = new CitaTransactionManager(
+        TransactionManager citaTxManager = new RawTransactionManager(
                 service, creator, 5, 3000);
 
         String nonce = TestUtil.getNonce();
@@ -222,7 +221,7 @@ public class TokenCodegenExample {
 
         System.out.println("Wait 10s for contract to be deployed...");
         Thread.sleep(10000);
-        Token token = tokenFuture.get();
+        token = tokenFuture.get();
         if (token != null) {
             System.out.println("contract deployment success. Contract address: "
                     + token.getContractAddress());
@@ -264,7 +263,7 @@ public class TokenCodegenExample {
 
         Future<TransactionReceipt> execute() throws Exception {
             Token tokenContract = new Token(token.getContractAddress(), service,
-                    new CitaTransactionManager(service, from, 5, 3000));
+                    new RawTransactionManager(service, from, 5, 3000));
 
             return tokenContract.transfer(
                     this.to.getAddress(), BigInteger.valueOf(tokens), quotaDeployment,

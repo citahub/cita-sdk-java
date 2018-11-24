@@ -2,109 +2,103 @@ package org.nervos.appchain.tx;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.crypto.Credentials;
-import org.nervos.appchain.crypto.RawTransaction;
-import org.nervos.appchain.crypto.TransactionEncoder;
+import org.nervos.appchain.crypto.Signature;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
+import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionCount;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
-import org.nervos.appchain.tx.response.TransactionReceiptProcessor;
-import org.nervos.appchain.utils.Numeric;
 
-/**
- * TransactionManager implementation using Ethereum wallet file to create and sign transactions
- * locally.
- *
- * <p>This transaction manager provides support for specifying the chain id for transactions as per
- * <a href="https://github.com/ethereum/EIPs/issues/155">EIP155</a>.
- */
 public class RawTransactionManager extends TransactionManager {
 
     private final AppChainj appChainj;
-    final Credentials credentials;
-
-    private final byte chainId;
-
-    public RawTransactionManager(AppChainj appChainj, Credentials credentials, byte chainId) {
-        super(appChainj, credentials.getAddress());
-
-        this.appChainj = appChainj;
-        this.credentials = credentials;
-
-        this.chainId = chainId;
-    }
-
-    public RawTransactionManager(
-            AppChainj appChainj, Credentials credentials, byte chainId,
-            TransactionReceiptProcessor transactionReceiptProcessor) {
-        super(transactionReceiptProcessor, credentials.getAddress());
-
-        this.appChainj = appChainj;
-        this.credentials = credentials;
-
-        this.chainId = chainId;
-    }
-
-    public RawTransactionManager(
-            AppChainj appChainj, Credentials credentials,
-            byte chainId, int attempts, long sleepDuration) {
-        super(appChainj, attempts, sleepDuration, credentials.getAddress());
-
-        this.appChainj = appChainj;
-        this.credentials = credentials;
-
-        this.chainId = chainId;
-    }
+    private Credentials credentials;
+    private Signature signature;
 
     public RawTransactionManager(AppChainj appChainj, Credentials credentials) {
-        this(appChainj, credentials, ChainId.NONE);
+        super(appChainj, credentials.getAddress());
+        this.appChainj = appChainj;
+        this.credentials = credentials;
+
+    }
+
+    public RawTransactionManager(AppChainj appChainj, Signature signature) {
+        super(appChainj, signature.getAddress());
+        this.appChainj = appChainj;
+        this.signature = signature;
     }
 
     public RawTransactionManager(
             AppChainj appChainj, Credentials credentials, int attempts, int sleepDuration) {
-        this(appChainj, credentials, ChainId.NONE, attempts, sleepDuration);
+        super(appChainj, attempts, sleepDuration, credentials.getAddress());
+        this.appChainj = appChainj;
+        this.credentials = credentials;
     }
 
-    protected BigInteger getNonce() throws IOException {
+    public RawTransactionManager(
+            AppChainj appChainj, Signature signature, int attempts, int sleepDuration) {
+        super(appChainj, attempts, sleepDuration, signature.getAddress());
+        this.appChainj = appChainj;
+        this.signature = signature;
+    }
+
+    BigInteger getNonce() throws IOException {
         AppGetTransactionCount ethGetTransactionCount = appChainj.appGetTransactionCount(
-                credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
+                credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
 
         return ethGetTransactionCount.getTransactionCount();
     }
 
+
     @Override
     public AppSendTransaction sendTransaction(
-            BigInteger gasPrice, BigInteger gasLimit, String to,
-            String data, String value) throws IOException {
-
-        BigInteger nonce = getNonce();
-
-        RawTransaction rawTransaction = RawTransaction.createTransaction(
-                nonce,
-                gasPrice,
-                gasLimit,
-                to,
-                value,
-                data);
-
-        return signAndSend(rawTransaction);
+            String to, String data, long quota, String nonce,
+            long validUntilBlock, int version, int chainId, String value)
+            throws IOException {
+        Transaction transaction = new Transaction(
+                to, nonce, quota, validUntilBlock,
+                version, chainId, value, data);
+        String rawTx = null;
+        if (this.credentials != null) {
+            rawTx = transaction.sign(this.credentials);
+        } else if (this.signature != null) {
+            rawTx = transaction.sign(this.signature);
+        }
+        return appChainj.appSendRawTransaction(rawTx).send();
     }
 
-    public AppSendTransaction signAndSend(RawTransaction rawTransaction)
-            throws IOException {
-
-        byte[] signedMessage;
-
-        if (chainId > ChainId.NONE) {
-            signedMessage = TransactionEncoder.signMessage(rawTransaction, chainId, credentials);
-        } else {
-            signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+    public Future<AppSendTransaction> sendTransactionAsync(
+            String to, String data, long quota, String nonce,
+            long validUntilBlock, int version, int chainId, String value) {
+        Transaction transaction = new Transaction(
+                to, nonce, quota, validUntilBlock,
+                version, chainId, value, data);
+        String rawTx = null;
+        if (this.credentials != null) {
+            rawTx = transaction.sign(this.credentials);
+        } else if (this.signature != null) {
+            rawTx = transaction.sign(this.signature);
         }
+        return appChainj.appSendRawTransaction(rawTx).sendAsync();
+    }
 
-        String hexValue = Numeric.toHexString(signedMessage);
+    @Override
+    public String getFromAddress() {
+        if (credentials != null) {
+            return credentials.getAddress();
+        } else {
+            return signature.getAddress();
+        }
+    }
 
-        return appChainj.appSendRawTransaction(hexValue).send();
+    public String getFromAddress(boolean isCredential) {
+        if (isCredential) {
+            return credentials.getAddress();
+        } else {
+            return signature.getAddress();
+        }
     }
 }
