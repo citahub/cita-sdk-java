@@ -202,9 +202,6 @@ public class Transaction {
     }
 
     private static String processTo(String to) {
-        if (!Keys.verifyAddress(to) && to.matches("^(0x|0X)?")) {
-            throw new IllegalArgumentException("Address is not in correct format.");
-        }
-        return cleanHexPrefix(to).toLowerCase();
+        return !Strings.isEmpty(to) && Keys.verifyAddress(to) ? cleanHexPrefix(to).toLowerCase() : "";
     }
 }
