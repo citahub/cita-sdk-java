@@ -11,6 +11,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import org.junit.Before;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.AppChainjService;
@@ -20,8 +22,6 @@ import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.methods.response.AppFilter;
 import org.nervos.appchain.protocol.core.methods.response.AppLog;
 import org.nervos.appchain.protocol.core.methods.response.AppUninstallFilter;
-import rx.Observable;
-import rx.Subscription;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -47,7 +47,7 @@ public abstract class FilterTester {
         appChainj = AppChainj.build(appChainjService, 1000, scheduledExecutorService);
     }
 
-    <T> void runTest(AppLog appLog, Observable<T> observable) throws Exception {
+    <T> void runTest(AppLog appLog, Flowable<T> flowable) throws Exception {
         AppFilter appFilter = objectMapper.readValue(
                 "{\n"
                         + "  \"id\":1,\n"
@@ -73,7 +73,7 @@ public abstract class FilterTester {
         when(appChainjService.send(any(Request.class), eq(AppUninstallFilter.class)))
                 .thenReturn(appUninstallFilter);
 
-        Subscription subscription = observable.subscribe(
+        Disposable subscription = flowable.subscribe(
                 result -> {
                     results.add(result);
                     transactionLatch.countDown();
@@ -84,10 +84,10 @@ public abstract class FilterTester {
         transactionLatch.await(1, TimeUnit.SECONDS);
         assertThat(results, equalTo(new HashSet<>(expected)));
 
-        subscription.unsubscribe();
+        subscription.dispose();
 
         completedLatch.await(1, TimeUnit.SECONDS);
-        assertTrue(subscription.isUnsubscribed());
+        assertTrue(subscription.isDisposed());
     }
 
     List createExpected(AppLog appLog) {

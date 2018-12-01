@@ -1,10 +1,9 @@
 package org.nervos.appchain.tests;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.protocol.AppChainj;
 
-import rx.Observable;
-
-public class BlockFilterObservableExample {
+public class BlockFilterFlowableExample {
     private static AppChainj service;
 
     static {
@@ -14,8 +13,8 @@ public class BlockFilterObservableExample {
     }
 
     public static void main(String[] args) {
-        Observable blockFitlerObservable = service.appBlockHashObservable();
-        blockFitlerObservable.subscribe(block ->
+        Flowable blockFitlerFlowable = service.appBlockHashFlowable();
+        blockFitlerFlowable.subscribe(block ->
                 System.out.println(block.toString())
         );
     }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ScheduledExecutorService;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.AppChainjService;
 import org.nervos.appchain.protocol.core.methods.request.Call;
@@ -30,7 +31,6 @@ import org.nervos.appchain.protocol.core.methods.response.Transaction;
 import org.nervos.appchain.protocol.rx.JsonRpc2_0Rx;
 import org.nervos.appchain.utils.Async;
 import org.nervos.appchain.utils.Numeric;
-import rx.Observable;
 
 /**
  * JSON-RPC 2.0 factory implementation.
@@ -151,9 +151,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Request<?, AppSendTransaction>
-            appSendRawTransaction(
-            String signedTransactionData) {
+    public Request<?, AppSendTransaction> appSendRawTransaction(String signedTransactionData) {
         return new Request<>(
                 "sendRawTransaction",
                 Arrays.asList(signedTransactionData),
@@ -162,8 +160,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Request<?, AppCall> appCall(
-            Call call, DefaultBlockParameter defaultBlockParameter) {
+    public Request<?, AppCall> appCall(Call call, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
                 "call",
                 Arrays.asList(call, defaultBlockParameter),
@@ -173,8 +170,7 @@ public class JsonRpc2_0AppChainj implements AppChainj {
 
 
     @Override
-    public Request<?, AppBlock> appGetBlockByHash(
-            String blockHash, boolean returnFullTransactionObjects) {
+    public Request<?, AppBlock> appGetBlockByHash(String blockHash, boolean returnFullTransactionObjects) {
         return new Request<>(
                 "getBlockByHash",
                 Arrays.asList(
@@ -280,92 +276,86 @@ public class JsonRpc2_0AppChainj implements AppChainj {
     }
 
     @Override
-    public Observable<String> appBlockHashObservable() {
-        return appChainjRx.appBlockHashObservable(blockTime);
+    public Flowable<String> appBlockHashFlowable() {
+        return appChainjRx.appBlockHashFlowable(blockTime);
     }
 
     @Override
-    public Observable<String> appPendingTransactionHashObservable() {
-        return appChainjRx.appPendingTransactionHashObservable(blockTime);
+    public Flowable<String> appPendingTransactionHashFlowable() {
+        return appChainjRx.appPendingTransactionHashFlowable(blockTime);
     }
 
     @Override
-    public Observable<Log> appLogObservable(
+    public Flowable<Log> appLogFlowable(
             org.nervos.appchain.protocol.core.methods.request.AppFilter appFilter) {
-        return appChainjRx.appLogObservable(appFilter, blockTime);
+        return appChainjRx.appLogFlowable(appFilter, blockTime);
     }
 
     @Override
-    public Observable<Transaction>
-            transactionObservable() {
-        return appChainjRx.transactionObservable(blockTime);
+    public Flowable<Transaction> transactionFlowable() {
+        return appChainjRx.transactionFlowable(blockTime);
     }
 
     @Override
-    public Observable<Transaction>
-            pendingTransactionObservable() {
-        return appChainjRx.pendingTransactionObservable(blockTime);
+    public Flowable<Transaction> pendingTransactionFlowable() {
+        return appChainjRx.pendingTransactionFlowable(blockTime);
     }
 
     @Override
-    public Observable<AppBlock> blockObservable(boolean fullTransactionObjects) {
-        return appChainjRx.blockObservable(fullTransactionObjects, blockTime);
+    public Flowable<AppBlock> blockFlowable(boolean fullTransactionObjects) {
+        return appChainjRx.blockFlowable(fullTransactionObjects, blockTime);
     }
 
     @Override
-    public Observable<AppBlock> replayBlocksObservable(
+    public Flowable<AppBlock> replayBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects) {
-        return appChainjRx.replayBlocksObservable(startBlock, endBlock, fullTransactionObjects);
+        return appChainjRx.replayBlocksFlowable(startBlock, endBlock, fullTransactionObjects);
     }
 
     @Override
-    public Observable<AppBlock> replayBlocksObservable(
+    public Flowable<AppBlock> replayBlocksFlowable(
             DefaultBlockParameter startBlock, DefaultBlockParameter endBlock,
             boolean fullTransactionObjects, boolean ascending) {
-        return appChainjRx.replayBlocksObservable(startBlock, endBlock,
+        return appChainjRx.replayBlocksFlowable(startBlock, endBlock,
                 fullTransactionObjects, ascending);
     }
 
     @Override
-    public Observable<Transaction>
-            replayTransactionsObservable(
-            DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        return appChainjRx.replayTransactionsObservable(startBlock, endBlock);
+    public Flowable<Transaction> replayTransactionsFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
+        return appChainjRx.replayTransactionsFlowable(startBlock, endBlock);
     }
 
     @Override
-    public Observable<AppBlock> catchUpToLatestBlockObservable(
+    public Flowable<AppBlock> catchUpToLatestBlockFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects,
-            Observable<AppBlock> onCompleteObservable) {
-        return appChainjRx.catchUpToLatestBlockObservable(
-                startBlock, fullTransactionObjects, onCompleteObservable);
+            Flowable<AppBlock> onCompleteFlowable) {
+        return appChainjRx.catchUpToLatestBlockFlowable(
+                startBlock, fullTransactionObjects, onCompleteFlowable);
     }
 
     @Override
-    public Observable<AppBlock> catchUpToLatestBlockObservable(
+    public Flowable<AppBlock> catchUpToLatestBlockFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return appChainjRx.catchUpToLatestBlockObservable(startBlock, fullTransactionObjects);
+        return appChainjRx.catchUpToLatestBlockFlowable(startBlock, fullTransactionObjects);
     }
 
     @Override
-    public Observable<Transaction>
-            catchUpToLatestTransactionObservable(DefaultBlockParameter startBlock) {
-        return appChainjRx.catchUpToLatestTransactionObservable(startBlock);
+    public Flowable<Transaction> catchUpToLatestTransactionFlowable(DefaultBlockParameter startBlock) {
+        return appChainjRx.catchUpToLatestTransactionFlowable(startBlock);
     }
 
     @Override
-    public Observable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksObservable(
+    public Flowable<AppBlock> catchUpToLatestAndSubscribeToNewBlocksFlowable(
             DefaultBlockParameter startBlock, boolean fullTransactionObjects) {
-        return appChainjRx.catchUpToLatestAndSubscribeToNewBlocksObservable(
+        return appChainjRx.catchUpToLatestAndSubscribeToNewBlocksFlowable(
                 startBlock, fullTransactionObjects, blockTime);
     }
 
     @Override
-    public Observable<Transaction>
-            catchUpToLatestAndSubscribeToNewTransactionsObservable(
+    public Flowable<Transaction> catchUpToLatestAndSubscribeToNewTransactionsFlowable(
             DefaultBlockParameter startBlock) {
-        return appChainjRx.catchUpToLatestAndSubscribeToNewTransactionsObservable(
+        return appChainjRx.catchUpToLatestAndSubscribeToNewTransactionsFlowable(
                 startBlock, blockTime);
     }
 }

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
 import org.nervos.appchain.abi.FunctionEncoder;
@@ -28,7 +29,6 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.utils.TypedAbi;
-import rx.Observable;
 
 public class Account {
 
@@ -163,19 +163,19 @@ public class Account {
         return new String(hexStrToBytes(hex_remove_0x(abi)));
     }
 
-    public Observable<Object> eventObservable(String contractName, String eventName)
+    public Flowable<Object> eventFlowable(String contractName, String eventName)
             throws Exception {
         CompiledContract contract = loadContract(contractName);
         String contractAddress = getContractAddress(contractName);
         AbiDefinition eventAbi = contract.getEventAbi(eventName);
-        return eventObservable(
+        return eventFlowable(
                 contractAddress, eventAbi,
                 DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST);
     }
 
-    public Observable<Object> eventObservable(String contractAddress, AbiDefinition eventAbi,
-                                              DefaultBlockParameter start,
-                                              DefaultBlockParameter end)
+    public Flowable<Object> eventFlowable(String contractAddress, AbiDefinition eventAbi,
+                                          DefaultBlockParameter start,
+                                          DefaultBlockParameter end)
             throws Exception {
         List<TypedAbi.ArgRetType> results = new ArrayList<>();
         List<AbiDefinition.NamedType> namedTypes = eventAbi.getInputs();
@@ -189,32 +189,35 @@ public class Account {
         AppFilter filter = new AppFilter(start, end, contractAddress);
         /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after appChainj fixed
         filter.addSingleTopic(EventEncoder.encode(event));
-        return this.service.appLogObservable(filter).map(log -> {
-            EventValues eventValues = staticExtractEventParameters(event, log);
-            List<Type> indexedValues = eventValues.getIndexedValues();
-            List<Type> nonIndexedValues = eventValues.getNonIndexedValues();
-            int indexedSize = indexedValues.size();
-            int nonIndexedSize = nonIndexedValues.size();
-            int size = indexedSize + nonIndexedSize;
-            List<Object> values = new ArrayList<>(size);
-            for (int i = 0; i < size; i++) {
-                values.add(null);
-            }
+        return this.service.appLogFlowable(filter).map(new io.reactivex.functions.Function<Log, Object>() {
+            @Override
+            public Object apply(Log log) throws Exception {
+                EventValues eventValues = staticExtractEventParameters(event, log);
+                List<Type> indexedValues = eventValues.getIndexedValues();
+                List<Type> nonIndexedValues = eventValues.getNonIndexedValues();
+                int indexedSize = indexedValues.size();
+                int nonIndexedSize = nonIndexedValues.size();
+                int size = indexedSize + nonIndexedSize;
+                List<Object> values = new ArrayList<>(size);
+                for (int i = 0; i < size; i++) {
+                    values.add(null);
+                }
 
-            List<Integer> indexedSeq = event.getIndexedParametersSeq();
-            for (int i = 0; i < indexedSize; i++) {
-                int indexSeqNum = indexedSeq.get(i);
-                values.set(
-                        indexSeqNum, results.get(indexSeqNum).abiToJava(indexedValues.get(i)));
-            }
+                List<Integer> indexedSeq = event.getIndexedParametersSeq();
+                for (int i = 0; i < indexedSize; i++) {
+                    int indexSeqNum = indexedSeq.get(i);
+                    values.set(
+                            indexSeqNum, results.get(indexSeqNum).abiToJava(indexedValues.get(i)));
+                }
 
-            List<Integer> nonIndexedSeq = event.getNonIndexedParametersSeq();
-            for (int i = 0; i < nonIndexedSize; i++) {
-                int indexSeqNum = nonIndexedSeq.get(i);
-                values.set(
-                        indexSeqNum, results.get(indexSeqNum).abiToJava(nonIndexedValues.get(i)));
+                List<Integer> nonIndexedSeq = event.getNonIndexedParametersSeq();
+                for (int i = 0; i < nonIndexedSize; i++) {
+                    int indexSeqNum = nonIndexedSeq.get(i);
+                    values.set(
+                            indexSeqNum, results.get(indexSeqNum).abiToJava(nonIndexedValues.get(i)));
+                }
+                return values;
             }
-            return values;
         });
     }
 

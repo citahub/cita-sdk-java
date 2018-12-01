@@ -3,8 +3,8 @@ package org.nervos.appchain.protocol.core;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.utils.Async;
-import rx.Observable;
 
 /**
  * A common type for wrapping remote requests.
@@ -39,20 +39,16 @@ public class RemoteCall<T> {
     }
 
     /**
-     * Provide an observable to emit result from our function.
+     * Provide an flowable to emit result from our function.
      *
-     * @return an observable
+     * @return an flowable
      */
-    public Observable<T> observable() {
-        return Observable.create(
-                subscriber -> {
-                    try {
-                        subscriber.onNext(send());
-                        subscriber.onCompleted();
-                    } catch (Exception e) {
-                        subscriber.onError(e);
-                    }
-                }
-        );
+    public Flowable<T> flowable() {
+        return Flowable.fromCallable(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return send();
+            }
+        });
     }
 }

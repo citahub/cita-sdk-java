@@ -7,6 +7,8 @@ import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.reactivex.Flowable;
+import io.reactivex.Notification;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.Response;
 import org.nervos.appchain.utils.Async;
@@ -47,5 +49,16 @@ public abstract class Service implements AppChainjService {
                 return Service.this.send(jsonRpc20Request, responseType);
             }
         });
+    }
+
+    @Override
+    public <T extends Notification<?>> Flowable<T> subscribe(
+            Request request,
+            String unsubscribeMethod,
+            Class<T> responseType) {
+        throw new UnsupportedOperationException(
+                String.format(
+                        "Service %s does not support subscriptions",
+                        this.getClass().getSimpleName()));
     }
 }

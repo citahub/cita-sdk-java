@@ -43,7 +43,6 @@ public class EventEncoder {
         result.append(methodName);
         result.append("(");
 
-
         StringBuilder params = new StringBuilder();
         for (int i = 0; i < parameters.size(); i++) {
             params.append(Utils.getTypeName(parameters.get(i)));
@@ -67,7 +66,6 @@ public class EventEncoder {
         StringBuilder result = new StringBuilder();
         result.append(methodName);
         result.append("(");
-
 
         StringBuilder params = new StringBuilder();
         for (int i = 0; i < parameters.size(); i++) {

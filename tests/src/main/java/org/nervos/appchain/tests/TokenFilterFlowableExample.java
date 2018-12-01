@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
 import org.nervos.appchain.abi.FunctionEncoder;
@@ -23,11 +24,9 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
-import rx.Observable;
-
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
-public class TokenFilterObservableExample {
+public class TokenFilterFlowableExample {
     private static BigInteger chainId;
     private static int version;
     private static String privateKey;
@@ -166,8 +165,8 @@ public class TokenFilterObservableExample {
             String filterId = newFilter(filter);
             System.out.println("Filter created successfully: filter ID: " + filterId);
 
-            Observable appLogObservable = service.appLogObservable(filter);
-            Observable<TransferObj> reponse = appLogObservable.map(
+            Flowable appLogFlowable = service.appLogFlowable(filter);
+            Flowable<TransferObj> reponse = appLogFlowable.map(
                     (log) -> {
                         EventValues eventValues = staticExtractEventParameters(event, (Log)log);
                         TransferObj typedResponse = new TransferObj();
