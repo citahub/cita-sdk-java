@@ -163,4 +163,9 @@ public class HttpService extends Service {
     public static void setDebug(boolean debug) {
         HttpService.debug = debug;
     }
+
+    @Override
+    public void close() throws IOException {
+
+    }
 }
