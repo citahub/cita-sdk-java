@@ -25,7 +25,7 @@ public class Config {
     private static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
     private static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
     private static final String ADMIN_PRIVATE_KEY = "AdminPrivateKey";
-    private static final String CRYPTO_TYPE = "cryptoType";
+    private static final String CRYPTO_TYPE = "CryptoType";
 
     private Properties props;
     public String chainId;
