@@ -1,12 +1,16 @@
 package org.nervos.appchain.console;
+
 import org.nervos.appchain.codegen.Console;
 import org.nervos.appchain.codegen.SolidityFunctionWrapperGenerator;
 import org.nervos.appchain.codegen.TruffleJsonFunctionWrapperGenerator;
 import org.nervos.appchain.utils.Version;
+
 import static org.nervos.appchain.utils.Collection.tail;
+
 /**
  * Main entry point for running command line utilities.
  */
+
 public class Runner {
     private static String USAGE = "Usage: appChainj version|solidity ...";
 
