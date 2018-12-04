@@ -17,10 +17,12 @@ import org.nervos.appchain.utils.Convert;
 
 public class SendTransactionAsyncExample {
     private static String payerKey;
+    private static String payerAddr;
     private static String payeeAddr;
     private static BigInteger chainId;
     private static int version;
     private static long quotaToTransfer;
+    private static Transaction.CryptoTx cryptoTx;
 
     static AppChainj service;
 
@@ -28,11 +30,13 @@ public class SendTransactionAsyncExample {
         Config conf = new Config();
         conf.buildService(false);
         payerKey = conf.primaryPrivKey;
+        payerAddr = conf.primaryAddr;
         payeeAddr = conf.auxAddr1;
         quotaToTransfer = Long.parseLong(conf.defaultQuotaTransfer);
         service = conf.service;
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static BigInteger getBalance(String address) {
@@ -65,7 +69,7 @@ public class SendTransactionAsyncExample {
                 value,
                 "");
 
-        String rawTx = tx.sign(payerKey, false, false);
+        String rawTx = tx.sign(payerKey, cryptoTx, false);
         AppSendTransaction ethSendTrasnction = service
                 .appSendRawTransaction(rawTx).send();
 
@@ -83,8 +87,6 @@ public class SendTransactionAsyncExample {
     }
 
     public static void main(String[] args) {
-        Credentials payerCredential = Credentials.create(payerKey);
-        String payerAddr = payerCredential.getAddress();
         System.out.println(Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
         System.out.println(Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
 

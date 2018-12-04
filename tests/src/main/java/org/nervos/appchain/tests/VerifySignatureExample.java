@@ -18,6 +18,7 @@ public class VerifySignatureExample {
     private static int version;
     private static AppChainj service;
     private static String to;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -29,6 +30,7 @@ public class VerifySignatureExample {
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
         to = conf.auxAddr1;
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
 
@@ -67,7 +69,7 @@ public class VerifySignatureExample {
         Transaction tx = createSampleTransaction();
 
         //sign the sample transaction
-        String signedTx = tx.sign(privateKey);
+        String signedTx = tx.sign(privateKey, cryptoTx, false);
 
         //get sent transaction hash
         String txHash = sendSampleTransaction(signedTx);

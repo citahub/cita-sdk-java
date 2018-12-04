@@ -25,6 +25,7 @@ public class Config {
     private static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
     private static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
     private static final String ADMIN_PRIVATE_KEY = "AdminPrivateKey";
+    private static final String CRYPTO_TYPE = "cryptoType";
 
     private Properties props;
     public String chainId;
@@ -44,6 +45,7 @@ public class Config {
     public String defaultQuotaDeployment;
     public AppChainj service;
     public String adminPrivateKey;
+    public String cryptoTx;
 
 
     public Config() {
@@ -102,6 +104,7 @@ public class Config {
         defaultQuotaTransfer = props.getProperty(DEFAULT_QUOTA_Transfer);
         defaultQuotaDeployment = props.getProperty(DEFAULT_QUOTA_Deployment);
         adminPrivateKey = props.getProperty(ADMIN_PRIVATE_KEY);
+        cryptoTx = props.getProperty(CRYPTO_TYPE);
     }
 
 }

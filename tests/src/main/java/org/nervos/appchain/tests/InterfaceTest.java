@@ -40,11 +40,11 @@ public class InterfaceTest {
     private static String privateKey;
     private static long quotaToDeploy;
     private static String validTransactionHash;
+    private static Transaction.CryptoTx cryptoTx;
 
-    private static Config conf;
 
     static {
-        conf = new Config();
+        Config conf = new Config();
         conf.buildService(false);
         service = conf.service;
         privateKey = conf.primaryPrivKey;
@@ -52,6 +52,7 @@ public class InterfaceTest {
         value = "0";
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     public static void main(String[] args) throws Exception {
@@ -126,7 +127,7 @@ public class InterfaceTest {
         Transaction rtx = Transaction.createContractTransaction(
                 nonce, quotaToDeploy, validUtil.longValue(),
                 version, chainId, value, code);
-        String signedTx = rtx.sign(privateKey, false, false);
+        String signedTx = rtx.sign(privateKey, cryptoTx, false);
         String optionTxHash = testAppSendRawTransaction(signedTx);
 
         if (optionTxHash != null) {
