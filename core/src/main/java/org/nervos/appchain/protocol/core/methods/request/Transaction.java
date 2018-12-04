@@ -1,5 +1,6 @@
 package org.nervos.appchain.protocol.core.methods.request;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Random;
@@ -15,6 +16,9 @@ import org.nervos.appchain.crypto.ECKeyPair;
 import org.nervos.appchain.crypto.Keys;
 import org.nervos.appchain.crypto.Sign;
 import org.nervos.appchain.crypto.Signature;
+import org.nervos.appchain.crypto.sm2.SM2;
+import org.nervos.appchain.crypto.sm2.SM2KeyPair;
+import org.nervos.appchain.crypto.sm2.SM3;
 import org.nervos.appchain.protobuf.Blockchain;
 import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.utils.Numeric;
@@ -35,8 +39,8 @@ import static org.nervos.appchain.utils.Numeric.prependHexPrefix;
 public class Transaction {
     private static final BigInteger MAX_VALUE = BigInteger.valueOf(2).pow(256).subtract(BigInteger.ONE);
     private String to;
-    private String nonce;  // nonce field is not present on eth_call/eth_estimateGas
-    private long quota;  // gas
+    private String nonce;  // nonce field is not present on call
+    private long quota;  // gasLimit
     private long validUntilBlock;
     private int version = 0;
     private String data;
@@ -57,7 +61,43 @@ public class Transaction {
         this.to = processTo(to);
     }
 
+    private static final String IDA = "1234567812345678";
 
+    public enum CryptoTx {
+        SECP256K1, ED25519, SM2
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public String getNonce() {
+        return nonce;
+    }
+
+    public long getQuota() {
+        return quota;
+    }
+
+    public long getValidUntilBlock() {
+        return validUntilBlock;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public BigInteger getChainId() {
+        return chainId;
+    }
+
+    public String getValue() {
+        return value;
+    }
 
     public static Transaction createContractTransaction(String nonce, long quota, long validUntilBlock,
             int version, BigInteger chainId, String value, String init) {
@@ -86,18 +126,23 @@ public class Transaction {
     * 2. get signature from transaction
     * 3. add serialized raw transaction and signature together
     * */
-    public String sign(String privateKey, boolean isEd25519AndBlake2b, boolean isByteArray) {
-        byte[] tx = serializeRawTransaction(isByteArray);
-        return serializeUnverifiedTransaction(getSignature(privateKey, tx, isEd25519AndBlake2b), tx);
+    public String sign(
+            String privateKey, CryptoTx cryptoTx, boolean isByteArray)
+            throws IOException {
+        byte[] tx = this.serializeRawTransaction(isByteArray);
+        byte[] sig = this.getSignature(privateKey, tx, cryptoTx);
+        return this.serializeUnverifiedTransaction(sig, tx);
     }
 
-    public String sign(String privateKey) {
-        return sign(privateKey, false, false);
+    public String sign(String privateKey) throws IOException {
+        return sign(privateKey, CryptoTx.SECP256K1, false);
     }
 
     // just used to secp256k1
     public String sign(Credentials credentials) {
-        return sign(credentials.getEcKeyPair().getPrivateKey().toString(16), false, false);
+        byte[] tx = this.serializeRawTransaction(false);
+        byte[] sig = this.getSignature(credentials, tx);
+        return this.serializeUnverifiedTransaction(sig, tx);
     }
 
     public String sign(Signature signature) {
@@ -134,7 +179,7 @@ public class Transaction {
         return signatureData.get_signature();
     }
 
-    public byte[] getSignature(String privateKey, byte[] tx, boolean isEd25519AndBlake2b) {
+    public byte[] getSignature(String privateKey, byte[] tx, CryptoTx cryptoTx) throws IOException {
 
         if (!Keys.verifyPrivateKey(privateKey)) {
             throw new IllegalArgumentException("private key is not in correct format.");
@@ -144,7 +189,7 @@ public class Transaction {
         Hash hash = new Hash();
         byte[] sig;
 
-        if (isEd25519AndBlake2b) {
+        if (cryptoTx == CryptoTx.ED25519) {
             byte[] message = hash.blake2(tx, "CryptapeCryptape".getBytes(), null, null);
             SigningKey key = new SigningKey(privateKey, HEX);
             byte[] pk = key.getVerifyKey().toBytes();
@@ -152,6 +197,11 @@ public class Transaction {
             sig = new byte[signature.length + pk.length];
             System.arraycopy(signature, 0, sig, 0, signature.length);
             System.arraycopy(pk, 0, sig, signature.length, pk.length);
+        } else if (cryptoTx == CryptoTx.SM2) {
+            SM2 sm02 = new SM2();
+            SM2KeyPair key = sm02.fromPrivateKey(privateKey);
+            SM2.Signature signature = sm02.sign(SM3.hash(tx), IDA, key);
+            sig = SM2.getSignature(signature, key.getPublicKey());
         } else {
             Credentials credentials = Credentials.create(privateKey);
             ECKeyPair keyPair = credentials.getEcKeyPair();

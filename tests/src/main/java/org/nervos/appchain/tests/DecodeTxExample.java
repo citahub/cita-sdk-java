@@ -15,6 +15,10 @@ import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 
+/*
+* This example shows how to decode transaction info from response.
+* */
+
 public class DecodeTxExample {
     private static int version;
     private static BigInteger chainId;
@@ -22,6 +26,7 @@ public class DecodeTxExample {
     private static String privateKey;
     private static long quotaToDeploy;
     private static String payeeAddr;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -33,6 +38,7 @@ public class DecodeTxExample {
         quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static String createSampleTransaction() throws IOException {
@@ -43,7 +49,7 @@ public class DecodeTxExample {
         Transaction transferTx = new Transaction(
                 payeeAddr, nonce, quotaToDeploy, validUtilBlock, version, chainId, "1", data);
 
-        String rawTx = transferTx.sign(privateKey);
+        String rawTx = transferTx.sign(privateKey, cryptoTx, false);
         return service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
     }
 

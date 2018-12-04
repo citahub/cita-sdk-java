@@ -191,7 +191,7 @@ public class SolidityFunctionWrapper extends Generator {
         } catch (IOException | NullPointerException e) {
             version = Version.DEFAULT;
         }
-        return "\n<p>Generated with appChainj version " + version + ".\n";
+        return "\n<p>Generated with appchainj version " + version + ".\n";
     }
 
     private FieldSpec createBinaryDefinition(String binary) {

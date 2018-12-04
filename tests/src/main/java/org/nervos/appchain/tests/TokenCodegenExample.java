@@ -33,7 +33,7 @@ public class TokenCodegenExample {
 
     static {
         conf = new Config();
-        conf.buildService(true);
+        conf.buildService(false);
 
         creatorPrivateKey = conf.primaryPrivKey;
         creator = Credentials.create(creatorPrivateKey);
@@ -223,7 +223,7 @@ public class TokenCodegenExample {
 
         System.out.println("Wait 10s for contract to be deployed...");
         Thread.sleep(10000);
-        Token token = tokenFuture.get();
+        token = tokenFuture.get();
         if (token != null) {
             System.out.println("contract deployment success. Contract address: "
                     + token.getContractAddress());

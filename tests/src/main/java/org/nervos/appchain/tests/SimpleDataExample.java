@@ -42,6 +42,7 @@ public class SimpleDataExample {
     private static String value;
     private static AppChainj service;
     private static String contractAddr;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -57,6 +58,7 @@ public class SimpleDataExample {
         value = "0";
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static String deploySampleContract(
@@ -70,7 +72,7 @@ public class SimpleDataExample {
                 TestUtil.getValidUtilBlock(service).longValue(),
                 version, chainId, value, contractData, constructorData);
 
-        String signedTx = tx.sign(privateKey);
+        String signedTx = tx.sign(privateKey, cryptoTx, false);
         AppSendTransaction appSendTransaction = service.appSendRawTransaction(signedTx).send();
 
         return appSendTransaction.getSendTransactionResult().getHash();

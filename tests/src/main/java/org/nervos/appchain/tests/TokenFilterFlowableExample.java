@@ -34,6 +34,7 @@ public class TokenFilterFlowableExample {
     private static Long quota;
     private static String value;
     private static AppChainj service;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -47,6 +48,7 @@ public class TokenFilterFlowableExample {
 
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     public static String deployContract(String contractCode) throws IOException {
@@ -57,7 +59,7 @@ public class TokenFilterFlowableExample {
                 .createContractTransaction(
                         nonce, quota, validUntilBlock,
                         version, chainId, value, contractCode);
-        String signedTx = txToDeployContract.sign(privateKey);
+        String signedTx = txToDeployContract.sign(privateKey, cryptoTx, false);
         AppSendTransaction appSendTransaction = service
                 .appSendRawTransaction(signedTx).send();
         if (!appSendTransaction.hasError()) {
@@ -125,7 +127,7 @@ public class TokenFilterFlowableExample {
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,
                 version, chainId, value, funcCallData);
-        String rawTx = tx.sign(privateKey, false, false);
+        String rawTx = tx.sign(privateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();

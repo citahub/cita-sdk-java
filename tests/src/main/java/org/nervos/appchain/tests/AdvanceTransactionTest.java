@@ -25,6 +25,7 @@ public class AdvanceTransactionTest {
     private static BigInteger chainId;
     private static long quota;
     private static String value = "0";
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -34,6 +35,7 @@ public class AdvanceTransactionTest {
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
         quota = Long.parseLong(conf.defaultQuotaDeployment);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private Random random;
@@ -78,7 +80,7 @@ public class AdvanceTransactionTest {
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
 
-        String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
+        String rawTx = tx.sign(senderPrivateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
@@ -106,7 +108,7 @@ public class AdvanceTransactionTest {
                 chainId,
                 value,
                 resetFuncData);
-        String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
+        String rawTx = tx.sign(senderPrivateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
@@ -134,7 +136,7 @@ public class AdvanceTransactionTest {
                 chainId,
                 value,
                 addFuncData);
-        String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
+        String rawTx = tx.sign(senderPrivateKey, cryptoTx, false);
 
         service.appSendRawTransaction(rawTx).send();
     }

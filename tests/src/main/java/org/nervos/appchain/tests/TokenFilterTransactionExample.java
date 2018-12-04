@@ -39,6 +39,7 @@ public class TokenFilterTransactionExample {
     private static Long quota;
     private static String value;
     private static AppChainj service;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config config = new Config();
@@ -53,6 +54,7 @@ public class TokenFilterTransactionExample {
 
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(config.cryptoTx);
     }
 
 
@@ -64,7 +66,7 @@ public class TokenFilterTransactionExample {
                 .createContractTransaction(
                         nonce, quota, validUntilBlock,
                         version, chainId, value, contractCode);
-        String signedTx = txToDeployContract.sign(privateKey);
+        String signedTx = txToDeployContract.sign(privateKey, cryptoTx, false);
         AppSendTransaction appSendTransaction = service.appSendRawTransaction(signedTx).send();
         if (!appSendTransaction.hasError()) {
             System.out.println("tx sent successfully.");
@@ -178,7 +180,7 @@ public class TokenFilterTransactionExample {
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,
                 version, chainId, value, funcCallData);
-        String rawTx = tx.sign(privateKey, false, false);
+        String rawTx = tx.sign(privateKey, cryptoTx, false);
 
         service.appSendRawTransaction(rawTx).send();
     }

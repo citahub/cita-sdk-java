@@ -8,9 +8,13 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Consumer;
 import org.nervos.appchain.crypto.Credentials;
+import org.nervos.appchain.crypto.sm2.SM2;
+import org.nervos.appchain.crypto.sm2.SM2KeyPair;
+import org.nervos.appchain.crypto.sm2.SM2Keys;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
+import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
@@ -19,10 +23,13 @@ public class TokenFilterCodeGenExample {
     private static int version;
     private static String payerPrivateKey;
     private static String payeePrivateKey;
+    private static String payerAddr;
+    private static String payeeAddr;
     private static AppChainj service;
     private static long quota;
     private static String value;
     private static Token token;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
 
@@ -31,22 +38,24 @@ public class TokenFilterCodeGenExample {
 
         payerPrivateKey = conf.primaryPrivKey;
         payeePrivateKey = conf.auxPrivKey1;
-
+        payerAddr = conf.primaryAddr;
+        payeeAddr = conf.auxAddr1;
         service = conf.service;
         quota = Long.parseLong(conf.defaultQuotaDeployment);
         value = "0";
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
     }
 
-    static long getBalance(Credentials credentials) {
+    private static long getBalance(String addr) {
         long accountBalance = 0;
         try {
             Future<BigInteger> balanceFuture =
-                    token.getBalance(credentials.getAddress()).sendAsync();
+                    token.getBalance(addr).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
         } catch (Exception e) {
-            System.out.println("Failed to get balance of account: " + credentials.getAddress());
+            System.out.println("Failed to get balance of account: " + addr);
             e.printStackTrace();
             System.exit(1);
         }
@@ -76,10 +85,10 @@ public class TokenFilterCodeGenExample {
 
         for (int i = 0; i < 20; i++) {
             System.out.println("Transfer " + i);
-            long fromBalance = getBalance(fromCredential);
+            long fromBalance = getBalance(payerAddr);
             long transferAmount = ThreadLocalRandom
                     .current().nextLong(0, fromBalance);
-            TransferEvent event = new TransferEvent(fromCredential, toCredential, transferAmount);
+            TransferEvent event = new TransferEvent(payerAddr, payeeAddr, transferAmount);
             System.out.println("Transaction " + event.toString() + " is being executing.");
             event.execute();
             try {
@@ -92,20 +101,28 @@ public class TokenFilterCodeGenExample {
 
 
     public static void main(String[] args) throws Exception {
-        TransactionManager citaTxManager = new RawTransactionManager(
+        TransactionManager rawTransactionManager = new RawTransactionManager(
                 service, Credentials.create(payerPrivateKey), 5, 3000);
+        //Instantiate SM2 style rawTransactionManager
+        if (cryptoTx == Transaction.CryptoTx.SM2) {
+            SM2 sm2 = new SM2();
+            rawTransactionManager =  RawTransactionManager.createSM2Manager(
+                    service, sm2.fromPrivateKey(payerPrivateKey), 5, 3000);
+        }
+
         long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
         String nonce = TestUtil.getNonce();
 
         Future<Token> tokenFuture = Token.deploy(
-                service, citaTxManager, 1000000L, nonce,
+                service, rawTransactionManager, 1000000L, nonce,
                 validUtilBlock, version,
                 value, chainId).sendAsync();
         TokenFilterCodeGenExample tokenFilterCodeGenExample = new TokenFilterCodeGenExample();
 
         System.out.println("Wait 10s for contract to be deployed...");
         Thread.sleep(10000);
-        Token token = tokenFuture.get();
+
+        token = tokenFuture.get();
         if (token != null) {
             System.out.println("contract deployment success. Contract address: "
                     + token.getContractAddress());
@@ -128,7 +145,7 @@ public class TokenFilterCodeGenExample {
             System.out.println("Contract initial state: ");
             tokenFilterCodeGenExample.randomTransferToken();
         } catch (Exception e) {
-            System.out.println("Failed to get accounts balances");
+            System.out.println("Failed to get accounts balances" + e);
             e.printStackTrace();
             System.exit(1);
         }
@@ -136,11 +153,11 @@ public class TokenFilterCodeGenExample {
     }
 
     private class TransferEvent {
-        Credentials from;
-        Credentials to;
+        String from;
+        String to;
         long tokens;
 
-        TransferEvent(Credentials from, Credentials to, long tokens) {
+        TransferEvent(String from, String to, long tokens) {
             this.from = from;
             this.to = to;
             this.tokens = tokens;
@@ -153,15 +170,15 @@ public class TokenFilterCodeGenExample {
 
             String nonce = TestUtil.getNonce();
             tokenContract.transfer(
-                    this.to.getAddress(), BigInteger.valueOf(tokens),
+                    this.to, BigInteger.valueOf(tokens),
                     TokenFilterCodeGenExample.quota,
                     nonce, validUtilBlock, version, chainId, value).sendAsync();
         }
 
         @Override
         public String toString() {
-            return "TransferEvent(" + this.from.getAddress()
-                    + ", " + this.to.getAddress() + ", " + this.tokens + ")";
+            return "TransferEvent(" + this.from
+                    + ", " + this.to + ", " + this.tokens + ")";
         }
     }
 }

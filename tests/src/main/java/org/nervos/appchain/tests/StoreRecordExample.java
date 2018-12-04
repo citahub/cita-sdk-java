@@ -18,6 +18,7 @@ public class StoreRecordExample {
     private static String payerKey;
     private static BigInteger chainId;
     private static int version;
+    private static Transaction.CryptoTx cryptoTx;
 
     static AppChainj service;
 
@@ -29,6 +30,7 @@ public class StoreRecordExample {
         payerKey = conf.primaryPrivKey;
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     public static void main(String[] args)
@@ -42,7 +44,7 @@ public class StoreRecordExample {
         Transaction txToStoreData = sysContract
                 .constructStoreTransaction(sampleDataToStore, version, chainId);
 
-        String signedTx = txToStoreData.sign(payerKey);
+        String signedTx = txToStoreData.sign(payerKey, cryptoTx, false);
 
         AppSendTransaction appSendTransaction
                 = service.appSendRawTransaction(signedTx).send();
