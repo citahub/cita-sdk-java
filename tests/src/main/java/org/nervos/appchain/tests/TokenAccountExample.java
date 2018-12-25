@@ -12,7 +12,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
 public class TokenAccountExample {
 
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String fromAddress;
@@ -46,7 +46,7 @@ public class TokenAccountExample {
             String hash) throws Exception {
         Thread.sleep(10_000);
         return service.appGetTransactionReceipt(hash)
-                .send().getTransactionReceipt().get();
+                .send().getTransactionReceipt();
     }
 
     public TokenAccountExample() throws Exception {

@@ -1,6 +1,7 @@
 package org.nervos.appchain.tests;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.protobuf.Blockchain;
@@ -15,8 +16,9 @@ import static org.nervos.appchain.utils.Numeric.cleanHexPrefix;
 public class StoreRecordExample {
 
     private static String payerKey;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
+    private static Transaction.CryptoTx cryptoTx;
 
     static AppChainj service;
 
@@ -28,6 +30,7 @@ public class StoreRecordExample {
         payerKey = conf.primaryPrivKey;
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     public static void main(String[] args)
@@ -41,7 +44,7 @@ public class StoreRecordExample {
         Transaction txToStoreData = sysContract
                 .constructStoreTransaction(sampleDataToStore, version, chainId);
 
-        String signedTx = txToStoreData.sign(payerKey);
+        String signedTx = txToStoreData.sign(payerKey, cryptoTx, false);
 
         AppSendTransaction appSendTransaction
                 = service.appSendRawTransaction(signedTx).send();
@@ -60,7 +63,7 @@ public class StoreRecordExample {
 
         String serializedTx = service
                 .appGetTransactionByHash(hash).send()
-                .getTransaction().get().getContent();
+                .getTransaction().getContent();
 
         System.out.println(
                 "Unverified transaction(Content transaction): \n"

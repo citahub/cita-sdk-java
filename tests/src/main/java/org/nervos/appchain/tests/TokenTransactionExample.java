@@ -24,7 +24,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
 
 public class TokenTransactionExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String fromAddress;
@@ -33,6 +33,7 @@ public class TokenTransactionExample {
     private static Long quota;
     private static String value;
     private static AppChainj service;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -48,6 +49,7 @@ public class TokenTransactionExample {
         value = "0";
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static String loadContractCode(String binPath) throws Exception {
@@ -63,7 +65,7 @@ public class TokenTransactionExample {
         Transaction tx = Transaction.createContractTransaction(
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
-        String rawTx = tx.sign(privateKey, false, false);
+        String rawTx = tx.sign(privateKey, cryptoTx, false);
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
     }
@@ -71,7 +73,7 @@ public class TokenTransactionExample {
     private static TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
         return service.appGetTransactionReceipt(txHash)
-                .send().getTransactionReceipt().get();
+                .send().getTransactionReceipt();
     }
 
     static String contractFunctionCall(
@@ -84,7 +86,7 @@ public class TokenTransactionExample {
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,
                 version, chainId, value, funcCallData);
-        String rawTx = tx.sign(privateKey, false, false);
+        String rawTx = tx.sign(privateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();

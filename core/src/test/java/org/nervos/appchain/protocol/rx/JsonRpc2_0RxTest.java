@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.Disposable;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.stubbing.OngoingStubbing;
@@ -23,8 +25,6 @@ import org.nervos.appchain.protocol.core.methods.response.AppFilter;
 import org.nervos.appchain.protocol.core.methods.response.AppLog;
 import org.nervos.appchain.protocol.core.methods.response.AppUninstallFilter;
 import org.nervos.appchain.utils.Numeric;
-import rx.Observable;
-import rx.Subscription;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -53,7 +53,7 @@ public class JsonRpc2_0RxTest {
     }
 
     @Test
-    public void testReplayBlocksObservable() throws Exception {
+    public void testReplayBlocksFlowable() throws Exception {
 
         List<AppBlock> appBlocks = Arrays.asList(createBlock(0), createBlock(1), createBlock(2));
 
@@ -63,7 +63,7 @@ public class JsonRpc2_0RxTest {
             stubbing = stubbing.thenReturn(appBlock);
         }
 
-        Observable<AppBlock> observable = appChainj.replayBlocksObservable(
+        Flowable<AppBlock> flowable = appChainj.replayBlocksFlowable(
                 new DefaultBlockParameterNumber(BigInteger.ZERO),
                 new DefaultBlockParameterNumber(BigInteger.valueOf(2)),
                 false);
@@ -72,7 +72,7 @@ public class JsonRpc2_0RxTest {
         CountDownLatch completedLatch = new CountDownLatch(1);
 
         List<AppBlock> results = new ArrayList<>(appBlocks.size());
-        Subscription subscription = observable.subscribe(
+        Disposable subscription = flowable.subscribe(
                 result -> {
                     results.add(result);
                     transactionLatch.countDown();
@@ -83,14 +83,14 @@ public class JsonRpc2_0RxTest {
         transactionLatch.await(1, TimeUnit.SECONDS);
         assertThat(results, equalTo(appBlocks));
 
-        subscription.unsubscribe();
+        subscription.dispose();
 
         completedLatch.await(1, TimeUnit.SECONDS);
-        assertTrue(subscription.isUnsubscribed());
+        assertTrue(subscription.isDisposed());
     }
 
     @Test
-    public void testReplayBlocksDescendingObservable() throws Exception {
+    public void testReplayBlocksDescendingFlowable() throws Exception {
 
         List<AppBlock> appBlocks = Arrays.asList(createBlock(2), createBlock(1), createBlock(0));
 
@@ -100,7 +100,7 @@ public class JsonRpc2_0RxTest {
             stubbing = stubbing.thenReturn(appBlock);
         }
 
-        Observable<AppBlock> observable = appChainj.replayBlocksObservable(
+        Flowable<AppBlock> flowable = appChainj.replayBlocksFlowable(
                 new DefaultBlockParameterNumber(BigInteger.ZERO),
                 new DefaultBlockParameterNumber(BigInteger.valueOf(2)),
                 false, false);
@@ -109,7 +109,7 @@ public class JsonRpc2_0RxTest {
         CountDownLatch completedLatch = new CountDownLatch(1);
 
         List<AppBlock> results = new ArrayList<>(appBlocks.size());
-        Subscription subscription = observable.subscribe(
+        Disposable subscription = flowable.subscribe(
                 result -> {
                     results.add(result);
                     transactionLatch.countDown();
@@ -120,14 +120,14 @@ public class JsonRpc2_0RxTest {
         transactionLatch.await(1, TimeUnit.SECONDS);
         assertThat(results, equalTo(appBlocks));
 
-        subscription.unsubscribe();
+        subscription.dispose();
 
         completedLatch.await(1, TimeUnit.SECONDS);
-        assertTrue(subscription.isUnsubscribed());
+        assertTrue(subscription.isDisposed());
     }
 
     @Test
-    public void testCatchUpToLatestAndSubscribeToNewBlockObservable() throws Exception {
+    public void testCatchUpToLatestAndSubscribeToNewBlockFlowable() throws Exception {
         List<AppBlock> expected = Arrays.asList(
                 createBlock(0), createBlock(1), createBlock(2),
                 createBlock(3), createBlock(4), createBlock(5),
@@ -140,7 +140,7 @@ public class JsonRpc2_0RxTest {
                 expected.get(3), expected.get(4),
                 expected.get(4),  // greatest block
                 expected.get(5),  // initial response from ethGetFilterLogs call
-                expected.get(6)); // subsequent block from new block observable
+                expected.get(6)); // subsequent block from new block flowable
 
         OngoingStubbing<AppBlock> stubbing =
                 when(appChainjService.send(any(Request.class), eq(AppBlock.class)));
@@ -169,8 +169,8 @@ public class JsonRpc2_0RxTest {
         when(appChainjService.send(any(Request.class), eq(AppUninstallFilter.class)))
                 .thenReturn(appUninstallFilter);
 
-        Observable<AppBlock> observable = appChainj
-                .catchUpToLatestAndSubscribeToNewBlocksObservable(
+        Flowable<AppBlock> flowable = appChainj
+                .catchUpToLatestAndSubscribeToNewBlocksFlowable(
                         new DefaultBlockParameterNumber(BigInteger.ZERO),
                         false);
 
@@ -178,7 +178,7 @@ public class JsonRpc2_0RxTest {
         CountDownLatch completedLatch = new CountDownLatch(1);
 
         List<AppBlock> results = new ArrayList<>(expected.size());
-        Subscription subscription = observable.subscribe(
+        Disposable subscription = flowable.subscribe(
                 result -> {
                     results.add(result);
                     transactionLatch.countDown();
@@ -189,10 +189,10 @@ public class JsonRpc2_0RxTest {
         transactionLatch.await(1250, TimeUnit.MILLISECONDS);
         assertThat(results, equalTo(expected));
 
-        subscription.unsubscribe();
+        subscription.dispose();
 
         completedLatch.await(1, TimeUnit.SECONDS);
-        assertTrue(subscription.isUnsubscribed());
+        assertTrue(subscription.isDisposed());
     }
 
     private AppBlock createBlock(int number) {

@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
 import org.nervos.appchain.abi.FunctionEncoder;
@@ -24,18 +24,17 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.Log;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 
-import rx.Observable;
-
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
-public class TokenFilterObservableExample {
-    private static int chainId;
+public class TokenFilterFlowableExample {
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String toAddress;
     private static Long quota;
     private static String value;
     private static AppChainj service;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -49,6 +48,7 @@ public class TokenFilterObservableExample {
 
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     public static String deployContract(String contractCode) throws IOException {
@@ -59,7 +59,7 @@ public class TokenFilterObservableExample {
                 .createContractTransaction(
                         nonce, quota, validUntilBlock,
                         version, chainId, value, contractCode);
-        String signedTx = txToDeployContract.sign(privateKey);
+        String signedTx = txToDeployContract.sign(privateKey, cryptoTx, false);
         AppSendTransaction appSendTransaction = service
                 .appSendRawTransaction(signedTx).send();
         if (!appSendTransaction.hasError()) {
@@ -74,12 +74,12 @@ public class TokenFilterObservableExample {
     private static String getContractAddr(String txHash) throws IOException {
         AppGetTransactionReceipt transactionReceipt =
                 service.appGetTransactionReceipt(txHash).send();
-        Optional<TransactionReceipt> receipt = transactionReceipt.getTransactionReceipt();
-        if (!receipt.isPresent()) {
+        TransactionReceipt receipt = transactionReceipt.getTransactionReceipt();
+        if (receipt == null) {
             System.out.println("Failed to get tx receipt from hash: " + txHash);
             return null;
         }
-        return receipt.get().getContractAddress();
+        return receipt.getContractAddress();
     }
 
 
@@ -127,7 +127,7 @@ public class TokenFilterObservableExample {
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,
                 version, chainId, value, funcCallData);
-        String rawTx = tx.sign(privateKey, false, false);
+        String rawTx = tx.sign(privateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
@@ -167,8 +167,8 @@ public class TokenFilterObservableExample {
             String filterId = newFilter(filter);
             System.out.println("Filter created successfully: filter ID: " + filterId);
 
-            Observable appLogObservable = service.appLogObservable(filter);
-            Observable<TransferObj> reponse = appLogObservable.map(
+            Flowable appLogFlowable = service.appLogFlowable(filter);
+            Flowable<TransferObj> reponse = appLogFlowable.map(
                     (log) -> {
                         EventValues eventValues = staticExtractEventParameters(event, (Log)log);
                         TransferObj typedResponse = new TransferObj();
@@ -180,12 +180,12 @@ public class TokenFilterObservableExample {
                                 (BigInteger) eventValues.getNonIndexedValues().get(0).getValue();
                         return typedResponse;
                     }
-                    );
+            );
 
             reponse.subscribe(x ->
                     System.out.println(
-                        "(Transfer Object)From: " + x.from
-                        + " To: " + x.to + " Value: " + x.value)
+                            "(Transfer Object)From: " + x.from
+                                    + " To: " + x.to + " Value: " + x.value)
             );
 
 

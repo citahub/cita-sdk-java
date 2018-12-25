@@ -22,6 +22,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
 import org.nervos.appchain.abi.FunctionEncoder;
@@ -49,7 +50,6 @@ import org.nervos.appchain.tx.TransactionManager;
 import org.nervos.appchain.utils.Collection;
 import org.nervos.appchain.utils.Strings;
 import org.nervos.appchain.utils.Version;
-import rx.functions.Func1;
 
 /**
  * Generate Java Classes based on generated Solidity bin and abi files.
@@ -191,7 +191,7 @@ public class SolidityFunctionWrapper extends Generator {
         } catch (IOException | NullPointerException e) {
             version = Version.DEFAULT;
         }
-        return "\n<p>Generated with appChainj version " + version + ".\n";
+        return "\n<p>Generated with appchainj version " + version + ".\n";
     }
 
     private FieldSpec createBinaryDefinition(String binary) {
@@ -403,7 +403,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(Long.class, VALID_UNTIL_BLOCK)
                 .addParameter(Integer.class, VERSION)
                 .addParameter(String.class, VALUE)
-                .addParameter(Integer.class, CHAIN_ID);
+                .addParameter(BigInteger.class, CHAIN_ID);
         return builder;
     }
 
@@ -693,7 +693,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addParameter(String.class, NONCE)
                 .addParameter(Long.class, VALID_UNTIL_BLOCK)
                 .addParameter(Integer.class, VERSION)
-                .addParameter(Integer.class, CHAIN_ID)
+                .addParameter(BigInteger.class, CHAIN_ID)
                 .addParameter(String.class, VALUE);
 
         String functionName = functionDefinition.getName();
@@ -713,14 +713,14 @@ public class SolidityFunctionWrapper extends Generator {
                     VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE);
         } else {
             methodBuilder.addStatement("return executeRemoteCallTransaction"
-                    + "(function, $N, $N, $N, $N, $N, $N)",
+                            + "(function, $N, $N, $N, $N, $N, $N)",
                     QUOTA, NONCE, VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE);
         }
     }
 
     TypeSpec buildEventResponseObject(String className,
-                                             List<NamedTypeName> indexedParameters,
-                                             List<NamedTypeName> nonIndexedParameters) {
+                                      List<NamedTypeName> indexedParameters,
+                                      List<NamedTypeName> nonIndexedParameters) {
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
@@ -738,32 +738,32 @@ public class SolidityFunctionWrapper extends Generator {
         return builder.build();
     }
 
-    MethodSpec buildEventObservableFunction(String responseClassName,
-                                                   String functionName,
-                                                   List<NamedTypeName> indexedParameters,
-                                                   List<NamedTypeName> nonIndexedParameters)
+    MethodSpec buildEventFlowableFunction(String responseClassName,
+                                          String functionName,
+                                          List<NamedTypeName> indexedParameters,
+                                          List<NamedTypeName> nonIndexedParameters)
             throws ClassNotFoundException {
 
         String generatedFunctionName =
-                Strings.lowercaseFirstLetter(functionName) + "EventObservable";
-        ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(rx
-                .Observable.class), ClassName.get("", responseClassName));
+                Strings.lowercaseFirstLetter(functionName) + "EventFlowable";
+        ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(ClassName.get(Flowable.class),
+                ClassName.get("", responseClassName));
 
-        MethodSpec.Builder observableMethodBuilder = MethodSpec.methodBuilder(generatedFunctionName)
+        MethodSpec.Builder flowableMethodBuilder = MethodSpec.methodBuilder(generatedFunctionName)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(DefaultBlockParameter.class, START_BLOCK)
                 .addParameter(DefaultBlockParameter.class, END_BLOCK)
                 .returns(parameterizedTypeName);
 
         buildVariableLengthEventConstructor(
-                observableMethodBuilder, functionName, indexedParameters, nonIndexedParameters);
+                flowableMethodBuilder, functionName, indexedParameters, nonIndexedParameters);
 
         TypeSpec converter = TypeSpec.anonymousClassBuilder("")
                 .addSuperinterface(ParameterizedTypeName.get(
-                        ClassName.get(Func1.class),
+                        ClassName.get(io.reactivex.functions.Function.class),
                         ClassName.get(Log.class),
                         ClassName.get("", responseClassName)))
-                .addMethod(MethodSpec.methodBuilder("call")
+                .addMethod(MethodSpec.methodBuilder("apply")
                         .addAnnotation(Override.class)
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(Log.class, "log")
@@ -778,18 +778,18 @@ public class SolidityFunctionWrapper extends Generator {
                         .build())
                 .build();
 
-        observableMethodBuilder.addStatement("$1T filter = new $1T($2L, $3L, "
+        flowableMethodBuilder.addStatement("$1T filter = new $1T($2L, $3L, "
                 + "getContractAddress())", AppFilter.class, START_BLOCK, END_BLOCK)
                 .addStatement("filter.addSingleTopic($T.encode(event))", EventEncoder.class)
-                .addStatement("return appChainj.appLogObservable(filter).map($L)", converter);
+                .addStatement("return appChainj.appLogFlowable(filter).map($L)", converter);
 
-        return observableMethodBuilder
+        return flowableMethodBuilder
                 .build();
     }
 
     MethodSpec buildEventTransactionReceiptFunction(String responseClassName, String
             functionName, List<NamedTypeName> indexedParameters, List<NamedTypeName>
-                                                                   nonIndexedParameters) throws
+                                                            nonIndexedParameters) throws
             ClassNotFoundException {
 
         ParameterizedTypeName parameterizedTypeName = ParameterizedTypeName.get(
@@ -850,13 +850,13 @@ public class SolidityFunctionWrapper extends Generator {
 
         classBuilder.addMethod(buildEventTransactionReceiptFunction(responseClassName,
                 functionName, indexedParameters, nonIndexedParameters));
-        classBuilder.addMethod(buildEventObservableFunction(responseClassName, functionName,
+        classBuilder.addMethod(buildEventFlowableFunction(responseClassName, functionName,
                 indexedParameters, nonIndexedParameters));
     }
 
     CodeBlock buildTypedResponse(String objectName,
-                                        List<NamedTypeName> indexedParameters,
-                                        List<NamedTypeName> nonIndexedParameters) {
+                                 List<NamedTypeName> indexedParameters,
+                                 List<NamedTypeName> nonIndexedParameters) {
         String nativeConversion;
 
         if (useNativeJavaTypes) {

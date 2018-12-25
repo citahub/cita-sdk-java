@@ -2,10 +2,13 @@ package org.nervos.appchain.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.reactivex.Flowable;
+import io.reactivex.Notification;
 import org.nervos.appchain.protocol.core.Request;
 import org.nervos.appchain.protocol.core.Response;
 import org.nervos.appchain.utils.Async;
@@ -38,8 +41,24 @@ public abstract class Service implements AppChainjService {
     }
 
     @Override
-    public <T extends Response> CompletableFuture<T> sendAsync(
-            Request jsonRpc20Request, Class<T> responseType) {
-        return Async.run(() -> send(jsonRpc20Request, responseType));
+    public <T extends Response> Future<T> sendAsync(
+            final Request jsonRpc20Request, final Class<T> responseType) {
+        return Async.run(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return Service.this.send(jsonRpc20Request, responseType);
+            }
+        });
+    }
+
+    @Override
+    public <T extends Notification<?>> Flowable<T> subscribe(
+            Request request,
+            String unsubscribeMethod,
+            Class<T> responseType) {
+        throw new UnsupportedOperationException(
+                String.format(
+                        "Service %s does not support subscriptions",
+                        this.getClass().getSimpleName()));
     }
 }

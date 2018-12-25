@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.nervos.appchain.abi.EventEncoder;
 import org.nervos.appchain.abi.EventValues;
@@ -19,7 +18,6 @@ import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.abi.datatypes.Event;
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.Type;
-import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.RemoteCall;
@@ -40,63 +38,38 @@ import org.nervos.appchain.utils.Numeric;
 public abstract class Contract extends ManagedTransaction {
 
     // https://www.reddit.com/r/ethereum/comments/5g8ia6/attention_miners_we_recommend_raising_gas_limit/
-    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(4_300_000);
 
     protected final String contractBinary;
     protected String contractAddress;
-    protected BigInteger gasPrice;
-    protected BigInteger gasLimit;
+    protected String nonce;
+    protected long quota;
     protected TransactionReceipt transactionReceipt;
     protected Map<String, String> deployedAddresses;
 
     protected Contract(String contractBinary, String contractAddress,
                        AppChainj appChainj, TransactionManager transactionManager,
-                       BigInteger gasPrice, BigInteger gasLimit) {
+                       String nonce, long quota) {
         super(appChainj, transactionManager);
 
         //this.contractAddress = ensResolver.resolve(contractAddress);
 
         this.contractAddress = contractAddress;
         this.contractBinary = contractBinary;
-        this.gasPrice = gasPrice;
-        this.gasLimit = gasLimit;
+        this.nonce = nonce;
+        this.quota = quota;
     }
 
     protected Contract(String contractBinary, String contractAddress,
                        AppChainj appChainj, TransactionManager transactionManager) {
         this(contractBinary, contractAddress, appChainj,
-                transactionManager, BigInteger.ZERO, BigInteger.ZERO);
-    }
-
-    protected Contract(String contractBinary, String contractAddress,
-                       AppChainj appChainj, Credentials credentials,
-                       BigInteger gasPrice, BigInteger gasLimit) {
-        this(contractBinary, contractAddress, appChainj,
-                new RawTransactionManager(appChainj, credentials),
-                gasPrice, gasLimit);
-    }
-
-    @Deprecated
-    protected Contract(String contractAddress,
-                       AppChainj appChainj, TransactionManager transactionManager,
-                       BigInteger gasPrice, BigInteger gasLimit) {
-        this("", contractAddress, appChainj, transactionManager, gasPrice, gasLimit);
+                transactionManager, "", 0);
     }
 
     @Deprecated
     protected Contract(String contractAddress,
                        AppChainj appChainj, TransactionManager transactionManager) {
         this("", contractAddress, appChainj,
-                transactionManager, BigInteger.ZERO, BigInteger.ZERO);
-    }
-
-    @Deprecated
-    protected Contract(String contractAddress,
-                       AppChainj appChainj, Credentials credentials,
-                       BigInteger gasPrice, BigInteger gasLimit) {
-        this("", contractAddress, appChainj,
-                new RawTransactionManager(appChainj, credentials),
-                gasPrice, gasLimit);
+                transactionManager, "", 0);
     }
 
     public void setContractAddress(String contractAddress) {
@@ -154,8 +127,8 @@ public abstract class Contract extends ManagedTransaction {
      *
      * @return the TransactionReceipt generated at contract deployment
      */
-    public Optional<TransactionReceipt> getTransactionReceipt() {
-        return Optional.ofNullable(transactionReceipt);
+    public TransactionReceipt getTransactionReceipt() {
+        return transactionReceipt;
     }
 
     /**
@@ -229,8 +202,7 @@ public abstract class Contract extends ManagedTransaction {
      * Given the duration required to execute a transaction.
      *
      * @param data  to send in transaction
-     * @param weiValue in Wei to send in transaction
-     * @return {@link Optional} containing our transaction receipt
+     * @return  containing our transaction receipt
      * @throws IOException                 if the call to the node fails
      * @throws TransactionException if the transaction was not mined while waiting
      */
@@ -238,20 +210,18 @@ public abstract class Contract extends ManagedTransaction {
             String data, String weiValue)
             throws TransactionException, IOException {
 
-        return send(contractAddress, data, weiValue, gasPrice, gasLimit);
+        return send(contractAddress, data, quota, nonce, 0, 1, BigInteger.ONE, weiValue);
     }
 
-    // adapt to cita
     TransactionReceipt executeTransaction(
             String data, long quota, String nonce, long validUntilBlock,
-            int version , int chainId, String value)
+            int version , BigInteger chainId, String value)
             throws TransactionException, IOException {
-        return sendAdaptToCita(
+        return send(
                 contractAddress, data, quota, nonce, validUntilBlock, version, chainId, value);
     }
 
-    protected <T extends Type> RemoteCall<T>
-                executeRemoteCallSingleValueReturn(Function function) {
+    protected <T extends Type> RemoteCall<T> executeRemoteCallSingleValueReturn(Function function) {
         return new RemoteCall<>(
                 () -> executeCallSingleValueReturn(function));
     }
@@ -262,14 +232,12 @@ public abstract class Contract extends ManagedTransaction {
                 () -> executeCallSingleValueReturn(function, returnType));
     }
 
-    protected RemoteCall<List<Type>>
-                executeRemoteCallMultipleValueReturn(Function function) {
+    protected RemoteCall<List<Type>> executeRemoteCallMultipleValueReturn(Function function) {
         return new RemoteCall<>(
                 () -> executeCallMultipleValueReturn(function));
     }
 
-    protected RemoteCall<TransactionReceipt>
-                executeRemoteCallTransaction(Function function) {
+    protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(Function function) {
         return new RemoteCall<>(() -> executeTransaction(function));
     }
 
@@ -281,33 +249,18 @@ public abstract class Contract extends ManagedTransaction {
     protected RemoteCall<TransactionReceipt> executeRemoteCallTransaction(
             Function function, long quota, String nonce,
             long validUntilBlock, int version,
-            int chainId, String value) {
+            BigInteger chainId, String value) {
         return new RemoteCall<>(
                 () -> executeTransaction(
                         FunctionEncoder.encode(function),
                         quota, nonce, validUntilBlock, version, chainId, value));
     }
 
-    private static <T extends Contract> T create(
-            T contract, String binary, String encodedConstructor, String value)
-            throws IOException, TransactionException {
-        TransactionReceipt transactionReceipt =
-                contract.executeTransaction(binary + encodedConstructor, value);
-
-        String contractAddress = transactionReceipt.getContractAddress();
-        if (contractAddress == null) {
-            throw new RuntimeException("Empty contract address returned");
-        }
-        contract.setContractAddress(contractAddress);
-        contract.setTransactionReceipt(transactionReceipt);
-
-        return contract;
-    }
 
     private static <T extends Contract> T create(
             T contract, String binary, String encodedConstructor,
             long quota, String nonce, long validUntilBlock,
-            int version, int chainId, String value)
+            int version, BigInteger chainId, String value)
             throws IOException, TransactionException {
         TransactionReceipt transactionReceipt =
                 contract.executeTransaction(
@@ -324,61 +277,12 @@ public abstract class Contract extends ManagedTransaction {
         return contract;
     }
 
-    protected static <T extends Contract> T deploy(
-            Class<T> type,
-            AppChainj appChainj, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor, String value) throws
-            IOException, TransactionException {
-
-        try {
-            Constructor<T> constructor = type.getDeclaredConstructor(
-                    String.class,
-                    AppChainj.class, Credentials.class,
-                    BigInteger.class, BigInteger.class);
-            constructor.setAccessible(true);
-
-            // we want to use null here to ensure that "to" parameter on message is not populated
-            // We don't need to modify this,
-            // because we must specify the CitaTransactionManager which used to send transaction
-            T contract = constructor.newInstance(
-                    null, appChainj, credentials, gasPrice, gasLimit);
-
-            return create(contract, binary, encodedConstructor, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    protected static <T extends Contract> T deploy(
-            Class<T> type,
-            AppChainj appChainj, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor, String value)
-            throws IOException, TransactionException {
-
-        try {
-            Constructor<T> constructor = type.getDeclaredConstructor(
-                    String.class,
-                    AppChainj.class, TransactionManager.class,
-                    BigInteger.class, BigInteger.class);
-            constructor.setAccessible(true);
-
-            // we want to use null here to ensure that "to" parameter on message is not populated
-            // Unfortunately, we need empty string(not null) that represent create contract
-            T contract = constructor.newInstance(
-                    "", appChainj, transactionManager, gasPrice, gasLimit);
-            return create(contract, binary, encodedConstructor, value);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     protected static <T extends Contract> T deploy(
             Class<T> type,
             AppChainj appChainj, TransactionManager transactionManager,
             long quota, String nonce, long validUntilBlock,
-            int version, String binary, int chainId,
+            int version, String binary, BigInteger chainId,
             String value, String encodedConstructor)
             throws IOException, TransactionException {
 
@@ -399,56 +303,14 @@ public abstract class Contract extends ManagedTransaction {
         }
     }
 
-    protected static <T extends Contract> RemoteCall<T>
-                    deployRemoteCall(
+    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
             Class<T> type, AppChainj appChainj, TransactionManager transactionManager,
             long quota, String nonce, long validUntilBlock,
-            int version, int chainId, String value,
+            int version, BigInteger chainId, String value,
             String binary, String encodedConstructor) {
         return new RemoteCall<>(() -> deploy(
                 type, appChainj, transactionManager, quota, nonce, validUntilBlock,
                 version, binary, chainId, value, encodedConstructor));
-    }
-
-    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            AppChainj appChainj, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor,
-            String value) {
-        return new RemoteCall<>(() -> deploy(
-                type, appChainj, credentials, gasPrice, gasLimit, binary,
-                encodedConstructor, value));
-    }
-
-    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            AppChainj appChainj, Credentials credentials,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor) {
-        return deployRemoteCall(
-                type, appChainj, credentials, gasPrice, gasLimit,
-                binary, encodedConstructor, "0");
-    }
-
-    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            AppChainj appChainj, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor, String value) {
-        return new RemoteCall<>(() -> deploy(
-                type, appChainj, transactionManager, gasPrice, gasLimit, binary,
-                encodedConstructor, value));
-    }
-
-    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type,
-            AppChainj appChainj, TransactionManager transactionManager,
-            BigInteger gasPrice, BigInteger gasLimit,
-            String binary, String encodedConstructor) {
-        return deployRemoteCall(
-                type, appChainj, transactionManager, gasPrice, gasLimit, binary,
-                encodedConstructor, "0");
     }
 
     public static EventValues staticExtractEventParameters(
@@ -519,8 +381,7 @@ public abstract class Contract extends ManagedTransaction {
     }
 
     @SuppressWarnings("unchecked")
-    protected static <S extends Type, T>
-            List<T> convertToNative(List<S> arr) {
+    protected static <S extends Type, T> List<T> convertToNative(List<S> arr) {
         List<T> out = new ArrayList<T>();
         for (Iterator<S> it = arr.iterator(); it.hasNext(); ) {
             out.add((T)it.next().getValue());

@@ -1,27 +1,27 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
-import org.nervos.appchain.tx.CitaTransactionManager;
+import org.nervos.appchain.tx.RawTransactionManager;
 import org.nervos.appchain.tx.TransactionManager;
 
 public class TokenCodegenExample {
     private static Config conf;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String creatorPrivateKey;
     private static Credentials creator;
@@ -54,13 +54,16 @@ public class TokenCodegenExample {
         String testAcct2 = conf.auxPrivKey2;
         accounts.add(testAcct1);
         accounts.add(testAcct2);
-        accounts.stream().map(Credentials::create).forEach(c -> testAccounts.add(c));
+        List<Credentials> list = new ArrayList<>();
+        for (String str : accounts) {
+            testAccounts.add(Credentials.create(str));
+        }
     }
 
     private static long getBalance(Credentials credentials) {
         long accountBalance = 0;
         try {
-            CompletableFuture<BigInteger> balanceFuture = token.getBalance(
+            Future<BigInteger> balanceFuture = token.getBalance(
                     credentials.getAddress()).sendAsync();
             accountBalance = balanceFuture.get(8, TimeUnit.SECONDS).longValue();
         } catch (Exception e) {
@@ -104,12 +107,14 @@ public class TokenCodegenExample {
      * by checking if the total token keeps the same as initial token.
      */
     private static boolean isTokenTransferComplete() {
-        Map<Credentials, Long> accountTokens =
-                testAccounts.stream().collect(
-                        Collectors.toMap(Function.identity(),
-                                TokenCodegenExample::getBalance));
-        long tokens = 0;
-        long totalToken = accountTokens.values().stream().reduce(tokens, (x, y) -> x + y);
+        Map<Credentials, Long> accountTokens = new HashMap<>();
+        for (Credentials credentials : testAccounts) {
+            accountTokens.put(credentials, TokenCodegenExample.getBalance(credentials));
+        }
+        long totalToken = 0;
+        for (Long token : accountTokens.values()) {
+            totalToken += token;
+        }
         return totalToken == 10000;
     }
 
@@ -119,7 +124,7 @@ public class TokenCodegenExample {
             if (c != credentials) {
                 TransferEvent event = new TransferEvent(c, credentials, getBalance(c));
                 try {
-                    CompletableFuture<TransactionReceipt> receiptFuture = event.execute();
+                    Future<TransactionReceipt> receiptFuture = event.execute();
                     TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                     if (receipt.getErrorMessage() == null) {
                         System.out.println(event.toString() + " execute success");
@@ -172,7 +177,7 @@ public class TokenCodegenExample {
                 printBalanceInfo();
                 System.out.println(event.toString() + " executing..");
 
-                CompletableFuture<TransactionReceipt> receiptFuture = event.execute();
+                Future<TransactionReceipt> receiptFuture = event.execute();
                 TransactionReceipt receipt = receiptFuture.get(12, TimeUnit.SECONDS);
                 if (receipt.getErrorMessage() == null) {
                     System.out.println(event.toString()
@@ -204,47 +209,47 @@ public class TokenCodegenExample {
     }
 
 
-    public static void main(String[] args) {
-        TransactionManager citaTxManager = new CitaTransactionManager(
+    public static void main(String[] args) throws Exception {
+        TransactionManager citaTxManager = new RawTransactionManager(
                 service, creator, 5, 3000);
 
         String nonce = TestUtil.getNonce();
 
-        CompletableFuture<Token> tokenFuture = Token.deploy(
+        Future<Token> tokenFuture = Token.deploy(
                 service, citaTxManager, quotaDeployment, nonce,
                 TestUtil.getValidUtilBlock(service).longValue(),
                 version, value, chainId).sendAsync();
         TokenCodegenExample tokenCodegenExample = new TokenCodegenExample();
 
-        tokenFuture.whenCompleteAsync((contract, exception) -> {
-            if (exception != null) {
-                System.out.println("Failed to deploy the contract. Exception: "
-                        + exception);
-                exception.printStackTrace();
-                System.exit(1);
-            }
-            token = contract;
-            System.out.println("Contract deployment success. Contract address: "
-                    + contract.getContractAddress());
-            try {
-                TimeUnit.SECONDS.sleep(5);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Interrupted when waiting blocks written in.");
-                System.exit(1);
-            }
+        System.out.println("Wait 10s for contract to be deployed...");
+        Thread.sleep(10000);
+        token = tokenFuture.get();
+        if (token != null) {
+            System.out.println("contract deployment success. Contract address: "
+                    + token.getContractAddress());
+        } else {
+            System.out.println("Failed to deploy the contract.");
+            System.exit(1);
+        }
 
-            try {
-                System.out.println("Contract initial state: ");
-                printBalanceInfo();
-                tokenCodegenExample.randomTransferToken();
-            } catch (Exception e) {
-                System.out.println("Failed to get accounts balances");
-                e.printStackTrace();
-                System.exit(1);
-            }
-            System.exit(0);
-        });
+        try {
+            TimeUnit.SECONDS.sleep(5);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Interrupted when waiting blocks written in.");
+            System.exit(1);
+        }
+
+        try {
+            System.out.println("Contract initial state: ");
+            printBalanceInfo();
+            tokenCodegenExample.randomTransferToken();
+        } catch (Exception e) {
+            System.out.println("Failed to get accounts balances");
+            e.printStackTrace();
+            System.exit(1);
+        }
+        System.exit(0);
     }
 
     private class TransferEvent {
@@ -258,9 +263,9 @@ public class TokenCodegenExample {
             this.tokens = tokens;
         }
 
-        CompletableFuture<TransactionReceipt> execute() throws Exception {
+        Future<TransactionReceipt> execute() throws Exception {
             Token tokenContract = new Token(token.getContractAddress(), service,
-                    new CitaTransactionManager(service, from, 5, 3000));
+                    new RawTransactionManager(service, from, 5, 3000));
 
             return tokenContract.transfer(
                     this.to.getAddress(), BigInteger.valueOf(tokens), quotaDeployment,

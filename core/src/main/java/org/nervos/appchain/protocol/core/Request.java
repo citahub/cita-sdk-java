@@ -2,11 +2,12 @@ package org.nervos.appchain.protocol.core;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
+import io.reactivex.Flowable;
 import org.nervos.appchain.protocol.AppChainjService;
-import rx.Observable;
 
 public class Request<S, T extends Response> {
     private static AtomicLong nextId = new AtomicLong(0);
@@ -70,11 +71,16 @@ public class Request<S, T extends Response> {
         return appChainjService.send(this, responseType);
     }
 
-    public CompletableFuture<T> sendAsync() {
+    public Future<T> sendAsync() {
         return  appChainjService.sendAsync(this, responseType);
     }
 
-    public Observable<T> observable() {
-        return new RemoteCall<>(this::send).observable();
+    public Flowable<T> flowable() {
+        return new RemoteCall<T>(new Callable<T>() {
+            @Override
+            public T call() throws Exception {
+                return Request.this.send();
+            }
+        }).flowable();
     }
 }
