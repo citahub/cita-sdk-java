@@ -2,6 +2,7 @@ package org.nervos.appchain.protocol.core.methods.response;
 
 import org.nervos.appchain.abi.datatypes.Address;
 import org.nervos.appchain.protocol.core.Response;
+import org.nervos.appchain.utils.Numeric;
 
 
 public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
@@ -37,7 +38,11 @@ public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
             if (this.version == 0) {
                 return this.chainId;
             } else if (this.version == 1) {
-                return Integer.parseInt(this.chainIdV1);
+                if (Numeric.containsHexPrefix(chainIdV1)) {
+                    return Numeric.toBigInt(chainIdV1).intValue();
+                } else {
+                    return Integer.parseInt(chainIdV1);
+                }
             } else {
                 throw new IllegalArgumentException("version number can only be 1 or 2");
             }
