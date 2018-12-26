@@ -10,28 +10,26 @@ import static org.nervos.appchain.utils.Collection.tail;
 /**
  * Main entry point for running command line utilities.
  */
-public class Runner {
 
-    private static String USAGE = "Usage: appChainj version|wallet|solidity ...";
+public class Runner {
+    private static String USAGE = "Usage: appChainj version|solidity ...";
 
     private static String LOGO = "\n" // generated at http://patorjk.com/software/taag
-            + "                                       _\n"
-            + " _ __    ___  _ __ __   __ ___   ___  (_)\n"
-            + "| \'_ \\  / _ \\| \'__|\\ \\ / // _ \\ / __| | |\n"
-            + "| | | ||  __/| |    \\ V /| (_) |\\__ \\ | |\n"
-            + "|_| |_| \\___||_|     \\_/  \\___/ |___/_/ |\n"
-            + "                                    |__/";
+            + "                            _             _          _\n"
+            + "  __ _  _ __   _ __    ___ | |__    __ _ (_) _ __   (_)\n"
+            + " / _` || '_ \\ | '_ \\  / __|| '_ \\  / _` || || '_ \\  | |\n"
+            + "| (_| || |_) || |_) || (__ | | | || (_| || || | | | | |\n"
+            + " \\__,_|| .__/ | .__/  \\___||_| |_| \\__,_||_||_| |_|_/ |\n"
+            + "       |_|    |_|                                 |__/\n";
+
+
 
     public static void main(String[] args) throws Exception {
         System.out.println(LOGO);
-
         if (args.length < 1) {
             Console.exitError(USAGE);
         } else {
             switch (args[0]) {
-                case "wallet":
-                    WalletRunner.run(tail(args));
-                    break;
                 case "solidity":
                     SolidityFunctionWrapperGenerator.run(tail(args));
                     break;

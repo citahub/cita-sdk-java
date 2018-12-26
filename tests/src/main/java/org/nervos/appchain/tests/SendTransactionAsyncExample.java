@@ -1,7 +1,8 @@
 package org.nervos.appchain.tests;
 
 import java.math.BigInteger;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.nervos.appchain.crypto.Credentials;
 import org.nervos.appchain.protocol.AppChainj;
@@ -16,10 +17,12 @@ import org.nervos.appchain.utils.Convert;
 
 public class SendTransactionAsyncExample {
     private static String payerKey;
+    private static String payerAddr;
     private static String payeeAddr;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static long quotaToTransfer;
+    private static Transaction.CryptoTx cryptoTx;
 
     static AppChainj service;
 
@@ -27,11 +30,13 @@ public class SendTransactionAsyncExample {
         Config conf = new Config();
         conf.buildService(false);
         payerKey = conf.primaryPrivKey;
+        payerAddr = conf.primaryAddr;
         payeeAddr = conf.auxAddr1;
         quotaToTransfer = Long.parseLong(conf.defaultQuotaTransfer);
         service = conf.service;
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static BigInteger getBalance(String address) {
@@ -64,7 +69,7 @@ public class SendTransactionAsyncExample {
                 value,
                 "");
 
-        String rawTx = tx.sign(payerKey, false, false);
+        String rawTx = tx.sign(payerKey, cryptoTx, false);
         AppSendTransaction ethSendTrasnction = service
                 .appSendRawTransaction(rawTx).send();
 
@@ -75,36 +80,33 @@ public class SendTransactionAsyncExample {
         return txReceipt;
     }
 
-    private static CompletableFuture<TransactionReceipt> transferAsync(
+    private static Future<TransactionReceipt> transferAsync(
             String payerKey, String payeeAddr, String value) {
         return new RemoteCall<>(
                 () -> transferSync(payerKey, payeeAddr, value)).sendAsync();
     }
 
     public static void main(String[] args) {
-        Credentials payerCredential = Credentials.create(payerKey);
-        String payerAddr = payerCredential.getAddress();
         System.out.println(Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
         System.out.println(Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
 
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
 
-        CompletableFuture<TransactionReceipt> receiptFuture =
+        Future<TransactionReceipt> receiptFuture =
                 transferAsync(payerKey, payeeAddr, valueWei);
-        receiptFuture.whenCompleteAsync((data, exception) -> {
-            if (exception == null) {
-                if (data.getErrorMessage() == null) {
-                    System.out.println(
-                            Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-                    System.out.println(
-                            Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
-                } else {
-                    System.out.println("Error get receipt: " + data.getErrorMessage());
-                }
+        try {
+            TransactionReceipt receipt = receiptFuture.get();
+            if (receipt.getErrorMessage() == null) {
+                System.out.println(
+                        Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
+                System.out.println(
+                        Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
             } else {
-                System.out.println("Exception happens: " + exception);
+                System.out.println("Error get receipt: " + receipt.getErrorMessage());
             }
-        });
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -14,3 +14,4 @@ SimpleDataBin=tests/src/main/resources/SimpleData.bin
 QuotaForTransfer=21000
 QuotaForDeployment=10000000
 AdminPrivateKey=0x5a0257a4778057a8a7d97809bd209055b2fbafa654ce7d31ec7191066b9225e6
+CryptoType=SECP256K1

@@ -1,8 +1,8 @@
 package org.nervos.appchain.abi;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.StaticArray;
@@ -75,10 +75,16 @@ public class FunctionEncoder {
         StringBuilder result = new StringBuilder();
         result.append(methodName);
         result.append("(");
-        String params = parameters.stream()
-                .map(Type::getTypeAsString)
-                .collect(Collectors.joining(","));
-        result.append(params);
+
+        StringBuilder params = new StringBuilder();
+        for (int i = 0; i < parameters.size(); i++) {
+            params.append(parameters.get(i).getTypeAsString());
+            if (i + 1 < parameters.size()) {
+                params.append(",");  // no whitespace
+            }
+        }
+
+        result.append(params.toString());
         result.append(")");
         return result.toString();
     }

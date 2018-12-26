@@ -54,7 +54,7 @@ public abstract class TypeReference<T extends org.nervos.appchain.abi.datatypes.
         if (getType() instanceof ParameterizedType) {
             return (Class<T>) ((ParameterizedType) clsType).getRawType();
         } else {
-            return (Class<T>) Class.forName(clsType.getTypeName());
+            return (Class<T>) Class.forName(((Class) clsType).getName());
         }
     }
 

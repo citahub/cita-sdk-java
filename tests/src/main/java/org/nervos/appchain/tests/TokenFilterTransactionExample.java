@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +31,7 @@ import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
 import static org.nervos.appchain.tx.Contract.staticExtractEventParameters;
 
 public class TokenFilterTransactionExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String toAddress;
@@ -40,6 +39,7 @@ public class TokenFilterTransactionExample {
     private static Long quota;
     private static String value;
     private static AppChainj service;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config config = new Config();
@@ -54,6 +54,7 @@ public class TokenFilterTransactionExample {
 
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(config.cryptoTx);
     }
 
 
@@ -65,7 +66,7 @@ public class TokenFilterTransactionExample {
                 .createContractTransaction(
                         nonce, quota, validUntilBlock,
                         version, chainId, value, contractCode);
-        String signedTx = txToDeployContract.sign(privateKey);
+        String signedTx = txToDeployContract.sign(privateKey, cryptoTx, false);
         AppSendTransaction appSendTransaction = service.appSendRawTransaction(signedTx).send();
         if (!appSendTransaction.hasError()) {
             System.out.println("tx sent successfully.");
@@ -79,12 +80,12 @@ public class TokenFilterTransactionExample {
     private static String getContractAddr(String txHash) throws IOException {
         AppGetTransactionReceipt transactionReceipt
                 = service.appGetTransactionReceipt(txHash).send();
-        Optional<TransactionReceipt> receipt = transactionReceipt.getTransactionReceipt();
-        if (!receipt.isPresent()) {
+        TransactionReceipt receipt = transactionReceipt.getTransactionReceipt();
+        if (receipt == null) {
             System.out.println("Failed to get tx receipt from hash: " + txHash);
             return null;
         }
-        return receipt.get().getContractAddress();
+        return receipt.getContractAddress();
     }
 
     private static Event createEvent() {
@@ -114,8 +115,7 @@ public class TokenFilterTransactionExample {
     }
 
     //this will call JSON RPC "getFilterChanges"
-    private static List<TransferEventResponse>
-            getFilterChanges(Event event, String filterId) throws IOException {
+    private static List<TransferEventResponse> getFilterChanges(Event event, String filterId) throws IOException {
         List<TransferEventResponse> responseList = new ArrayList<>();
         Request<?, AppLog> req = service
                 .appGetFilterChanges(BigInteger.valueOf(Long.parseLong(filterId)));
@@ -138,8 +138,7 @@ public class TokenFilterTransactionExample {
     }
 
     //this will call JSON RPC "getFilterLogs" to get logs
-    private static List<TransferEventResponse>
-            getFilterLogs(Event event, AppFilter appFilter) throws IOException {
+    private static List<TransferEventResponse> getFilterLogs(Event event, AppFilter appFilter) throws IOException {
         List<TransferEventResponse> responseList = new ArrayList<>();
         AppLog responseAppLog = service.appGetLogs(appFilter).send();
         List<AppLog.LogResult> logResults = responseAppLog.getLogs();
@@ -181,7 +180,7 @@ public class TokenFilterTransactionExample {
         Transaction tx = Transaction.createFunctionCallTransaction(
                 contractAddress, nonce, quota, validUntilBlock,
                 version, chainId, value, funcCallData);
-        String rawTx = tx.sign(privateKey, false, false);
+        String rawTx = tx.sign(privateKey, cryptoTx, false);
 
         service.appSendRawTransaction(rawTx).send();
     }

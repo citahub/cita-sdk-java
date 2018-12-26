@@ -52,7 +52,7 @@ public class RequestTest extends RequestTester {
                         BigInteger.TEN.longValue(),
                         BigInteger.ONE.longValue(),
                         0,
-                        1,
+                        BigInteger.ONE,
                         "0",
                         "DATA"
                 ),

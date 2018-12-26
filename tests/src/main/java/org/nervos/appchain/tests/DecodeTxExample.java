@@ -1,8 +1,10 @@
 package org.nervos.appchain.tests;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
+import com.google.gson.Gson;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.nervos.appchain.crypto.ECKeyPair;
 import org.nervos.appchain.protobuf.Blockchain;
@@ -13,24 +15,30 @@ import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 import org.nervos.appchain.protocol.core.methods.response.AppTransaction;
 
+/*
+* This example shows how to decode transaction info from response.
+* */
+
 public class DecodeTxExample {
     private static int version;
-    private static int chainId;
+    private static BigInteger chainId;
     private static AppChainj service;
     private static String privateKey;
     private static long quotaToDeploy;
     private static String payeeAddr;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
         conf.buildService(false);
         service = conf.service;
         privateKey = conf.primaryPrivKey;
-        chainId = Integer.parseInt(conf.chainId);
+        chainId = new BigInteger(conf.chainId);
         payeeAddr = conf.auxAddr1;
         quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static String createSampleTransaction() throws IOException {
@@ -41,7 +49,7 @@ public class DecodeTxExample {
         Transaction transferTx = new Transaction(
                 payeeAddr, nonce, quotaToDeploy, validUtilBlock, version, chainId, "1", data);
 
-        String rawTx = transferTx.sign(privateKey);
+        String rawTx = transferTx.sign(privateKey, cryptoTx, false);
         return service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
     }
 
@@ -57,17 +65,7 @@ public class DecodeTxExample {
         //get response transaction
         AppTransaction appTx = service.appGetTransactionByHash(hash).send();
         org.nervos.appchain.protocol.core.methods.response.Transaction tx
-                = appTx.getTransaction().get();
-
-        //decode from response transaction's content
-        Transaction decodedTx = tx.decodeContent();
-        System.out.println("version: " + decodedTx.getVersion());
-        System.out.println("nonce: " + decodedTx.getNonce());
-        System.out.println("quota: " + decodedTx.getQuota());
-        System.out.println("ValidUntilBlock: " + decodedTx.get_valid_until_block());
-        System.out.println("data: " + decodedTx.getData());
-        System.out.println("value: " + decodedTx.getValue());
-        System.out.println("chainId: " + decodedTx.getChainId());
-        System.out.println("to: " + decodedTx.getTo());
+                = appTx.getTransaction();
+        System.out.println(new Gson().toJson(tx.decodeContent()));
     }
 }

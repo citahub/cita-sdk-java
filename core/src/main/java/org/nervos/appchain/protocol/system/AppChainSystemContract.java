@@ -1,12 +1,11 @@
 package org.nervos.appchain.protocol.system;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.nervos.appchain.abi.FunctionEncoder;
 import org.nervos.appchain.abi.FunctionReturnDecoder;
@@ -112,9 +111,9 @@ public interface AppChainSystemContract {
 
     static List<TypeReference<Type>> convert(List<TypeReference<?>> input) {
         List<TypeReference<Type>> result = new ArrayList<>(input.size());
-        result.addAll(input.stream()
-                .map(typeReference -> (TypeReference<Type>) typeReference)
-                .collect(Collectors.toList()));
+        for (TypeReference<?> typeReference : input) {
+            result.add((TypeReference<Type>) typeReference);
+        }
         return result;
     }
 
@@ -141,7 +140,7 @@ public interface AppChainSystemContract {
             String adminKey,
             String funcData,
             int version,
-            int chainId)
+            BigInteger chainId)
             throws IOException {
 
         Transaction tx = new Transaction(
@@ -169,12 +168,11 @@ public interface AppChainSystemContract {
             throws IOException, InterruptedException {
         int count = 0;
         while (true) {
-            Optional<TransactionReceipt> receipt
+            TransactionReceipt receipt
                     = service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
 
-            if (receipt.isPresent()) {
-                TransactionReceipt txReceipt = receipt.get();
-                if (txReceipt.getErrorMessage() != null) {
+            if (receipt != null) {
+                if (receipt.getErrorMessage() != null) {
                     return false;
                 } else {
                     return true;
@@ -194,15 +192,14 @@ public interface AppChainSystemContract {
             throws IOException, InterruptedException {
         int count = 0;
         while (true) {
-            Optional<TransactionReceipt> receipt
+            TransactionReceipt receipt
                     = service.appGetTransactionReceipt(hash).send().getTransactionReceipt();
 
-            if (receipt.isPresent()) {
-                TransactionReceipt txReceipt = receipt.get();
-                if (txReceipt.getErrorMessage() != null) {
+            if (receipt != null) {
+                if (receipt.getErrorMessage() != null) {
                     return null;
                 } else {
-                    List<Log> logs = txReceipt.getLogs();
+                    List<Log> logs = receipt.getLogs();
                     return logs.get(logIndex);
                 }
             } else {

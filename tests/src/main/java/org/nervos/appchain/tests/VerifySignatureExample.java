@@ -1,6 +1,7 @@
 package org.nervos.appchain.tests;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
 
 import org.nervos.appchain.protobuf.ConvertStrByte;
@@ -13,10 +14,11 @@ import org.nervos.appchain.utils.Numeric;
 public class VerifySignatureExample {
     private static String privateKey;
     private static String primaryAddr;
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static AppChainj service;
     private static String to;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -28,6 +30,7 @@ public class VerifySignatureExample {
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
         to = conf.auxAddr1;
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
 
@@ -54,8 +57,8 @@ public class VerifySignatureExample {
     private static org.nervos.appchain.protocol.core.methods.response.Transaction
             getResponseTransaction(String hash) throws IOException {
         AppTransaction appTransaction = service.appGetTransactionByHash(hash).send();
-        if (appTransaction.getTransaction().isPresent()) {
-            return appTransaction.getTransaction().get();
+        if (appTransaction.getTransaction() != null) {
+            return appTransaction.getTransaction();
         } else {
             return null;
         }
@@ -66,7 +69,7 @@ public class VerifySignatureExample {
         Transaction tx = createSampleTransaction();
 
         //sign the sample transaction
-        String signedTx = tx.sign(privateKey);
+        String signedTx = tx.sign(privateKey, cryptoTx, false);
 
         //get sent transaction hash
         String txHash = sendSampleTransaction(signedTx);

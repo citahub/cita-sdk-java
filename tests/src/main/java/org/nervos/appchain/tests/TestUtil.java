@@ -28,7 +28,7 @@ public class TestUtil {
         return appMetaData.getAppMetaDataResult().getVersion();
     }
 
-    static int getChainId(AppChainj service) {
+    static BigInteger getChainId(AppChainj service) {
         AppMetaData appMetaData = null;
         try {
             appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();

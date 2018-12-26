@@ -15,12 +15,12 @@ Appchainj 接口继承了 Appchain 和 AppchainjRx 两个接口，Appchainj 的�
 [appGetTransactionByHash](Nervosj?id=requestlt-apptransactiongt-appgettransactionbyhashstring-transactionhash)  
 [appGetTransactionReceipt](Nervosj?id=requestlt-appgettransactionreceiptgt-appgettransactionreceiptstring-transactionhash)  
 [appNewBlockFilter](Nervosj?id=requestlt-appfiltergt-appnewblockfilter)  
-[appBlockHashObservable](Nervosj?id=observableltstringgt-appblockhashobservable)  
+[appBlockHashFlowable](Nervosj?id=observableltstringgt-appblockhashobservable)  
 [appNewFilter](Nervosj?id=requestlt-appfiltergt-appnewfilterorgnervosjprotocolcoremethodsrequestappfilter-appfilter)  
 [appUninstallFilter](Nervosj?id=requestlt-appuninstallfiltergt-appuninstallfilterbiginteger-filterid)  
 [appGetFilterChanges](Nervosj?id=requestlt-apploggt-appgetfilterchangesbiginteger-filterid)  
 [appGetFilterLogs](Nervosj?id=requestlt-apploggt-appgetfilterlogsbiginteger-filterid)  
-[appLogObservable](Nervosj?id=observableltloggt-applogobservableappfilter-appfilter)  
+[appLogFlowable](Nervosj?id=observableltloggt-applogobservableappfilter-appfilter)  
 
 #### `Appchainj build (AppchainjService appChainj)`
 根据 AppchainjService 类型实例化 appchainj。
@@ -279,21 +279,21 @@ AppFilter appFilter = service.appNewBlockFilter().send();
 BigInteger filterId = appFilter.getFilterId();
 ```
 
-#### `Observable<String> appBlockHashObservable()`
-新建一个Block Filter来监听新增块的哈希，返回一个Observable，可以用交互的形式来监听块高的变化。
+#### `Flowable<String> appBlockHashFlowable()`
+新建一个Block Filter来监听新增块的哈希，返回一个Flowable，可以用交互的形式来监听块高的变化。
 
 **参数**
 无
 
 **返回值**
-Observable<?, AppLog>
+Flowable<?, AppLog>
 
 **示例**
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
-Observable blockFitlerObservable = service.appBlockHashObservable();
+Flowable blockFitlerFlowable = service.appBlockHashFlowable();
 AppLog logs = service.appGetFilterLogs(filterId).send();
-        blockFitlerObservable.subscribe(block -> {
+        blockFitlerFlowable.subscribe(block -> {
             System.out.println(block.toString());
         });
 ```
@@ -365,19 +365,19 @@ AppLog logs = service.appGetFilterLogs(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
 
-#### `Observable<Log> appLogObservable(AppFilter appFilter)`
-根据 AppFilter 来安装一个新的 Filter 用以获取历史 log 和监听新的 Log，返回一个 Observable 以交互的模式监听 Log。
+#### `Flowable<Log> appLogFlowable(AppFilter appFilter)`
+根据 AppFilter 来安装一个新的 Filter 用以获取历史 log 和监听新的 Log，返回一个 Flowable 以交互的模式监听 Log。
 
 **参数**
 AppFilter - 过滤器可以由`appNewFilter`来新建
 
 **返回值**
-Observable<Log>
+Flowable<Log>
 
 **示例**
 ```java
-Observable appLogObservable = service.appLogObservable(filter);
-            Observable<String> reponse = appLogObservable.map(
+Flowable appLogFlowable = service.appLogFlowable(filter);
+            Flowable<String> reponse = appLogFlowable.map(
                     (log) -> {
                         EventValues eventValues = staticExtractEventParameters(event, (Log)log);
                         return (String) eventValues.getIndexedValues().get(0).getValue();;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -101,28 +102,29 @@ public class CompiledContract {
     /// TODO: how to distinguish overload function which the num of args are same???
     public AbiDefinition getFunctionAbi(String funcName, int numOfArgs)
             throws ContractFuncNotFound {
-        Object[] abiDefinitions = this.typedABI
-                .stream()
-                .filter(abiDefinition ->
-                        abiDefinition.getType().equals("function")
-                                && abiDefinition.getName().equals(funcName)
-                                && abiDefinition.getInputs().size() == numOfArgs)
-                .toArray();
-
-        if (abiDefinitions.length == 0) {
+        List<AbiDefinition> definitionList = new ArrayList<>();
+        for (AbiDefinition abiDefinition : this.typedABI) {
+            if (abiDefinition.getType().equals("function")
+                    && abiDefinition.getName().equals(funcName)
+                    && abiDefinition.getInputs().size() == numOfArgs) {
+                definitionList.add(abiDefinition);
+            }
+        }
+        if (definitionList.size() == 0) {
             throw new ContractFuncNotFound(funcName, numOfArgs);
         } else {
-            return (AbiDefinition)abiDefinitions[0];
+            return definitionList.get(0);
         }
     }
 
     public AbiDefinition getEventAbi(String eventName) {
-        Object[] abiDefinitions = this.typedABI
-                .stream()
-                .filter(abiDefinition ->
-                        abiDefinition.getType().equals("event")
-                                && abiDefinition.getName().equals(eventName))
-                .toArray();
-        return (AbiDefinition) abiDefinitions[0];
+        List<AbiDefinition> definitionList = new ArrayList<>();
+        for (AbiDefinition abiDefinition : this.typedABI) {
+            if (abiDefinition.getType().equals("event")
+                    && abiDefinition.getName().equals(eventName)) {
+                definitionList.add(abiDefinition);
+            }
+        }
+        return definitionList.get(0);
     }
 }

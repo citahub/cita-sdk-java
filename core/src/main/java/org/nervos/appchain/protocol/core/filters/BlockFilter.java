@@ -3,7 +3,6 @@ package org.nervos.appchain.protocol.core.filters;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Optional;
 
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.Request;
@@ -42,12 +41,10 @@ public class BlockFilter extends Filter<String> {
      * and an empty optional is returned.
      * @param filterId
      * Id of the filter for which the historic log should be retrieved
-     * @return
-     * Optional.empty()
      */
     @Override
-    protected Optional<Request<?, AppLog>> getFilterLogs(BigInteger filterId) {
-        return Optional.empty();
+    protected Request<?, AppLog> getFilterLogs(BigInteger filterId) {
+        return appChainj.appGetFilterLogs(filterId);
     }
 }
 

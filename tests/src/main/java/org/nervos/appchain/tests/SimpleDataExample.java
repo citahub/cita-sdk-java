@@ -32,7 +32,7 @@ import org.nervos.appchain.protocol.core.methods.response.AppSendTransaction;
 * */
 
 public class SimpleDataExample {
-    private static int chainId;
+    private static BigInteger chainId;
     private static int version;
     private static String privateKey;
     private static String fromAddress;
@@ -42,6 +42,7 @@ public class SimpleDataExample {
     private static String value;
     private static AppChainj service;
     private static String contractAddr;
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -57,6 +58,7 @@ public class SimpleDataExample {
         value = "0";
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private static String deploySampleContract(
@@ -70,7 +72,7 @@ public class SimpleDataExample {
                 TestUtil.getValidUtilBlock(service).longValue(),
                 version, chainId, value, contractData, constructorData);
 
-        String signedTx = tx.sign(privateKey);
+        String signedTx = tx.sign(privateKey, cryptoTx, false);
         AppSendTransaction appSendTransaction = service.appSendRawTransaction(signedTx).send();
 
         return appSendTransaction.getSendTransactionResult().getHash();
@@ -79,9 +81,9 @@ public class SimpleDataExample {
     private static void getTransactionReceipt(String hash) throws IOException {
         AppGetTransactionReceipt txReceipt
                 = service.appGetTransactionReceipt(hash).send();
-        if (txReceipt.getTransactionReceipt().isPresent()) {
-            if (txReceipt.getTransactionReceipt().get().getErrorMessage() == null) {
-                contractAddr = txReceipt.getTransactionReceipt().get().getContractAddress();
+        if (txReceipt.getTransactionReceipt() != null) {
+            if (txReceipt.getTransactionReceipt().getErrorMessage() == null) {
+                contractAddr = txReceipt.getTransactionReceipt().getContractAddress();
             }
         } else {
             throw new IOException("Cannot get receipt for hash " + hash);

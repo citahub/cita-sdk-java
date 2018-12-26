@@ -14,13 +14,14 @@ import org.nervos.appchain.utils.Convert;
 
 public class SendTransactionSyncExample {
 
-    static String payerKey;
-    static String payeeKey;
-    static String payeeAddr;
-    static String payeeAddr_1;
-    static int chainId;
-    static int version;
-    static long quotaToTransfer;
+    private static String payerKey;
+    private static String payerAddr;
+    private static String payeeAddr1;
+    private static String payeeAddr2;
+    private static BigInteger chainId;
+    private static int version;
+    private static long quotaToTransfer;
+    private static Transaction.CryptoTx cryptoTx;
 
     static AppChainj service;
 
@@ -29,16 +30,17 @@ public class SendTransactionSyncExample {
         conf.buildService(false);
 
         payerKey = conf.primaryPrivKey;
-        payeeKey = conf.auxPrivKey1;
-        payeeAddr = conf.auxAddr1;
-        payeeAddr_1 = conf.auxAddr2;
+        payerAddr = conf.primaryAddr;
+        payeeAddr1 = conf.auxAddr1;
+        payeeAddr2 = conf.auxAddr2;
         quotaToTransfer = Long.parseLong(conf.defaultQuotaDeployment);
         service = conf.service;
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
-    static BigInteger getBalance(String address) {
+    private static BigInteger getBalance(String address) {
         BigInteger balance = null;
         try {
             AppGetBalance response = service
@@ -53,7 +55,7 @@ public class SendTransactionSyncExample {
     }
 
     //use PollingTransactionReceiptProcessor to wait for transaction receipt.
-    static TransactionReceipt transferSync(
+    private static TransactionReceipt transferSync(
             String payerKey, String payeeAddr, String value)
             throws Exception {
         PollingTransactionReceiptProcessor txProcessor = new PollingTransactionReceiptProcessor(
@@ -69,7 +71,7 @@ public class SendTransactionSyncExample {
                 value,
                 "");
 
-        String rawTx = tx.sign(payerKey, false, false);
+        String rawTx = tx.sign(payerKey, cryptoTx, false);
         AppSendTransaction appSendTrasnction = service.appSendRawTransaction(rawTx).send();
 
         TransactionReceipt txReceipt = txProcessor
@@ -79,34 +81,33 @@ public class SendTransactionSyncExample {
     }
 
     public static void main(String[] args) throws Exception {
-        Credentials payerCredential = Credentials.create(payerKey);
-        String payerAddr = payerCredential.getAddress();
+
         System.out.println(payerAddr + ": "
                 + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-        System.out.println(payeeAddr + ": "
-                + Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
-        System.out.println(payeeAddr_1 + ": "
-                + Convert.fromWei(getBalance(payeeAddr_1).toString(), Convert.Unit.ETHER));
+        System.out.println(payeeAddr1 + ": "
+                + Convert.fromWei(getBalance(payeeAddr1).toString(), Convert.Unit.ETHER));
+        System.out.println(payeeAddr2 + ": "
+                + Convert.fromWei(getBalance(payeeAddr2).toString(), Convert.Unit.ETHER));
 
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
 
-        TransactionReceipt txReceipt = transferSync(payerKey, payeeAddr, valueWei);
+        TransactionReceipt txReceipt = transferSync(payerKey, payeeAddr1, valueWei);
 
         if (txReceipt.getErrorMessage() == null) {
             System.out.println(payerAddr + ": "
                     + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-            System.out.println(payeeAddr + ": "
-                    + Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
+            System.out.println(payeeAddr1 + ": "
+                    + Convert.fromWei(getBalance(payeeAddr1).toString(), Convert.Unit.ETHER));
         }
 
-        TransactionReceipt txReceipt1 = transferSync(payerKey, payeeAddr_1, valueWei);
+        TransactionReceipt txReceipt1 = transferSync(payerKey, payeeAddr2, valueWei);
 
         if (txReceipt1.getErrorMessage() == null) {
             System.out.println(payerAddr + ": "
                     + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-            System.out.println(payeeAddr_1 + ": "
-                    + Convert.fromWei(getBalance(payeeAddr_1).toString(), Convert.Unit.ETHER));
+            System.out.println(payeeAddr2 + ": "
+                    + Convert.fromWei(getBalance(payeeAddr2).toString(), Convert.Unit.ETHER));
         }
     }
 }

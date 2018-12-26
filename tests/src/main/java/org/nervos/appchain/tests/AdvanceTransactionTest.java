@@ -1,9 +1,9 @@
 package org.nervos.appchain.tests;
 
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Random;
 
 import org.nervos.appchain.abi.FunctionEncoder;
@@ -22,9 +22,10 @@ public class AdvanceTransactionTest {
     private static AppChainj service;
     private static String senderPrivateKey;
     private static int version;
-    private static int chainId;
+    private static BigInteger chainId;
     private static long quota;
     private static String value = "0";
+    private static Transaction.CryptoTx cryptoTx;
 
     static {
         Config conf = new Config();
@@ -34,6 +35,7 @@ public class AdvanceTransactionTest {
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
         quota = Long.parseLong(conf.defaultQuotaDeployment);
+        cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
     private Random random;
@@ -78,7 +80,7 @@ public class AdvanceTransactionTest {
                 nonce, quota, validUntilBlock,
                 version, chainId, value, contractCode);
 
-        String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
+        String rawTx = tx.sign(senderPrivateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
@@ -106,7 +108,7 @@ public class AdvanceTransactionTest {
                 chainId,
                 value,
                 resetFuncData);
-        String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
+        String rawTx = tx.sign(senderPrivateKey, cryptoTx, false);
 
         return service.appSendRawTransaction(rawTx)
                 .send().getSendTransactionResult().getHash();
@@ -134,7 +136,7 @@ public class AdvanceTransactionTest {
                 chainId,
                 value,
                 addFuncData);
-        String rawTx = tx.sign(senderPrivateKey, isEd25519AndBlake2b, false);
+        String rawTx = tx.sign(senderPrivateKey, cryptoTx, false);
 
         service.appSendRawTransaction(rawTx).send();
     }
@@ -152,7 +154,7 @@ public class AdvanceTransactionTest {
     private TransactionReceipt getTransactionReceipt(String txHash)
             throws Exception {
         return service.appGetTransactionReceipt(txHash)
-                .send().getTransactionReceipt().get();
+                .send().getTransactionReceipt();
     }
 
     public void runContract() throws Exception {
@@ -178,18 +180,17 @@ public class AdvanceTransactionTest {
         // get contract address from receipt
         int countForContractDeployment = 0;
         while (true) {
-            Optional<TransactionReceipt> receipt = service
+            TransactionReceipt receipt = service
                     .appGetTransactionReceipt(deployContractTxHash)
                     .send().getTransactionReceipt();
-            if (receipt.isPresent()) {
-                TransactionReceipt deployTxReceipt = receipt.get();
-                if (deployTxReceipt.getErrorMessage() == null) {
-                    this.contractAddress = deployTxReceipt.getContractAddress();
+            if (receipt != null) {
+                if (receipt.getErrorMessage() == null) {
+                    this.contractAddress = receipt.getContractAddress();
                     System.out.println("Contract is deployed successfully.");
                     break;
                 } else {
                     System.out.println("Failed to deploy smart contract. Error: "
-                            + deployTxReceipt.getErrorMessage());
+                            + receipt.getErrorMessage());
                     System.exit(1);
                 }
             } else {
@@ -207,12 +208,11 @@ public class AdvanceTransactionTest {
         //call smart contract function and wait for receipt.
         int countForResetFunctionCall = 0;
         while (true) {
-            Optional<TransactionReceipt> receipt = service
+            TransactionReceipt receipt = service
                     .appGetTransactionReceipt(resetTxHash)
                     .send().getTransactionReceipt();
-            if (receipt.isPresent()) {
-                TransactionReceipt resetTxReceipt = receipt.get();
-                if (resetTxReceipt.getErrorMessage() == null) {
+            if (receipt != null) {
+                if (receipt.getErrorMessage() == null) {
                     System.out.println("Count is reset successfully.");
                     break;
                 } else {
