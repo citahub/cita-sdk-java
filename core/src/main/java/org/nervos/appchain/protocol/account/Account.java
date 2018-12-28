@@ -124,7 +124,7 @@ public class Account {
             throws IOException {
         String data = FunctionEncoder.encode(func);
         AppCall call = this.service.appCall(new Call(this.transactionManager.getFromAddress(),
-                contractAddress, data), DefaultBlockParameterName.LATEST).send();
+                contractAddress, data), DefaultBlockParameterName.PENDING).send();
         String value = call.getValue();
         List<Type> abiValues = FunctionReturnDecoder.decode(value, func.getOutputParameters());
         if (retsType.size() == 1) {
