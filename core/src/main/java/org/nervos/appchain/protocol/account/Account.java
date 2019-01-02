@@ -159,7 +159,7 @@ public class Account {
 
     public String getAbi(String contractAddress) throws IOException {
         String abi = service.appGetAbi(
-                contractAddress, DefaultBlockParameter.valueOf("latest")).send().getAbi();
+                contractAddress, DefaultBlockParameterName.PENDING).send().getAbi();
         return new String(hexStrToBytes(hex_remove_0x(abi)));
     }
 
@@ -170,7 +170,7 @@ public class Account {
         AbiDefinition eventAbi = contract.getEventAbi(eventName);
         return eventFlowable(
                 contractAddress, eventAbi,
-                DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST);
+                DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.PENDING);
     }
 
     public Flowable<Object> eventFlowable(String contractAddress, AbiDefinition eventAbi,

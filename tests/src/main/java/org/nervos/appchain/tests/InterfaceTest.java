@@ -148,8 +148,7 @@ public class InterfaceTest {
         System.out.println("***  8.  getTransactionCount   ***");
         Credentials credentials = Credentials.create(privateKey);
         String validAccount = credentials.getAddress();
-        DefaultBlockParameter param = DefaultBlockParameter.valueOf("latest");
-        testAppGetTransactionCount(validAccount, param);
+        testAppGetTransactionCount(validAccount, DefaultBlockParameterName.PENDING);
 
         System.out.println("======================================");
         System.out.println("***  9.  getTransactionReceipt ***");
@@ -164,8 +163,7 @@ public class InterfaceTest {
 
         System.out.println("======================================");
         System.out.println("***  10.  getCode               ***");
-        DefaultBlockParameter parameter = DefaultBlockParameter.valueOf("latest");
-        testAppGetCode(validContractAddress, parameter);
+        testAppGetCode(validContractAddress, DefaultBlockParameterName.PENDING);
 
         System.out.println("======================================");
         System.out.println("***  11. appCall                  ***");
@@ -178,7 +176,7 @@ public class InterfaceTest {
         );
         String funcCallData = FunctionEncoder.encode(getBalanceFunc);
 
-        testAppCall(fromAddr, validContractAddress, funcCallData, DefaultBlockParameterName.LATEST);
+        testAppCall(fromAddr, validContractAddress, funcCallData, DefaultBlockParameterName.PENDING);
     }
 
 
@@ -187,7 +185,7 @@ public class InterfaceTest {
         Credentials c = Credentials.create(privateKey);
         String addr = c.getAddress();
         AppGetBalance appGetbalance = service.appGetBalance(
-                addr, DefaultBlockParameterName.LATEST).send();
+                addr, DefaultBlockParameterName.PENDING).send();
         if (appGetbalance == null) {
             System.out.println("the result is null");
         } else {
@@ -198,7 +196,7 @@ public class InterfaceTest {
 
     //1.  getMetaData
     private static void testMetaData() throws Exception {
-        AppMetaData appMetaData = service.appMetaData(DefaultBlockParameterName.LATEST).send();
+        AppMetaData appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
         if (appMetaData == null) {
             System.out.println("the result is null");
         } else {

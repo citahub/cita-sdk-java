@@ -86,7 +86,7 @@ public class TokenFilterFlowableExample {
     //create a Request.AppFilter to be sent with service.
     private static AppFilter createNewFilter(Event event, String contractAddr) {
         AppFilter filter = new AppFilter(DefaultBlockParameterName.EARLIEST,
-                DefaultBlockParameterName.LATEST, contractAddr);
+                DefaultBlockParameterName.PENDING, contractAddr);
         filter.addSingleTopic(EventEncoder.encode(event));
         return filter;
     }

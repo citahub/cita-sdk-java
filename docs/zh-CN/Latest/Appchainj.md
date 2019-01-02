@@ -62,7 +62,7 @@ Request<?, AppMetaData>
 **示例**
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
-DefaultBlockParameter defaultParam = DefaultBlockParameter.valueOf("latest");
+DefaultBlockParameter defaultParam = DefaultBlockParameterName.PENDING;
 AppMetaDataResult result = service.appMetaData(defaultParam).send();
 int chainId = result.chainId;
 String chainName = result.chainName;
@@ -97,7 +97,7 @@ Request<?, AppGetBalance>
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetBalance getBalance = service.appGetBalance(addr, defaultBlockParamter).send();
 BigInteger balance = getBalance.getBalance();
 ```
@@ -116,7 +116,7 @@ Request<?, AppGetAbi>
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetAbi getAbi = service.appGetAbi(addr, defaultBlockParamter).send();
 String abi = getAbi.getAbi();
 ```
@@ -135,7 +135,7 @@ Request<?, AppGetTransactionCount>
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetTransactionCount getTransactionCount = service.appGetTransactionCount(addr, defaultBlockParamter).send();
 BigInteger txCount = getTransactionCount.getTransactionCount();
 ```
@@ -154,7 +154,7 @@ Request<?, AppGetCode>
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetCode getCode = service.appGetCode(addr, defaultBlockParamter).send();
 Sring code = getCode.getCode();
 ```
@@ -196,7 +196,7 @@ Request<?, AppCall>
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
 Call call = new Call(from, to, data);
-AppCall appCall = service.appCall(call, DefaultBlockParameter.valueOf("latest")).send();
+AppCall appCall = service.appCall(call, DefaultBlockParameterName.PENDING).send();
 String result = call.getValue();
 ```
 
@@ -230,7 +230,7 @@ Request<?, AppBlock>
 **示例**
 ```java
 Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
-AppBlock appBlock = service.appGetBlockByHash(DefaultBlockParameter.valueOf("latest"), false).send();
+AppBlock appBlock = service.appGetBlockByHash(DefaultBlockParameterName.PENDING, false).send();
 ```
 #### `Request<?, AppTransaction> appGetTransactionByHash(String transactionHash)`
 根据哈希查询交易信息。

@@ -15,6 +15,7 @@ import org.nervos.appchain.abi.datatypes.Type;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.AppChainjService;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppCall;
@@ -32,7 +33,7 @@ import static org.nervos.appchain.protocol.system.Util.getValidUtilBlock;
 
 public interface AppChainSystemContract {
     DefaultBlockParameter DEFAULT_BLOCK_PARAMETER
-            = DefaultBlockParameter.valueOf("latest");
+            = DefaultBlockParameterName.PENDING;
 
     Long DEFAULT_QUOTA = 10000000L;
 

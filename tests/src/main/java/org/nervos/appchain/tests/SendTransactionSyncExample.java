@@ -45,7 +45,7 @@ public class SendTransactionSyncExample {
         try {
             AppGetBalance response = service
                     .appGetBalance(
-                            address, DefaultBlockParameterName.LATEST).send();
+                            address, DefaultBlockParameterName.PENDING).send();
             balance = response.getBalance();
         } catch (Exception e) {
             System.out.println("failed to get balance.");
