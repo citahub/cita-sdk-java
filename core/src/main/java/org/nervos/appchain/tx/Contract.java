@@ -108,7 +108,7 @@ public abstract class Contract extends ManagedTransaction {
         }
 
         AppGetCode ethGetCode = appChainj
-                .appGetCode(contractAddress, DefaultBlockParameterName.LATEST)
+                .appGetCode(contractAddress, DefaultBlockParameterName.PENDING)
                 .send();
         if (ethGetCode.hasError()) {
             return false;
@@ -144,7 +144,7 @@ public abstract class Contract extends ManagedTransaction {
                 appChainj.appCall(
                         new Call(transactionManager.getFromAddress(),
                                 contractAddress, encodedFunction),
-                        DefaultBlockParameterName.LATEST).send();
+                        DefaultBlockParameterName.PENDING).send();
 
         String value = ethCall.getValue();
         return FunctionReturnDecoder.decode(value, function.getOutputParameters());

@@ -66,7 +66,7 @@ public class TokenFilterCodeGenExample {
         Flowable<Token.TransferEventResponse> flowable =
                 token.transferEventFlowable(
                         DefaultBlockParameter.valueOf(BigInteger.ONE),
-                        DefaultBlockParameterName.LATEST);
+                        DefaultBlockParameterName.PENDING);
         flowable.subscribe(new Consumer<Token.TransferEventResponse>() {
             @Override
             public void accept(Token.TransferEventResponse event) throws Exception {

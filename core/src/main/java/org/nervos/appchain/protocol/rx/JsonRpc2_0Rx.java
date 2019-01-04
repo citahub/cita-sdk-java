@@ -253,7 +253,7 @@ public class JsonRpc2_0Rx {
     }
 
     private BigInteger getLatestBlockNumber() throws IOException {
-        return getBlockNumber(DefaultBlockParameterName.LATEST);
+        return getBlockNumber(DefaultBlockParameterName.PENDING);
     }
 
     private BigInteger getBlockNumber(

@@ -42,11 +42,11 @@ public class RequestTest extends RequestTester {
     @Test
     public void testAppGetBalance() throws Exception {
         appChainj.appGetBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-                DefaultBlockParameterName.LATEST).send();
+                DefaultBlockParameterName.PENDING).send();
 
         verifyResult(
                 "{\"jsonrpc\":\"2.0\",\"method\":\"getBalance\","
-                        + "\"params\":[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\"latest\"],"
+                        + "\"params\":[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\"pending\"],"
                         + "\"id\":1}");
     }
 
@@ -54,10 +54,10 @@ public class RequestTest extends RequestTester {
     @Test
     public void testAppGetTransactionCount() throws Exception {
         appChainj.appGetTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-                DefaultBlockParameterName.LATEST).send();
+                DefaultBlockParameterName.PENDING).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"getTransactionCount\","
-                + "\"params\":[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\"latest\"],"
+                + "\"params\":[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\",\"pending\"],"
                 + "\"id\":1}");
     }
 
@@ -99,12 +99,12 @@ public class RequestTest extends RequestTester {
                 "0xa70e8dd61c5d32be8058bb8eb970870f07233155",
                 "0xb60e8dd61c5d32be8058bb8eb970870f07233155",
                         "0x0"),
-                DefaultBlockParameter.valueOf("latest")).send();
+                DefaultBlockParameterName.PENDING).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"call\","
                 + "\"params\":[{\"from\":\"0xa70e8dd61c5d32be8058bb8eb970870f07233155\","
                 + "\"to\":\"0xb60e8dd61c5d32be8058bb8eb970870f07233155\",\"data\":\"0x0\"},"
-                + "\"latest\"],\"id\":1}");
+                + "\"pending\"],\"id\":1}");
     }
 
 
@@ -215,12 +215,12 @@ public class RequestTest extends RequestTester {
     public void testAppGetLogsWithNumericBlockRange() throws Exception {
         appChainj.appGetLogs(new AppFilter(
                 DefaultBlockParameter.valueOf(Numeric.toBigInt("0xe8")),
-                DefaultBlockParameter.valueOf("latest"), ""))
+                DefaultBlockParameterName.PENDING, ""))
                 .send();
 
         verifyResult(
                 "{\"jsonrpc\":\"2.0\",\"method\":\"getLogs\","
                         + "\"params\":[{\"topics\":[],\"fromBlock\":\"0xe8\","
-                        + "\"toBlock\":\"latest\",\"address\":[\"\"]}],\"id\":1}");
+                        + "\"toBlock\":\"pending\",\"address\":[\"\"]}],\"id\":1}");
     }
 }

@@ -97,7 +97,7 @@ public class TokenFilterTransactionExample {
     //create a Request.AppFilter to be sent with service.
     private static AppFilter createNewFilter(Event event, String contractAddr) throws IOException {
         AppFilter filter = new AppFilter(DefaultBlockParameterName.EARLIEST,
-                DefaultBlockParameterName.LATEST, contractAddr);
+                DefaultBlockParameterName.PENDING, contractAddr);
         // 1. Only indexed parameter can be added into topic.
         // 2. Data in topic must be 256-bit long.
         // 3. Parameters are in order.

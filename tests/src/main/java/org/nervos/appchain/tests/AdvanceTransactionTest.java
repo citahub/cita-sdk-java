@@ -13,6 +13,7 @@ import org.nervos.appchain.abi.datatypes.Function;
 import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
@@ -147,7 +148,7 @@ public class AdvanceTransactionTest {
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
         return service.appCall(
-                call, DefaultBlockParameter.valueOf("latest")).send().getValue();
+                call, DefaultBlockParameterName.PENDING).send().getValue();
     }
 
     // Get transaction receipt

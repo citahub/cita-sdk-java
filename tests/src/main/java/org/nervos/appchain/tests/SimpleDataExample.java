@@ -22,6 +22,7 @@ import org.nervos.appchain.abi.datatypes.generated.Uint256;
 import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.AppGetTransactionReceipt;
@@ -104,7 +105,7 @@ public class SimpleDataExample {
             throws IOException {
         String funcData = FunctionEncoder.encode(func);
         Call call = new Call(fromAddress, addr, funcData);
-        String result = service.appCall(call, DefaultBlockParameter.valueOf("latest"))
+        String result = service.appCall(call, DefaultBlockParameterName.PENDING)
                 .send().getValue();
         return FunctionReturnDecoder.decode(result, func.getOutputParameters()).get(0);
     }

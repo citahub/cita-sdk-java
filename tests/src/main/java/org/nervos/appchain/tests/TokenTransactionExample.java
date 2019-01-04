@@ -18,6 +18,7 @@ import org.nervos.appchain.abi.datatypes.generated.Uint256;
 
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.request.Call;
 import org.nervos.appchain.protocol.core.methods.request.Transaction;
 import org.nervos.appchain.protocol.core.methods.response.TransactionReceipt;
@@ -108,7 +109,7 @@ public class TokenTransactionExample {
             String from, String contractAddress, String callData)
             throws Exception {
         Call call = new Call(from, contractAddress, callData);
-        return service.appCall(call, DefaultBlockParameter.valueOf("latest")).send().getValue();
+        return service.appCall(call, DefaultBlockParameterName.PENDING).send().getValue();
     }
 
     private static String getBalance(String fromAddr, String contractAddress) throws Exception {
