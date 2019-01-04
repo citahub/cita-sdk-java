@@ -83,7 +83,7 @@ public class RawTransactionManager extends TransactionManager {
 
     BigInteger getNonce() throws IOException {
         AppGetTransactionCount ethGetTransactionCount = appChainj.appGetTransactionCount(
-                credentials.getAddress(), DefaultBlockParameterName.LATEST).send();
+                credentials.getAddress(), DefaultBlockParameterName.PENDING).send();
 
         return ethGetTransactionCount.getTransactionCount();
     }

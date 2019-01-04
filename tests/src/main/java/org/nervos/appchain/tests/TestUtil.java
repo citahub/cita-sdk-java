@@ -7,6 +7,7 @@ import java.util.Random;
 import org.nervos.appchain.protobuf.ConvertStrByte;
 import org.nervos.appchain.protocol.AppChainj;
 import org.nervos.appchain.protocol.core.DefaultBlockParameter;
+import org.nervos.appchain.protocol.core.DefaultBlockParameterName;
 import org.nervos.appchain.protocol.core.methods.response.AppMetaData;
 import org.nervos.appchain.utils.Numeric;
 
@@ -20,7 +21,7 @@ public class TestUtil {
     static int getVersion(AppChainj service) {
         AppMetaData appMetaData = null;
         try {
-            appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();
+            appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -31,7 +32,7 @@ public class TestUtil {
     static BigInteger getChainId(AppChainj service) {
         AppMetaData appMetaData = null;
         try {
-            appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();
+            appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
