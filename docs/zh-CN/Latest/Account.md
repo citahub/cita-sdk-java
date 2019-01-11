@@ -1,4 +1,4 @@
-Account 封装了 TransactionManager（在 Cita 中使用的是 CitaTransactionManager），通过 Appchainj 和账户的私钥进行实例化。Account 使用了 CompiledContract 类，可以直接从读取 Solidity 合约文件，生成 ABI 和 BIN 文件以供 TransactionManager 使用。
+Account 封装了 TransactionManager（在 Cita 中使用的是 CitaTransactionManager），通过 CITAj 和账户的私钥进行实例化。Account 使用了 CompiledContract 类，可以直接从读取 Solidity 合约文件，生成 ABI 和 BIN 文件以供 TransactionManager 使用。
 [Account](Account?id=accountstring-privatekey-appChainj-service)  
 [deploy](Account?id=appsendtransaction-deployfile-contractfile-biginteger-nonce-long-quota-int-version-int-chainid-string-value)  
 [callContract](Account?id=object-callcontractstring-contractaddress-string-funcname-biginteger-nonce-long-quota-int-version-int-chainid-string-value-object-args)  
@@ -16,7 +16,7 @@ Account
 **示例**
 ```java
 String privateKey = "{private key}";
-Appchainj service  = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service  = CITAj.build(new HttpService("127.0.0.1"));
 Account account = new Account(privateKey, service);
 ```
 #### `AppSendTransaction deploy(File contractFile, BigInteger nonce, long quota, int version, int chainId, String value)`
@@ -36,7 +36,7 @@ AppSendTransaction
 **示例**
 ```java
 String privateKey = "{private key}";
-Appchainj service  = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service  = CITAj.build(new HttpService("127.0.0.1"));
 Account account = new Account(privateKey, service);
 AppSendTransaction appSendTransaction = account.deploy(new File(path), randomNonce(), quota, version, chainId, value);
 ```
@@ -59,7 +59,7 @@ Object
 **示例**
 ```java
 String privateKey = "{private key}";
-Appchainj service  = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service  = CITAj.build(new HttpService("127.0.0.1"));
 Account account = new Account(privateKey, service);
 AppSendTransaction appSendTransaction = (AppSendTransaction) account.callContract(contractAddress, transfer, randomNonce(), quota, version, chainId, value, toAddress, amount);
 ```

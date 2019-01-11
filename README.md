@@ -79,7 +79,7 @@ Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilB
 Sign the transaction with sender's private key and send it to Nervos AppChain net.
 ```java
 String rawTx = tx.sign(privateKey);
-AppChainj service = AppChainj.build(new HttpService(ipAddr + ":" + port));
+CITAj service = CITAj.build(new HttpService(ipAddr + ":" + port));
 AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```
 Please be attention that all transactions need to be signed since Nervos AppChain only supports method `sendRawTransaction` rather than `sendTransaction`.
@@ -114,7 +114,7 @@ $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes]
 ```
 Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `appchainj/tests/src/main/resources`:
 ```shell
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
+java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
 ```
 `Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos AppChain network.
 Please check [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
@@ -214,7 +214,7 @@ Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilB
 用发送者的私钥对交易进行签名然后发送到 Nervos AppChain 网络，代码如下：
 ```java
 String rawTx = tx.sign(privateKey);
-AppChainj service = AppChainj.build(new HttpService(ipAddr + ":" + port));
+CITAj service = CITAj.build(new HttpService(ipAddr + ":" + port));
 AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```
 请注意因为 Nervos AppChain 只支持 `sendRawTransaction` 方法而不是 `sendTransaction` ，所以所有发送给 Nervos AppChain 的交易都需要被签名。
@@ -249,12 +249,12 @@ $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes]
 ```
 这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `appchainj/tests/src/main/resources` 生成对应的 java 类，命令如下：
 ```
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
+java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
 ```
 `Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 Nervos Appchain 中应该使用 [CitaTransactionManager](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) 而不是 TransactionManager。
 请在 [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
 
-### 通过 AppChainj 中的 Account 与智能合约交互（测试阶段）
+### 通过 CITAj 中的 Account 与智能合约交互（测试阶段）
 appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
 
 合约部署示例代码：

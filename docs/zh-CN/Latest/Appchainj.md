@@ -1,4 +1,4 @@
-Appchainj 接口继承了 Appchain 和 AppchainjRx 两个接口，Appchainj 的实现类（比如JsonRpc2_0Appchainj），提供了方法以发送交易的方式对合约进行部署和函数调用。Appchainj 中没有提供将 solidity 合约转换为 java 类的方法，所以对合约的操作必须依赖合约或者合约函数的二进制码，即手动拼接参数。
+CITAj 接口继承了 Appchain 和 AppchainjRx 两个接口，CITAj 的实现类（比如JsonRpc2_0Appchainj），提供了方法以发送交易的方式对合约进行部署和函数调用。CITAj 中没有提供将 solidity 合约转换为 java 类的方法，所以对合约的操作必须依赖合约或者合约函数的二进制码，即手动拼接参数。
 
 [build](Nervosj?id=appChainj-build-nervosjservice-appChainj)  
 [netPeer](Nervosj?id=requestlt-netpeercountgt-netpeer)  
@@ -22,18 +22,18 @@ Appchainj 接口继承了 Appchain 和 AppchainjRx 两个接口，Appchainj 的�
 [appGetFilterLogs](Nervosj?id=requestlt-apploggt-appgetfilterlogsbiginteger-filterid)  
 [appLogFlowable](Nervosj?id=observableltloggt-applogobservableappfilter-appfilter)  
 
-#### `Appchainj build (AppchainjService appChainj)`
+#### `CITAj build (AppchainjService appChainj)`
 根据 AppchainjService 类型实例化 appchainj。
 
 **参数**
 appChainj - appchainjService 实例
 
 **返回值**
-Appchainj 实例
+CITAj 实例
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 ```
 #### `Request<?, NetPeerCount> netPeer()`
 获取当前连接节点数。
@@ -46,7 +46,7 @@ Request<?, NetPeerCount>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 NetPeerCount netPeerCount = service.netPeerCount().send();
 BigInteger peerCount = netPeerCount.getQuantity();
 ```
@@ -61,7 +61,7 @@ Request<?, AppMetaData>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 DefaultBlockParameter defaultParam = DefaultBlockParameterName.PENDING;
 AppMetaDataResult result = service.appMetaData(defaultParam).send();
 int chainId = result.chainId;
@@ -79,7 +79,7 @@ Request<?, AppBlockNumber>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 AppBlockNumber result = service.appBlockNumber().send();
 BigInteger blockNumber = result.getBlockNumber();
 ```
@@ -95,7 +95,7 @@ Request<?, AppGetBalance>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetBalance getBalance = service.appGetBalance(addr, defaultBlockParamter).send();
@@ -114,7 +114,7 @@ Request<?, AppGetAbi>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetAbi getAbi = service.appGetAbi(addr, defaultBlockParamter).send();
@@ -133,7 +133,7 @@ Request<?, AppGetTransactionCount>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetTransactionCount getTransactionCount = service.appGetTransactionCount(addr, defaultBlockParamter).send();
@@ -152,7 +152,7 @@ Request<?, AppGetCode>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String addr = "{hex address}";
 DefaultBlockParameter defaultBlockParameter = DefaultBlockParameterName.PENDING;
 AppGetCode getCode = service.appGetCode(addr, defaultBlockParamter).send();
@@ -175,7 +175,7 @@ Transaction tx = Transaction.createContractTransaction(BigInteger.valueOf(nonce)
 tx.sign(this.config.getPrivateKey(), false, false);
 
 //instantiate a Nervosj and send the transaction
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 AppSendTransaction sendTransaction = service.appSendRawTransaction(tx).send();
 
 //get hash of the transaction
@@ -194,7 +194,7 @@ Request<?, AppCall>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 Call call = new Call(from, to, data);
 AppCall appCall = service.appCall(call, DefaultBlockParameterName.PENDING).send();
 String result = call.getValue();
@@ -212,7 +212,7 @@ Request<?, AppBlock>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String blockHash = "{block hash to search}";
 AppBlock appBlock = service.appGetBlockByHash(blockHash, false).send();
 ```
@@ -229,7 +229,7 @@ Request<?, AppBlock>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 AppBlock appBlock = service.appGetBlockByHash(DefaultBlockParameterName.PENDING, false).send();
 ```
 #### `Request<?, AppTransaction> appGetTransactionByHash(String transactionHash)`
@@ -243,7 +243,7 @@ Request<?, AppTransaction>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 AppTransaction responseTx = service.appGetTransactionByHash(txHash).send();
 ```
@@ -258,7 +258,7 @@ Request<?, AppGetTransactionReceipt>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 AppGetTransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send();
 ```
@@ -274,7 +274,7 @@ Request<?, AppFilter>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 AppFilter appFilter = service.appNewBlockFilter().send();
 BigInteger filterId = appFilter.getFilterId();
 ```
@@ -290,7 +290,7 @@ Flowable<?, AppLog>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 Flowable blockFitlerFlowable = service.appBlockHashFlowable();
 AppLog logs = service.appGetFilterLogs(filterId).send();
         blockFitlerFlowable.subscribe(block -> {
@@ -309,8 +309,8 @@ Request<?, AppFilter>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
-org.appChainj.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
+com.cryptape.cita.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
 AppFilter appFilter = service.appNewFilter(txHash).send();
 BigInteger filterId = appFilter.getFilterId();
 ```
@@ -326,7 +326,7 @@ Request<?, AppUninstallFilter>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 BigInteger filterId = {your filter Id };
 AppUninstallFilter uninstallFilter = service.appUninstallFilter(filterId).send();
 ```
@@ -342,7 +342,7 @@ Request<?, AppLog>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 BigInteger filterId = {your filter Id };
 AppLog logs = service.appGetFilterChanges(filterId).send();
 List<LogResult> results = logs.getLogs();
@@ -359,7 +359,7 @@ Request<?, AppLog>
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 BigInteger filterId = {your filter Id };
 AppLog logs = service.appGetFilterLogs(filterId).send();
 List<LogResult> results = logs.getLogs();

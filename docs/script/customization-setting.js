@@ -4,7 +4,7 @@
 
 var customization = {
 
-    name: 'Appchainj', // name of this document
+    name: 'CITAj', // name of this document
 
-    homepage: 'AppchainjAPI.md',// the home page, extension name '.md' cannot be omitted.
+    homepage: 'citajAPI.md',// the home page, extension name '.md' cannot be omitted.
 }

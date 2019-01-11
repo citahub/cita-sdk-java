@@ -15,5 +15,5 @@ dependencies {
 }
 
 // Build command line library release with target distShadowZip
-mainClassName = 'org.nervos.appchain.console.Runner'
+mainClassName = 'com.cryptape.cita.console.Runner'
 applicationName = 'nervosj'

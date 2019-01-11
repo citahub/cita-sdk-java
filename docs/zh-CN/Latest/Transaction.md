@@ -24,7 +24,7 @@ Transaction实例
 
 **示例**
 ```java
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 String to = "{address to which the tx is sent}";
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long quota = 9999;
@@ -52,8 +52,8 @@ Transaction实例
 
 **示例**
 ```java
-//create new Appchainj service
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+//create new CITAj service
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 
 //settings initiation
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
@@ -88,7 +88,7 @@ Transaction实例
 **示例**
 ```java
 //create new appChainj service
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 
 //settings initiation
 String to = "{smart contract address}";
@@ -118,7 +118,7 @@ CitaTransctionManager 实例
 **示例**
 ```java
 Credentials credentials = Credentials.create(privateKey);
-Appchainj service = Appchainj.build(new HttpService("127.0.0.1"));
+CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 CitaTransactionManager transactionManager = new CitaTransactionManager(service, credentials);
 ```
 #### `AppSendTransaction sendTransaction(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
