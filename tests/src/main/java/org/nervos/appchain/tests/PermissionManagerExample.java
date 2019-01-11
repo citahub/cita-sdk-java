@@ -12,7 +12,7 @@ import org.nervos.appchain.protocol.system.entities.QueryInfoResult;
 public class PermissionManagerExample {
     static AppChainj service;
     static String senderAddr;
-    static String adminPriavteKey;
+    static String adminPrivateKey;
     static int version;
     static BigInteger chainId;
 
@@ -21,7 +21,7 @@ public class PermissionManagerExample {
         conf.buildService(false);
         service = conf.service;
         senderAddr = conf.primaryAddr;
-        adminPriavteKey = conf.adminPrivateKey;
+        adminPrivateKey = conf.adminPrivateKey;
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
     }
@@ -42,11 +42,11 @@ public class PermissionManagerExample {
         ArrayList<String> addrs = new ArrayList<>(Collections.singletonList(senderAddr));
         ArrayList<String> funcs = new ArrayList<>(Collections.singletonList("Token"));
         String newPermissionAddr = sysContract.newPermission(
-                "somePermission1", addrs, funcs, adminPriavteKey, version, chainId);
+                "somePermission1", addrs, funcs, adminPrivateKey, version, chainId);
         System.out.println("Address for new permission: " + newPermissionAddr);
         TimeUnit.SECONDS.sleep(10);
 
-        boolean updated = sysContract.updatePermissionName(newPermissionAddr, "TokenNew", adminPriavteKey, version, chainId);
+        boolean updated = sysContract.updatePermissionName(newPermissionAddr, "TokenNew", adminPrivateKey, version, chainId);
         System.out.println("Permission updated: " + updated);
         TimeUnit.SECONDS.sleep(10);
 
@@ -57,7 +57,7 @@ public class PermissionManagerExample {
         //add a new resource
         addrs = new ArrayList<>(Collections.singletonList(senderAddr));
         funcs = new ArrayList<>(Collections.singletonList("Token1"));
-        boolean addResource = sysContract.addResources(addrs, funcs, newPermissionAddr, adminPriavteKey, version, chainId);
+        boolean addResource = sysContract.addResources(addrs, funcs, newPermissionAddr, adminPrivateKey, version, chainId);
         System.out.println("Resource is added: " + addResource);
         TimeUnit.SECONDS.sleep(10);
 
@@ -72,7 +72,7 @@ public class PermissionManagerExample {
         //delete a existing resource
         addrs = new ArrayList<>(Collections.singletonList(senderAddr));
         funcs = new ArrayList<>(Collections.singletonList("Token1"));
-        boolean deleteResource = sysContract.deleteResources(addrs, funcs, newPermissionAddr, adminPriavteKey, version, chainId);
+        boolean deleteResource = sysContract.deleteResources(addrs, funcs, newPermissionAddr, adminPrivateKey, version, chainId);
         System.out.println("Resource is deleted: " + deleteResource);
         TimeUnit.SECONDS.sleep(10);
 
@@ -81,7 +81,7 @@ public class PermissionManagerExample {
         printQueryInfo(queryInforesult);
 
         //delete permission
-        boolean deleted = sysContract.deletePermission(newPermissionAddr, adminPriavteKey, version, chainId);
+        boolean deleted = sysContract.deletePermission(newPermissionAddr, adminPrivateKey, version, chainId);
         System.out.println("Permission deleted: " + deleted);
     }
 }

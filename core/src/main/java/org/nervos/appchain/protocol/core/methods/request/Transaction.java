@@ -49,12 +49,10 @@ public class Transaction {
 
     public Transaction(String to, String nonce, long quota, long validUntilBlock, int version,
                        BigInteger chainId, String value, String data) {
-        this.to = to;
         this.quota = quota;
         this.version = version;
         this.validUntilBlock = validUntilBlock;
         this.chainId = chainId;
-        this.value = value;
         this.data = data != null ? prependHexPrefix(data) : "";
         this.nonce = processNonce(nonce);
         this.value = processValue(value);

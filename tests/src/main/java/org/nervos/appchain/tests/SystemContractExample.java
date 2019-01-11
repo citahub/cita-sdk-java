@@ -64,7 +64,7 @@ public class SystemContractExample {
         }
 
         /**Don't try this**/
-        //boolean setStake = sysContract.setStake(senderAddr, 2, adminPriavteKey);
+        //boolean setStake = sysContract.setStake(senderAddr, 2, adminPrivateKey);
         //if (setStake) {
         //    System.out.println("success");
         //}
