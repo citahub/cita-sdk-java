@@ -17,17 +17,6 @@ import com.cryptape.cita.protocol.core.Response;
 import com.cryptape.cita.utils.Numeric;
 
 
-/**
- * Block object returned by:
- * <ul>
- * <li>getBlockByHash</li>
- * <li>getBlockByNumber</li>
- * </ul>
- *
- * <p>See
- * <a href="https://docs.nervos.org/cita/#/./rpc_guide/rpc?id=getblockbyhash">docs</a>
- * for further details.</p>
- */
 public class AppBlock extends Response<AppBlock.Block> {
 
     @Override

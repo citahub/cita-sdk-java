@@ -1,5 +1,5 @@
 
-description 'nervosj AppChain crypto library'
+description 'cita-sdk-java crypto library'
 
 dependencies {
     compile project(':rlp'),

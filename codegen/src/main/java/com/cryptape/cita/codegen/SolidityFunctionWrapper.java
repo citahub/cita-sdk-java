@@ -57,7 +57,7 @@ import com.cryptape.cita.utils.Strings;
 public class SolidityFunctionWrapper extends Generator {
 
     private static final String BINARY = "BINARY";
-    private static final String NERVOSJ = "citaj";
+    private static final String CITAJ = "citaj";
     private static final String CREDENTIALS = "credentials";
     private static final String TRANSACTION_MANAGER = "transactionManager";
     private static final String INITIAL_VALUE = "initialWeiValue";
@@ -256,12 +256,12 @@ public class SolidityFunctionWrapper extends Generator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(CITAj.class, NERVOSJ)
+                .addParameter(CITAj.class, CITAJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
                 .addStatement("super($N, $N, $N, $N, $N, $N)",
-                        BINARY, CONTRACT_ADDRESS, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT)
+                        BINARY, CONTRACT_ADDRESS, CITAJ, authName, GAS_PRICE, GAS_LIMIT)
                 .build();
     }
 
@@ -269,10 +269,10 @@ public class SolidityFunctionWrapper extends Generator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PROTECTED)
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(CITAj.class, NERVOSJ)
+                .addParameter(CITAj.class, CITAJ)
                 .addParameter(authType, authName)
                 .addStatement("super($N, $N, $N, $N)",
-                        BINARY, CONTRACT_ADDRESS, NERVOSJ, authName)
+                        BINARY, CONTRACT_ADDRESS, CITAJ, authName)
                 .build();
     }
 
@@ -319,11 +319,11 @@ public class SolidityFunctionWrapper extends Generator {
         if (isPayable) {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, encodedConstructor, $L)",
-                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
+                    className, CITAJ, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
         } else {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, encodedConstructor)",
-                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY);
+                    className, CITAJ, authName, GAS_PRICE, GAS_LIMIT, BINARY);
         }
 
         return methodBuilder.build();
@@ -340,7 +340,7 @@ public class SolidityFunctionWrapper extends Generator {
         methodBuilder.addStatement(
                 "return deployRemoteCall"
                         + "($L.class, $L, $L, $L, $L, $L, $L, $L, $L, $L, encodedConstructor)",
-                className, NERVOSJ, authName, QUOTA, NONCE, VALID_UNTIL_BLOCK,
+                className, CITAJ, authName, QUOTA, NONCE, VALID_UNTIL_BLOCK,
                 VERSION, CHAIN_ID, VALUE, BINARY);
         return methodBuilder.build();
     }
@@ -351,11 +351,11 @@ public class SolidityFunctionWrapper extends Generator {
         if (isPayable) {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, \"\", $L)",
-                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
+                    className, CITAJ, authName, GAS_PRICE, GAS_LIMIT, BINARY, INITIAL_VALUE);
         } else {
             methodBuilder.addStatement(
                     "return deployRemoteCall($L.class, $L, $L, $L, $L, $L, \"\")",
-                    className, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT, BINARY);
+                    className, CITAJ, authName, GAS_PRICE, GAS_LIMIT, BINARY);
         }
 
         return methodBuilder.build();
@@ -367,7 +367,7 @@ public class SolidityFunctionWrapper extends Generator {
         methodBuilder.addStatement(
                 "return deployRemoteCall"
                         + "($L.class, $L, $L, $L, $L, $L, $L, $L, $L, $L, \"\")",
-                className, NERVOSJ, authName, QUOTA, NONCE,
+                className, CITAJ, authName, QUOTA, NONCE,
                 VALID_UNTIL_BLOCK, VERSION, CHAIN_ID, VALUE, BINARY);
         return methodBuilder.build();
     }
@@ -378,7 +378,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
-                .addParameter(CITAj.class, NERVOSJ)
+                .addParameter(CITAj.class, CITAJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT);
@@ -396,7 +396,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(
                         buildRemoteCall(TypeVariableName.get(className, Type.class)))
-                .addParameter(CITAj.class, NERVOSJ)
+                .addParameter(CITAj.class, CITAJ)
                 .addParameter(authType, authName)
                 .addParameter(Long.class, QUOTA)
                 .addParameter(String.class, NONCE)
@@ -413,12 +413,12 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(TypeVariableName.get(className, Type.class))
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(CITAj.class, NERVOSJ)
+                .addParameter(CITAj.class, CITAJ)
                 .addParameter(authType, authName)
                 .addParameter(BigInteger.class, GAS_PRICE)
                 .addParameter(BigInteger.class, GAS_LIMIT)
                 .addStatement("return new $L($L, $L, $L, $L, $L)", className,
-                        CONTRACT_ADDRESS, NERVOSJ, authName, GAS_PRICE, GAS_LIMIT)
+                        CONTRACT_ADDRESS, CITAJ, authName, GAS_PRICE, GAS_LIMIT)
                 .build();
     }
 
@@ -428,10 +428,10 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(TypeVariableName.get(className, Type.class))
                 .addParameter(String.class, CONTRACT_ADDRESS)
-                .addParameter(CITAj.class, NERVOSJ)
+                .addParameter(CITAj.class, CITAJ)
                 .addParameter(authType, authName)
                 .addStatement("return new $L($L, $L, $L)", className,
-                        CONTRACT_ADDRESS, NERVOSJ, authName)
+                        CONTRACT_ADDRESS, CITAJ, authName)
                 .build();
     }
 

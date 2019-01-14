@@ -169,14 +169,14 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
                 }
 
                 pom.project {
-                    name 'nervosj'
+                    name 'citaj'
                     packaging 'jar'
                     description project.description
-                    url 'https://docs.nervos.org/nervosj'
+                    url 'https://docs.nervos.org/appchainj'
 
                     scm {
-                        connection 'scm:git@github.com:cryptape/appchainj.git'
-                        url 'https://github.com/cryptape/appchainj.git'
+                        connection 'scm:git@github.com:cryptape/cita-sdk-java.git'
+                        url 'https://github.com/cryptape/cita-sdk-java.git'
                     }
 
                     licenses {
@@ -210,13 +210,13 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
         publish = true
         pkg {
             repo = 'maven'
-            name = 'org.nervos'
+            name = 'com.cryptape.cita'
             desc = project.description
-            userOrg = 'nervos'
+            userOrg = 'cita-sdk-java'
             licenses = ['Apache-2.0']
-            issueTrackerUrl = 'https://github.com/cryptape/appchainj/issues'
-            vcsUrl = 'https://github.com/cryptape/appchainj.git'
-            websiteUrl = 'https://docs.nervos.org/nervosj'
+            issueTrackerUrl = 'https://github.com/cryptape/cita-sdk-java/issues'
+            vcsUrl = 'https://github.com/cryptape/cita-sdk-java.git'
+            websiteUrl = 'https://docs.nervos.org/appchainj'
             publicDownloadNumbers = true
         }
     }
