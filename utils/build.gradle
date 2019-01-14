@@ -1,5 +1,5 @@
 
-description 'Minimal set of nervosj utility classes'
+description 'Minimal set of cita-sdk-java utility classes'
 
 dependencies {
     compile "org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"

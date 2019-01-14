@@ -1,5 +1,5 @@
 
-description 'nervosj project code generators'
+description 'cita-sdk-java project code generators'
 
 dependencies {
     compile project(':core'),

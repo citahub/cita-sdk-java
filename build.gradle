@@ -17,6 +17,7 @@ buildscript {
     ext.mockitoVersion = '1.10.19'
 
     repositories {
+        jcenter()
         mavenCentral()
     }
 
@@ -37,21 +38,22 @@ apply plugin: 'idea'
 apply plugin: 'io.codearte.nexus-staging'
 apply plugin: 'jacoco'
 
-description 'nervosj base project'
+description 'cita base project'
 
 allprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    group 'org.nervos'
-    version '0.20'
+    group 'com.cryptape.cita'
+    version '0.20.2'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
-    apply plugin: 'checkstyle'
+//    apply plugin: 'checkstyle'
 
     repositories {
+        jcenter()
         mavenCentral()
     }
 
@@ -78,10 +80,10 @@ allprojects {
     }
     */
 
-    checkstyle {
-        toolVersion = "7.7"
-        configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
-    }
+//    checkstyle {
+//        toolVersion = "7.6.1"
+//        configFile = file("${rootDir}/config/checkstyle/checkstyle.xml")
+//    }
 }
 
 subprojects {
@@ -139,8 +141,8 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId 'org.nervos'
-                version '0.19'
+                groupId 'com.cryptape.cita'
+                version '0.20.2'
                 from components.java
 
                 artifact sourcesJar {
@@ -167,14 +169,14 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
                 }
 
                 pom.project {
-                    name 'nervosj'
+                    name 'citaj'
                     packaging 'jar'
                     description project.description
-                    url 'https://docs.nervos.org/nervosj'
+                    url 'https://github.com/cryptape/cita-sdk-java.git'
 
                     scm {
-                        connection 'scm:git@github.com:cryptape/nervosj.git'
-                        url 'https://github.com/cryptape/nervosj.git'
+                        connection 'scm:git@github.com:cryptape/cita-sdk-java.git'
+                        url 'https://github.com/cryptape/cita-sdk-java.git'
                     }
 
                     licenses {
@@ -208,13 +210,13 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
         publish = true
         pkg {
             repo = 'maven'
-            name = 'org.nervos'
+            name = 'com.cryptape.cita'
             desc = project.description
-            userOrg = 'nervos'
+            userOrg = 'cita-sdk-java'
             licenses = ['Apache-2.0']
-            issueTrackerUrl = 'https://github.com/cryptape/nervosj/issues'
-            vcsUrl = 'https://github.com/cryptape/nervosj.git'
-            websiteUrl = 'https://docs.nervos.org/nervosj'
+            issueTrackerUrl = 'https://github.com/cryptape/cita-sdk-java/issues'
+            vcsUrl = 'https://github.com/cryptape/cita-sdk-java.git'
+            websiteUrl = 'https://github.com/cryptape/cita-sdk-java.git'
             publicDownloadNumbers = true
         }
     }
@@ -254,9 +256,9 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: [
-                            'org/nervos/appchain/abi/datatypes/generated/**',
-                            'org/nervos/appchain/tuples/generated/**',
-                            'org/nervos/appchain/ens/contracts/generated/**'
+                            'com/cryptape/cita/abi/datatypes/generated/**',
+                            'com/cryptape/cita/tuples/generated/**',
+                            'com/cryptape/cita/ens/contracts/generated/**'
                     ])
         })
     }

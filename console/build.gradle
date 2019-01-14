@@ -1,7 +1,7 @@
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 
-description 'nervosj command line tools'
+description 'cita-sdk-java command line tools'
 
 dependencies {
     compile project(':codegen'),
@@ -15,5 +15,5 @@ dependencies {
 }
 
 // Build command line library release with target distShadowZip
-mainClassName = 'org.nervos.appchain.console.Runner'
-applicationName = 'nervosj'
+mainClassName = 'com.cryptape.cita.console.Runner'
+applicationName = 'cita'

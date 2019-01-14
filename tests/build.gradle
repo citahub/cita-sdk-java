@@ -1,4 +1,4 @@
-description 'Several examples to use nervosj to interact with AppChain'
+description 'Several examples to use cita-sdk-java to interact with CITA'
 
 dependencies {
     compile group: 'commons-codec', name: 'commons-codec', version: '1.11'

@@ -1,13 +1,16 @@
-# appchainj
-[![Build Status](https://travis-ci.org/cryptape/appchainj.svg?branch=master)](https://travis-ci.org/cryptape/appchainj) 
+# cita-sdk-java
+[![Build Status](https://travis-ci.org/cryptape/cita-sdk-java.svg?branch=master)](https://travis-ci.org/cryptape/cita-sdk-java) 
 
-[English](https://github.com/cryptape/appchainj#introduction)  
-[中文](https://github.com/cryptape/appchainj#简介)
+[English](https://github.com/cryptape/cita-sdk-java#introduction)  
+[中文](https://github.com/cryptape/cita-sdk-java#简介)
 
 ## Introduction
-appchainj, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on Nervos layer2 network.
+
+cita-sdk-java, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on CITA.
+
 ## Features
-- Complete implementation of Nervos AppChain JSON-RPC API over HTTP.
+
+- Complete implementation of CITA JSON-RPC API over HTTP.
 - Auto-generation of Java smart contract wrappers to create, deploy, transact with and call smart contracts from native Java code (Solidity and Truffle definition formats supported).
 - Android compatible. 
 
@@ -22,39 +25,38 @@ Install from repositories:
 maven  
 ```
 <dependency>
-  <groupId>org.nervos</groupId>
+  <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
   <version>0.20</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'org.nervos:core:0.20'
+compile 'com.cryptape.cita:core:0.20'
 ```
-Scala SBT
-```
-libraryDependencies += "org.nervos" % "core" % "0.20"
-```
+
 Install manually
 If you want to generate the jar and import manually.
 ```
-git clone https://github.com/cryptape/appChainj.git
+git clone https://github.com/cryptape/cita-sdk-java.git
 gradle shadowJar
 ```
 
-Please refer to branch Android for usage for Android version.
 
-### AppChain Test net
-Use Nervos AppChain test net (recommended):
+### CITA Test net
+
+Use CITA test net (recommended):
 http://121.196.200.225:1337 is provided as a test net.
 
-Or build your own Nervos AppChain net:
-Please find more information in [how to set up client in your local](https://docs.nervos.org/cita/#/en/develop/chain/getting_started).
+Or build your own CITA net:
+Please find more information in [CITA](https://github.com/cryptape/cita).
 
 ### Get started
+
 #### Deploy smart contract
-Similar as Ethereum, smart contracts are deployed in Nervos AppChain network by sending transactions. Nervos AppChain transaction is defined in [Transaction.java](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/core/methods/request/Transaction.java).  
-In Nervos transaction, there are 3 special parameters:
+
+Similar as Ethereum, smart contracts are deployed in CITA network by sending transactions. CITA transaction is defined in [Transaction.java](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/core/methods/request/Transaction.java).  
+In CITA transaction, there are 3 special parameters:
 - nonce: generated randomly or depend on specific logic to avoid replay attack.
 - quota: transaction execution fee for operation, like gasPrice * gasLimit in Ethereum.
 - valid_until_block: timeout mechanism which should be set in (currentHeight, currentHeight + 100]. Transaction will be discarded beyond `valid_until_block`.
@@ -76,16 +78,16 @@ long quota = 1000000;
 Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, contractCode);
 ```
 
-Sign the transaction with sender's private key and send it to Nervos AppChain net.
+Sign the transaction with sender's private key and send it to CITA net.
 ```java
 String rawTx = tx.sign(privateKey);
-AppChainj service = AppChainj.build(new HttpService(ipAddr + ":" + port));
+CITAj service = CITAj.build(new HttpService(ipAddr + ":" + port));
 AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```
-Please be attention that all transactions need to be signed since Nervos AppChain only supports method `sendRawTransaction` rather than `sendTransaction`.
+Please be attention that all transactions need to be signed since CITA only supports method `sendRawTransaction` rather than `sendTransaction`.
 
 #### Call functions in smart contract
-In Nervos AppChain smart contract call, like contract deployment, a transaction needs to be created with 2 more parameters:
+In CITA smart contract call, like contract deployment, a transaction needs to be created with 2 more parameters:
 - contract address: address of the deployed contract.
 - functionCallData: ABI of function and parameter.
 
@@ -93,7 +95,7 @@ After contract deployed, contract address can be fetched from TransactionReceipt
 ```java
 //get receipt and address from transaction
 String txHash = result.getSendTransactionResult().getHash();
-TransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send().getTransactionReceipt().get();
+TransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send().getTransactionReceipt();
 String contractAddress = txReceipt.getContractAddress();
 
 //sign and send the transaction
@@ -101,26 +103,26 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-Please check [TokenTransactionExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
+Please check [TokenTransactionExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
 
-### Working with smart contract with appchainj wrapper
-Besides interacting with smart contracts by sending transactions with binary code, appchainj provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
+### Working with smart contract with cita-sdk-java wrapper
+Besides interacting with smart contracts by sending transactions with binary code, cita-sdk-java provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
 
-Download Nervosj jar file from release page or run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar`.
+Download cita jar file from release page or run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar`.
 
 Usage of console-version-all is shown below:
 ```shell
 $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
 ```
-Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `appchainj/tests/src/main/resources`:
+Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `/tests/src/main/resources`:
 ```shell
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
+java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
 ```
-`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in Nervos AppChain network.
-Please check [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) for a complete example.
+`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
+Please check [TokenCodegenExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenCodegenExample.java) for a complete example.
 
-### Working with smart contract with appChainj Account (Test)
-appchainj provides interface [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
+### Working with smart contract with cita-sdk-java Account (Test)
+cita-sdk-java provides interface [Account](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
 
 Method of smart contract deployment:
 ```java
@@ -136,14 +138,14 @@ public Object callContract(String contractAddress, String funcName, String nonce
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
 public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
-While contract file is required when first deploy the contract, appchainj can get the abi file according to address when call methods in deployed contract.
-Please find complete code in [TokenAccountExample](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java).
+While contract file is required when first deploy the contract, cita-sdk-java can get the abi file according to address when call methods in deployed contract.
+Please find complete code in [TokenAccountExample](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenAccountExample.java).
 
 
 ## 简介
-appchainj 是对以太坊 Web3j 进行改写，适配 Nervos AppChain 的一个 Java 开发包。appchainj 集成了与 Nervos AppChain 客户端交互的功能，可以用来对 Nervos AppChain 发送交易，系统配置，信息查询。
+cita-sdk-java 是对以太坊 Web3j 进行改写，适配 CITA 的一个 Java 开发包。cita-sdk-java 集成了与 CITA 客户端交互的功能，可以用来对 CITA 发送交易，系统配置，信息查询。
 ## 特性
-- 通过 HTTP 协议，实现了 Nervos AppChain 所定义的所有 JSON-RPC 方法。
+- 通过 HTTP 协议，实现了 CITA 所定义的所有 JSON-RPC 方法。
 - 可以通过 Solidity 智能合约生成该合约的 Java 类。这个智能合约的 Java 类作为 java 对只能合约的包裹层，可以使开发和通过 java 方便地对智能合约进行部署和合约方法的调用（支持Solidity 和 Truffle 的格式）。
 - 适配安卓
 
@@ -157,39 +159,35 @@ Gradle 4.3
 通过远程仓库安装：  
 ```
 <dependency>
-  <groupId>org.nervos</groupId>
+  <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.19</version>
+  <version>0.20</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'org.nervos:core:0.19'
+compile 'com.cryptape.cita:core:0.20'
 ```
-Scala SBT
-```
-libraryDependencies += "org.nervos" % "core" % "0.19"
-```
+
 手动安装  
-如果你想使用最新的 AppChain，编译 AppChain 生成 jar 包，并手动引入。
+如果你想使用最新的 CITA，编译 CITA 生成 jar 包，并手动引入。
 ```
-git clone https://github.com/cryptape/appchainj.git
+git clone https://github.com/cryptape/cita-sdk-java.git
 gradle shadowJar
 ```
 
-如果使用安卓适配版，请使用 Android 分支。
 
-### AppChain 测试网络
-使用 Nervos AppChain 测试网络（推荐）：  
+### CITA 测试网络
+使用 CITA 测试网络（推荐）：  
 http://121.196.200.225:1337  
 
-或者可以部署你自己的 Nervos AppChain：  
-如果需要了解怎么部署 Nervos AppChain 网络，请查阅[怎么在本地部署 Nervos AppChain](https://docs.nervos.org/cita/#/chain/getting_started)。
+或者可以部署你自己的 CITA：  
+如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/cryptape/cita)。
 
 ### 快速教程
 #### 部署智能合约
-与以太坊类似，智能合约是通过发送交易来部署的。Nervos AppChain 交易对象定义在 [Transaction.java](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/core/methods/request/Transaction.java)。
-在 Nervos AppChain 交易中，有三个特殊的参数：
+与以太坊类似，智能合约是通过发送交易来部署的。CITA 交易对象定义在 [Transaction.java](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/core/methods/request/Transaction.java)。
+在 CITA 交易中，有三个特殊的参数：
 - nonce： 随机数或者通过特定的逻辑生成的随机信息，nonce是为了避免重放攻击。
 - quota： 交易执行费用，也就是矿工费，就像以太坊中的 gasPrice * gasLimit。
 - valid_until_block： 超时机制，valid_until_block 可以定义的范围是 (currentHeight, currentHeight + 100]。交易在`valid_until_block`之后会作废。
@@ -211,16 +209,16 @@ long quota = 1000000;
 Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, contractCode);
 ```
 
-用发送者的私钥对交易进行签名然后发送到 Nervos AppChain 网络，代码如下：
+用发送者的私钥对交易进行签名然后发送到 CITA 网络，代码如下：
 ```java
 String rawTx = tx.sign(privateKey);
-AppChainj service = AppChainj.build(new HttpService(ipAddr + ":" + port));
+CITAj service = CITAj.build(new HttpService(ipAddr + ":" + port));
 AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```
-请注意因为 Nervos AppChain 只支持 `sendRawTransaction` 方法而不是 `sendTransaction` ，所以所有发送给 Nervos AppChain 的交易都需要被签名。
+请注意因为 CITA 只支持 `sendRawTransaction` 方法而不是 `sendTransaction` ，所以所有发送给 CITA 的交易都需要被签名。
 
 #### 调用智能合约的函数
-在 Nervos AppChain 中，正如智能合约的部署，智能合约中函数的调用也是通过发送交易来实现的，调用合约函数的交易是通过两个参数构造的：
+在 CITA 中，正如智能合约的部署，智能合约中函数的调用也是通过发送交易来实现的，调用合约函数的交易是通过两个参数构造的：
 - 合约地址： 已部署合约的地址。
 - 函数编码数据： 函数以及入参的 ABI 的编码后数据。
 
@@ -228,7 +226,7 @@ AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```java
 //得到回执和回执中的合约部署地址
 String txHash = result.getSendTransactionResult().getHash();
-TransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send().getTransactionReceipt().get();
+TransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send().getTransactionReceipt();
 String contractAddress = txReceipt.getContractAddress();
 
 //对交易签名并且发送
@@ -236,26 +234,26 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-请在 [TokenTransactionExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenTransactionExample.java) 中查看完整代码。
+请在 [TokenTransactionExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenTransactionExample.java) 中查看完整代码。
 
-### 通过 appchainj 中的 wrapper 与智能合约交互
-以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，appchainj 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 appchainj 生成的 java 类，可以方便对合约进行部署和函数调用。
+### 通过 cita-sdk-java 中的 wrapper 与智能合约交互
+以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，cita-sdk-java 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 cita-sdk-java 生成的 java 类，可以方便对合约进行部署和函数调用。
 
-在 release 页面下载 appchainj 的 jar 包，或者在源项目中运行 `gradle shadowJar` 生成 jar 包，jar包会在 `console/build/libs` 中生成，名字是 `console-version-all.jar`。
+在 release 页面下载 cita-sdk-java 的 jar 包，或者在源项目中运行 `gradle shadowJar` 生成 jar 包，jar包会在 `console/build/libs` 中生成，名字是 `console-version-all.jar`。
 
 solidity 合约转化为 java 类操作如下：
 ```shell
 $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
 ```
-这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `appchainj/tests/src/main/resources` 生成对应的 java 类，命令如下：
+这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `tests/src/main/resources` 生成对应的 java 类，命令如下：
 ```
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p org.nervos.appchain.tests
+java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
 ```
-`Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 Nervos Appchain 中应该使用 [CitaTransactionManager](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/tx/CitaTransactionManager.java) 而不是 TransactionManager。
-请在 [TokenCodegenExample.java](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenCodegenExample.java) 查看完整代码.
+`Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [CitaTransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/CitaTransactionManager.java) 而不是 TransactionManager。
+请在 [TokenCodegenExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenCodegenExample.java) 查看完整代码.
 
-### 通过 AppChainj 中的 Account 与智能合约交互（测试阶段）
-appchainj 还提供了接口 [Account](https://github.com/cryptape/appchainj/blob/master/core/src/main/java/org/nervos/appchain/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
+### 通过 CITAj 中的 Account 与智能合约交互（测试阶段）
+cita-sdk-java 还提供了接口 [Account](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
 
 合约部署示例代码：
 ```java
@@ -271,5 +269,5 @@ public Object callContract(String contractAddress, String funcName, String nonce
 //function is a encapsulation of method including name, argument datatypes, return type and other info.
 public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
-虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 appchainj 通过 Nervos AppChain 提供的 getAbi 接口根据合约地址得到对应的 abi。  
-请在 [TokenAccountExample](https://github.com/cryptape/appchainj/blob/master/tests/src/main/java/org/nervos/appchain/tests/TokenAccountExample.java) 中查看完整代码。
+虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 cita-sdk-java 通过 CITA 提供的 getAbi 接口根据合约地址得到对应的 abi。  
+请在 [TokenAccountExample](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenAccountExample.java) 中查看完整代码。
