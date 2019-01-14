@@ -187,7 +187,7 @@ public class Account {
         }
 
         AppFilter filter = new AppFilter(start, end, contractAddress);
-        /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after appChainj fixed
+        /// FIXME: https://github.com/web3j/web3j/issues/209, patch to this after cita fixed
         filter.addSingleTopic(EventEncoder.encode(event));
         return this.service.appLogFlowable(filter).map(new io.reactivex.functions.Function<Log, Object>() {
             @Override

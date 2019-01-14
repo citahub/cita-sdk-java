@@ -49,7 +49,7 @@ Use CITA test net (recommended):
 http://121.196.200.225:1337 is provided as a test net.
 
 Or build your own CITA net:
-Please find more information in [how to set up client in your local](https://docs.nervos.org/cita/#/en/develop/chain/getting_started).
+Please find more information in [CITA](https://github.com/cryptape/cita).
 
 ### Get started
 
@@ -182,7 +182,7 @@ gradle shadowJar
 http://121.196.200.225:1337  
 
 或者可以部署你自己的 CITA：  
-如果需要了解怎么部署 CITA 网络，请查阅[怎么在本地部署 CITA](https://docs.nervos.org/cita/#/chain/getting_started)。
+如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/cryptape/cita)。
 
 ### 快速教程
 #### 部署智能合约

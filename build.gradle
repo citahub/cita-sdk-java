@@ -172,7 +172,7 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
                     name 'citaj'
                     packaging 'jar'
                     description project.description
-                    url 'https://docs.nervos.org/appchainj'
+                    url 'https://github.com/cryptape/cita-sdk-java.git'
 
                     scm {
                         connection 'scm:git@github.com:cryptape/cita-sdk-java.git'
@@ -216,7 +216,7 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
             licenses = ['Apache-2.0']
             issueTrackerUrl = 'https://github.com/cryptape/cita-sdk-java/issues'
             vcsUrl = 'https://github.com/cryptape/cita-sdk-java.git'
-            websiteUrl = 'https://docs.nervos.org/appchainj'
+            websiteUrl = 'https://github.com/cryptape/cita-sdk-java.git'
             publicDownloadNumbers = true
         }
     }
