@@ -188,9 +188,9 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
 
                     developers {
                         developer {
-                            id 'QingyangKong'
-                            name 'Qingyang Kong'
-                            email 'qingyangkong@cryptape.com'
+                            id 'cryptape developer'
+                            name 'cryptape developer'
+                            email 'op@cryptape.com'
                         }
                     }
                 }
