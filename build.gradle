@@ -46,7 +46,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'com.cryptape.cita'
-    version '0.20.2'
+    version '0.20.3'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
@@ -142,7 +142,7 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
         publications {
             mavenJava(MavenPublication) {
                 groupId 'com.cryptape.cita'
-                version '0.20.2'
+                version '0.20.3'
                 from components.java
 
                 artifact sourcesJar {
