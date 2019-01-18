@@ -46,7 +46,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'com.cryptape.cita'
-    version '0.20.3'
+    version '0.20.3.1'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
@@ -142,7 +142,7 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
         publications {
             mavenJava(MavenPublication) {
                 groupId 'com.cryptape.cita'
-                version '0.20.3'
+                version '0.20.3.1-SNAPSHOT'
                 from components.java
 
                 artifact sourcesJar {
@@ -169,7 +169,7 @@ configure(subprojects.findAll {it.name != 'integration-tests'}) {
                 }
 
                 pom.project {
-                    name 'citaj'
+                    name 'cita-sdk-java'
                     packaging 'jar'
                     description project.description
                     url 'https://github.com/cryptape/cita-sdk-java.git'
