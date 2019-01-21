@@ -1,11 +1,10 @@
-apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 
 description 'cita-sdk-java command line tools'
 
 dependencies {
-    compile project(':codegen'),
-            project(':infura')
+    compile project(':codegen')
     runtime "org.slf4j:slf4j-nop:$slf4jVersion"  // prevent logging of the library to the console
     testCompile project(path: ':crypto', configuration: 'archives'),
             project(path: ':core', configuration: 'archives'),
