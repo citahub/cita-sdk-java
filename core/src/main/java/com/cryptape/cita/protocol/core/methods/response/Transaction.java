@@ -16,17 +16,19 @@ public class Transaction {
     private String blockNumber;
     private String content;
     private String index;
+    private String from;
 
     public Transaction() {
     }
 
     public Transaction(String hash, String blockHash, String blockNumber,
-                        String content, String index) {
+                        String content, String index, String from) {
         this.hash = hash;
         this.blockHash = blockHash;
         this.blockNumber = blockNumber;
         this.content = content;
         this.index = index;
+        this.from = from;
     }
 
     public String getHash() {
@@ -71,6 +73,14 @@ public class Transaction {
 
     public String getIndex() {
         return index;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     public boolean verifySignature(String addr)

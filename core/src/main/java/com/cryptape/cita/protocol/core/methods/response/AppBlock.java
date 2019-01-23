@@ -540,8 +540,8 @@ public class AppBlock extends Response<AppBlock.Block> {
         }
 
         public TransactionObject(String hash, String blockHash, String blockNumber,
-                                 String content, String index) {
-            super(hash, blockHash, blockNumber, content, index);
+                                 String content, String index, String from) {
+            super(hash, blockHash, blockNumber, content, index, from);
         }
 
         @Override
