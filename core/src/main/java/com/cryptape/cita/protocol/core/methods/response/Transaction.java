@@ -123,6 +123,10 @@ public class Transaction {
             return false;
         }
 
+        if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null) {
+            return false;
+        }
+
         return getContent() != null
                 ? getContent().equals(that.getContent()) : that.getContent() == null;
     }
@@ -134,6 +138,7 @@ public class Transaction {
         result = 31 * result + (getBlockNumberRaw() != null ? getBlockNumberRaw().hashCode() : 0);
         result = 31 * result + (getContent() != null ? getContent().hashCode() : 0);
         result = 31 * result + (getIndex() != null ? getIndex().hashCode() : 0);
+        result = 31 * result + (getFrom() != null ? getFrom().hashCode() : 0);
         return result;
     }
 }
