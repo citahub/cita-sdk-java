@@ -215,7 +215,7 @@ public class Transaction {
             utx = Blockchain.UnverifiedTransaction.newBuilder()
                     .setTransaction(Blockchain.Transaction.parseFrom(tx))
                     .setSignature(ByteString.copyFrom(sig))
-                    .setCrypto(Blockchain.Crypto.SECP)
+                    .setCrypto(Blockchain.Crypto.DEFAULT)
                     .build();
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
