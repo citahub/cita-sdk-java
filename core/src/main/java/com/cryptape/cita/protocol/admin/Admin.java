@@ -16,8 +16,8 @@ import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
  */
 public interface Admin extends CITAj {
 
-    static Admin build(CITAjService CITAjService) {
-        return new JsonRpc2_0Admin(CITAjService);
+    static Admin build(CITAjService citajService) {
+        return new JsonRpc2_0Admin(citajService);
     }
 
     public Request<?, PersonalListAccounts> personalListAccounts();

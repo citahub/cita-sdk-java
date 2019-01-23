@@ -172,7 +172,7 @@ public class SolidityFunctionWrapper extends Generator {
 
     private TypeSpec.Builder createClassBuilder(String className, String binary) {
 
-        String javadoc = CODEGEN_WARNING + getWeb3jVersion();
+        String javadoc = CODEGEN_WARNING + getCITAjVersion();
 
         return TypeSpec.classBuilder(className)
                 .addModifiers(Modifier.PUBLIC)
@@ -181,7 +181,7 @@ public class SolidityFunctionWrapper extends Generator {
                 .addField(createBinaryDefinition(binary));
     }
 
-    private String getWeb3jVersion() {
+    private String getCITAjVersion() {
         String version;
 
         try {

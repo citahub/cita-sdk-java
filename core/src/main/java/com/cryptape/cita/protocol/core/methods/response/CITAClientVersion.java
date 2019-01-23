@@ -3,7 +3,7 @@ package com.cryptape.cita.protocol.core.methods.response;
 import com.cryptape.cita.protocol.core.Response;
 
 /**
- * web3_clientVersion.
+ * CITA_clientVersion.
  */
 public class CITAClientVersion extends Response<String> {
 

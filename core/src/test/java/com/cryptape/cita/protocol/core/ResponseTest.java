@@ -79,7 +79,7 @@ public class ResponseTest extends ResponseTester {
     }
 
     @Test
-    public void testWeb3Sha3() throws IOException {
+    public void testCITASha3() throws IOException {
         buildResponse(
                 "{\n"
                         + "  \"id\":64,\n"

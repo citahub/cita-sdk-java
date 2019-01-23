@@ -14,7 +14,7 @@ public class RequestTest extends RequestTester {
     private CITAj citaj;
 
     @Override
-    protected void initWeb3Client(HttpService httpService) {
+    protected void initCITAClient(HttpService httpService) {
         citaj = CITAj.build(httpService);
     }
 

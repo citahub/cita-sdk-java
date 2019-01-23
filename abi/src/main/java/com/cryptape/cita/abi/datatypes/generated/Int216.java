@@ -6,8 +6,7 @@ import com.cryptape.cita.abi.datatypes.Int;
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use org.web3j.codegen.AbiTypesGenerator in the 
- * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use com.cryptape.cita.codegen.AbiTypesGenerator in the
  */
 public class Int216 extends Int {
     public static final Int216 DEFAULT = new Int216(BigInteger.ZERO);

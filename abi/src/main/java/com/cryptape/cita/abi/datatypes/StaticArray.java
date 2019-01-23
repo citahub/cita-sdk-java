@@ -9,7 +9,7 @@ public class StaticArray<T extends Type> extends Array<T> {
 
     /**
      * Warning: increasing this constant will cause more generated StaticArrayN types, see:
-     * org.web3j.codegen.AbiTypesGenerator#generateStaticArrayTypes
+     * com.cryptape.cita.codegen.AbiTypesGenerator#generateStaticArrayTypes
      */
     public static int MAX_SIZE_OF_STATIC_ARRAY = 32;
 
