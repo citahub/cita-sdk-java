@@ -6,3 +6,4 @@ All notable changes to this project will be documented in this file.
 
 * Update Crypto field of protobuf. 
 * Add field from to transaction response.
+
