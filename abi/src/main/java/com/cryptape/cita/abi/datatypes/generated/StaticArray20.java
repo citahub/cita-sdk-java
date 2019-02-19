@@ -7,8 +7,7 @@ import com.cryptape.cita.abi.datatypes.Type;
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use org.web3j.codegen.AbiTypesGenerator in the 
- * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use com.cryptape.cita.codegen.AbiTypesGenerator in the
  */
 public class StaticArray20<T extends Type> extends StaticArray<T> {
     public StaticArray20(List<T> values) {

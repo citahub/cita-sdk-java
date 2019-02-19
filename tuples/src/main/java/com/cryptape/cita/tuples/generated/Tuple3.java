@@ -5,8 +5,7 @@ import com.cryptape.cita.tuples.Tuple;
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use org.web3j.codegen.TupleGenerator in the 
- * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use com.cryptape.cita.codegen.TupleGenerator in the
  */
 public final class Tuple3<T1, T2, T3> implements Tuple {
     private static final int SIZE = 3;

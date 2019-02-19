@@ -3,7 +3,7 @@ syntax = "proto3";
 enum ProofType {
     AuthorityRound = 0;
     Raft = 1;
-    Tendermint = 2;
+    Bft = 2;
 }
 
 message Proof {
@@ -18,9 +18,10 @@ message BlockHeader {
     bytes state_root = 4;
     bytes transactions_root = 5;
     bytes receipts_root = 6;
-    uint64 gas_used = 7;
-    uint64 gas_limit = 8;
+    uint64 quota_used = 7;
+    uint64 quota_limit = 8;
     Proof proof = 9;
+    bytes proposer = 10;
 }
 
 message Status {
@@ -29,19 +30,22 @@ message Status {
 }
 
 message AccountGasLimit {
-    uint64 common_gas_limit = 1;
-    map<string,uint64> specific_gas_limit = 2;
+    uint64 common_quota_limit = 1;
+    map<string,uint64> specific_quota_limit = 2;
 }
 
 message RichStatus {
     bytes hash = 1;
     uint64 height = 2;
     repeated bytes nodes = 3;
+    uint64 interval = 4;
+    uint32 version = 5;
+    repeated bytes validators = 6;
 }
 
 enum Crypto {
-    SECP = 0;
-    SM2 = 1;
+    DEFAULT = 0;
+    RESERVED = 1;
 }
 
 message Transaction {
@@ -65,8 +69,10 @@ message UnverifiedTransaction {
 
 message SignedTransaction {
     UnverifiedTransaction transaction_with_sig = 1;
-    bytes tx_hash = 2;  // SignedTransaction hash
-    bytes signer = 3; //public key
+    // SignedTransaction hash
+    bytes tx_hash = 2;
+    // public key
+    bytes signer = 3;
 }
 
 // data precompile API
@@ -75,10 +81,20 @@ message BlockBody {
     repeated SignedTransaction transactions = 1;
 }
 
+message CompactBlockBody {
+    repeated bytes tx_hashes = 1;
+}
+
 message Block {
     uint32 version = 1;
     BlockHeader header = 2;
     BlockBody body = 3;
+}
+
+message CompactBlock {
+    uint32 version = 1;
+    BlockHeader header = 2;
+    CompactBlockBody body = 3;
 }
 
 message BlockWithProof {
@@ -89,4 +105,16 @@ message BlockWithProof {
 message BlockTxs {
     uint64 height = 1;
     BlockBody body = 3;
+}
+
+message BlackList {
+    // black list of address, the account that sent the transaction does not have enough gas
+    repeated bytes black_list = 1;
+    // clear list of address
+    repeated bytes clear_list = 2;
+}
+
+// State positioning signal
+message StateSignal {
+    uint64 height = 1;
 }

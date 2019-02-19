@@ -53,7 +53,6 @@ public abstract class Filter<T> {
             We want the filter to be resilient against client issues. On numerous occasions
             users have reported socket timeout exceptions when connected over HTTP to Geth and
             Parity clients. For examples, refer to
-            https://github.com/web3j/web3j/issues/144 and
             https://github.com/ethereum/go-ethereum/issues/15243.
 
             Hence we consume errors and log them as errors, allowing our polling for changes to

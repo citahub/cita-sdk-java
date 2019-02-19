@@ -16,17 +16,17 @@ import com.cryptape.cita.protocol.http.HttpService;
 
 public class RequestTest extends RequestTester {
 
-    private Admin web3j;
+    private Admin citaj;
 
     @Override
-    protected void initWeb3Client(HttpService httpService) {
-        web3j = Admin.build(httpService);
+    protected void initCITAClient(HttpService httpService) {
+        citaj = Admin.build(httpService);
     }
 
 
     @Test
     public void testPersonalListAccounts() throws Exception {
-        web3j.personalListAccounts().send();
+        citaj.personalListAccounts().send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"personal_listAccounts\","
                 + "\"params\":[],\"id\":1}");
@@ -34,7 +34,7 @@ public class RequestTest extends RequestTester {
 
     @Test
     public void testPersonalNewAccount() throws Exception {
-        web3j.personalNewAccount("password").send();
+        citaj.personalNewAccount("password").send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"personal_newAccount\","
                 + "\"params\":[\"password\"],\"id\":1}");
@@ -45,7 +45,7 @@ public class RequestTest extends RequestTester {
     //to make this work, I need to refactor Transaction, I will do it in next sprint if necessary.
     @Test
     public void testPersonalSendTransaction() throws Exception {
-        web3j.personalSendTransaction(
+        citaj.personalSendTransaction(
                 new Transaction(
                         "FROM",
                         "1",
@@ -66,7 +66,7 @@ public class RequestTest extends RequestTester {
 
     @Test
     public void testPersonalUnlockAccount() throws Exception {
-        web3j.personalUnlockAccount(
+        citaj.personalUnlockAccount(
                 "0xfc390d8a8ddb591b010fda52f4db4945742c3809", "hunter2", BigInteger.ONE).send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"personal_unlockAccount\","
@@ -76,7 +76,7 @@ public class RequestTest extends RequestTester {
 
     @Test
     public void testPersonalUnlockAccountNoDuration() throws Exception {
-        web3j.personalUnlockAccount("0xfc390d8a8ddb591b010fda52f4db4945742c3809", "hunter2").send();
+        citaj.personalUnlockAccount("0xfc390d8a8ddb591b010fda52f4db4945742c3809", "hunter2").send();
 
         verifyResult("{\"jsonrpc\":\"2.0\",\"method\":\"personal_unlockAccount\","
                 + "\"params\":[\"0xfc390d8a8ddb591b010fda52f4db4945742c3809\",\"hunter2\",null],"

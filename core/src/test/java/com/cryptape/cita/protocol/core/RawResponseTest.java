@@ -69,14 +69,14 @@ public class RawResponseTest extends ResponseTester {
 
     @Test
     public void testRawResponseEnabled() {
-        configureWeb3Service(true);
+        configureCITAService(true);
         final CITAClientVersion citaClientVersion = deserialiseCitaClientVersionResponse();
         assertThat(citaClientVersion.getRawResponse(), is(RAW_RESPONSE));
     }
 
     @Test
     public void testLargeRawResponseEnabled() {
-        configureWeb3Service(true);
+        configureCITAService(true);
 
         buildResponse(LARGE_RAW_RESPONSE);
 
@@ -86,7 +86,7 @@ public class RawResponseTest extends ResponseTester {
 
     @Test
     public void testRawResponseDisabled() {
-        configureWeb3Service(false);
+        configureCITAService(false);
         final CITAClientVersion citaClientVersion = deserialiseCitaClientVersionResponse();
         assertThat(citaClientVersion.getRawResponse(), nullValue());
     }

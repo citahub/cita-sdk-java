@@ -8,8 +8,7 @@ import com.cryptape.cita.abi.datatypes.Utf8String;
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use org.web3j.codegen.AbiTypesMapperGenerator in the 
- * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use com.cryptape.cita.codegen.AbiTypesMapperGenerator in the
  */
 public final class AbiTypes {
     private AbiTypes() {

@@ -6,8 +6,7 @@ import com.cryptape.cita.abi.datatypes.Uint;
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use org.web3j.codegen.AbiTypesGenerator in the 
- * <a href="https://github.com/web3j/web3j/tree/master/codegen">codegen module</a> to update.
+ * <p>Please use com.cryptape.cita.codegen.AbiTypesGenerator in the
  */
 public class Uint104 extends Uint {
     public static final Uint104 DEFAULT = new Uint104(BigInteger.ZERO);

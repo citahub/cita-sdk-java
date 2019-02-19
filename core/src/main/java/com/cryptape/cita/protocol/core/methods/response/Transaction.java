@@ -16,17 +16,19 @@ public class Transaction {
     private String blockNumber;
     private String content;
     private String index;
+    private String from;
 
     public Transaction() {
     }
 
     public Transaction(String hash, String blockHash, String blockNumber,
-                        String content, String index) {
+                        String content, String index, String from) {
         this.hash = hash;
         this.blockHash = blockHash;
         this.blockNumber = blockNumber;
         this.content = content;
         this.index = index;
+        this.from = from;
     }
 
     public String getHash() {
@@ -73,6 +75,14 @@ public class Transaction {
         return index;
     }
 
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
     public boolean verifySignature(String addr)
             throws InvalidProtocolBufferException, SignatureException {
         return TransactionUtil.verifySignature(addr, content);
@@ -113,6 +123,10 @@ public class Transaction {
             return false;
         }
 
+        if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null) {
+            return false;
+        }
+
         return getContent() != null
                 ? getContent().equals(that.getContent()) : that.getContent() == null;
     }
@@ -124,6 +138,7 @@ public class Transaction {
         result = 31 * result + (getBlockNumberRaw() != null ? getBlockNumberRaw().hashCode() : 0);
         result = 31 * result + (getContent() != null ? getContent().hashCode() : 0);
         result = 31 * result + (getIndex() != null ? getIndex().hashCode() : 0);
+        result = 31 * result + (getFrom() != null ? getFrom().hashCode() : 0);
         return result;
     }
 }

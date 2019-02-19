@@ -20,7 +20,7 @@ import static com.cryptape.cita.protocol.http.HttpService.JSON_MEDIA_TYPE;
  */
 public abstract class ResponseTester {
 
-    private HttpService web3jService;
+    private HttpService citajService;
     private OkHttpClient okHttpClient;
     private ResponseInterceptor responseInterceptor;
 
@@ -30,21 +30,21 @@ public abstract class ResponseTester {
         okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(responseInterceptor)
                 .build();
-        configureWeb3Service(false);
+        configureCITAService(false);
     }
 
     protected void buildResponse(String data) {
         responseInterceptor.setJsonResponse(data);
     }
 
-    protected void configureWeb3Service(boolean includeRawResponses) {
-        web3jService = new HttpService(okHttpClient, includeRawResponses);
+    protected void configureCITAService(boolean includeRawResponses) {
+        citajService = new HttpService(okHttpClient, includeRawResponses);
     }
 
     protected <T extends Response> T deserialiseResponse(Class<T> type) {
         T response = null;
         try {
-            response = web3jService.send(new Request(), type);
+            response = citajService.send(new Request(), type);
         } catch (IOException e) {
             fail(e.getMessage());
         }
