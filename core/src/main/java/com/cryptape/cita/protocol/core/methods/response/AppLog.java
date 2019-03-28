@@ -1,12 +1,24 @@
 package com.cryptape.cita.protocol.core.methods.response;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import com.cryptape.cita.protocol.ObjectMapperFactory;
 import com.cryptape.cita.protocol.core.Response;
 
 public class AppLog extends Response<List<AppLog.LogResult>> {
 
     @Override
+    @JsonDeserialize(using = LogResultDeserialiser.class)
     public void setResult(List<LogResult> result) {
         super.setResult(result);
     }
@@ -77,4 +89,36 @@ public class AppLog extends Response<List<AppLog.LogResult>> {
         }
     }
 
+
+    public static class LogResultDeserialiser
+            extends JsonDeserializer<List<LogResult>> {
+
+        private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
+
+        @Override
+        public List<LogResult> deserialize(
+                JsonParser jsonParser,
+                DeserializationContext deserializationContext) throws IOException {
+
+            List<LogResult> logResults = new ArrayList<>();
+            JsonToken nextToken = jsonParser.nextToken();
+
+            if (nextToken == JsonToken.START_OBJECT) {
+                Iterator<LogObject> logObjectIterator =
+                        objectReader.readValues(jsonParser, LogObject.class);
+                while (logObjectIterator.hasNext()) {
+                    logResults.add(logObjectIterator.next());
+                }
+            } else if (nextToken == JsonToken.VALUE_STRING) {
+                jsonParser.getValueAsString();
+
+                Iterator<Hash> transactionHashIterator =
+                        objectReader.readValues(jsonParser, Hash.class);
+                while (transactionHashIterator.hasNext()) {
+                    logResults.add(transactionHashIterator.next());
+                }
+            }
+            return logResults;
+        }
+    }
 }

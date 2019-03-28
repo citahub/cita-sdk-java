@@ -56,7 +56,7 @@ public class InterfaceTest {
 
     public static void main(String[] args) throws Exception {
 
-        testGetBlockByNumber(BigInteger.valueOf(0));
+        testGetBlockByNumber(BigInteger.valueOf(1));
 
         testGetBalance();
 
