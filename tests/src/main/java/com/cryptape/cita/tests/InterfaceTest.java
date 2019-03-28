@@ -1,15 +1,14 @@
 package com.cryptape.cita.tests;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 
 import com.cryptape.cita.abi.FunctionEncoder;
 import com.cryptape.cita.abi.TypeReference;
 import com.cryptape.cita.abi.datatypes.Address;
 import com.cryptape.cita.abi.datatypes.Function;
 import com.cryptape.cita.abi.datatypes.Uint;
-import com.cryptape.cita.abi.datatypes.generated.Uint256;
 import com.cryptape.cita.crypto.Credentials;
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.core.DefaultBlockParameter;
@@ -30,6 +29,7 @@ import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
 import com.cryptape.cita.protocol.core.methods.response.NetPeerCount;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.google.gson.Gson;
 
 public class InterfaceTest {
 
@@ -39,7 +39,6 @@ public class InterfaceTest {
     private static String value;
     private static String privateKey;
     private static long quotaToDeploy;
-    private static String validTransactionHash;
     private static Transaction.CryptoTx cryptoTx;
 
 
@@ -57,47 +56,24 @@ public class InterfaceTest {
 
     public static void main(String[] args) throws Exception {
 
+        testGetBlockByNumber(BigInteger.valueOf(0));
 
-        System.out.println("======================================");
-        System.out.println("***  0.  getbalance             ***");
         testGetBalance();
 
-        System.out.println("======================================");
-        System.out.println("***  1.  getMetaData            ***");
         testMetaData();
 
-        System.out.println("======================================");
-        System.out.println("***  2.  net_peerCount          ***");
         testNetPeerCount();
 
-        System.out.println("======================================");
-        System.out.println("***  3.  blockNumber          ***");
         BigInteger validBlockNumber = testBlockNumber();
 
-        System.out.println(validBlockNumber);
-        System.out.println(validBlockNumber.toString(16));
-        System.out.println(DefaultBlockParameter.valueOf(validBlockNumber).getValue());
+        System.out.println(validBlockNumber.toString(10));
 
-        System.out.println("======================================");
-        System.out.println("***  4.  getBlockByNumber     ***");
-        boolean returnFullTransactions = true;
         String blockByNumberHash = testAppGetBlockByNumber(
-                validBlockNumber, returnFullTransactions);
-        String blockHash = "";
-        if (blockByNumberHash != null) {
-            blockHash = blockByNumberHash;
-        } else {
-            System.out.println("Failed to get block by number: " + validBlockNumber);
-            System.exit(1);
-        }
+                validBlockNumber, true);
 
-        System.out.println("======================================");
-        System.out.println("***  5.  getBlockByHash       ***");
-        testAppGetBlockByHash(blockHash, returnFullTransactions);
+        testAppGetBlockByHash(blockByNumberHash, true);
 
         //because unsigned transaction is not supported in cita, there is no method sendTransaction.
-        System.out.println("======================================");
-        System.out.println("***  6.  sendRawTransaction      ***");
         String code = "6060604052341561000f57600080fd5b600160a060020"
                 + "a033316600090815260208190526040902061271090556101"
                 + "df8061003b6000396000f3006060604052600436106100565"
@@ -127,33 +103,20 @@ public class InterfaceTest {
         Transaction rtx = Transaction.createContractTransaction(
                 nonce, quotaToDeploy, validUtil.longValue(),
                 version, chainId, value, code);
-        String signedTx = rtx.sign(privateKey, cryptoTx, false);
-        String optionTxHash = testAppSendRawTransaction(signedTx);
-
-        if (optionTxHash != null) {
-            validTransactionHash = optionTxHash;
-        } else {
-            System.out.println("Failed to get deployment tx hash, maybe it failed to be validated");
-            System.exit(1);
-        }
+        String signedTransaction = rtx.sign(privateKey, cryptoTx, false);
+        String transactionHash = testAppSendRawTransaction(signedTransaction);
 
         System.out.println("waiting for tx into chain ...");
         Thread.sleep(8000);
 
-        System.out.println("======================================");
-        System.out.println("***  7.  getTransactionByHash  ***");
-        testAppGetTransactionByHash(validTransactionHash);
+        testAppGetTransactionByHash(transactionHash);
 
-        System.out.println("======================================");
-        System.out.println("***  8.  getTransactionCount   ***");
         Credentials credentials = Credentials.create(privateKey);
         String validAccount = credentials.getAddress();
         testAppGetTransactionCount(validAccount, DefaultBlockParameterName.PENDING);
 
-        System.out.println("======================================");
-        System.out.println("***  9.  getTransactionReceipt ***");
         String validContractAddress = "";
-        String contractAddr = testAppGetTransactionReceipt(validTransactionHash);
+        String contractAddr = testAppGetTransactionReceipt(transactionHash);
         if (contractAddr != null) {
             validContractAddress = contractAddr;
         } else {
@@ -161,26 +124,26 @@ public class InterfaceTest {
             System.exit(1);
         }
 
-        System.out.println("======================================");
-        System.out.println("***  10.  getCode               ***");
         testAppGetCode(validContractAddress, DefaultBlockParameterName.PENDING);
 
-        System.out.println("======================================");
-        System.out.println("***  11. appCall                  ***");
-        String fromAddr = Credentials.create(privateKey).getAddress();
+        String fromAddress = Credentials.create(privateKey).getAddress();
         Function getBalanceFunc = new Function(
                 "getBalance",
-                Arrays.asList(new Address(fromAddr)),
+                Arrays.asList(new Address(fromAddress)),
                 Arrays.asList(new TypeReference<Uint>() {
                 })
         );
         String funcCallData = FunctionEncoder.encode(getBalanceFunc);
 
-        testAppCall(fromAddr, validContractAddress, funcCallData, DefaultBlockParameterName.PENDING);
+        testAppCall(fromAddress, validContractAddress, funcCallData, DefaultBlockParameterName.PENDING);
     }
 
 
-    //0.  getBalance
+    private static void testGetBlockByNumber(BigInteger number) throws IOException {
+        AppBlock.Block block = service.appGetBlockByNumber(DefaultBlockParameter.valueOf(number), true).send().getBlock();
+        System.out.println("block " + number.toString() + " is: " + new Gson().toJson(block));
+    }
+
     private static void testGetBalance() throws Exception {
         Credentials c = Credentials.create(privateKey);
         String addr = c.getAddress();
@@ -190,54 +153,20 @@ public class InterfaceTest {
             System.out.println("the result is null");
         } else {
             BigInteger balance = appGetbalance.getBalance();
-            System.out.println("Balance for addr " + addr + "is " + balance);
+            System.out.println("Balance for address " + addr + "is " + balance);
         }
     }
 
-    //1.  getMetaData
     private static void testMetaData() throws Exception {
         AppMetaData appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
-        if (appMetaData == null) {
-            System.out.println("the result is null");
-        } else {
-            System.out.println("Version: "
-                    + appMetaData.getAppMetaDataResult().getVersion());
-            version = appMetaData.getAppMetaDataResult().getVersion();
-            System.out.println("TokenName: "
-                    + appMetaData.getAppMetaDataResult().getTokenName());
-            System.out.println("TokenSymbol: "
-                    + appMetaData.getAppMetaDataResult().getTokenSymbol());
-            System.out.println("TokenAvator: "
-                    + appMetaData.getAppMetaDataResult().getTokenAvatar());
-            System.out.println("ChainName: "
-                    + appMetaData.getAppMetaDataResult().getChainName());
-            System.out.println("Genesis TS: "
-                    + appMetaData.getAppMetaDataResult().getGenesisTimestamp());
-            System.out.println("Operator: "
-                    + appMetaData.getAppMetaDataResult().getOperator());
-            System.out.println("Website: "
-                    + appMetaData.getAppMetaDataResult().getWebsite());
-            System.out.println("Block Interval: "
-                    + appMetaData.getAppMetaDataResult().getBlockInterval());
-            System.out.println("Chain Id: "
-                    + appMetaData.getAppMetaDataResult().getChainId());
-            System.out.println("Validators: ");
-            Arrays.asList(appMetaData.getAppMetaDataResult().getValidators())
-                    .forEach(x -> System.out.println("Address: " + x.toString()));
-            System.out.println("Economical Model: "
-                    + appMetaData.getAppMetaDataResult().getEconomicalModel());
-            System.out.println("Chain Id V1: "
-                    + appMetaData.getAppMetaDataResult().getChainIdV1());
-        }
+        System.out.println("AppMetaData: " + new Gson().toJson(appMetaData));
     }
 
-    //1.  net_peerCount
     private static void testNetPeerCount() throws Exception {
         NetPeerCount netPeerCount = service.netPeerCount().send();
         System.out.println("net_peerCount:" + netPeerCount.getQuantity());
     }
 
-    //2.  blockNumber
     private static BigInteger testBlockNumber() throws Exception {
 
         AppBlockNumber appBlockNumber = service.appBlockNumber().send();
@@ -253,7 +182,6 @@ public class InterfaceTest {
         return validBlockNumber;
     }
 
-    //3.  getBlockByNumber
     private static String testAppGetBlockByNumber(
             BigInteger validBlockNumber, boolean isfullTranobj)
             throws Exception {
@@ -265,12 +193,11 @@ public class InterfaceTest {
             return null;
         } else {
             AppBlock.Block block = appBlock.getBlock();
-            printBlock(block);
+            System.out.println("Block: " + new Gson().toJson(block));
             return block.getHash();
         }
     }
 
-    //4.  cita_getBlockByHash
     private static void testAppGetBlockByHash(
             String validBlockHash, boolean isfullTran)
             throws Exception {
@@ -281,12 +208,11 @@ public class InterfaceTest {
             System.out.println("the result is null");
         } else {
             AppBlock.Block block = appBlock.getBlock();
-            printBlock(block);
+            System.out.println("Block: " + new Gson().toJson(block));
         }
     }
 
 
-    //5.  sendRawTransaction
     private static String testAppSendRawTransaction(
             String rawData) throws Exception {
         AppSendTransaction appSendTx = service
@@ -305,7 +231,6 @@ public class InterfaceTest {
     }
 
 
-    //6.  getTransactionByHash
     private static void testAppGetTransactionByHash(
             String validTransactionHash) throws Exception {
         AppTransaction appTransaction = service.appGetTransactionByHash(
@@ -316,16 +241,11 @@ public class InterfaceTest {
         } else {
             com.cryptape.cita.protocol.core.methods.response.Transaction transaction
                     = appTransaction.getTransaction();
-            System.out.println("hash(Transaction):" + transaction.getHash());
-            System.out.println("content:" + transaction.getContent());
-            System.out.println("blockNumber(dec):" + transaction.getBlockNumber());
-            System.out.println("blockHash:" + transaction.getBlockHash());
-            System.out.println("index:" + transaction.getIndex());
+            System.out.println("Transaction: " + new Gson().toJson(transaction));
         }
     }
 
 
-    //7.  getTransactionCount
     private static void testAppGetTransactionCount(
             String validAccount, DefaultBlockParameter param) throws Exception {
         AppGetTransactionCount appGetTransactionCount = service.appGetTransactionCount(
@@ -339,7 +259,6 @@ public class InterfaceTest {
         }
     }
 
-    //8.  getTransactionReceipt
     private static String testAppGetTransactionReceipt(
             String validTransactionHash) throws Exception {
         AppGetTransactionReceipt appGetTransactionReceipt = service.appGetTransactionReceipt(
@@ -376,7 +295,6 @@ public class InterfaceTest {
         }
     }
 
-    //9.  eth_getCode
     private static void testAppGetCode(
             String validContractAddress, DefaultBlockParameter param)
             throws Exception {
@@ -386,71 +304,19 @@ public class InterfaceTest {
         if (appGetCode.isEmpty()) {
             System.out.println("the result is null");
         } else {
-            System.out.println("contractcode:" + appGetCode.getCode());
+            System.out.println("contract code:" + appGetCode.getCode());
         }
     }
 
 
-    public Function totalSupply() {
-        return new Function(
-                "get",
-                Collections.emptyList(),
-                Collections.singletonList(new TypeReference<Uint256>() {
-                }));
-    }
-
-    //10.  call
     private static void testAppCall(
-            String fromaddress, String contractAddress, String encodedFunction,
+            String fromAddress, String contractAddress, String encodedFunction,
             DefaultBlockParameter param) throws Exception {
         AppCall appCall = service.appCall(
-                new Call(fromaddress, contractAddress, encodedFunction),
+                new Call(fromAddress, contractAddress, encodedFunction),
                 param).send();
 
         System.out.println("call result:" + appCall.getValue());
     }
 
-    private static void printBlock(AppBlock.Block block) {
-        System.out.println("hash(blockhash):"
-                + block.getHash());
-        System.out.println("version:"
-                + block.getVersion());
-        System.out.println("header.timestamp:"
-                + block.getHeader().getTimestamp());
-        System.out.println("header.prevHash:"
-                + block.getHeader().getPrevHash());
-        System.out.println("header.number(hex):"
-                + block.getHeader().getNumber());
-        System.out.println("header.number(dec):"
-                + block.getHeader().getNumberDec());
-        System.out.println("header.stateRoot:"
-                + block.getHeader().getStateRoot());
-        System.out.println("header.transactionsRoot:"
-                + block.getHeader().getTransactionsRoot());
-        System.out.println("header.receiptsRoot:"
-                + block.getHeader().getReceiptsRoot());
-        System.out.println("header.gasUsed:"
-                + block.getHeader().getGasUsed());
-        System.out.println("header.proof.proposal:"
-                + block.getHeader().getProof().getTendermint().getProposal());
-        System.out.println("header.proof.height:"
-                + block.getHeader().getProof().getTendermint().getHeight());
-        System.out.println("header.proof.round:"
-                + block.getHeader().getProof().getTendermint().getRound());
-
-        if (!block.getBody().getTransactions().isEmpty()) {
-            System.out.println("number of transaction:"
-                    + block.getBody().getTransactions().size());
-
-            for (int i = 0; i < block.getBody().getTransactions().size(); i++) {
-                com.cryptape.cita.protocol.core.methods.response.Transaction tx =
-                        (com.cryptape.cita.protocol.core.methods.response.Transaction)
-                                block.getBody().getTransactions().get(i).get();
-                System.out.println("body.transactions.tranhash:" + tx.getHash());
-                System.out.println("body.transactions.content:" + tx.getContent());
-            }
-        } else {
-            System.out.println("the block transactions is null");
-        }
-    }
 }

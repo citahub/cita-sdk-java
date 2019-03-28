@@ -19,8 +19,6 @@ public class Request<S, T extends Response> {
 
     private CITAjService CITAjService;
 
-    // Unfortunately require an instance of the type too, see
-    // http://stackoverflow.com/a/3437930/3211687
     private Class<T> responseType;
 
     public Request() {
