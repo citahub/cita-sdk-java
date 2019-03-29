@@ -1,5 +1,12 @@
 All notable changes to this project will be documented in this file.
 
+# [v0.22.1](https://github.com/cryptape/cita-sdk-java/compare/v0.22...v0.22.1) (2019-03-29)
+
+### Feature
+
+* update RPC request cases
+* fix block response parse bug
+
 # [v0.22](https://github.com/cryptape/cita-sdk-java/compare/v0.21...v0.22) (2019-03-28)
 
 ### BREAKING CHANGES

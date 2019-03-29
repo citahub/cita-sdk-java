@@ -6,7 +6,7 @@ import com.cryptape.cita.protocol.core.Response;
 import com.cryptape.cita.utils.Numeric;
 
 /**
- * eth_getTransactionCount.
+ * app_getTransactionCount.
  */
 public class AppGetTransactionCount extends Response<String> {
     public boolean isEmpty() {

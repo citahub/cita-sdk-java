@@ -15,18 +15,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.cryptape.cita.protocol.ObjectMapperFactory;
 import com.cryptape.cita.protocol.core.Response;
 
-/**
- * Log object returned by:
- * <ul>
- * <li>getFilterChanges</li>
- * <li>getFilterLogs</li>
- * <li>getLogs</li>
- * </ul>
- *
- * <p>See
- * <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getfilterchanges">docs</a>
- * for further details.</p>
- */
 public class AppLog extends Response<List<AppLog.LogResult>> {
 
     @Override

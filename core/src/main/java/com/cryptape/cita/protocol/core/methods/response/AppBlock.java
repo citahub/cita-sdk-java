@@ -1,26 +1,13 @@
 package com.cryptape.cita.protocol.core.methods.response;
 
-import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import com.cryptape.cita.protocol.core.Response;
 import com.cryptape.cita.utils.Numeric;
 
-
 public class AppBlock extends Response<AppBlock.Block> {
 
-    @Override
-    @JsonDeserialize(using = AppBlock.ResponseDeserialiser.class)
     public void setResult(Block result) {
         super.setResult(result);
     }
@@ -550,99 +537,4 @@ public class AppBlock extends Response<AppBlock.Block> {
         }
     }
 
-    public static class ResponseDeserialiser extends JsonDeserializer<Block> {
-        //block meta
-        String blockVersion;
-        String blockHash;
-
-        //block header
-        Long timeStamp;
-        String prevHash;
-        String number;
-        String stateRoot;
-        String transactionsRoot;
-        String receiptsRoot;
-        String quotaUsed;
-
-        //proof tendermint
-        String proposer;
-        String proposal;
-        String height;
-        String round;
-
-        @Override
-        public Block deserialize(
-                JsonParser jsonParser,
-                DeserializationContext deserializationContext) throws IOException {
-            if (jsonParser.getCurrentToken() != JsonToken.VALUE_NULL) {
-                JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-                //block meta
-                blockVersion = node.get("version").asText();
-                blockHash = node.get("hash").asText();
-
-                //block header
-                JsonNode headerNode = node.get("header");
-                timeStamp = headerNode.get("timestamp").asLong();
-                prevHash = headerNode.get("prevHash").asText();
-                number = headerNode.get("number").asText();
-                stateRoot = headerNode.get("stateRoot").asText();
-                transactionsRoot = headerNode.get("transactionsRoot").asText();
-                receiptsRoot = headerNode.get("receiptsRoot").asText();
-
-                //pre 0.20 gasUsed. 0.20 quotaUsed
-                if (headerNode.get("gasUsed") != null) {
-                    quotaUsed = headerNode.get("gasUsed").asText();
-                } else {
-                    quotaUsed = headerNode.get("quotaUsed").asText();
-                }
-
-                proposer = headerNode.get("proposer").asText();
-
-                //proof tendermint
-                JsonNode proofNode = node.get("header").get("proof").get("Bft");
-                proposal = proofNode.get("proposal").asText();
-                height = proofNode.get("height").asText();
-                round = proofNode.get("round").asText();
-
-                //proof tendermint commits
-                List<TendermintCommit> tendermintCommits = new ArrayList<>();
-                JsonNode commitsNode = node.get("header")
-                        .get("proof").get("Bft").get("commits");
-                Iterator<String> commitsAddress = commitsNode.fieldNames();
-                while (commitsAddress.hasNext()) {
-                    String commitAddress = commitsAddress.next();
-                    String commit = commitsNode.get(commitAddress).asText();
-                    tendermintCommits.add(new TendermintCommit(commitAddress, commit));
-                }
-
-                //body transactions
-                List<TransactionObject> transactionObjs = new ArrayList<TransactionObject>();
-                JsonNode transactionNode = node.get("body").get("transactions");
-                Iterator<JsonNode> txNodes = transactionNode.elements();
-                while (txNodes.hasNext()) {
-                    JsonNode txNode = txNodes.next();
-                    TransactionObject txToAdd = new TransactionObject();
-                    if (txNode.get("hash") == null && txNode.get("content") == null) {
-                        txToAdd.setHash(txNode.asText());
-                    } else {
-                        txToAdd.setHash(txNode.get("hash").asText());
-                        txToAdd.setContent(txNode.get("content").asText());
-                    }
-                    transactionObjs.add(txToAdd);
-                }
-
-                Tendermint tendermint = new Tendermint(
-                        proposal, height, round,
-                        tendermintCommits.toArray(
-                                new TendermintCommit[tendermintCommits.size()]));
-
-                Header header = new Header(timeStamp, prevHash, number, stateRoot,
-                        transactionsRoot, receiptsRoot, quotaUsed, new Proof(tendermint), proposer);
-                Body body = new Body(transactionObjs);
-                return new Block(blockVersion, blockHash, header, body);
-            } else {
-                return null;  // null is wrapped by Optional in above getter
-            }
-        }
-    }
 }
