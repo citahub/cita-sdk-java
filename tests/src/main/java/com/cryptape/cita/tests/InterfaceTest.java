@@ -44,7 +44,7 @@ public class InterfaceTest {
 
     static {
         Config conf = new Config();
-        conf.buildService(false);
+        conf.buildService(true);
         service = conf.service;
         privateKey = conf.primaryPrivKey;
         quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
@@ -56,7 +56,7 @@ public class InterfaceTest {
 
     public static void main(String[] args) throws Exception {
 
-        testGetBlockByNumber(BigInteger.valueOf(1));
+        testGetBlockByNumber(BigInteger.valueOf(47));
 
         testGetBalance();
 
@@ -140,7 +140,7 @@ public class InterfaceTest {
 
 
     private static void testGetBlockByNumber(BigInteger number) throws IOException {
-        AppBlock.Block block = service.appGetBlockByNumber(DefaultBlockParameter.valueOf(number), true).send().getBlock();
+        AppBlock.Block block = service.appGetBlockByNumber(DefaultBlockParameter.valueOf(number), false).send().getBlock();
         System.out.println("block " + number.toString() + " is: " + new Gson().toJson(block));
     }
 

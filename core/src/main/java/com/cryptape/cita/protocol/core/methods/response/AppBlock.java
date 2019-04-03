@@ -1,10 +1,22 @@
 package com.cryptape.cita.protocol.core.methods.response;
 
-import java.math.BigInteger;
-import java.util.List;
-
+import com.cryptape.cita.protocol.ObjectMapperFactory;
 import com.cryptape.cita.protocol.core.Response;
 import com.cryptape.cita.utils.Numeric;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class AppBlock extends Response<AppBlock.Block> {
 
@@ -21,187 +33,42 @@ public class AppBlock extends Response<AppBlock.Block> {
     }
 
     public static class TendermintCommit {
-        private String commitAddress;
-        private String commit;
+        public String commitAddress;
+        public String commit;
 
         public TendermintCommit() {}
 
-        public TendermintCommit(String commitAddress, String commit) {
-            this.commitAddress = commitAddress;
-            this.commit = commit;
-        }
-
-        public String getCommitAddress() {
-            return this.commitAddress;
-        }
-
-        public void setCommitAddress(String commitAddress) {
-            this.commitAddress = commitAddress;
-        }
-
-        public String getCommit() {
-            return this.commit;
-        }
-
-        public void setCommit(String commit) {
-            this.commit = commit;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof TendermintCommit)) {
-                return false;
-            }
-
-            TendermintCommit commit = (TendermintCommit) o;
-
-            if (getCommitAddress() != null
-                    ? !getCommitAddress().equals(commit.getCommitAddress())
-                    : commit.getCommitAddress() != null) {
-                return false;
-            }
-            return (getCommit() != null
-                    ? getCommit().equals(commit.getCommit()) : commit.getCommit() == null);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getCommitAddress() != null ? getCommitAddress().hashCode() : 0;
-            result = 31 * result + (getCommit() != null ? getCommit().hashCode() : 0);
-            return result;
-        }
     }
 
     public static class Tendermint {
-        private String proposal;
-        private String height;
-        private String round;
-        private TendermintCommit[] tendermintCommits;
+        public String proposal;
+        public String height;
+        public String round;
+        public TendermintCommit[] tendermintCommits;
 
         public Tendermint() {}
 
-        public Tendermint(String proposal, String height,
-                   String round, TendermintCommit[] tendermintCommits) {
-            this.proposal = proposal;
-            this.height = height;
-            this.round = round;
-            this.tendermintCommits = tendermintCommits;
-        }
+    }
 
-        public String getProposal() {
-            return proposal;
-        }
+    public static class Bft {
 
-        public void setProposal(String proposal) {
-            this.proposal = proposal;
-        }
+        public String proposal;
+        public int height;
+        public int round;
+        public Map<String, String> commits;
 
-        public String getHeight() {
-            return height;
-        }
+        public Bft() {}
 
-        public void setHeight(String height) {
-            this.height = height;
-        }
-
-        public String getRound() {
-            return round;
-        }
-
-        public void setRound(String round) {
-            this.round = round;
-        }
-
-        public TendermintCommit[] getTendermintCommits() {
-            return this.tendermintCommits;
-        }
-
-        public void setTendermintCommits(
-                TendermintCommit[] tendermintCommits) {
-            this.tendermintCommits = tendermintCommits;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-
-            if (!(o instanceof Tendermint)) {
-                return false;
-            }
-
-            Tendermint tendermint = (Tendermint) o;
-
-            if (getHeight() != null
-                    ? !getHeight().equals(tendermint.getHeight())
-                    : tendermint.getHeight() != null) {
-                return false;
-            }
-
-            if (getProposal() != null
-                    ? !getProposal().equals(tendermint.getProposal())
-                    : tendermint.getProposal() != null) {
-                return false;
-            }
-
-            return (getRound() != null
-                    ? getRound().equals(tendermint.getRound())
-                    : tendermint.getRound() == null);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getProposal() != null ? getProposal().hashCode() : 0;
-            result = 31 * result + (getHeight() != null ? getHeight().hashCode() : 0);
-            result = 31 * result + (getRound() != null ? getRound().hashCode() : 0);
-            return result;
-        }
     }
 
 
     public static class Proof {
-        private Tendermint tendermint;
+        public Tendermint tendermint;
+        @JsonProperty("Bft")
+        public Bft bft;
 
-        public Proof() {
-        }
+        public Proof() {}
 
-        public Proof(Tendermint tendermint) {
-            this.tendermint = tendermint;
-        }
-
-        public Tendermint getTendermint() {
-            return this.tendermint;
-        }
-
-        public void setTendermint(Tendermint tendermint) {
-            this.tendermint = tendermint;
-        }
-
-        @Override
-        public int hashCode() {
-            return getTendermint() != null
-                    ? getTendermint().hashCode() : 0;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Proof)) {
-                return false;
-            }
-
-            Proof proof = (Proof) o;
-
-            return (getTendermint() != null
-                    ? getTendermint().equals(proof.getTendermint())
-                    : proof.getTendermint() == null);
-        }
     }
 
 
@@ -318,78 +185,6 @@ public class AppBlock extends Response<AppBlock.Block> {
             this.proposer = proposer;
         }
 
-        @Override
-        public int hashCode() {
-            int result = 0;
-            result = 31 * result + (getPrevHash() != null
-                    ? getPrevHash().hashCode() : 0);
-            result = 31 * result + (getNumber() != null
-                    ? getNumber().hashCode() : 0);
-            result = 31 * result + (getStateRoot() != null
-                    ? getStateRoot().hashCode() : 0);
-            result = 31 * result + (getTransactionsRoot() != null
-                    ? getTransactionsRoot().hashCode() : 0);
-            result = 31 * result + (getReceiptsRoot() != null
-                    ? getReceiptsRoot().hashCode() : 0);
-            result = 31 * result + (getGasUsed() != null
-                    ? getGasUsed().hashCode() : 0);
-            result = 31 * result + (getProof() != null
-                    ? getProof().hashCode() : 0);
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Header)) {
-                return false;
-            }
-
-            Header header = (Header) o;
-
-            if (getTimestamp() != null
-                    ? !getTimestamp().equals(header.getTimestamp())
-                    : header.getTimestamp() != null) {
-                return false;
-            }
-            if (getPrevHash() != null
-                    ? !getPrevHash().equals(header.getPrevHash())
-                    : header.getPrevHash() != null) {
-                return false;
-            }
-            if (getNumber() != null
-                    ? !getNumber().equals(header.getNumber()) : header.getNumber() != null) {
-                return false;
-            }
-            if (getStateRoot() != null
-                    ? !getStateRoot().equals(header.getStateRoot())
-                    : header.getStateRoot() != null) {
-                return false;
-            }
-            if (getTransactionsRoot() != null
-                    ? !getTransactionsRoot().equals(header.getTransactionsRoot())
-                    : header.getTransactionsRoot() != null) {
-                return false;
-            }
-            if (getReceiptsRoot() != null
-                    ? !getReceiptsRoot().equals(header.getReceiptsRoot())
-                    : header.getReceiptsRoot() != null) {
-                return false;
-            }
-            if (getGasUsed() != null
-                    ? !getGasUsed().equals(header.getGasUsed()) : header.getGasUsed() != null) {
-                return false;
-            }
-            if (getReceiptsRoot() != null
-                    ? !getReceiptsRoot().equals(header.getReceiptsRoot())
-                    : header.getReceiptsRoot() != null) {
-                return false;
-            }
-            return (getProof() != null
-                    ? getProof().equals(header.getProof()) : header.getProof() == null);
-        }
     }
 
     public static class Body {
@@ -406,30 +201,11 @@ public class AppBlock extends Response<AppBlock.Block> {
             return transactions;
         }
 
+        @JsonDeserialize(using = TransactionResultDeserializer.class)
         public void setTransactions(List<TransactionObject> transactions) {
             this.transactions = transactions;
         }
 
-        @Override
-        public int hashCode() {
-            int result = getTransactions() != null ? getTransactions().hashCode() : 0;
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Body)) {
-                return false;
-            }
-
-            Body body = (Body) o;
-            return (getTransactions() != null
-                    ? getTransactions().equals(body.getTransactions())
-                    : body.getTransactions() == null);
-        }
     }
 
     public static class Block {
@@ -480,41 +256,6 @@ public class AppBlock extends Response<AppBlock.Block> {
             this.body = body;
         }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Block)) {
-                return false;
-            }
-
-            Block block = (Block) o;
-
-            if (getHeader() != null
-                    ? !getHeader().equals(block.getHeader()) : block.getHeader() != null) {
-                return false;
-            }
-            if (getBody() != null
-                    ? !getBody().equals(block.getBody()) : block.getBody() != null) {
-                return false;
-            }
-            if (getHash() != null
-                    ? !getHash().equals(block.getHash()) : block.getHash() != null) {
-                return false;
-            }
-            return (getVersion() != null
-                    ? getVersion().equals(block.getVersion()) : block.getVersion() == null);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = getVersion() != null ? getVersion().hashCode() : 0;
-            result = 31 * result + (getHash() != null ? getHash().hashCode() : 0);
-            result = 31 * result + (getHeader() != null ? getHeader().hashCode() : 0);
-            result = 31 * result + (getBody() != null ? getBody().hashCode() : 0);
-            return result;
-        }
     }
 
     public interface TransactionResult<T> {
@@ -534,6 +275,59 @@ public class AppBlock extends Response<AppBlock.Block> {
         @Override
         public Transaction get() {
             return this;
+        }
+    }
+
+    public static class Hash implements TransactionResult<String> {
+        private String value;
+
+        public Hash() {
+        }
+
+        public Hash(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String get() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+    }
+
+    public static class TransactionResultDeserializer
+            extends JsonDeserializer<List<TransactionResult>> {
+
+        private ObjectReader objectReader = ObjectMapperFactory.getObjectReader();
+
+        @Override
+        public List<TransactionResult> deserialize(
+                JsonParser jsonParser,
+                DeserializationContext deserializationContext) throws IOException {
+
+            List<TransactionResult> transactionResults = new ArrayList<>();
+            JsonToken nextToken = jsonParser.nextToken();
+
+            if (nextToken == JsonToken.START_OBJECT) {
+                Iterator<TransactionObject> transactionObjectIterator =
+                        objectReader.readValues(jsonParser, TransactionObject.class);
+                while (transactionObjectIterator.hasNext()) {
+                    transactionResults.add(transactionObjectIterator.next());
+                }
+            } else if (nextToken == JsonToken.VALUE_STRING) {
+                jsonParser.getValueAsString();
+
+                Iterator<Hash> transactionHashIterator =
+                        objectReader.readValues(jsonParser, Hash.class);
+                while (transactionHashIterator.hasNext()) {
+                    transactionResults.add(transactionHashIterator.next());
+                }
+            }
+            return transactionResults;
         }
     }
 
