@@ -227,5 +227,5 @@ public interface CITASystemContract {
         return service.appCall(call, DEFAULT_BLOCK_PARAMETER).send();
     }
 
-    int getQuotaPrice(String from) throws IOException;
+    long getQuotaPrice(String from) throws IOException;
 }
