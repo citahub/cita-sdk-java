@@ -27,7 +27,7 @@ public class SystemContractExample {
     public static void main(String[] args) throws Exception {
 
         CITAjSystemContract sysContract = new CITAjSystemContract(service);
-        int quotaPrice = sysContract.getQuotaPrice(senderAddr);
+        long quotaPrice = sysContract.getQuotaPrice(senderAddr);
         System.out.println("Quota price is: " + quotaPrice);
 
         List<String> nodes = sysContract.listNode(senderAddr);
