@@ -1,3 +1,5 @@
+## JSONRPC
+
 CITAj 接口继承了 CITA 和 CITAjRx 两个接口，CITAj 的实现类（比如JsonRpc2_0CITAj），提供了方法以发送交易的方式对合约进行部署和函数调用。
 
 [Build CITAj](#build-citaj)
@@ -22,7 +24,7 @@ CITAj 接口继承了 CITA 和 CITAjRx 两个接口，CITAj 的实现类（比�
 [appGetFilterLogs](#appgetfilterlogs)
 [appLogObservable](#applogobservable)
 
-#### Build CITAj
+### Build CITAj
 
 **方法名**
 `CITAj build (CITAjService citaj)`
@@ -39,7 +41,7 @@ CITAj 实例
 CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 ```
 
-#### netPeer
+### netPeer
 
 **方法名**
 `Request<?, NetPeerCount> netPeer()`
@@ -58,7 +60,7 @@ NetPeerCount netPeerCount = service.netPeerCount().send();
 BigInteger peerCount = netPeerCount.getQuantity();
 ```
 
-#### appMetaData
+### appMetaData
 
 **方法名**
 `Request<?, AppMetaData> appMetaData(DefaultBlockParameter defaultBlockParameter)`
@@ -79,7 +81,7 @@ int chainId = result.chainId;
 String chainName = result.chainName;
 String genesisTS = result.genesisTimestamp;
 ```
-#### appBlockNumber
+### appBlockNumber
 
 **方法名**
 `Request<?, AppBlockNumber> appBlockNumber()`
@@ -97,7 +99,7 @@ CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 AppBlockNumber result = service.appBlockNumber().send();
 BigInteger blockNumber = result.getBlockNumber();
 ```
-#### appGetBalance
+### appGetBalance
 
 **方法名**
 `Request<?, AppGetBalance> appGetBalance(String address, DefaultBlockParameter defaultBlockParameter))`
@@ -119,7 +121,7 @@ AppGetBalance getBalance = service.appGetBalance(addr, defaultBlockParamter).sen
 BigInteger balance = getBalance.getBalance();
 ```
 
-#### appGetAbi
+### appGetAbi
 
 **方法名**
 `Request<?, AppGetAbi> appGetAbi(String contractAddress, DefaultBlockParameter defaultBlockParameter)`
@@ -141,7 +143,7 @@ AppGetAbi getAbi = service.appGetAbi(addr, defaultBlockParamter).send();
 String abi = getAbi.getAbi();
 ```
 
-#### appGetTransactionCount
+### appGetTransactionCount
 
 **方法名**
 `Request<?, AppGetTransactionCount> appGetTransactionCount(String address, DefaultBlockParameter defaultBlockParameter)`
@@ -163,7 +165,7 @@ AppGetTransactionCount getTransactionCount = service.appGetTransactionCount(addr
 BigInteger txCount = getTransactionCount.getTransactionCount();
 ```
 
-#### appGetCode
+### appGetCode
 
 **方法名**
 `Request<?, AppGetCode> appGetCode(String address, DefaultBlockParameter defaultBlockParameter)`
@@ -185,7 +187,7 @@ AppGetCode getCode = service.appGetCode(addr, defaultBlockParamter).send();
 Sring code = getCode.getCode();
 ```
 
-#### appSendRawTransaction
+### appSendRawTransaction
 
 **方法名**
 `Request<?, AppSendTransaction> appSendRawTransaction(String signedTransactionData)`
@@ -211,7 +213,7 @@ AppSendTransaction sendTransaction = service.appSendRawTransaction(tx).send();
 String hash = sendTransaction.getHash();
 ```
 
-#### appCall
+### appCall
 
 **方法名**
 `Request<?, AppCall> appCall(Call call, DefaultBlockParameter defaultBlockParameter)`
@@ -232,7 +234,7 @@ AppCall appCall = service.appCall(call, DefaultBlockParameter.valueOf("latest"))
 String result = call.getValue();
 ```
 
-#### appGetBlockByHash
+### appGetBlockByHash
 
 **方法名**
 `Request<?, AppBlock> appGetBlockByHash(String blockHash, boolean returnFullTransactionObjects)`
@@ -252,7 +254,7 @@ String blockHash = "{block hash to search}";
 AppBlock appBlock = service.appGetBlockByHash(blockHash, false).send();
 ```
 
-#### appGetBlockByNumber
+### appGetBlockByNumber
 
 **方法名**
 `Request<?, AppBlock> appGetBlockByNumber(DefaultBlockParameter defaultBlockParameter, boolean returnFullTransactionObjects)`
@@ -272,7 +274,7 @@ AppBlock appBlock = service.appGetBlockByHash(DefaultBlockParameter.valueOf("lat
 ```
 
 
-#### appGetTransactionByHash
+### appGetTransactionByHash
 
 **方法名**
 `Request<?, AppTransaction> appGetTransactionByHash(String transactionHash)`
@@ -290,7 +292,7 @@ CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 String txHash = "{hash of transactino to be searched}";
 AppTransaction responseTx = service.appGetTransactionByHash(txHash).send();
 ```
-#### appGetTransactionReceipt
+### appGetTransactionReceipt
 
 **方法名**
 `Request<?, AppGetTransactionReceipt> appGetTransactionReceipt(String transactionHash)`
@@ -309,7 +311,7 @@ String txHash = "{hash of transactino to be searched}";
 AppGetTransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send();
 ```
 
-#### appNewBlockFilter
+### appNewBlockFilter
 
 **方法名**
 `Request<?, AppFilter> appNewBlockFilter()`
@@ -328,7 +330,7 @@ AppFilter appFilter = service.appNewBlockFilter().send();
 BigInteger filterId = appFilter.getFilterId();
 ```
 
-#### appBlockHashObservable
+### appBlockHashObservable
 
 **方法名**
 `Observable<String> appBlockHashObservable()`
@@ -350,7 +352,7 @@ AppLog logs = service.appGetFilterLogs(filterId).send();
         });
 ```
 
-#### appNewFilter
+### appNewFilter
 
 **方法名**
 `Request<?, AppFilter> appNewFilter(com.cryptape.cita.protocol.core.methods.request.AppFilter appFilter)`
@@ -370,7 +372,7 @@ AppFilter appFilter = service.appNewFilter(txHash).send();
 BigInteger filterId = appFilter.getFilterId();
 ```
 
-#### appUninstallFilter
+### appUninstallFilter
 
 **方法名**
 `Request<?, AppUninstallFilter> appUninstallFilter(BigInteger filterId)`
@@ -389,7 +391,7 @@ BigInteger filterId = {your filter Id };
 AppUninstallFilter uninstallFilter = service.appUninstallFilter(filterId).send();
 ```
 
-#### appGetFilterChanges
+### appGetFilterChanges
 
 **方法名**
 `Request<?, AppLog> appGetFilterChanges(BigInteger filterId)`
@@ -409,7 +411,7 @@ AppLog logs = service.appGetFilterChanges(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
 
-#### appGetFilterLogs
+### appGetFilterLogs
 
 **方法名**
 `Request<?, AppLog> appGetFilterLogs(BigInteger filterId)`
@@ -429,7 +431,7 @@ AppLog logs = service.appGetFilterLogs(filterId).send();
 List<LogResult> results = logs.getLogs();
 ```
 
-#### appLogObservable
+### appLogObservable
 
 **方法名**
 `Observable<Log> appLogObservable(AppFilter appFilter)`

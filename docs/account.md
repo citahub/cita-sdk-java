@@ -8,7 +8,7 @@ Account 使用了 CompiledContract 类，可以直接读取 Solidity 合约文�
 * [Deploy contract](#deploy-contract)
 * [Call Contract](#call-contract)
 
-#### New account
+### New account
 
 **方法名**
 `Account(String privateKey, CITAj service)`
@@ -27,7 +27,7 @@ String privateKey = "{private key}";
 CITAj service  = CITAj.build(new HttpService("http://127.0.0.1"));
 Account account = new Account(privateKey, service);
 ```
-#### Deploy contract
+### Deploy contract
 
 **方法名**
 
@@ -53,7 +53,7 @@ Account account = new Account(privateKey, service);
 AppSendTransaction appSendTransaction = account.deploy(new File(path), randomNonce(), quota, version, chainId, value);
 ```
 
-#### Call contract
+### Call contract
 
 **方法名**
 

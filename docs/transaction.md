@@ -1,3 +1,5 @@
+## Transaction
+
 Transction定义在core.request中，用于将交易数据封装并且签名（如果需要），交易数据或者签名后的交易数据被appCall()或者appSendRawTransaction()所使用进行合约的调用或者部署。
 
 [Transaction](#transaction)
@@ -7,7 +9,7 @@ Transction定义在core.request中，用于将交易数据封装并且签名（�
 [sendTransaction](#sendtransaction)
 [sendTransactionAsync](#sendtransactionasync)
 
-#### Transaction
+### Transaction
 
 **方法名**
 `Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
@@ -39,7 +41,7 @@ String value = "100000000";
 String init = "{encoded abi}";
 Transaction tx = Transction.createContractTransaction(nonce, quota, valid_until_block, version, chainId, value, init);
 ```
-#### createContractTransaction
+### createContractTransaction
 
 **方法名**
 `createContractTransaction(BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String init)`
@@ -77,7 +79,7 @@ String signedTx = txToDeployContract.sign(this.config.getPrivateKey(), false, fa
 AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 ```
 
-#### createFunctionCallTransaction
+### createFunctionCallTransaction
 
 **方法名**
 `createFunctionCallTransaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
@@ -116,7 +118,7 @@ Transaction txToDeployContract = Transction.createFunctionCallTransaction(to, no
 String signedTx = txToDeployContract.sign(this.config.getPrivateKey(), false, false);
 AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 ```
-#### TransactionManager
+### TransactionManager
 
 **方法名**
 `TransactionManager(CITAj citaj, Credentials credentials)`
@@ -135,7 +137,7 @@ CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 TransactionManager transactionManager = new TransactionManager(service, credentials);
 ```
 
-#### sendTransaction
+### sendTransaction
 
 **方法名**
 `AppSendTransaction sendTransaction(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
@@ -168,7 +170,7 @@ String value = "0";
 AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
 ```
 
-#### sendTransactionAsync
+### sendTransactionAsync
 
 **方法名**
 `Flowable<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
