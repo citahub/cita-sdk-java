@@ -4,9 +4,9 @@ Account 封装了 TransactionManager，通过 CITAj 和账户的私钥进行实�
 
 Account 使用了 CompiledContract 类，可以直接读取 Solidity 合约文件，生成 ABI 和 BIN 文件以供 TransactionManager 使用。
 
-[New account](#new-account)
-[Deploy contract](#deploy-contract)
-[Call Contract](#call-contract)
+* [New account](#new-account)
+* [Deploy contract](#deploy-contract)
+* [Call Contract](#call-contract)
 
 #### New account
 
