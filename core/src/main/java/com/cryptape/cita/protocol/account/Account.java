@@ -59,7 +59,7 @@ public class Account {
                         version, chainId, value);
     }
 
-    public Future<AppSendTransaction> deployAsync(
+    public Flowable<AppSendTransaction> deployAsync(
             File contractFile, String nonce, long quota,
             int version, BigInteger chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
