@@ -12,10 +12,13 @@ Transction定义在core.request中，用于将交易数据封装并且签名（�
 ### Transaction
 
 **方法名**
+
 `Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
+
 根据参数新建一个交易。
 
 **参数**
+
 * to - 交易将要的发送地址
 * nonce - 随机数用于防止重放攻击
 * quota - 用户支付矿工的费用
@@ -26,6 +29,7 @@ Transction定义在core.request中，用于将交易数据封装并且签名（�
 * data - 编码后交易数据（abi）
 
 **返回值**
+
 Transaction实例
 
 **示例**
@@ -44,10 +48,13 @@ Transaction tx = Transction.createContractTransaction(nonce, quota, valid_until_
 ### createContractTransaction
 
 **方法名**
+
 `createContractTransaction(BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String init)`
-根据参数新建一个交易。
+
+根据参数新建一个部署合约的交易。
 
 **参数**
+
 * nonce - 随机数用于防止重放攻击
 * quota - 用户支付矿工的费用
 * valid_until_block - 超时机制，超过设定块高取消交易
@@ -57,6 +64,7 @@ Transaction tx = Transction.createContractTransaction(nonce, quota, valid_until_
 * init - 合约编码后数据（abi）
 
 **返回值**
+
 Transaction实例
 
 **示例**
@@ -82,10 +90,13 @@ AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 ### createFunctionCallTransaction
 
 **方法名**
+
 `createFunctionCallTransaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
-根据参数新建一个交易。
+
+根据参数新建一个合约调用的交易。
 
 **参数**
+
 * to - 交易将要的发送地址
 * nonce - 随机数用于防止重放攻击
 * quota - 用户支付矿工的费用
@@ -96,9 +107,11 @@ AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 * data - 编码后交易数据（abi）
 
 **返回值**
+
 Transaction实例
 
 **示例**
+
 ```
 //create new CITAj service
 CITAj service = CITAj.build(new HttpService("127.0.0.1"));
@@ -121,6 +134,7 @@ AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 ### TransactionManager
 
 **方法名**
+
 `TransactionManager(CITAj citaj, Credentials credentials)`
 
 **参数**
@@ -129,6 +143,7 @@ AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 * credentials - 发起交易账户的credential
 
 **返回值**
+
 TransactionManager实例
 
 **示例**
@@ -141,7 +156,9 @@ TransactionManager transactionManager = new TransactionManager(service, credenti
 ### sendTransaction
 
 **方法名**
+
 `AppSendTransaction sendTransaction(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
+
 通过TransactionManager发送交易。
 
 **参数**
@@ -156,9 +173,11 @@ TransactionManager transactionManager = new TransactionManager(service, credenti
 * value - 交易中原生token的数量
 
 **返回值**
+
 AppSendTransaction
 
 **示例**
+
 ```
 CitaTransactionManager transactionManager = new CitaTransactionManager(service, credentials);
 String to = "{address to which the contract is sent}";
@@ -175,10 +194,12 @@ AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(t
 ### sendTransactionAsync
 
 **方法名**
+
 `Flowable<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
 通过TransactionManager发送交易。
 
 **参数**
+
 * to - 交易将要的发送地址
 * data - 编码后交易数据（abi）
 * quota - 用户支付矿工的费用
@@ -189,9 +210,11 @@ AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(t
 * value - 交易中原生token的数量
 
 **返回值**
+
 AppSendTransaction
 
 **示例**
+
 ```
 TransactionManager transactionManager = new TransactionManager(service, credentials);
 String to = "{address to which the contract is sent}";
