@@ -67,7 +67,7 @@ BigInteger peerCount = netPeerCount.getQuantity();
 获取指定块高的元数据。
 
 **参数**
-defaultBlockParameter - 块高度的接口：数字或者关键字
+* defaultBlockParameter - 块高度的接口：数字或者关键字
 
 **返回值**
 Request<?, AppMetaData>
@@ -106,8 +106,8 @@ BigInteger blockNumber = result.getBlockNumber();
 获取地址余额。
 
 **参数**
-address - 所要查询的地址
-defaultBlockParameter - 块高度的接口：数字或者关键字
+* address - 所要查询的地址
+* defaultBlockParameter - 块高度的接口：数字或者关键字
 
 **返回值**
 Request<?, AppGetBalance>
@@ -128,8 +128,8 @@ BigInteger balance = getBalance.getBalance();
 获取合约的Abi。
 
 **参数**
-address - 所要查询Abi的合约地址
-defaultBlockParameter - 块高度的接口：数字或者关键字
+* address - 所要查询Abi的合约地址
+* defaultBlockParameter - 块高度的接口：数字或者关键字
 
 **返回值**
 Request<?, AppGetAbi>
@@ -150,8 +150,8 @@ String abi = getAbi.getAbi();
 获取账户发送合约数量。
 
 **参数**
-address - 所要查询的地址
-defaultBlockParameter - 块高度的接口：数字或者关键字
+* address - 所要查询的地址
+* defaultBlockParameter - 块高度的接口：数字或者关键字
 
 **返回值**
 Request<?, AppGetTransactionCount>
@@ -172,8 +172,8 @@ BigInteger txCount = getTransactionCount.getTransactionCount();
 获取合约代码。
 
 **参数**
-address - 所要查询的地址
-defaultBlockParameter - 块高度的接口：数字或者关键字
+* address - 所要查询的地址
+* defaultBlockParameter - 块高度的接口：数字或者关键字
 
 **返回值**
 Request<?, AppGetCode>
@@ -194,7 +194,7 @@ Sring code = getCode.getCode();
 向区块链节点发送序列化交易。
 
 **参数**
-signedTransaction - 经过签名的交易数据
+* signedTransaction - 经过签名的交易数据
 
 **返回值**
 Request<?, AppSendTransaction>
@@ -220,8 +220,8 @@ String hash = sendTransaction.getHash();
 调用合约接口。
 
 **参数**
-call - 合约方法的call的封装
-defaultBlockParameter - 块高度的接口：数字或者关键字
+* call - 合约方法的call的封装
+* defaultBlockParameter - 块高度的接口：数字或者关键字
 
 **返回值**
 Request<?, AppCall>
@@ -241,8 +241,8 @@ String result = call.getValue();
 根据块的哈希值查询块信息。
 
 **参数**
-blockHash - 块高度的接口：数字或者关键字
-returnFullTransactionObjects - 是否返回交易信息 (True: 返回详细交易列表| False: 只返回交易hash)
+* blockHash - 块高度的接口：数字或者关键字
+* returnFullTransactionObjects - 是否返回交易信息 (True: 返回详细交易列表| False: 只返回交易hash)
 
 **返回值**
 Request<?, AppBlock>
@@ -261,8 +261,8 @@ AppBlock appBlock = service.appGetBlockByHash(blockHash, false).send();
 根据块高度查询块信息。
 
 **参数**
-defaultBlockParameter - 块高度的接口：数字或者关键字
-returnFullTransactionObjects - 是否返回交易信息 (True: 返回详细交易列表| False: 只返回交易hash)
+* defaultBlockParameter - 块高度的接口：数字或者关键字
+* returnFullTransactionObjects - 是否返回交易信息 (True: 返回详细交易列表| False: 只返回交易hash)
 
 **返回值**
 Request<?, AppBlock>
@@ -281,7 +281,7 @@ AppBlock appBlock = service.appGetBlockByHash(DefaultBlockParameter.valueOf("lat
 根据哈希查询交易信息。
 
 **参数**
-transactionHash - 交易哈希
+* transactionHash - 交易哈希
 
 **返回值**
 Request<?, AppTransaction>
@@ -299,7 +299,7 @@ AppTransaction responseTx = service.appGetTransactionByHash(txHash).send();
 根据交易哈希查询交易回执。
 
 **参数**
-transactionHash - 交易哈希
+* transactionHash - 交易哈希
 
 **返回值**
 Request<?, AppGetTransactionReceipt>
@@ -359,7 +359,7 @@ AppLog logs = service.appGetFilterLogs(filterId).send();
 创建一个新的Event过滤器以用来监听合约中的Event。
 
 **参数**
-appFilter - 针对于 CITA 智能合约event的过滤器（定义在Request中的appFilter）
+* appFilter - 针对于 CITA 智能合约event的过滤器（定义在Request中的appFilter）
 
 **返回值**
 Request<?, AppFilter>
@@ -379,7 +379,7 @@ BigInteger filterId = appFilter.getFilterId();
 移除已部署的过滤器。
 
 **参数**
-filterId - 过滤器Id
+* filterId - 过滤器Id
 
 **返回值**
 Request<?, AppUninstallFilter>
@@ -398,7 +398,7 @@ AppUninstallFilter uninstallFilter = service.appUninstallFilter(filterId).send()
 根据过滤器Id查询log，返回上一次查询之后的所有log。
 
 **参数**
-filterId - 过滤器Id
+* filterId - 过滤器Id
 
 **返回值**
 Request<?, AppLog>
@@ -418,7 +418,7 @@ List<LogResult> results = logs.getLogs();
 根据过滤器Id查询log，返回符合输入filter Id的所有log。
 
 **参数**
-filterId - 过滤器Id
+* filterId - 过滤器Id
 
 **返回值**
 Request<?, AppLog>
@@ -438,7 +438,7 @@ List<LogResult> results = logs.getLogs();
 根据AppFilter来安装一个新的Filter用以获取历史log和监听新的Log，返回一个Observable以交互的模式监听Log。
 
 **参数**
-AppFilter - 过滤器可以由`appNewFilter`来新建
+* AppFilter - 过滤器可以由`appNewFilter`来新建
 
 **返回值**
 Observable<Log>
