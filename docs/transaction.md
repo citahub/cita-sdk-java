@@ -2,12 +2,12 @@
 
 Transction定义在core.request中，用于将交易数据封装并且签名（如果需要），交易数据或者签名后的交易数据被appCall()或者appSendRawTransaction()所使用进行合约的调用或者部署。
 
-[Transaction](#transaction)
-[createContractTransaction](#createcontracttransaction)
-[createFunctionCallTransaction](#createfunctioncalltransaction)
-[TransactionManager](#transactionmanager)
-[sendTransaction](#sendtransaction)
-[sendTransactionAsync](#sendtransactionasync)
+* [Transaction](#transaction)
+* [createContractTransaction](#createcontracttransaction)
+* [createFunctionCallTransaction](#createfunctioncalltransaction)
+* [TransactionManager](#transactionmanager)
+* [sendTransaction](#sendtransaction)
+* [sendTransactionAsync](#sendtransactionasync)
 
 ### Transaction
 
