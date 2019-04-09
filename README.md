@@ -8,6 +8,8 @@
 
 cita-sdk-java, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on CITA.
 
+For detailed documentation, see [documentation](docs/index.md).
+
 ## Features
 
 - Complete implementation of CITA JSON-RPC API over HTTP.
@@ -27,12 +29,12 @@ maven
 <dependency>
   <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.22.1</version>
+  <version>0.22.2</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:0.22.1'
+compile 'com.cryptape.cita:core:0.22.2'
 ```
 
 Install manually
@@ -144,9 +146,12 @@ Please find complete code in [TokenAccountExample](https://github.com/cryptape/c
 
 ## 简介
 cita-sdk-java 是对以太坊 Web3j 进行改写，适配 CITA 的一个 Java 开发包。cita-sdk-java 集成了与 CITA 客户端交互的功能，可以用来对 CITA 发送交易，系统配置，信息查询。
+
+开发请参考[详细文档](docs/index.md)。
+
 ## 特性
 - 通过 HTTP 协议，实现了 CITA 所定义的所有 JSON-RPC 方法。
-- 可以通过 Solidity 智能合约生成该合约的 Java 类。这个智能合约的 Java 类作为 java 对只能合约的包裹层，可以使开发和通过 java 方便地对智能合约进行部署和合约方法的调用（支持Solidity 和 Truffle 的格式）。
+- 可以通过 Solidity 智能合约生成该合约的 Java 类。这个智能合约的 Java 类作为 java 对智能合约的包裹层，可以使开发和通过 java 方便地对智能合约进行部署和合约方法的调用（支持Solidity 和 Truffle 的格式）。
 - 适配安卓
 
 ## 开始
@@ -161,12 +166,12 @@ Gradle 4.3
 <dependency>
   <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.22.1</version>
+  <version>0.22.2</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:0.22.1'
+compile 'com.cryptape.cita:core:0.22.2'
 ```
 
 手动安装  

@@ -59,7 +59,7 @@ public class Account {
                         version, chainId, value);
     }
 
-    public Future<AppSendTransaction> deployAsync(
+    public Flowable<AppSendTransaction> deployAsync(
             File contractFile, String nonce, long quota,
             int version, BigInteger chainId, String value)
             throws IOException, InterruptedException, CompiledContract.ContractCompileError {
@@ -70,7 +70,6 @@ public class Account {
                         version, chainId, value);
     }
 
-    // eth_call: nonce and quota is null
     // sendTransaction: nonce and quota is necessary
     public Object callContract(
             String contractAddress, String funcName,
@@ -101,7 +100,7 @@ public class Account {
 
         Function func;
         if (functionAbi.isConstant()) {
-            // eth_call
+            // call
             List<TypedAbi.ArgRetType> retsType = new ArrayList<>();
             List<TypeReference<?>> retsTypeRef = new ArrayList<>();
             List<AbiDefinition.NamedType> outputs = functionAbi.getOutputs();
@@ -111,7 +110,7 @@ public class Account {
                 retsTypeRef.add(retType.getTypeReference());
             }
             func = new Function(functionAbi.getName(), params, retsTypeRef);
-            return ethCall(contractAddress, func, retsType);
+            return appCall(contractAddress, func, retsType);
         } else {
             // send_transaction
             func = new Function(functionAbi.getName(), params, Collections.emptyList());
@@ -120,7 +119,7 @@ public class Account {
         }
     }
 
-    public Object ethCall(String contractAddress, Function func, List<TypedAbi.ArgRetType> retsType)
+    public Object appCall(String contractAddress, Function func, List<TypedAbi.ArgRetType> retsType)
             throws IOException {
         String data = FunctionEncoder.encode(func);
         AppCall call = this.service.appCall(new Call(this.transactionManager.getFromAddress(),

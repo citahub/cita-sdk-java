@@ -104,14 +104,14 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return Integer.parseInt(resultTypes.get(0).getValue().toString());
     }
 
-    public int getQuotaPrice(String from) throws IOException {
+    public long getQuotaPrice(String from) throws IOException {
         String callData = CITASystemContract.encodeCall(PRICE_MANAGER_GET_QUOTA_PRICE);
         AppCall callResult = CITASystemContract.sendCall(
                 from, PRICE_MANAGER_ADDR, callData, service);
-        List<TypeReference<?>> outputParamters
+        List<TypeReference<?>> outputParameters
                 = Collections.singletonList(new TypeReference<Uint>() {});
-        List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParamters);
-        return Integer.parseInt(
+        List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParameters);
+        return Long.parseLong(
                 resultTypes.get(0).getValue().toString());
     }
 

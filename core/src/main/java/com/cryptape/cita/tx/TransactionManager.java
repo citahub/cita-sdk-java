@@ -12,11 +12,10 @@ import com.cryptape.cita.tx.response.TransactionReceiptProcessor;
 import com.cryptape.cita.protocol.exceptions.TransactionException;
 
 /**
- * Transaction manager abstraction for executing transactions with Ethereum client via
+ * Transaction manager abstraction for executing transactions with CITA client via
  * various mechanisms.
  */
 
-///TODO this class includes ethereum methods: remove them later
 public abstract class TransactionManager {
 
     public static final int DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH = 40;

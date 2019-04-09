@@ -14,6 +14,7 @@ import com.cryptape.cita.protocol.core.methods.request.Transaction;
 import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionCount;
 import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.utils.Numeric;
+import io.reactivex.Flowable;
 
 public class RawTransactionManager extends TransactionManager {
 
@@ -108,7 +109,7 @@ public class RawTransactionManager extends TransactionManager {
         return citaj.appSendRawTransaction(rawTx).send();
     }
 
-    public Future<AppSendTransaction> sendTransactionAsync(
+    public Flowable<AppSendTransaction> sendTransactionAsync(
             String to, String data, long quota, String nonce,
             long validUntilBlock, int version, BigInteger chainId, String value)
             throws IOException {
@@ -124,7 +125,7 @@ public class RawTransactionManager extends TransactionManager {
         } else if (this.signature != null) {
             rawTx = transaction.sign(this.signature);
         }
-        return citaj.appSendRawTransaction(rawTx).sendAsync();
+        return citaj.appSendRawTransaction(rawTx).flowable();
     }
 
     @Override
