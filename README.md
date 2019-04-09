@@ -8,7 +8,7 @@
 
 cita-sdk-java, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on CITA.
 
-Here is [detail documentation](docs/index.md)
+For detailed documentation, see [documentation](docs/index.md).
 
 ## Features
 
@@ -147,7 +147,7 @@ Please find complete code in [TokenAccountExample](https://github.com/cryptape/c
 ## 简介
 cita-sdk-java 是对以太坊 Web3j 进行改写，适配 CITA 的一个 Java 开发包。cita-sdk-java 集成了与 CITA 客户端交互的功能，可以用来对 CITA 发送交易，系统配置，信息查询。
 
-开发请参考[详细文档](docs/index.md)
+开发请参考[详细文档](docs/index.md)。
 
 ## 特性
 - 通过 HTTP 协议，实现了 CITA 所定义的所有 JSON-RPC 方法。
