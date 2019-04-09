@@ -3,23 +3,7 @@ package com.cryptape.cita.protocol.core;
 import java.math.BigInteger;
 
 import com.cryptape.cita.protocol.core.methods.request.Call;
-import com.cryptape.cita.protocol.core.methods.response.AppAccounts;
-import com.cryptape.cita.protocol.core.methods.response.AppBlock;
-import com.cryptape.cita.protocol.core.methods.response.AppBlockNumber;
-import com.cryptape.cita.protocol.core.methods.response.AppCall;
-import com.cryptape.cita.protocol.core.methods.response.AppFilter;
-import com.cryptape.cita.protocol.core.methods.response.AppGetAbi;
-import com.cryptape.cita.protocol.core.methods.response.AppGetBalance;
-import com.cryptape.cita.protocol.core.methods.response.AppGetCode;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionCount;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
-import com.cryptape.cita.protocol.core.methods.response.AppLog;
-import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.AppSign;
-import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
-import com.cryptape.cita.protocol.core.methods.response.AppUninstallFilter;
-import com.cryptape.cita.protocol.core.methods.response.NetPeerCount;
+import com.cryptape.cita.protocol.core.methods.response.*;
 
 
 /**
@@ -28,6 +12,10 @@ import com.cryptape.cita.protocol.core.methods.response.NetPeerCount;
 public interface CITA {
 
     Request<?, NetPeerCount> netPeerCount();
+
+    Request<?, NetPeersInfo> netPeersInfo();
+
+    Request<?, AppVersion> getVersion();
 
     Request<?, AppAccounts> appAccounts();
 

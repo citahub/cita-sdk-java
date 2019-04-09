@@ -15,23 +15,12 @@ import com.cryptape.cita.protocol.core.DefaultBlockParameter;
 import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
 import com.cryptape.cita.protocol.core.methods.request.Call;
 import com.cryptape.cita.protocol.core.methods.request.Transaction;
+import com.cryptape.cita.protocol.core.methods.response.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.cryptape.cita.protocol.core.methods.response.AppBlock;
-import com.cryptape.cita.protocol.core.methods.response.AppBlockNumber;
-import com.cryptape.cita.protocol.core.methods.response.AppCall;
-import com.cryptape.cita.protocol.core.methods.response.AppGetBalance;
-import com.cryptape.cita.protocol.core.methods.response.AppGetCode;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionCount;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
-import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
-import com.cryptape.cita.protocol.core.methods.response.NetPeerCount;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
 import com.google.gson.Gson;
 
-public class InterfaceTest {
+public class RpcTest {
 
     private static int version;
     private static BigInteger chainId;
@@ -56,13 +45,17 @@ public class InterfaceTest {
 
     public static void main(String[] args) throws Exception {
 
+        testNetPeerCount();
+
+        testNetPeersInfo();
+
+        testGetVersion();
+
         testGetBlockByNumber(BigInteger.valueOf(47));
 
         testGetBalance();
 
         testMetaData();
-
-        testNetPeerCount();
 
         BigInteger validBlockNumber = testBlockNumber();
 
@@ -165,6 +158,16 @@ public class InterfaceTest {
     private static void testNetPeerCount() throws Exception {
         NetPeerCount netPeerCount = service.netPeerCount().send();
         System.out.println("net_peerCount:" + netPeerCount.getQuantity());
+    }
+
+    private static void testNetPeersInfo() throws Exception {
+        NetPeersInfo netPeersInfo = service.netPeersInfo().send();
+        System.out.println("net_peersInfo:" + new Gson().toJson(netPeersInfo));
+    }
+
+    private static void testGetVersion() throws Exception {
+        AppVersion appVersion = service.getVersion().send();
+        System.out.println("version:" + appVersion.getVersion().softwareVersion);
     }
 
     private static BigInteger testBlockNumber() throws Exception {
