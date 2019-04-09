@@ -8,7 +8,7 @@
 
 cita-sdk-java, originally adapted from Ethereum web3j, is a Java library for working with Smart Contract and integrating with clients on CITA.
 
-Here is [detail documentation](docs/index.md)
+For detailed documentation, see [documentation](docs/index.md).
 
 ## Features
 
