@@ -3,6 +3,8 @@ package com.cryptape.cita.tests;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 import com.cryptape.cita.abi.FunctionEncoder;
 import com.cryptape.cita.abi.TypeReference;
@@ -162,7 +164,11 @@ public class RpcTest {
 
     private static void testNetPeersInfo() throws Exception {
         NetPeersInfo netPeersInfo = service.netPeersInfo().send();
-        System.out.println("net_peersInfo:" + new Gson().toJson(netPeersInfo));
+        Map<String, String> peers = netPeersInfo.getPeersInfo().peers;
+        System.out.println("net_peersInfo amount:" + netPeersInfo.getPeersInfo().amount);
+        for (Map.Entry<String, String> entry : peers.entrySet()) {
+            System.out.println("Address : " + entry.getKey() + " Node : " + entry.getValue());
+        }
     }
 
     private static void testGetVersion() throws Exception {
