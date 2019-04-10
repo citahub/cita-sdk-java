@@ -6,28 +6,10 @@ import java.util.Collections;
 import java.util.concurrent.ScheduledExecutorService;
 
 import com.cryptape.cita.protocol.core.methods.request.Call;
+import com.cryptape.cita.protocol.core.methods.response.*;
 import io.reactivex.Flowable;
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.CITAjService;
-import com.cryptape.cita.protocol.core.methods.response.AppAccounts;
-import com.cryptape.cita.protocol.core.methods.response.AppBlock;
-import com.cryptape.cita.protocol.core.methods.response.AppBlockNumber;
-import com.cryptape.cita.protocol.core.methods.response.AppCall;
-import com.cryptape.cita.protocol.core.methods.response.AppFilter;
-import com.cryptape.cita.protocol.core.methods.response.AppGetAbi;
-import com.cryptape.cita.protocol.core.methods.response.AppGetBalance;
-import com.cryptape.cita.protocol.core.methods.response.AppGetCode;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionCount;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
-import com.cryptape.cita.protocol.core.methods.response.AppLog;
-import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.AppSign;
-import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
-import com.cryptape.cita.protocol.core.methods.response.AppUninstallFilter;
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.core.methods.response.NetPeerCount;
-import com.cryptape.cita.protocol.core.methods.response.Transaction;
 import com.cryptape.cita.protocol.rx.JsonRpc2_0Rx;
 import com.cryptape.cita.utils.Async;
 import com.cryptape.cita.utils.Numeric;
@@ -66,6 +48,24 @@ public class JsonRpc2_0CITAj implements CITAj {
                 Collections.<String>emptyList(),
                 CITAjService,
                 NetPeerCount.class);
+    }
+
+    @Override
+    public Request<?, NetPeersInfo> netPeersInfo() {
+        return new Request<>(
+                "peersInfo",
+                Collections.<String>emptyList(),
+                CITAjService,
+                NetPeersInfo.class);
+    }
+
+    @Override
+    public Request<?, AppVersion> getVersion() {
+        return new Request<>(
+                "getVersion",
+                Collections.<String>emptyList(),
+                CITAjService,
+                AppVersion.class);
     }
 
 

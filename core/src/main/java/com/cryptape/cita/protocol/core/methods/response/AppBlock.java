@@ -79,7 +79,7 @@ public class AppBlock extends Response<AppBlock.Block> {
         private String stateRoot;
         private String transactionsRoot;
         private String receiptsRoot;
-        private String gasUsed;
+        private String quotaUsed;
         private Proof proof;
         private String proposer;
 
@@ -89,14 +89,14 @@ public class AppBlock extends Response<AppBlock.Block> {
 
         public Header(long timestamp, String prevHash, String number,
                       String stateRoot, String transactionsRoot, String receiptsRoot,
-                      String gasUsed, Proof proof, String proposer) {
+                      String quotaUsed, Proof proof, String proposer) {
             this.timestamp = timestamp;
             this.prevHash = prevHash;
             this.number = number;
             this.stateRoot = stateRoot;
             this.transactionsRoot = transactionsRoot;
             this.receiptsRoot = receiptsRoot;
-            this.gasUsed = gasUsed;
+            this.quotaUsed = quotaUsed;
             this.proof = proof;
             this.proposer = proposer;
         }
@@ -158,15 +158,15 @@ public class AppBlock extends Response<AppBlock.Block> {
         }
 
         public BigInteger getGasUsedDec() {
-            return Numeric.decodeQuantity(gasUsed);
+            return Numeric.decodeQuantity(quotaUsed);
         }
 
-        public String getGasUsed() {
-            return gasUsed;
+        public String getQuotaUsed() {
+            return quotaUsed;
         }
 
-        public void setGasUsed(String gasUsed) {
-            this.gasUsed = gasUsed;
+        public void setQuotaUsed(String quotaUsed) {
+            this.quotaUsed = quotaUsed;
         }
 
         public Proof getProof() {
