@@ -112,7 +112,7 @@ public class KeysTest {
         assertTrue(Keys.verifyAddress("0Xbac68e5cb986ead0253e0632da1131a0a96efa18"));
         assertTrue(Keys.verifyAddress("bac68e5cb986ead0253e0632da1131a0a96efa18"));
         assertFalse(Keys.verifyPrivateKey("xbac68e5cb986ead0253e0632da1131a0a96efa18"));
-        assertFalse(Keys.verifyPrivateKey("0bac68e5cb986ead0253e0632da1131a0a96efa18"));
+        assertFalse(Keys.verifyPrivateKey("0bac68re5cb986ead0253e0632da1131a0a96efa18"));
         assertFalse(Keys.verifyPrivateKey("gac68e5cb986ead0253e0632da1131a0a96efa18"));
     }
 
@@ -127,7 +127,7 @@ public class KeysTest {
         assertFalse(Keys.verifyPrivateKey(
                 "x02b8f18d92354b055bd02cd51449b05b7b97104931f10485d1df905e4e70fbca"));
         assertFalse(Keys.verifyPrivateKey(
-                "002b8f18d92354b055bd02cd51449b05b7b97104931f10485d1df905e4e70fbca"));
+                "00k2b8f18d92354b055bd02cd51449b05b7b97104931f10485d1df905e4e70fbca"));
         assertFalse(Keys.verifyPrivateKey(
                 "h2b8f18d92354b055bd02cd51449b05b7b97104931f10485d1df905e4e70fbca"));
     }
