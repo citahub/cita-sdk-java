@@ -1,4 +1,4 @@
-## Transaction
+# Transaction
 
 Transction定义在core.request中，用于将交易数据封装并且签名（如果需要），交易数据或者签名后的交易数据被appCall()或者appSendRawTransaction()所使用进行合约的调用或者部署。
 
@@ -13,7 +13,7 @@ Transction定义在core.request中，用于将交易数据封装并且签名（�
 
 **方法名**
 
-`Transaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
+`Transaction(String to, BigInteger nonce, long quota, long valid_until_block, BigInteger version, int chainId, String value, String data)`
 
 根据参数新建一个交易。
 
@@ -39,7 +39,7 @@ String to = "{address to which the tx is sent}";
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long quota = 9999;
 long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
-int version = 0;
+BigInteger version = BigInteger.valueOf(0);
 in chainId = 1;
 String value = "100000000";
 String init = "{encoded abi}";
@@ -49,7 +49,7 @@ Transaction tx = Transction.createContractTransaction(nonce, quota, valid_until_
 
 **方法名**
 
-`createContractTransaction(BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String init)`
+`createContractTransaction(BigInteger nonce, long quota, long valid_until_block, BigInteger version, int chainId, String value, String init)`
 
 根据参数新建一个部署合约的交易。
 
@@ -76,7 +76,7 @@ CITAj service = CITAj.build(new HttpService("127.0.0.1"));
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long quota = 9999;
 long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
-int version = 0;
+BigInteger version = BigInteger.valueOf(0);
 in chainId = 1;
 String value = "100000000";
 String init = "{encoded abi}";
@@ -91,7 +91,7 @@ AppSendTransaction appSendTx = service.sendRawTransaction(signedTx);
 
 **方法名**
 
-`createFunctionCallTransaction(String to, BigInteger nonce, long quota, long valid_until_block, int version, int chainId, String value, String data)`
+`createFunctionCallTransaction(String to, BigInteger nonce, long quota, long valid_until_block, BigInteger version, int chainId, String value, String data)`
 
 根据参数新建一个合约调用的交易。
 
@@ -121,7 +121,7 @@ String to = "{smart contract address}";
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long quota = 9999;
 long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
-int version = 0;
+BigInteger version = BigInteger.valueOf(0);
 in chainId = 1;
 String value = "100000000";
 String init = "{encoded abi}";
@@ -157,7 +157,7 @@ TransactionManager transactionManager = new TransactionManager(service, credenti
 
 **方法名**
 
-`AppSendTransaction sendTransaction(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
+`AppSendTransaction sendTransaction(String to, String data, long quota, BigInteger nonce, long validUntilBlock, BigInteger version, int chainId, String value)`
 
 通过TransactionManager发送交易。
 
@@ -185,17 +185,17 @@ String contractBin = "{contract bin or function call bin}";
 BigInteger quota = 99999;
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
-int version = 0;
+BigInteger version = BigInteger.valueOf(0);
 int chainId = 1;
 String value = "0";
-AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
+AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, version, chainId, value);
 ```
 
 ### sendTransactionAsync
 
 **方法名**
 
-`Flowable<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, int version, int chainId, String value)`
+`Flowable<AppSendTransaction> sendTransactionAsync(String to, String data, long quota, BigInteger nonce, long validUntilBlock, BigInteger version, int chainId, String value)`
 通过TransactionManager发送交易。
 
 **参数**
@@ -222,8 +222,8 @@ String contractBin = "{contract bin or function call bin}";
 BigInteger quota = 99999;
 BigInteger nonce = BigInteger.valueOf(Math.abs(this.random.nextLong()));
 long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
-int version = 0;
+BigInteger version = BigInteger.valueOf(0);
 int chainId = 1;
 String value = "0";
-Flowable<AppSendTransaction> appSendTransaction = transactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, BigInteger.valueOf(version), chainId, value);
+Flowable<AppSendTransaction> appSendTransaction = transactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, version, chainId, value);
 ```
