@@ -158,14 +158,15 @@ public class Transaction {
 
 
         /*
-        * version 0: cita 0.19
-        * version 1: cita 0.20
-        * */
+         * version 0: cita 0.19
+         * version 1: cita 0.20
+         * version 2: cita 0.24
+         * */
         if (version == 0) {
             builder.setTo(to).setChainId(chainId.intValue());
-        } else if (version == 1) {
+        } else if (version == 1 || version == 2) {
             builder.setToV1(ByteString.copyFrom(ConvertStrByte.hexStringToBytes(to)))
-                .setChainIdV1(ByteString.copyFrom(ConvertStrByte.hexStringToBytes(Numeric.toHexStringNoPrefix(chainId), 256)));
+                    .setChainIdV1(ByteString.copyFrom(ConvertStrByte.hexStringToBytes(Numeric.toHexStringNoPrefix(chainId), 256)));
         }
 
         return builder.build().toByteArray();
