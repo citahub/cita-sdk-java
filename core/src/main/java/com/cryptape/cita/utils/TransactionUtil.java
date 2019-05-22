@@ -111,10 +111,11 @@ public class TransactionUtil {
 
         //version 0: cita 0.19
         //version 1: cita 0.20
+        //version 2: cita 0.24
         if (version == 0) {
             to = blockChainTx.getTo();
             chainId = BigInteger.valueOf(blockChainTx.getChainId());
-        } else if (version == 1) {
+        } else if (version == 1 || version == 2) {
             to = bytesToHexString(blockChainTx.getToV1());
             chainId = Numeric.toBigInt(bytesToHexString(blockChainTx.getChainIdV1()));
         }
