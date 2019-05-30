@@ -1,4 +1,4 @@
-## Account
+# Account
 
 Account 封装了 TransactionManager，通过 CITAj 和账户的私钥进行实例化。
 
@@ -36,7 +36,7 @@ Account account = new Account(privateKey, service);
 
 **方法名**
 
-`AppSendTransaction deploy(File contractFile, BigInteger nonce, long quota, int version, int chainId, String value)`
+`AppSendTransaction deploy(File contractFile, BigInteger nonce, long quota, BigInteger version, int chainId, String value)`
 
 部署合约。
 
@@ -65,7 +65,7 @@ AppSendTransaction appSendTransaction = account.deploy(new File(path), randomNon
 
 **方法名**
 
-`Object callContract(String contractAddress, String funcName, BigInteger nonce, long quota, int version, int chainId, String value, Object... args)`
+`Object callContract(String contractAddress, String funcName, BigInteger nonce, long quota, BigInteger version, int chainId, String value, Object... args)`
 
 调用合约方法,根据Abi中对方法的定义判断使用sendRawTransaction还是app_call。
 

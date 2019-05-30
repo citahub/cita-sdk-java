@@ -1,4 +1,4 @@
-## JSONRPC
+# JSONRPC
 
 CITAj 接口继承了 CITA 和 CITAjRx 两个接口，CITAj 的实现类（比如JsonRpc2_0CITAj），提供了方法以发送交易的方式对合约进行部署和函数调用。
 

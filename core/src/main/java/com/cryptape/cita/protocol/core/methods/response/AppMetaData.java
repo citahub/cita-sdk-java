@@ -39,10 +39,10 @@ public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {
         public BigInteger getChainId() {
             if (this.version == 0) {
                 return Numeric.toBigInt(chainId);
-            } else if (this.version == 1) {
+            } else if (this.version == 1 || this.version == 2) {
                 return Numeric.toBigInt(this.chainIdV1);
             } else {
-                throw new IllegalArgumentException("version number can only be 1 or 2");
+                throw new IllegalArgumentException("version number can only be 0 , 1 or 2");
             }
         }
 
