@@ -29,12 +29,12 @@ maven
 <dependency>
   <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.23.0</version>
+  <version>0.24.0</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:0.23.0'
+compile 'com.cryptape.cita:core:0.24.0'
 ```
 
 Install manually
@@ -170,12 +170,12 @@ Gradle 4.3
 <dependency>
   <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.23.0</version>
+  <version>0.24.0</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:0.23.0'
+compile 'com.cryptape.cita:core:0.24.0'
 ```
 
 手动安装  
