@@ -179,7 +179,7 @@ AppSendTransaction
 **示例**
 
 ```
-CitaTransactionManager transactionManager = new CitaTransactionManager(service, credentials);
+TransactionManager transactionManager = new TransactionManager(service, credentials);
 String to = "{address to which the contract is sent}";
 String contractBin = "{contract bin or function call bin}";
 BigInteger quota = 99999;
@@ -188,7 +188,7 @@ long valid_until_block = service.appBlockNumber().send().getBlockNumber() + 88;
 BigInteger version = BigInteger.valueOf(0);
 int chainId = 1;
 String value = "0";
-AppSendTransaction appSendTransaction = citaTransactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, version, chainId, value);
+AppSendTransaction appSendTransaction = transactionManager.sendTransaction(to, contractBin, quota, nonce, valid_until_block, version, chainId, value);
 ```
 
 ### sendTransactionAsync

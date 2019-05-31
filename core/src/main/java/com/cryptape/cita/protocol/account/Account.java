@@ -1,5 +1,6 @@
 package com.cryptape.cita.protocol.account;
 
+import com.cryptape.cita.utils.Numeric;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -49,14 +50,40 @@ public class Account {
 
     /// TODO: get contract address from receipt after deploy, then return contract name
     public AppSendTransaction deploy(
-            File contractFile, String nonce, long quota,
-            int version, BigInteger chainId, String value)
-            throws IOException, InterruptedException, CompiledContract.ContractCompileError {
+        File contractFile, String nonce, long quota,
+        int version, BigInteger chainId, String value)
+        throws IOException, InterruptedException, CompiledContract.ContractCompileError {
         CompiledContract contract = new CompiledContract(contractFile);
         String contractBin = contract.getBin();
         return this.transactionManager
-                .sendTransaction("", contractBin, quota, nonce, getValidUntilBlock(),
-                        version, chainId, value);
+            .sendTransaction("", contractBin, quota, nonce, getValidUntilBlock(),
+                version, chainId, value);
+    }
+
+    /**
+     *
+     * @param contractFile
+     * @param constructorCode add by timmyz, fulfill the construction contract situations
+     * @param nonce
+     * @param quota
+     * @param version
+     * @param chainId
+     * @param value
+     * @return
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws CompiledContract.ContractCompileError
+     */
+    public AppSendTransaction deploy(
+        File contractFile, String constructorCode, String nonce, long quota,
+        int version, BigInteger chainId, String value)
+        throws IOException, InterruptedException, CompiledContract.ContractCompileError {
+        CompiledContract contract = new CompiledContract(contractFile);
+        String contractBin = contract.getBin();
+        String data = constructorCode != null ? contractBin + Numeric.cleanHexPrefix(constructorCode) : contractBin;
+        return this.transactionManager
+            .sendTransaction("", data, quota, nonce, getValidUntilBlock(),
+                version, chainId, value);
     }
 
     public Flowable<AppSendTransaction> deployAsync(

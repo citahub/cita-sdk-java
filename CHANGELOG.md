@@ -1,5 +1,12 @@
 All notable changes to this project will be documented in this file.
 
+# [v0.24.0](https://github.com/cryptape/cita-sdk-java/compare/v0.23.0...v0.24.0) (2019-05-30)
+
+### Feature
+
+* Support new protocol version 2
+
+
 # [v0.23.0](https://github.com/cryptape/cita-sdk-java/compare/v0.22.3...v0.23.0) (2019-04-30)
 
 ### Feature
