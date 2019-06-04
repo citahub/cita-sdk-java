@@ -39,6 +39,8 @@ public abstract class Contract extends ManagedTransaction {
 
     // https://www.reddit.com/r/ethereum/comments/5g8ia6/attention_miners_we_recommend_raising_gas_limit/
 
+    private static final String ABI_ADDRESS = "ffffffffffffffffffffffffffffffffff010001";
+
     protected final String contractBinary;
     protected String contractAddress;
     protected String nonce;
@@ -221,6 +223,37 @@ public abstract class Contract extends ManagedTransaction {
                 contractAddress, data, quota, nonce, validUntilBlock, version, chainId, value);
     }
 
+    TransactionReceipt uploadAbi(
+        String abi, long quota, String nonce, long validUntilBlock,
+        int version , BigInteger chainId, String value)
+        throws TransactionException, IOException {
+        String data = hex_remove_0x(contractAddress) + hex_remove_0x(bytesToHexStr(abi.getBytes()));
+        return send(
+            ABI_ADDRESS, data, quota, nonce, validUntilBlock,
+            version, chainId, value);
+    }
+
+    private String hex_remove_0x(String hex) {
+        if (hex.contains("0x")) {
+            return hex.substring(2);
+        }
+        return hex;
+    }
+
+    private String bytesToHexStr(byte[] byteArr) {
+        if (null == byteArr || byteArr.length < 1) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (byte t : byteArr) {
+            if ((t & 0xF0) == 0) {
+                sb.append("0");
+            }
+            sb.append(Integer.toHexString(t & 0xFF));
+        }
+        return sb.toString();
+    }
+
     protected <T extends Type> RemoteCall<T> executeRemoteCallSingleValueReturn(Function function) {
         return new RemoteCall<>(
                 () -> executeCallSingleValueReturn(function));
@@ -256,6 +289,15 @@ public abstract class Contract extends ManagedTransaction {
                         quota, nonce, validUntilBlock, version, chainId, value));
     }
 
+    protected RemoteCall<TransactionReceipt> executeUploadAbi(
+        String abi, long quota, String nonce,
+        long validUntilBlock, int version,
+        BigInteger chainId, String value) {
+        return new RemoteCall<>(
+            () -> executeTransaction(
+                abi, quota, nonce, validUntilBlock, version, chainId, value));
+    }
+
 
     private static <T extends Contract> T create(
             T contract, String binary, String encodedConstructor,
@@ -277,40 +319,100 @@ public abstract class Contract extends ManagedTransaction {
         return contract;
     }
 
+    private static <T extends Contract> T create(
+        T contract, String binary, String encodedConstructor,
+        long quota, String nonce, long validUntilBlock,
+        int version, BigInteger chainId, String value, String abi)
+        throws IOException, TransactionException {
+        TransactionReceipt transactionReceipt =
+            contract.executeTransaction(
+                binary + encodedConstructor, quota, nonce,
+                validUntilBlock, version, chainId, value);
+
+        String contractAddress = transactionReceipt.getContractAddress();
+        if (contractAddress == null) {
+            throw new RuntimeException("Empty contract address returned");
+        }
+        contract.setContractAddress(contractAddress);
+        contract.setTransactionReceipt(transactionReceipt);
+
+        if(abi != null && abi.length() > 0) {
+            contract.uploadAbi(abi, quota, nonce,
+                validUntilBlock + 88, version, chainId, value);
+        }
+
+        return contract;
+    }
+
 
     protected static <T extends Contract> T deploy(
-            Class<T> type,
-            CITAj citaj, TransactionManager transactionManager,
-            long quota, String nonce, long validUntilBlock,
-            int version, String binary, BigInteger chainId,
-            String value, String encodedConstructor)
-            throws IOException, TransactionException {
+        Class<T> type,
+        CITAj citaj, TransactionManager transactionManager,
+        long quota, String nonce, long validUntilBlock,
+        int version, String binary, BigInteger chainId,
+        String value, String encodedConstructor)
+        throws IOException, TransactionException {
 
         try {
             Constructor<T> constructor = type.getDeclaredConstructor(
-                    String.class,
-                    CITAj.class, TransactionManager.class);
+                String.class,
+                CITAj.class, TransactionManager.class);
             constructor.setAccessible(true);
 
             // we want to use null here to ensure that "to" parameter on message is not populated
             // Unfortunately, we need empty string(not null) that represent create contract
             T contract = constructor.newInstance(
-                    "", citaj, transactionManager);
+                "", citaj, transactionManager);
             return create(contract, binary, encodedConstructor, quota, nonce,
-                    validUntilBlock, version, chainId, value);
+                validUntilBlock, version, chainId, value);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected static <T extends Contract> T deploy(
+        Class<T> type,
+        CITAj citaj, TransactionManager transactionManager,
+        long quota, String nonce, long validUntilBlock,
+        int version, String binary, BigInteger chainId,
+        String value, String encodedConstructor, String abi)
+        throws IOException, TransactionException {
+
+        try {
+            Constructor<T> constructor = type.getDeclaredConstructor(
+                String.class,
+                CITAj.class, TransactionManager.class);
+            constructor.setAccessible(true);
+
+            // we want to use null here to ensure that "to" parameter on message is not populated
+            // Unfortunately, we need empty string(not null) that represent create contract
+            T contract = constructor.newInstance(
+                "", citaj, transactionManager);
+            return create(contract, binary, encodedConstructor, quota, nonce,
+                validUntilBlock, version, chainId, value, abi);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
-            Class<T> type, CITAj citaj, TransactionManager transactionManager,
-            long quota, String nonce, long validUntilBlock,
-            int version, BigInteger chainId, String value,
-            String binary, String encodedConstructor) {
+        Class<T> type, CITAj citaj, TransactionManager transactionManager,
+        long quota, String nonce, long validUntilBlock,
+        int version, BigInteger chainId, String value,
+        String binary, String encodedConstructor) {
         return new RemoteCall<>(() -> deploy(
-                type, citaj, transactionManager, quota, nonce, validUntilBlock,
-                version, binary, chainId, value, encodedConstructor));
+            type, citaj, transactionManager, quota, nonce, validUntilBlock,
+            version, binary, chainId, value, encodedConstructor));
+    }
+
+    protected static <T extends Contract> RemoteCall<T> deployRemoteCall(
+        Class<T> type, CITAj citaj, TransactionManager transactionManager,
+        long quota, String nonce, long validUntilBlock,
+        int version, BigInteger chainId, String value,
+        String binary, String encodedConstructor, String abi) {
+        return new RemoteCall<>(() -> deploy(
+            type, citaj, transactionManager, quota, nonce, validUntilBlock,
+            version, binary, chainId, value, encodedConstructor, abi));
     }
 
     public static EventValues staticExtractEventParameters(

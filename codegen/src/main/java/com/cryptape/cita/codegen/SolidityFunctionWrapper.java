@@ -57,6 +57,7 @@ import com.cryptape.cita.utils.Strings;
 public class SolidityFunctionWrapper extends Generator {
 
     private static final String BINARY = "BINARY";
+    private static final String ABI = "ABI";
     private static final String CITAJ = "citaj";
     private static final String CREDENTIALS = "credentials";
     private static final String TRANSACTION_MANAGER = "transactionManager";
@@ -105,7 +106,7 @@ public class SolidityFunctionWrapper extends Generator {
             throws IOException, ClassNotFoundException {
         String className = Strings.capitaliseFirstLetter(contractName);
 
-        TypeSpec.Builder classBuilder = createClassBuilder(className, bin);
+        TypeSpec.Builder classBuilder = createClassBuilder(className, bin, convertToAbiString(abi));
 
         classBuilder.addMethod(
                 buildConstructorAdaptToCita(TransactionManager.class, TRANSACTION_MANAGER));
@@ -170,7 +171,7 @@ public class SolidityFunctionWrapper extends Generator {
     }
 
 
-    private TypeSpec.Builder createClassBuilder(String className, String binary) {
+    private TypeSpec.Builder createClassBuilder(String className, String binary, String abi) {
 
         String javadoc = CODEGEN_WARNING + getCITAjVersion();
 
@@ -178,7 +179,8 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PUBLIC)
                 .addJavadoc(javadoc)
                 .superclass(Contract.class)
-                .addField(createBinaryDefinition(binary));
+                .addField(createBinaryDefinition(binary))
+                .addField(createAbiDefinition(abi));
     }
 
     private String getCITAjVersion() {
@@ -199,6 +201,13 @@ public class SolidityFunctionWrapper extends Generator {
                 .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
                 .initializer("$S", binary)
                 .build();
+    }
+
+    private FieldSpec createAbiDefinition(String abi) {
+        return FieldSpec.builder(String.class, ABI)
+            .addModifiers(Modifier.PRIVATE, Modifier.FINAL, Modifier.STATIC)
+            .initializer("$S", abi)
+            .build();
     }
 
     private List<MethodSpec> buildFunctionDefinitions(
@@ -1073,6 +1082,11 @@ public class SolidityFunctionWrapper extends Generator {
         ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
         AbiDefinition[] abiDefinition = objectMapper.readValue(abi, AbiDefinition[].class);
         return Arrays.asList(abiDefinition);
+    }
+
+    private String convertToAbiString(List<AbiDefinition> abi) throws IOException {
+        ObjectMapper objectMapper = ObjectMapperFactory.getObjectMapper();
+        return objectMapper.writeValueAsString(abi);
     }
 
     private static class NamedTypeName {
