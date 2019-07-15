@@ -15,7 +15,7 @@ dependencies {
             "com.google.code.gson:gson:$gsonVersion"
     testCompile project(path: ':crypto', configuration: 'archives'),
             "nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion"
-    testCompile files(project(':crypto').sourceSets.test.output.classesDir)
+    testCompile files(project(':crypto').sourceSets.test.output.classesDirs)
 }
 
 task createProperties(dependsOn: processResources) doLast {

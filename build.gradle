@@ -22,7 +22,11 @@ buildscript {
 
     dependencies {
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        /*
+        * the version need adapt to gradle version
+        * refer to https://github.com/fzdy1914/Inventory-Manager/commit/6e0df8af1ddf9261082389c4e1bb2fb728c2ae66
+         */
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.0.0'
     }
 }
 
