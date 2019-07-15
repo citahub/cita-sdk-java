@@ -1,4 +1,4 @@
-//apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 
 description 'cita-sdk-java command line tools'
@@ -9,8 +9,13 @@ dependencies {
     testCompile project(path: ':crypto', configuration: 'archives'),
             project(path: ':core', configuration: 'archives'),
             project(path: ':codegen', configuration: 'archives')
-    testCompile files(project(':crypto').sourceSets.test.output.classesDir)
-    testCompile files(project(':codegen').sourceSets.test.output.classesDir)
+    /*
+    * The classesDir property was deprecated in gradle 4.x, and removed in gradle 5.x
+    * refer to https://stackoverflow.com/questions/54707148/gradle-could-not-get-unknown-property-classesdir-for-main-classes
+    * refer to https://docs.gradle.org/5.0/release-notes.html
+    */
+    testCompile files(project(':crypto').sourceSets.test.output.classesDirs)
+    testCompile files(project(':codegen').sourceSets.test.output.classesDirs)
 }
 
 // Build command line library release with target distShadowZip
