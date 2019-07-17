@@ -52,7 +52,7 @@ gradle shadowJar
 ### CITA Test net
 
 Use CITA test net (recommended):
-http://121.196.200.225:1337 is provided as a test net.
+https://node.cryptape.com is provided as a test net.
 
 Or build your own CITA net:
 Please find more information in [CITA](https://github.com/cryptape/cita).
@@ -192,7 +192,7 @@ gradle shadowJar
 
 ### CITA 测试网络
 使用 CITA 测试网络（推荐）：  
-http://121.196.200.225:1337  
+https://node.cryptape.com
 
 或者可以部署你自己的 CITA：  
 如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/cryptape/cita)。
