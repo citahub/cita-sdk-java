@@ -24,6 +24,7 @@ import com.cryptape.cita.crypto.sm2.SM3;
 import com.cryptape.cita.utils.Numeric;
 import com.cryptape.cita.utils.Strings;
 
+import static com.cryptape.cita.utils.Numeric.encodeQuantity;
 import static org.abstractj.kalium.encoders.Encoder.HEX;
 import static com.cryptape.cita.utils.Numeric.cleanHexPrefix;
 import static com.cryptape.cita.utils.Numeric.prependHexPrefix;
@@ -239,7 +240,7 @@ public class Transaction {
         } else {
             BigInteger valueBigInt = value.matches("0[xX][0-9a-fA-F]+") ? Numeric.toBigInt(value) : new BigInteger(value);
             if (Transaction.MAX_VALUE.compareTo(valueBigInt) > 0) {
-                return valueBigInt.toString(16);
+                return encodeQuantity(valueBigInt);
             } else {
                 System.out.println("Value you input is out of bound");
                 throw new IllegalArgumentException(
