@@ -17,7 +17,19 @@ public class SM2Keys {
     private static final int PUBLIC_KEY_LENGTH_IN_HEX = PUBLIC_KEY_SIZE << 1;
 
     public static String getAddress(ECPoint key) {
-        String publicKey = key.getRawXCoord().toString() + key.getRawYCoord().toString();
+        String pubXStr = key.getRawXCoord().toString();
+        String pubYStr = key.getRawYCoord().toString();
+        if (pubXStr.length() < PUBLIC_KEY_SIZE) {
+            pubXStr = Strings.zeros(
+                    PUBLIC_KEY_SIZE - pubXStr.length())
+                    + pubXStr;
+        }
+        if (pubYStr.length() < PUBLIC_KEY_SIZE) {
+            pubYStr = Strings.zeros(
+                    PUBLIC_KEY_SIZE - pubYStr.length())
+                    + pubYStr;
+        }
+        String publicKey = pubXStr + pubYStr;
         return getAddress(publicKey);
     }
 
