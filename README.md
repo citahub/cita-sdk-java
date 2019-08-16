@@ -20,7 +20,7 @@ For detailed documentation, see [documentation](docs/index.md).
 
 ### Prerequisites
 Java 8  
-Gradle 4.3  
+Gradle 5.0  
 
 ### Install
 Install from repositories:  
@@ -29,12 +29,12 @@ maven
 <dependency>
   <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.24.0</version>
+  <version>0.24.1</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:0.24.0'
+compile 'com.cryptape.cita:core:0.24.1'
 ```
 
 Install manually
@@ -52,7 +52,7 @@ gradle shadowJar
 ### CITA Test net
 
 Use CITA test net (recommended):
-http://121.196.200.225:1337 is provided as a test net.
+https://node.cryptape.com is provided as a test net.
 
 Or build your own CITA net:
 Please find more information in [CITA](https://github.com/cryptape/cita).
@@ -124,7 +124,7 @@ Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under 
 ```shell
 java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
 ```
-`Token.java` will be created from commands above and class `Token` can be used with CitaTransactionManager to deploy and call smart contract `Token`. Please be attention that [CitaTransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/CitaTransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
+`Token.java` will be created from commands above and class `Token` can be used with TransactionManager to deploy and call smart contract `Token`. Please be attention that [TransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/TransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
 Please check [TokenCodegenExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenCodegenExample.java) for a complete example.
 
 ### Working with smart contract with cita-sdk-java Account (Test)
@@ -162,7 +162,7 @@ cita-sdk-java 是对以太坊 Web3j 进行改写，适配 CITA 的一个 Java �
 
 ### 预装组件
 Java 8  
-Gradle 4.3
+Gradle 5.0
 
 ### 安装
 通过远程仓库安装：  
@@ -170,12 +170,12 @@ Gradle 4.3
 <dependency>
   <groupId>com.cryptape.cita</groupId>
   <artifactId>core</artifactId>
-  <version>0.24.0</version>
+  <version>0.24.1</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:0.24.0'
+compile 'com.cryptape.cita:core:0.24.1'
 ```
 
 手动安装  
@@ -192,7 +192,7 @@ gradle shadowJar
 
 ### CITA 测试网络
 使用 CITA 测试网络（推荐）：  
-http://121.196.200.225:1337  
+https://node.cryptape.com
 
 或者可以部署你自己的 CITA：  
 如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/cryptape/cita)。
@@ -262,7 +262,7 @@ $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes]
 ```
 java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
 ```
-`Token.java` 会通过以上命令生成， `Token` 可以与 `CitaTransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [CitaTransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/CitaTransactionManager.java) 而不是 TransactionManager。
+`Token.java` 会通过以上命令生成， `Token` 可以与 `TransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [TransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/TransactionManager.java) 而不是 TransactionManager。
 请在 [TokenCodegenExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenCodegenExample.java) 查看完整代码.
 
 ### 通过 CITAj 中的 Account 与智能合约交互（测试阶段）

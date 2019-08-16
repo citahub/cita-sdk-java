@@ -1,5 +1,7 @@
 package com.cryptape.cita.utils;
 
+import static com.cryptape.cita.utils.Numeric.prependHexPrefix;
+
 import java.math.BigInteger;
 import java.security.SignatureException;
 
@@ -104,7 +106,7 @@ public class TransactionUtil {
         long quota = blockChainTx.getQuota();
         long validUntilBlock = blockChainTx.getValidUntilBlock();
         String data = bytesToHexString(blockChainTx.getData());
-        String value = bytesToHexString(blockChainTx.getValue());
+        String value = prependHexPrefix(bytesToHexString(blockChainTx.getValue())); // the value-param of Transaction class need add format tag
 
         String to = null;
         BigInteger chainId = null;

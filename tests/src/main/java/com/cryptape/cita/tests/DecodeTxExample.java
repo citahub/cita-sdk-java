@@ -1,5 +1,7 @@
 package com.cryptape.cita.tests;
 
+import static com.cryptape.cita.utils.Numeric.decodeQuantity;
+
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
@@ -40,9 +42,10 @@ public class DecodeTxExample {
         String nonce = TestUtil.getNonce();
         String data = ConvertStrByte.stringToHexString("some message");
         long validUtilBlock = TestUtil.getValidUtilBlock(service).longValue();
+        String value = decodeQuantity("0xa9b").toString();  // test value should be all-round, contains  at least one a-f
 
         Transaction transferTx = new Transaction(
-                payeeAddr, nonce, quotaToDeploy, validUtilBlock, version, chainId, "1", data);
+                payeeAddr, nonce, quotaToDeploy, validUtilBlock, version, chainId, value , data);
 
         String rawTx = transferTx.sign(privateKey, cryptoTx, false);
         return service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
