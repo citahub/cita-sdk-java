@@ -1,5 +1,12 @@
 All notable changes to this project will be documented in this file.
 
+# [v0.24.1](https://github.com/cryptape/cita-sdk-java/compare/v0.24.0...v0.24.1) (2019-08-16)
+
+### Feature
+
+* add a constructor parameter to contract deploy method 
+* fix some issues
+
 # [v0.24.0](https://github.com/cryptape/cita-sdk-java/compare/v0.23.0...v0.24.0) (2019-05-30)
 
 ### Feature
