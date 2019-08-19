@@ -68,5 +68,9 @@ public class SystemContractExample {
         //if (setStake) {
         //    System.out.println("success");
         //}
+
+        //test query groups
+        List<String> allGroups = sysContract.queryGroups("0xe2066149012e6c1505e3549d103068bd0f2f0577");
+        System.out.println("addresses of all groups: " + allGroups);
     }
 }

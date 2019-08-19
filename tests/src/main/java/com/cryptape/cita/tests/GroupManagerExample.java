@@ -34,7 +34,7 @@ public class GroupManagerExample {static CITAj service;
         addresses.add("0x1c6eebf136ee234caff3a95e0d9d22e40c9ac4ca");
         String newGroupAddr = sysContract.newGroup("vlk1", addresses, adminPrivateKey, version, chainId);
         if ("".equals(newGroupAddr)) {
-            System.out.println("创建新group失败！");
+            System.out.println("New group failed！");
             return;
         }
         System.out.println("Address for new group: " + newGroupAddr);

@@ -689,6 +689,27 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return new QueryResourceResult(contracts, functions);
     }
 
+    /**
+     * query all groups
+     * @param senderAddress sender address
+     * @return list addresses of all groups
+     * @throws IOException
+     */
+    public List<String> queryGroups(String senderAddress) throws IOException {
+        String callData = CITASystemContract.encodeCall(USER_MANAGER_QUERY_GROUPS);
+        AppCall callResult = CITASystemContract.sendCall(
+                senderAddress, USER_MANAGER_ADDR, callData, service);
+        List<TypeReference<?>> outputParamters
+                = Collections.singletonList(new TypeReference<DynamicArray<Address>>() {});
+        List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParamters);
+        ArrayList<Address> results = (ArrayList<Address>) resultTypes.get(0).getValue();
+        List<String> list = new ArrayList<>(results.size());
+        for (Address address : results) {
+            list.add(address.getValue());
+        }
+        return list;
+    }
+
     public Transaction constructStoreTransaction(String data, int version, BigInteger chainId) {
         return new Transaction(
                 STORE_ADDR, Util.getNonce(), DEFAULT_QUOTA,
