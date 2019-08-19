@@ -316,7 +316,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 USER_MANAGER_NEW_GROUP, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                USER_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
 
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log == null ? "" : log.getAddress();
@@ -328,7 +328,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 USER_MANAGER_DELETE_GROUP, inputParameter);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                USER_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
@@ -341,7 +341,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 USER_MANAGER_UPDATE_GROUP_NAME, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                USER_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
@@ -358,7 +358,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 USER_MANAGER_ADD_ACCOUNTS, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                USER_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
@@ -375,7 +375,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 USER_MANAGER_DELETE_ACCOUNTS, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                USER_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
@@ -387,14 +387,14 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 USER_MANAGER_CHECK_SCOPE, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                USER_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
     public List<String> queryGroups(String from) throws Exception {
         String callData = CITASystemContract.encodeCall(USER_MANAGER_QUERY_GROUPS);
         AppCall callResult = CITASystemContract.sendCall(
-                from, GROUP_MANAGER_ADDR, callData, service);
+                from, USER_MANAGER_ADDR, callData, service);
         List<TypeReference<?>> outputParameters = Collections.singletonList(
                 new TypeReference<DynamicArray<Address>>() {});
         List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParameters);
