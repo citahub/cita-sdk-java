@@ -25,7 +25,9 @@ public class Config {
     private static final String DEFAULT_QUOTA_Transfer = "QuotaForTransfer";
     private static final String DEFAULT_QUOTA_Deployment = "QuotaForDeployment";
     private static final String ADMIN_PRIVATE_KEY = "AdminPrivateKey";
+    private static final String ADMIN_ADDRESS = "AdminAddress";
     private static final String CRYPTO_TYPE = "CryptoType";
+
 
     private Properties props;
     public String chainId;
@@ -46,6 +48,7 @@ public class Config {
     public CITAj service;
     public String adminPrivateKey;
     public String cryptoTx;
+    public String adminAddress;
 
 
     public Config() {
@@ -105,6 +108,7 @@ public class Config {
         defaultQuotaDeployment = props.getProperty(DEFAULT_QUOTA_Deployment);
         adminPrivateKey = props.getProperty(ADMIN_PRIVATE_KEY);
         cryptoTx = props.getProperty(CRYPTO_TYPE);
+        adminAddress = props.getProperty(ADMIN_ADDRESS);
     }
 
 }

@@ -301,6 +301,115 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
+    public String newGroup(String groupName, List<String> accounts, String adminPrivatekey, int version, BigInteger chainId) throws Exception {
+        String nameHex = Util.addUpTo64Hex(ConvertStrByte.stringToHexString(groupName));
+        byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
+        List<Address> addrsToAdd = new ArrayList<>();
+        for (String str : accounts) {
+            addrsToAdd.add(new Address(str));
+        }
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Bytes32(nameBytes),
+                new DynamicArray<Address>(addrsToAdd));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_NEW_GROUP, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+
+        Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
+        return log == null ? "" : log.getAddress();
+    }
+
+    public boolean deleteGroup(String groupAddr, String adminPrivatekey, int version, BigInteger chainId) throws Exception {
+        List<Type> inputParameter = Arrays.asList(new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr));
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_DELETE_GROUP, inputParameter);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean updateGroupName(String groupAddr, String newGroupName, String adminPrivatekey, int version, BigInteger chainId) throws Exception {
+        String nameHex = Util.addUpTo64Hex(ConvertStrByte.stringToHexString(newGroupName));
+        byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
+
+        List<Type> inputParameters = Arrays.asList(new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr), new Bytes32(nameBytes));
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_UPDATE_GROUP_NAME, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean addAccounts(String groupAddr, List<String> accounts, String adminPrivatekey, int version, BigInteger chainId) throws Exception {
+        List<Address> addrsToAdd = new ArrayList<>();
+        for (String str : accounts) {
+            addrsToAdd.add(new Address(str));
+        }
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr),
+                new DynamicArray<Address>(addrsToAdd));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_ADD_ACCOUNTS, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean deleteAccounts(String groupAddr, List<String> accounts, String adminPrivatekey, int version, BigInteger chainId) throws Exception {
+        List<Address> addrsToAdd = new ArrayList<>();
+        for (String str : accounts) {
+            addrsToAdd.add(new Address(str));
+        }
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr),
+                new DynamicArray<Address>(addrsToAdd));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_DELETE_ACCOUNTS, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean checkScope(String groupAddr, String adminPrivatekey, int version, BigInteger chainId) throws Exception {
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_CHECK_SCOPE, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                GROUP_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public List<String> queryGroups(String from) throws Exception {
+        String callData = CITASystemContract.encodeCall(USER_MANAGER_QUERY_GROUPS);
+        AppCall callResult = CITASystemContract.sendCall(
+                from, GROUP_MANAGER_ADDR, callData, service);
+        List<TypeReference<?>> outputParameters = Collections.singletonList(
+                new TypeReference<DynamicArray<Address>>() {});
+        List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParameters);
+        if (resultTypes.isEmpty())
+            return null;
+        List<String> list = new ArrayList<>();
+        ArrayList<Address> results = (ArrayList<Address>) resultTypes.get(0).getValue();
+        for (Address address : results) {
+            if (INTRA_GROUP_USER_MANAGEMENT_ADDR.equalsIgnoreCase(address.getValue()))
+                continue;
+            list.add(address.getValue());
+        }
+        return list;
+    }
+
     public boolean addResources(
             List<String> addrs,
             List<String> funcs,
