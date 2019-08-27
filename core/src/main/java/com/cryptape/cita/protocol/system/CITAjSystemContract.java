@@ -601,6 +601,50 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return list;
     }
 
+    /**
+     * new group
+     * @see <a href="https://docs.citahub.com/zh-CN/cita/sys-contract-interface/interface#newgroup">newGroup</a>
+     * @param superAdminAddress the address of super_admin
+     * @param groupName the name of group to be created
+     * @param accounts accounts added to the group
+     * @param adminPrivateKey the private key of super_admin
+     * @param version
+     * @param chainId
+     * @return the transaction hash for creating group
+     * @throws IOException
+     */
+    public String newGroup(String superAdminAddress,
+                           String groupName,
+                           List<String> accounts,
+                           String adminPrivateKey,
+                           int version,
+                           BigInteger chainId) throws IOException {
+        // account addresses convert to Address object list
+        List<Address> addresses = new ArrayList<>(accounts.size());
+        for(String acc : accounts){
+            addresses.add(new Address(acc));
+        }
+
+        // groupName string convert to bytes32
+        String nameHex = Util.addUpTo64Hex(ConvertStrByte.stringToHexString(groupName));
+        byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
+
+        // build input parameters
+        List<Type> inputParameters = Arrays.asList(
+                new Address(superAdminAddress),//origin
+                new Bytes32(nameBytes),//name
+                new DynamicArray<Address>(addresses)//account
+        );
+
+        // encode input parameters
+        String funcData = CITASystemContract.encodeFunction(USER_MANAGER_NEW_GROUP, inputParameters);
+
+        // send request to create group and return transaction hash
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return txHash;
+    }
+
     public Transaction constructStoreTransaction(String data, int version, BigInteger chainId) {
         return new Transaction(
                 STORE_ADDR, Util.getNonce(), DEFAULT_QUOTA,
