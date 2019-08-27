@@ -13,6 +13,7 @@ public class SystemContractExample {
     static String adminPriavteKey;
     static int version;
     static BigInteger chainId;
+    static CITAjSystemContract sysContract;
 
     static {
         Config conf = new Config();
@@ -22,11 +23,11 @@ public class SystemContractExample {
         adminPriavteKey = conf.adminPrivateKey;
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
+        sysContract = new CITAjSystemContract(service);
     }
 
     public static void main(String[] args) throws Exception {
 
-        CITAjSystemContract sysContract = new CITAjSystemContract(service);
         long quotaPrice = sysContract.getQuotaPrice(senderAddr);
         System.out.println("Quota price is: " + quotaPrice);
 
@@ -68,9 +69,5 @@ public class SystemContractExample {
         //if (setStake) {
         //    System.out.println("success");
         //}
-
-        //test query groups
-        List<String> allGroups = sysContract.queryGroups("0xe2066149012e6c1505e3549d103068bd0f2f0577");
-        System.out.println("addresses of all groups: " + allGroups);
     }
 }
