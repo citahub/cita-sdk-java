@@ -391,25 +391,6 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return CITASystemContract.checkReceipt(service, txHash);
     }
 
-    public List<String> queryGroups(String from) throws Exception {
-        String callData = CITASystemContract.encodeCall(USER_MANAGER_QUERY_GROUPS);
-        AppCall callResult = CITASystemContract.sendCall(
-                from, USER_MANAGER_ADDR, callData, service);
-        List<TypeReference<?>> outputParameters = Collections.singletonList(
-                new TypeReference<DynamicArray<Address>>() {});
-        List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParameters);
-        if (resultTypes.isEmpty())
-            return null;
-        List<String> list = new ArrayList<>();
-        ArrayList<Address> results = (ArrayList<Address>) resultTypes.get(0).getValue();
-        for (Address address : results) {
-            if (INTRA_GROUP_USER_MANAGEMENT_ADDR.equalsIgnoreCase(address.getValue()))
-                continue;
-            list.add(address.getValue());
-        }
-        return list;
-    }
-
     public boolean addResources(
             List<String> addrs,
             List<String> funcs,
@@ -702,9 +683,13 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         List<TypeReference<?>> outputParamters
                 = Collections.singletonList(new TypeReference<DynamicArray<Address>>() {});
         List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParamters);
+        if (resultTypes.isEmpty())
+            return null;
+        List<String> list = new ArrayList<>();
         ArrayList<Address> results = (ArrayList<Address>) resultTypes.get(0).getValue();
-        List<String> list = new ArrayList<>(results.size());
         for (Address address : results) {
+            if (INTRA_GROUP_USER_MANAGEMENT_ADDR.equalsIgnoreCase(address.getValue()))
+                continue;
             list.add(address.getValue());
         }
         return list;
