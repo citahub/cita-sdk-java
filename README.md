@@ -147,6 +147,44 @@ public Object callContract(String contractAddress, AbiDefinition functionAbi, St
 While contract file is required when first deploy the contract, cita-sdk-java can get the abi file according to address when call methods in deployed contract.
 Please find complete code in [TokenAccountExample](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenAccountExample.java).
 
+## Contributing
+
+### Creating a Bug Report
+open a new issue: https://github.com/cryptape/cita-sdk-java/issues/new
+
+with your version info
+
+### Tech Stack
+
+#### Back end
+Java
+- Version: 8
+- Building: gradle-v5.0
+
+### Coding style
+coding style guide: Google Shell Style guide:
+- https://google.github.io/styleguide/javaguide.html
+
+#### Installing the coding style settings in Intellij
+1. Download the intellij-java-google-style.xml file from the http://code.google.com/p/google-styleguide/ repo.
+2. go into Preferences -> Editor -> Code Style. Click on Manage and import the downloaded Style Setting file. Select GoogleStyle as new coding style.
+
+#### Installing the coding style settings in Eclipse
+1. Download the eclipse-java-google-style.xml file from the http://code.google.com/p/google-styleguide/ repo.
+2. Under Window/Preferences select Java/Code Style/Formatter. Import the settings file by selecting Import.
+
+### Commit your changes
+
+#### Workflow
+[GitHub Flow](https://help.github.com/en/articles/github-flow), [Understanding the GitHub flow](https://guides.github.com/introduction/flow/)
+
+#### git style guide
+use [git-style-guide](https://github.com/agis/git-style-guide) for Branches, Commits,Messages, Merging 
+
+## Versioning
+vx.y.z
+- x.y Follow the version number of CITA
+- z Defined by SDK itself：changed by fixing or adding features
 
 ## 简介
 cita-sdk-java 是对以太坊 Web3j 进行改写，适配 CITA 的一个 Java 开发包。cita-sdk-java 集成了与 CITA 客户端交互的功能，可以用来对 CITA 发送交易，系统配置，信息查询。
@@ -198,6 +236,7 @@ https://node.cryptape.com
 如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/cryptape/cita)。
 
 ### 快速教程
+
 #### 部署智能合约
 与以太坊类似，智能合约是通过发送交易来部署的。CITA 交易对象定义在 [Transaction.java](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/core/methods/request/Transaction.java)。
 在 CITA 交易中，有三个特殊的参数：
@@ -284,3 +323,42 @@ public Object callContract(String contractAddress, AbiDefinition functionAbi, St
 ```
 虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 cita-sdk-java 通过 CITA 提供的 getAbi 接口根据合约地址得到对应的 abi。  
 请在 [TokenAccountExample](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenAccountExample.java) 中查看完整代码。
+
+## 参与贡献
+
+### 报告Bug
+提交 issue: https://github.com/cryptape/cita-sdk-java/issues/new
+记得声明所使用软件的版本信息
+
+### 技术栈
+
+#### Back end
+Java
+- Version: 8
+- Building: gradle-v5.0
+
+### 编码规范
+使用《Google java编程规范》作为我们的编码规范:
+- 英文版: https://google.github.io/styleguide/javaguide.html
+- 中文版: https://jervyshi.gitbooks.io/google-java-styleguide-zh/content/
+
+#### Installing the coding style settings in Intellij
+1. Download the intellij-java-google-style.xml file from the http://code.google.com/p/google-styleguide/ repo.
+2. go into Preferences -> Editor -> Code Style. Click on Manage and import the downloaded Style Setting file. Select GoogleStyle as new coding style.
+
+#### Installing the coding style settings in Eclipse
+1. Download the eclipse-java-google-style.xml file from the http://code.google.com/p/google-styleguide/ repo.
+2. Under Window/Preferences select Java/Code Style/Formatter. Import the settings file by selecting Import.
+
+### 代码提交规范
+
+#### 代码提交流程
+[GitHub Flow](https://help.github.com/en/articles/github-flow), [Understanding the GitHub flow](https://guides.github.com/introduction/flow/)
+
+#### git style guide
+我们要求遵守 [git-style-guide](https://github.com/agis/git-style-guide) 中的规则来进行分支创建、提交以及合并操作。
+
+## 版本规则
+vx.y.z
+- x.y 跟随 CITA 的版本号；
+- z 由 SDK 自己定义：修复或增加feature 则变化
