@@ -89,6 +89,7 @@ public interface CITASystemContract {
     String Authorization_MANAGER_CHECK_RESOURCE = "checkResource";
 
     //User manager
+    String INTRA_GROUP_USER_MANAGEMENT_ADDR = "0xfFFfFFFFFffFFfffFFFFfffffFffffFFfF020009";
     String USER_MANAGER_ADDR = "0xffffffffffffffffffffffffffffffffff02000a";
     //User manager manipulation
     String USER_MANAGER_NEW_GROUP = "newGroup";
