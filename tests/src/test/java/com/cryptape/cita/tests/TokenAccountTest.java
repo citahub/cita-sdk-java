@@ -1,16 +1,17 @@
 package com.cryptape.cita.tests;
 
-import java.io.File;
-import java.math.BigInteger;
-
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.account.Account;
 import com.cryptape.cita.protocol.account.CompiledContract;
+import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
 import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
+import java.io.File;
+import java.math.BigInteger;
+import org.junit.Ignore;
+import org.junit.Test;
 
-public class TokenAccountExample {
+public class TokenAccountTest {
 
     private static BigInteger chainId;
     private static int version;
@@ -49,7 +50,7 @@ public class TokenAccountExample {
                 .send().getTransactionReceipt();
     }
 
-    public TokenAccountExample() throws Exception {
+    public TokenAccountTest() throws Exception {
         account = new Account(privateKey, service);
         tokenContract = new CompiledContract(new File(solPath));
 
@@ -63,7 +64,7 @@ public class TokenAccountExample {
         if (receipt.getErrorMessage() != null) {
             System.out.println("deploy contract failed because of "
                     + receipt.getErrorMessage());
-            System.exit(1);
+            //System.exit(1);
         }
         contractAddress = receipt.getContractAddress();
         System.out.println("deploy contract success and contract address is "
@@ -83,7 +84,7 @@ public class TokenAccountExample {
         if (receipt.getErrorMessage() != null) {
             System.out.println("call transfer method failed because of "
                     + receipt.getErrorMessage());
-            System.exit(1);
+            //System.exit(1);
         }
         System.out.println("call transfer method success and receipt is "
                 + receipt.getTransactionHash());
@@ -107,7 +108,7 @@ public class TokenAccountExample {
         if (receipt.getErrorMessage() != null) {
             System.out.println("call transfer method failed because of "
                     + receipt.getErrorMessage());
-            System.exit(1);
+            //System.exit(1);
         }
         System.out.println("call transfer method success and receipt is "
                 + receipt.getTransactionHash());
@@ -130,7 +131,7 @@ public class TokenAccountExample {
         if (receipt.getErrorMessage() != null) {
             System.out.println("call upload abi method failed because of "
                     + receipt.getErrorMessage());
-            System.exit(1);
+            //System.exit(1);
         } else {
             System.out.println("call upload abi method success. Receipt " + receipt);
         }
@@ -144,7 +145,10 @@ public class TokenAccountExample {
         System.out.println("abi: " + abi);
     }
 
-    public static void main(String[] args) throws Exception {
+    // need solc environment
+    @Ignore
+    @Test
+    public void testTokenAccount() throws Exception {
         // deploy contract with smart contract solidity file
         // and call method "transfer" with generated Abi
         String contractAddr = deployContractAndCallMethodFromSolidity();
@@ -153,14 +157,14 @@ public class TokenAccountExample {
         // and call method "transfer"
         callContractMethodFromRemoteAbi(contractAddr);
 
-        System.exit(0);
+        //System.exit(0);
     }
 
 
     //CHECKSTYLE:OFF
     private static String deployContractAndCallMethodFromSolidity()
             throws Exception {
-        TokenAccountExample tokenAccountExample = new TokenAccountExample();
+        TokenAccountTest tokenAccountExample = new TokenAccountTest();
         String contractAddr = tokenAccountExample.deployContract(solPath);
         tokenAccountExample.getBalance(fromAddress);
         tokenAccountExample.getBalance(toAddress);
@@ -175,7 +179,7 @@ public class TokenAccountExample {
 
     private static void callContractMethodFromRemoteAbi(String contractAddress)
             throws Exception {
-        TokenAccountExample tokenAccountExample = new TokenAccountExample();
+        TokenAccountTest tokenAccountExample = new TokenAccountTest();
         tokenAccountExample.contractAddress = contractAddress;
         tokenAccountExample.transferRemote(toAddress, BigInteger.valueOf(500));
         tokenAccountExample.getBalanceRemote(fromAddress);

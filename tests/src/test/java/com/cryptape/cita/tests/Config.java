@@ -1,14 +1,13 @@
 package com.cryptape.cita.tests;
 
+import com.cryptape.cita.protocol.CITAj;
+import com.cryptape.cita.protocol.http.HttpService;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.http.HttpService;
-
 public class Config {
 
-    private static final String configPath = "tests/src/main/resources/config.properties";
+    private static final String configPath = "src/test/resources/config.properties";
     private static final String CHAIN_ID = "ChainId";
     private static final String VERSION = "Version";
     private static final String TEST_NET_ADDR = "TestNetIpAddr";
@@ -72,7 +71,7 @@ public class Config {
             props.load(new FileInputStream(path));
         } catch (Exception e) {
             System.out.println("Failed to read config at path " + path);
-            System.exit(1);
+            //System.exit(1);
         }
         return props;
     }
@@ -84,7 +83,7 @@ public class Config {
         } catch (Exception e) {
             System.out.println("Failed to read config file. Error: " + e);
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
         }
         return props;
     }

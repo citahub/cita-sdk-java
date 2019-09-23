@@ -1,13 +1,12 @@
 package com.cryptape.cita.tests;
 
-import java.math.BigInteger;
-import java.util.Random;
-
 import com.cryptape.cita.protobuf.ConvertStrByte;
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
-import com.cryptape.cita.utils.Numeric;
 import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
+import com.cryptape.cita.utils.Numeric;
+import java.math.BigInteger;
+import java.util.Random;
 
 public class TestUtil {
 
@@ -22,7 +21,7 @@ public class TestUtil {
             appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
         }
         return appMetaData.getAppMetaDataResult().getVersion();
     }
@@ -33,7 +32,7 @@ public class TestUtil {
             appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
         }
         return appMetaData.getAppMetaDataResult().getChainId();
     }
@@ -60,14 +59,14 @@ public class TestUtil {
                     Thread.sleep(2000);
                 } catch (Exception e1) {
                     System.out.println("failed to get block number, Exception: " + e1);
-                    System.exit(1);
+                    //System.exit(1);
                 }
             }
             count++;
         }
         if (height == -1) {
             System.out.println("Failed to get block number after " + count + " times.");
-            System.exit(1);
+            //System.exit(1);
         }
         return BigInteger.valueOf(height);
     }
