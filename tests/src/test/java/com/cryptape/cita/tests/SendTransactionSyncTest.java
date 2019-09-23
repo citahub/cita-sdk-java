@@ -1,6 +1,8 @@
 package com.cryptape.cita.tests;
 
-import java.math.BigInteger;
+import static junit.framework.TestCase.assertNull;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
@@ -10,9 +12,14 @@ import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
 import com.cryptape.cita.tx.response.PollingTransactionReceiptProcessor;
 import com.cryptape.cita.utils.Convert;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import org.junit.Test;
 
-public class SendTransactionSyncExample {
+public class SendTransactionSyncTest {
 
+    private static String adminKey;
+    private static String adminKeyAddr;
     private static String payerKey;
     private static String payerAddr;
     private static String payeeAddr1;
@@ -28,6 +35,8 @@ public class SendTransactionSyncExample {
         Config conf = new Config();
         conf.buildService(false);
 
+        adminKey = conf.adminPrivateKey;
+        adminKeyAddr = conf.adminAddress;
         payerKey = conf.primaryPrivKey;
         payerAddr = conf.primaryAddr;
         payeeAddr1 = conf.auxAddr1;
@@ -48,7 +57,7 @@ public class SendTransactionSyncExample {
             balance = response.getBalance();
         } catch (Exception e) {
             System.out.println("failed to get balance.");
-            System.exit(1);
+            //System.exit(1);
         }
         return balance;
     }
@@ -79,34 +88,47 @@ public class SendTransactionSyncExample {
         return txReceipt;
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testSendTransactionSync() throws Exception {
 
-        System.out.println(payerAddr + ": "
-                + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-        System.out.println(payeeAddr1 + ": "
-                + Convert.fromWei(getBalance(payeeAddr1).toString(), Convert.Unit.ETHER));
-        System.out.println(payeeAddr2 + ": "
-                + Convert.fromWei(getBalance(payeeAddr2).toString(), Convert.Unit.ETHER));
+        BigDecimal  payeeBalanceEther1 = Convert.fromWei(getBalance(payeeAddr1).toString(), Convert.Unit.ETHER);
+        BigDecimal  payeeBalanceEther2 = Convert.fromWei(getBalance(payeeAddr2).toString(), Convert.Unit.ETHER);
+        System.out.println(payeeAddr1 + ": " + payeeBalanceEther1);
+        System.out.println(payeeAddr2 + ": " + payeeBalanceEther2);
 
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
+        TransactionReceipt transactionReceipt1 = transferSync(adminKey, payeeAddr1, valueWei);
+        TransactionReceipt transactionReceipt2 = transferSync(adminKey, payeeAddr2, valueWei);
+        assertNull(transactionReceipt1.getErrorMessage());
+        assertNull(transactionReceipt2.getErrorMessage());
+        BigDecimal  payeeBalanceEtherNow1 = Convert.fromWei(getBalance(payeeAddr1).toString(), Convert.Unit.ETHER);
+        BigDecimal  payeeBalanceEtherNow2 = Convert.fromWei(getBalance(payeeAddr2).toString(), Convert.Unit.ETHER);
 
-        TransactionReceipt txReceipt = transferSync(payerKey, payeeAddr1, valueWei);
-
-        if (txReceipt.getErrorMessage() == null) {
-            System.out.println(payerAddr + ": "
-                    + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-            System.out.println(payeeAddr1 + ": "
-                    + Convert.fromWei(getBalance(payeeAddr1).toString(), Convert.Unit.ETHER));
-        }
-
-        TransactionReceipt txReceipt1 = transferSync(payerKey, payeeAddr2, valueWei);
-
-        if (txReceipt1.getErrorMessage() == null) {
-            System.out.println(payerAddr + ": "
-                    + Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-            System.out.println(payeeAddr2 + ": "
-                    + Convert.fromWei(getBalance(payeeAddr2).toString(), Convert.Unit.ETHER));
-        }
+        System.out.println(payeeAddr1 + ": " + payeeBalanceEtherNow1);
+        System.out.println(payeeAddr2 + ": " + payeeBalanceEtherNow2);
+        assertThat(payeeBalanceEtherNow1.subtract(payeeBalanceEther1).intValue()+"", equalTo(value));
+        assertThat(payeeBalanceEtherNow2.subtract(payeeBalanceEther2).intValue()+"", equalTo((value)));
     }
+
+
+    public static void initSenderBalance () throws Exception {
+
+        BigDecimal  adminBalanceEther = Convert.fromWei(getBalance(adminKeyAddr).toString(), Convert.Unit.ETHER);
+        BigDecimal  payerBalanceEther = Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER);
+        System.out.println(adminKeyAddr + ": " + adminBalanceEther);
+        System.out.println(payerAddr + ": " + payerBalanceEther);
+
+        String value = "40";
+        String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
+        TransactionReceipt transactionReceipt1 = transferSync(adminKey, payerAddr, valueWei);
+        assertNull(transactionReceipt1.getErrorMessage());
+
+        BigDecimal  payerBalanceEtherNow = Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER);
+        System.out.println(payerAddr + ": " + payerBalanceEtherNow);
+
+        String addEther = payerBalanceEtherNow.subtract(payerBalanceEther)+"";
+        assertThat(addEther, equalTo(value));
+    }
+
 }

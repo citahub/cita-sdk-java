@@ -1,12 +1,14 @@
 package com.cryptape.cita.tests;
 
-import java.math.BigInteger;
-import java.util.List;
+import static org.junit.Assert.assertTrue;
 
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.system.CITAjSystemContract;
+import java.math.BigInteger;
+import java.util.List;
+import org.junit.Test;
 
-public class SystemContractExample {
+public class SystemContractTest {
 
     static CITAj service;
     static String senderAddr;
@@ -26,7 +28,8 @@ public class SystemContractExample {
         sysContract = new CITAjSystemContract(service);
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testSystemContract() throws Exception {
 
         long quotaPrice = sysContract.getQuotaPrice(senderAddr);
         System.out.println("Quota price is: " + quotaPrice);
@@ -49,25 +52,13 @@ public class SystemContractExample {
         //test approve node
         boolean approved = sysContract.approveNode(
                 "0xe2066149012e6c1505e3549d103068bd0f2f0577", adminPriavteKey, version, chainId);
-        if (approved) {
-            System.out.println(
-                    "Node(0xe2066149012e6c1505e3549d103068bd0f2f0577) "
-                            + "is added as a consensus node successfully");
-        }
+        List<String> nodesNow = sysContract.listNode(senderAddr);
+        assertTrue(nodesNow.contains("0xe2066149012e6c1505e3549d103068bd0f2f0577"));
 
         //test for delete node
         boolean deleted = sysContract.deleteNode(
                 "0xe2066149012e6c1505e3549d103068bd0f2f0577", adminPriavteKey, version, chainId);
-        if (deleted) {
-            System.out.println(
-                    "Node(0xe2066149012e6c1505e3549d103068bd0f2f0577) "
-                            + "is deleted from consensus nodes successfully.");
-        }
+        assertTrue(deleted);
 
-        /**Don't try this**/
-        //boolean setStake = sysContract.setStake(senderAddr, 2, adminPrivateKey);
-        //if (setStake) {
-        //    System.out.println("success");
-        //}
     }
 }

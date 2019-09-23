@@ -1,11 +1,8 @@
 package com.cryptape.cita.tests;
 
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertNull;
 
 import com.cryptape.cita.abi.FunctionEncoder;
 import com.cryptape.cita.abi.FunctionReturnDecoder;
@@ -20,9 +17,16 @@ import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
 import com.cryptape.cita.protocol.core.methods.request.Call;
 import com.cryptape.cita.protocol.core.methods.request.Transaction;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.junit.Test;
 
 
-public class TokenTransactionExample {
+public class TokenTransactionTest {
     private static BigInteger chainId;
     private static int version;
     private static String privateKey;
@@ -38,8 +42,8 @@ public class TokenTransactionExample {
         Config conf = new Config();
         conf.buildService(false);
 
-        privateKey = conf.primaryPrivKey;
-        fromAddress = conf.primaryAddr;
+        privateKey = conf.adminPrivateKey;
+        fromAddress = conf.adminAddress;
         toAddress = conf.auxAddr1;
         binPath = conf.tokenBin;
 
@@ -124,7 +128,8 @@ public class TokenTransactionExample {
         return resultTypes.get(0).getValue().toString();
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testTokenTransaction() throws Exception {
         // deploy contract
         String contractCode = loadContractCode(binPath);
         System.out.println(contractCode);
@@ -138,7 +143,7 @@ public class TokenTransactionExample {
         if (txReceipt.getErrorMessage() != null) {
             System.out.println("There is something wrong in deployContractTxHash. Error: "
                     + txReceipt.getErrorMessage());
-            System.exit(1);
+            //System.exit(1);
         }
         String contractAddress = txReceipt.getContractAddress();
         System.out.println("Contract deployed successfully. Contract address: "
@@ -156,10 +161,11 @@ public class TokenTransactionExample {
         Thread.sleep(10000);
 
         TransactionReceipt transferTxReceipt = getTransactionReceipt(transferTxHash);
+        assertNull(transferTxReceipt.getErrorMessage());
         if (transferTxReceipt.getErrorMessage() != null) {
             System.out.println("Failed to call transfer method in contract. Error: "
                     + transferTxReceipt.getErrorMessage());
-            System.exit(1);
+            //System.exit(1);
         }
         System.out.println("call transfer method success and receipt is " + transferTxHash);
 
@@ -169,6 +175,6 @@ public class TokenTransactionExample {
         System.out.println(toAddress + " has " + balanceTo + " tokens.");
 
         System.out.println("Complete");
-        System.exit(0);
+        assertThat(balaneFrom,equalTo("9000"));
     }
 }

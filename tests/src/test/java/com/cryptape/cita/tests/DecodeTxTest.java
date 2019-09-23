@@ -1,22 +1,25 @@
 package com.cryptape.cita.tests;
 
 import static com.cryptape.cita.utils.Numeric.decodeQuantity;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.concurrent.TimeUnit;
-
+import com.alibaba.fastjson.JSONObject;
 import com.cryptape.cita.protobuf.ConvertStrByte;
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.core.methods.request.Transaction;
 import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
 import com.google.gson.Gson;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
 /*
 * This example shows how to decode transaction info from response.
 * */
 
-public class DecodeTxExample {
+public class DecodeTxTest {
     private static int version;
     private static BigInteger chainId;
     private static CITAj service;
@@ -29,7 +32,7 @@ public class DecodeTxExample {
         Config conf = new Config();
         conf.buildService(false);
         service = conf.service;
-        privateKey = conf.primaryPrivKey;
+        privateKey = conf.adminPrivateKey;
         chainId = new BigInteger(conf.chainId);
         payeeAddr = conf.auxAddr1;
         quotaToDeploy = Long.parseLong(conf.defaultQuotaDeployment);
@@ -51,7 +54,8 @@ public class DecodeTxExample {
         return service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testDecodeTx( ) throws Exception {
         //create a sample transaction
         String hash = createSampleTransaction();
         System.out.println("Hash of the transaction: " + hash);
@@ -62,8 +66,9 @@ public class DecodeTxExample {
 
         //get response transaction
         AppTransaction appTx = service.appGetTransactionByHash(hash).send();
-        com.cryptape.cita.protocol.core.methods.response.Transaction tx
-                = appTx.getTransaction();
+        com.cryptape.cita.protocol.core.methods.response.Transaction tx = appTx.getTransaction();
+        JSONObject contendJson = JSONObject.parseObject(new Gson().toJson(tx.decodeContent()));
+        assertTrue(payeeAddr.equals("0x"+contendJson.getString("to")));
         System.out.println(new Gson().toJson(tx.decodeContent()));
     }
 }
