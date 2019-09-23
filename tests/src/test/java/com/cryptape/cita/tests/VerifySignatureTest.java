@@ -1,8 +1,6 @@
 package com.cryptape.cita.tests;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.assertTrue;
 
 import com.cryptape.cita.protobuf.ConvertStrByte;
 import com.cryptape.cita.protocol.CITAj;
@@ -10,8 +8,12 @@ import com.cryptape.cita.protocol.core.methods.request.Transaction;
 import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
 import com.cryptape.cita.utils.Numeric;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
-public class VerifySignatureExample {
+public class VerifySignatureTest {
     private static String privateKey;
     private static String primaryAddr;
     private static BigInteger chainId;
@@ -24,8 +26,8 @@ public class VerifySignatureExample {
         Config conf = new Config();
         conf.buildService(false);
 
-        privateKey = conf.primaryPrivKey;
-        primaryAddr = conf.primaryAddr;
+        privateKey = conf.adminPrivateKey;
+        primaryAddr = conf.adminAddress;
         service = conf.service;
         chainId = TestUtil.getChainId(service);
         version = TestUtil.getVersion(service);
@@ -64,7 +66,8 @@ public class VerifySignatureExample {
         }
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testVerifySignatureTest() throws Exception {
         //create a sample transaction
         Transaction tx = createSampleTransaction();
 
@@ -86,5 +89,6 @@ public class VerifySignatureExample {
         //verify signature in response transaction
         boolean valid = respTx.verifySignature(primaryAddr);
         System.out.println("Verification: " + valid);
+        assertTrue(valid);
     }
 }

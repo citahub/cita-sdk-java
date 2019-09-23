@@ -2,9 +2,10 @@ package com.cryptape.cita.tests;
 
 import com.cryptape.cita.protocol.CITAj;
 import io.reactivex.Flowable;
+import org.junit.Test;
 
-public class BlockFilterFlowableExample {
-    private static CITAj service;
+public class BlockFilterFlowableTest {
+    public static CITAj service;
 
     static {
         Config conf = new Config();
@@ -12,7 +13,8 @@ public class BlockFilterFlowableExample {
         service = conf.service;
     }
 
-    public static void main(String[] args) {
+    @Test
+    public void testBlockFilterFlowable( ) {
         Flowable blockFitlerFlowable = service.appBlockHashFlowable();
         blockFitlerFlowable.subscribe(block ->
                 System.out.println(block.toString())

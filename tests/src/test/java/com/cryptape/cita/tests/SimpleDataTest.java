@@ -1,5 +1,25 @@
 package com.cryptape.cita.tests;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
+import com.cryptape.cita.abi.FunctionEncoder;
+import com.cryptape.cita.abi.FunctionReturnDecoder;
+import com.cryptape.cita.abi.TypeReference;
+import com.cryptape.cita.abi.datatypes.Address;
+import com.cryptape.cita.abi.datatypes.DynamicBytes;
+import com.cryptape.cita.abi.datatypes.Function;
+import com.cryptape.cita.abi.datatypes.Type;
+import com.cryptape.cita.abi.datatypes.Uint;
+import com.cryptape.cita.abi.datatypes.Utf8String;
+import com.cryptape.cita.abi.datatypes.generated.Uint256;
+import com.cryptape.cita.protobuf.ConvertStrByte;
+import com.cryptape.cita.protocol.CITAj;
+import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
+import com.cryptape.cita.protocol.core.methods.request.Call;
+import com.cryptape.cita.protocol.core.methods.request.Transaction;
+import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
+import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
@@ -8,30 +28,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import com.cryptape.cita.abi.FunctionEncoder;
-import com.cryptape.cita.abi.FunctionReturnDecoder;
-import com.cryptape.cita.abi.TypeReference;
-import com.cryptape.cita.abi.datatypes.generated.Uint256;
-import com.cryptape.cita.protobuf.ConvertStrByte;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
-import com.cryptape.cita.protocol.core.methods.request.Call;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.Uint;
-import com.cryptape.cita.abi.datatypes.Utf8String;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
+import org.junit.Test;
 
 /*
 * The example shows how to deploy a contract with constructor parameters
 * */
 
-public class SimpleDataExample {
+public class SimpleDataTest {
     private static BigInteger chainId;
     private static int version;
     private static String privateKey;
@@ -48,8 +51,8 @@ public class SimpleDataExample {
         Config conf = new Config();
         conf.buildService(false);
 
-        privateKey = conf.primaryPrivKey;
-        fromAddress = conf.primaryAddr;
+        privateKey = conf.adminPrivateKey;
+        fromAddress = conf.adminAddress;
         toAddress = conf.auxAddr1;
         binPath = conf.simpleBin;
 
@@ -154,7 +157,8 @@ public class SimpleDataExample {
         return new String(Files.readAllBytes(Paths.get(binPath)));
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testSimpleData() throws Exception {
         //deploy the contract with sample parameters
         String deploymentHash = deploySampleContract(1, "userName", "userDesc", toAddress);
         System.out.println("Hash of contract deployment: " + deploymentHash);
@@ -169,5 +173,10 @@ public class SimpleDataExample {
         System.out.println("user name: " + getName());
         System.out.println("user desc: " + getUserDesc());
         System.out.println("user addr: " + getUserAddr());
+        assertThat(getUserId(),equalTo(BigInteger.valueOf(1L)));
+        assertThat(getName(),equalTo("userName"));
+        assertThat(getUserDesc(),equalTo("userDesc"));
+        assertThat(getUserAddr(),equalTo(toAddress));
+
     }
 }

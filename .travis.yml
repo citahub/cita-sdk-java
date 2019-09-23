@@ -32,6 +32,3 @@ before_script:
 
 script: bash ./scripts/run.sh
 
-## Upload code coverage metrics
-#after_success:
-#  - bash <(curl -s https://codecov.io/bash)

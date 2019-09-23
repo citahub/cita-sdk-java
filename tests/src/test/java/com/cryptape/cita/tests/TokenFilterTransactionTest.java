@@ -1,13 +1,6 @@
 package com.cryptape.cita.tests;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import static org.junit.Assert.assertTrue;
 
 import com.cryptape.cita.abi.EventEncoder;
 import com.cryptape.cita.abi.EventValues;
@@ -22,14 +15,23 @@ import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
 import com.cryptape.cita.protocol.core.Request;
 import com.cryptape.cita.protocol.core.methods.request.AppFilter;
 import com.cryptape.cita.protocol.core.methods.request.Transaction;
+import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
 import com.cryptape.cita.protocol.core.methods.response.AppLog;
 import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.protocol.core.methods.response.Log;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
 import com.cryptape.cita.tx.Contract;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import org.junit.Test;
 
-public class TokenFilterTransactionExample {
+public class TokenFilterTransactionTest {
     private static BigInteger chainId;
     private static int version;
     private static String privateKey;
@@ -44,7 +46,7 @@ public class TokenFilterTransactionExample {
         Config config = new Config();
         config.buildService(true);
 
-        privateKey = config.primaryPrivKey;
+        privateKey = config.adminPrivateKey;
         toAddress = config.auxAddr1;
         service = config.service;
         random = new Random(System.currentTimeMillis());
@@ -184,7 +186,8 @@ public class TokenFilterTransactionExample {
         service.appSendRawTransaction(rawTx).send();
     }
 
-    public static void main(String[] args) {
+    @Test
+    public void TokenFilterTransactionTest() {
         String contractCode = "6060604052341561000f57600080fd5"
                 + "b600160a060020a03331660009081526020819052604090206127109055610"
                 + "1df8061003b6000396000f3006060604052600436106100565763ffffffff7"
@@ -204,6 +207,7 @@ public class TokenFilterTransactionExample {
                 + "15260208190526040902054905600a165627a7a72305820f59b7130870eee8"
                 + "f044b129f4a20345ffaff662707fc0758133cd16684bc3b160029";
 
+        boolean noException = true;
         try {
             String txHash = deployContract(contractCode);
             System.out.println("wait for 8 secs for contract deployment");
@@ -251,14 +255,14 @@ public class TokenFilterTransactionExample {
             }
             System.out.println("Filter Id " + filterId);
         } catch (IOException e) {
+            noException = false;
             e.printStackTrace();
             System.out.println("IO Exception: maybe tx is not deployed successfully");
-            System.exit(1);
         } catch (Exception e) {
+            noException = false;
             e.printStackTrace();
-            System.exit(1);
         }
-
+        assertTrue(noException);
     }
 
     public static class TransferEventResponse {

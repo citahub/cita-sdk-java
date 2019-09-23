@@ -1,11 +1,5 @@
 package com.cryptape.cita.tests;
 
-import java.math.BigInteger;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Random;
-
 import com.cryptape.cita.abi.FunctionEncoder;
 import com.cryptape.cita.abi.FunctionReturnDecoder;
 import com.cryptape.cita.abi.TypeReference;
@@ -16,6 +10,12 @@ import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
 import com.cryptape.cita.protocol.core.methods.request.Call;
 import com.cryptape.cita.protocol.core.methods.request.Transaction;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
+import org.junit.Test;
 
 public class AdvanceTransactionTest {
 
@@ -31,7 +31,7 @@ public class AdvanceTransactionTest {
         Config conf = new Config();
         conf.buildService(false);
         service = conf.service;
-        senderPrivateKey = conf.primaryPrivKey;
+        senderPrivateKey = conf.adminPrivateKey;
         version = TestUtil.getVersion(service);
         chainId = TestUtil.getChainId(service);
         quota = Long.parseLong(conf.defaultQuotaDeployment);
@@ -46,7 +46,7 @@ public class AdvanceTransactionTest {
     private String contractAddress;
 
 
-    public AdvanceTransactionTest(int sdCount, int thdCount, boolean isEd25519AndBlake2b) {
+    public void initAdvanceTransactionTest(int sdCount, int thdCount, boolean isEd25519AndBlake2b) {
         try {
             random = new Random(System.currentTimeMillis());
             this.validUntilBlock = TestUtil.getValidUtilBlock(service, 100).longValue();
@@ -56,7 +56,7 @@ public class AdvanceTransactionTest {
             System.out.println("Initial block height: " + TestUtil.getCurrentHeight(service));
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
         }
     }
 
@@ -191,14 +191,14 @@ public class AdvanceTransactionTest {
                 } else {
                     System.out.println("Failed to deploy smart contract. Error: "
                             + receipt.getErrorMessage());
-                    System.exit(1);
+                    //System.exit(1);
                 }
             } else {
                 System.out.println("Waiting for contract deployment....");
                 Thread.sleep(3000);
                 if (countForContractDeployment++ > 3) {
                     System.out.println("Timeout, failed to deploy contract.");
-                    System.exit(1);
+                    //System.exit(1);
                 }
             }
         }
@@ -217,14 +217,14 @@ public class AdvanceTransactionTest {
                     break;
                 } else {
                     System.out.println("Failed to reset count.");
-                    System.exit(1);
+                    //System.exit(1);
                 }
             } else {
                 System.out.println("Waiting to reset count....");
                 Thread.sleep(3000);
                 if (countForResetFunctionCall++ > 3) {
                     System.out.println("Timeout, failed to reset count.");
-                    System.exit(1);
+                    //System.exit(1);
                 }
             }
         }
@@ -247,7 +247,7 @@ public class AdvanceTransactionTest {
                         } catch (Exception e) {
                             System.out.println("Failed to call contract function.");
                             e.printStackTrace();
-                            System.exit(1);
+                            //System.exit(1);
                         }
                     });
             t.start();
@@ -308,7 +308,9 @@ public class AdvanceTransactionTest {
         System.out.println(outStr);
     }
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testAdvanceTransaction() throws Exception {
+
         int sendcount = 20;
         int threadcount = 1;
         boolean isEd25519AndBlake2b = false;
@@ -316,9 +318,9 @@ public class AdvanceTransactionTest {
         System.out.println(
                 "sendCount: " + sendcount + " threadCount: " + threadcount
                         + " isEd25519AndBlake2b: " + isEd25519AndBlake2b);
-        AdvanceTransactionTest advanceTxTest = new AdvanceTransactionTest(
-                sendcount, threadcount, isEd25519AndBlake2b);
-        advanceTxTest.runContract();
+        initAdvanceTransactionTest(sendcount, threadcount, isEd25519AndBlake2b);
+        runContract();
         System.out.println("Performance - test case complete");
     }
+
 }

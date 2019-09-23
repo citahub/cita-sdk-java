@@ -1,8 +1,8 @@
 package com.cryptape.cita.tests;
 
-import java.math.BigInteger;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+import static junit.framework.TestCase.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 import com.cryptape.cita.protocol.CITAj;
 import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
@@ -13,8 +13,13 @@ import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
 import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
 import com.cryptape.cita.tx.response.PollingTransactionReceiptProcessor;
 import com.cryptape.cita.utils.Convert;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import org.junit.Test;
 
-public class SendTransactionAsyncExample {
+public class SendTransactionTest {
     private static String payerKey;
     private static String payerAddr;
     private static String payeeAddr;
@@ -28,8 +33,8 @@ public class SendTransactionAsyncExample {
     static {
         Config conf = new Config();
         conf.buildService(false);
-        payerKey = conf.primaryPrivKey;
-        payerAddr = conf.primaryAddr;
+        payerKey = conf.adminPrivateKey;
+        payerAddr = conf.adminAddress;
         payeeAddr = conf.auxAddr1;
         quotaToTransfer = Long.parseLong(conf.defaultQuotaTransfer);
         service = conf.service;
@@ -38,7 +43,7 @@ public class SendTransactionAsyncExample {
         cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
-    private static BigInteger getBalance(String address) {
+    public static BigInteger getBalance(String address) {
         BigInteger balance = null;
         try {
             AppGetBalance response = service.appGetBalance(
@@ -46,7 +51,7 @@ public class SendTransactionAsyncExample {
             balance = response.getBalance();
         } catch (Exception e) {
             System.out.println("failed to get balance.");
-            System.exit(1);
+            //System.exit(1);
         }
         return balance;
     }
@@ -79,33 +84,22 @@ public class SendTransactionAsyncExample {
         return txReceipt;
     }
 
-    private static Future<TransactionReceipt> transferAsync(
+    public static Future<TransactionReceipt> transferAsync(
             String payerKey, String payeeAddr, String value) {
         return new RemoteCall<>(
                 () -> transferSync(payerKey, payeeAddr, value)).sendAsync();
     }
 
-    public static void main(String[] args) {
-        System.out.println(Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-        System.out.println(Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
-
+    @Test
+    public void testSendTransaction( ) throws ExecutionException, InterruptedException {
+        BigDecimal payeeBalance =  Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER);
         String value = "1";
         String valueWei = Convert.toWei(value, Convert.Unit.ETHER).toString();
-
         Future<TransactionReceipt> receiptFuture =
-                transferAsync(payerKey, payeeAddr, valueWei);
-        try {
-            TransactionReceipt receipt = receiptFuture.get();
-            if (receipt.getErrorMessage() == null) {
-                System.out.println(
-                        Convert.fromWei(getBalance(payerAddr).toString(), Convert.Unit.ETHER));
-                System.out.println(
-                        Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER));
-            } else {
-                System.out.println("Error get receipt: " + receipt.getErrorMessage());
-            }
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+            transferAsync(payerKey, payeeAddr, valueWei);
+        TransactionReceipt receipt = receiptFuture.get();
+        assertNull(receipt.getErrorMessage());
+        BigDecimal payeeBalanceNow =  Convert.fromWei(getBalance(payeeAddr).toString(), Convert.Unit.ETHER);
+        assertThat(payeeBalanceNow.subtract(payeeBalance).intValue(), equalTo(Integer.parseInt(value)));
     }
 }

@@ -1,7 +1,11 @@
 package com.cryptape.cita.tests;
 
+import com.cryptape.cita.crypto.Credentials;
+import com.cryptape.cita.protocol.CITAj;
+import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.cryptape.cita.tx.RawTransactionManager;
+import com.cryptape.cita.tx.TransactionManager;
 import java.math.BigInteger;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,14 +16,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import com.cryptape.cita.crypto.Credentials;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.tx.RawTransactionManager;
-import com.cryptape.cita.tx.TransactionManager;
-
-public class TokenCodegenExample {
+public class TokenCodegenTest {
     private static Config conf;
     private static BigInteger chainId;
     private static int version;
@@ -70,7 +70,7 @@ public class TokenCodegenExample {
             System.out.println("Failed to get balance of account: "
                     + credentials.getAddress());
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
         }
         return accountBalance;
     }
@@ -94,7 +94,7 @@ public class TokenCodegenExample {
             }
         } catch (InterruptedException e) {
             System.out.println("thread is interrupted accidently");
-            System.exit(1);
+            //System.exit(1);
         }
     }
 
@@ -109,7 +109,7 @@ public class TokenCodegenExample {
     private static boolean isTokenTransferComplete() {
         Map<Credentials, Long> accountTokens = new HashMap<>();
         for (Credentials credentials : testAccounts) {
-            accountTokens.put(credentials, TokenCodegenExample.getBalance(credentials));
+            accountTokens.put(credentials, TokenCodegenTest.getBalance(credentials));
         }
         long totalToken = 0;
         for (Long token : accountTokens.values()) {
@@ -137,10 +137,10 @@ public class TokenCodegenExample {
                         | TimeoutException e) {
                     System.out.println(
                             "Failed to get receipt from receiptFuture. Failed to shuffle.");
-                    System.exit(1);
+                    //System.exit(1);
                 } catch (Exception e) {
                     System.out.println("Event execute failed. Failed to Shuffle");
-                    System.exit(1);
+                    //System.exit(1);
                 }
             }
         });
@@ -199,7 +199,7 @@ public class TokenCodegenExample {
                     long accountBalance = getBalance(account);
                     System.out.println(account.getAddress() + ": " + accountBalance);
                 });
-                System.exit(1);
+                //System.exit(1);
             }
 
             if (event.tokens < shuffleThreshold) {
@@ -209,7 +209,9 @@ public class TokenCodegenExample {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    @Ignore
+    @Test
+    public void testTokenCodegen() throws Exception {
         TransactionManager citaTxManager = new RawTransactionManager(
                 service, creator, 5, 3000);
 
@@ -219,7 +221,7 @@ public class TokenCodegenExample {
                 service, citaTxManager, quotaDeployment, nonce,
                 TestUtil.getValidUtilBlock(service).longValue(),
                 version, value, chainId).sendAsync();
-        TokenCodegenExample tokenCodegenExample = new TokenCodegenExample();
+        TokenCodegenTest tokenCodegenExample = new TokenCodegenTest();
 
         System.out.println("Wait 10s for contract to be deployed...");
         Thread.sleep(10000);
@@ -229,7 +231,7 @@ public class TokenCodegenExample {
                     + token.getContractAddress());
         } else {
             System.out.println("Failed to deploy the contract.");
-            System.exit(1);
+            //System.exit(1);
         }
 
         try {
@@ -237,7 +239,7 @@ public class TokenCodegenExample {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Interrupted when waiting blocks written in.");
-            System.exit(1);
+            //System.exit(1);
         }
 
         try {
@@ -247,9 +249,9 @@ public class TokenCodegenExample {
         } catch (Exception e) {
             System.out.println("Failed to get accounts balances");
             e.printStackTrace();
-            System.exit(1);
+            //System.exit(1);
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
     private class TransferEvent {
