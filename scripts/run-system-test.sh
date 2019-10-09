@@ -33,7 +33,7 @@ cat pom.xml | grep -A 3  ">core<"
 
 # install cita-cli and run test
 rm -r target/*
-make install-cita-cli
+make install-cita-cli > ${DEBUG_LOG_PATH}
 mvn test -Dtest=com.cryptape.function.sdkcase.**
 MAVEN_TEST_RESULT=$?
 

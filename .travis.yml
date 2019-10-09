@@ -26,8 +26,8 @@ cache:
 
 before_script:
   # upgrade gradle to 5.0
-  - wget http://services.gradle.org/distributions/gradle-5.0-all.zip > /dev/null
-  - unzip gradle-5.0-all.zip
+  - wget http://services.gradle.org/distributions/gradle-5.0-all.zip > debug.log
+  - unzip gradle-5.0-all.zip > debug.log
   - ./gradle-5.0/bin/gradle -v
 
 script: bash ./scripts/run.sh
