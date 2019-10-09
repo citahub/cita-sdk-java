@@ -12,7 +12,7 @@ echo "Starting to update gh-pages"
 # gh page info
 owner_name=`echo $TRAVIS_REPO_SLUG|cut -d / -f 1`
 repo_name=`echo $TRAVIS_REPO_SLUG|cut -d / -f 2`
-gh_pages_url="https://cryptape.github.io/cita-sdk-java/"
+gh_pages_url="https://cryptape.github.io/cita-sdk-java"
 test_report_url="$gh_pages_url/reports/${TRAVIS_JOB_ID}/"
 
 test_result_mark="×"

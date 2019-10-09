@@ -3,6 +3,7 @@
 if [ ${TEST_TYPE} == UT ]; then
   echo "run unit test"
   bash scripts/run-unit-test.sh
+  exit $?
 fi
 
 if [ ${TEST_TYPE} == ST ]; then
