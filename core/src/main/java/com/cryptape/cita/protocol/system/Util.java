@@ -1,5 +1,7 @@
 package com.cryptape.cita.protocol.system;
 
+import static com.cryptape.cita.abi.FunctionEncoder.buildMethodId;
+
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Random;
@@ -68,9 +70,13 @@ public class Util {
     }
 
 
-    static String generateFunSig(String funcName) {
-        Function func = new Function(funcName, Collections.emptyList(), Collections.emptyList());
-        return FunctionEncoder.encode(func);
+    static String generateFunSig(String funcSignature) {
+        if(funcSignature.contains("(") && funcSignature.contains(")")){
+            return buildMethodId(funcSignature);
+        } else {
+            // compatible with old ways of using, only the func name
+            return buildMethodId(funcSignature+"()");
+        }
     }
 
     static String hexToASCII(String hexValue) {
