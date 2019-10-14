@@ -253,6 +253,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return resultList;
     }
 
+    // the name param length,  Chinese should not exceed 16 and English should not exceed 32
     public String newPermission(
             String name,
             List<String> addrs,
