@@ -580,6 +580,71 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return new QueryResourceResult(contracts, functions);
     }
 
+    /**
+     * query all groups
+     * @param senderAddress sender address
+     * @return list addresses of all groups
+     * @throws IOException
+     */
+    public List<String> queryGroups(String senderAddress) throws IOException {
+        String callData = CITASystemContract.encodeCall(USER_MANAGER_QUERY_GROUPS);
+        AppCall callResult = CITASystemContract.sendCall(
+                senderAddress, USER_MANAGER_ADDR, callData, service);
+        List<TypeReference<?>> outputParamters
+                = Collections.singletonList(new TypeReference<DynamicArray<Address>>() {});
+        List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParamters);
+        ArrayList<Address> results = (ArrayList<Address>) resultTypes.get(0).getValue();
+        List<String> list = new ArrayList<>(results.size());
+        for (Address address : results) {
+            list.add(address.getValue());
+        }
+        return list;
+    }
+
+    /**
+     * new group
+     * @see <a href="https://docs.citahub.com/zh-CN/cita/sys-contract-interface/interface#newgroup">newGroup</a>
+     * @param superAdminAddress the address of super_admin
+     * @param groupName the name of group to be created
+     * @param accounts accounts added to the group
+     * @param adminPrivateKey the private key of super_admin
+     * @param version
+     * @param chainId
+     * @return the transaction hash for creating group
+     * @throws IOException
+     */
+    public String newGroup(String superAdminAddress,
+                           String groupName,
+                           List<String> accounts,
+                           String adminPrivateKey,
+                           int version,
+                           BigInteger chainId) throws IOException {
+        // account addresses convert to Address object list
+        List<Address> addresses = new ArrayList<>(accounts.size());
+        for(String acc : accounts){
+            addresses.add(new Address(acc));
+        }
+
+        // groupName string convert to bytes32
+        String nameHex = Util.addUpTo64Hex(ConvertStrByte.stringToHexString(groupName));
+        byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
+
+        // build input parameters
+        List<Type> inputParameters = Arrays.asList(
+                new Address(superAdminAddress),//origin
+                new Bytes32(nameBytes),//name
+                new DynamicArray<Address>(addresses)//account
+        );
+
+        // encode input parameters
+        String funcData = CITASystemContract.encodeFunction(USER_MANAGER_NEW_GROUP, inputParameters);
+
+        // send request to create group and return transaction hash
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return txHash;
+    }
+
     public Transaction constructStoreTransaction(String data, int version, BigInteger chainId) {
         return new Transaction(
                 STORE_ADDR, Util.getNonce(), DEFAULT_QUOTA,
