@@ -116,72 +116,72 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
     }
 
     public boolean approveNode(
-            String nodeAddr, String adminPrivatekey, int version, BigInteger chainId)
+            String nodeAddr, String adminPrivateKey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Address(nodeAddr));
         String funcData = CITASystemContract.encodeFunction(
                 NODE_MANAGER_APPROVE_NODE, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                NODE_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                NODE_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
 
         return log != null && log.getTopics().contains(Util.addUpTo64Hex(nodeAddr));
     }
 
     public boolean deleteNode(
-            String nodeAddr, String adminPrivatekey, int version, BigInteger chainId)
+            String nodeAddr, String adminPrivateKey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Address(nodeAddr));
         String funcData = CITASystemContract.encodeFunction(
                 NODE_MANAGER_DELETE_NODE, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                NODE_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                NODE_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log != null && log.getTopics().contains(Util.addUpTo64Hex(nodeAddr));
     }
 
     public boolean setStake(
-            String nodeAddr, int stake, String adminPrivatekey, int version, BigInteger chainId)
+            String nodeAddr, int stake, String adminPrivateKey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Arrays.asList(new Address(nodeAddr), new Uint64(stake));
         String funcData = CITASystemContract.encodeFunction(NODE_MANAGER_SET_STAKE, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                NODE_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                NODE_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log != null && log.getTopics().contains(Util.addUpTo64Hex(nodeAddr));
     }
 
     public boolean setBql(
-            BigInteger bqlToSet, String adminPrivatekey, int version, BigInteger chainId)
+            BigInteger bqlToSet, String adminPrivateKey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Uint(bqlToSet));
         String funcData = CITASystemContract.encodeFunction(QUOTA_MANAGER_SET_BQL, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                QUOTA_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                QUOTA_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log != null
                 && log.getTopics().contains(Util.addUpTo64Hex(bqlToSet.toString(16)));
     }
 
     public boolean setDefaultAql(
-            BigInteger defaultAqlToSet, String adminPrivatekey, int version, BigInteger chainId)
+            BigInteger defaultAqlToSet, String adminPrivateKey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Collections.singletonList(new Uint(defaultAqlToSet));
         String funcData = CITASystemContract.encodeFunction(QUOTA_MANAGER_SET_DEFAULT_AQL, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                QUOTA_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                QUOTA_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log != null
                 && log.getTopics().contains(Util.addUpTo64Hex(defaultAqlToSet.toString(16)));
     }
 
     public boolean setAql(
-            String addrToSet, BigInteger aqlToSet, String adminPrivatekey, int version, BigInteger chainId)
+            String addrToSet, BigInteger aqlToSet, String adminPrivateKey, int version, BigInteger chainId)
             throws IOException, InterruptedException {
         List<Type> inputParameters = Arrays.asList(new Address(addrToSet), new Uint(aqlToSet));
         String funcData = CITASystemContract.encodeFunction(QUOTA_MANAGER_SET_AQL, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                QUOTA_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                QUOTA_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log != null && log.getTopics().contains(Util.addUpTo64Hex(addrToSet));
     }
@@ -253,11 +253,12 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return resultList;
     }
 
+    // the name param length,  Chinese should not exceed 16 and English should not exceed 32
     public String newPermission(
             String name,
             List<String> addrs,
             List<String> funcs,
-            String adminPrivatekey,
+            String adminPrivateKey,
             int version,
             BigInteger chainId)
             throws IOException, InterruptedException {
@@ -283,7 +284,7 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         String funcData = CITASystemContract.encodeFunction(
                 PERMISSION_MANAGER_NEW_PERMISSION, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
-                PERMISSION_MANAGER_ADDR, service, adminPrivatekey, funcData, version, chainId);
+                PERMISSION_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
 
         Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
         return log == null ? "" : log.getAddress();
@@ -580,6 +581,76 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         return new QueryResourceResult(contracts, functions);
     }
 
+    public boolean deleteGroup(String groupAddr, String adminPrivateKey, int version, BigInteger chainId) throws Exception {
+        List<Type> inputParameter = Arrays.asList(new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr));
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_DELETE_GROUP, inputParameter);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean updateGroupName(String groupAddr, String newGroupName, String adminPrivateKey, int version, BigInteger chainId) throws Exception {
+        String nameHex = Util.addUpTo64Hex(ConvertStrByte.stringToHexString(newGroupName));
+        byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
+
+        List<Type> inputParameters = Arrays.asList(new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr), new Bytes32(nameBytes));
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_UPDATE_GROUP_NAME, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean addAccounts(String groupAddr, List<String> accounts, String adminPrivateKey, int version, BigInteger chainId) throws Exception {
+        List<Address> addrsToAdd = new ArrayList<>();
+        for (String str : accounts) {
+            addrsToAdd.add(new Address(str));
+        }
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr),
+                new DynamicArray<Address>(addrsToAdd));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_ADD_ACCOUNTS, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean deleteAccounts(String groupAddr, List<String> accounts, String adminPrivateKey, int version, BigInteger chainId) throws Exception {
+        List<Address> addrsToAdd = new ArrayList<>();
+        for (String str : accounts) {
+            addrsToAdd.add(new Address(str));
+        }
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr),
+                new DynamicArray<Address>(addrsToAdd));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_DELETE_ACCOUNTS, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+    public boolean checkScope(String groupAddr, String adminPrivateKey, int version, BigInteger chainId) throws Exception {
+        List<Type> inputParameters = Arrays.asList(
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Address(groupAddr));
+
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_CHECK_SCOPE, inputParameters);
+        String txHash = CITASystemContract.sendTxAndGetHash(
+                USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
+        return CITASystemContract.checkReceipt(service, txHash);
+    }
+
+
     /**
      * query all groups
      * @param senderAddress sender address
@@ -593,9 +664,13 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
         List<TypeReference<?>> outputParamters
                 = Collections.singletonList(new TypeReference<DynamicArray<Address>>() {});
         List<Type> resultTypes = CITASystemContract.decodeCallResult(callResult, outputParamters);
+        if (resultTypes.isEmpty())
+            return null;
+        List<String> list = new ArrayList<>();
         ArrayList<Address> results = (ArrayList<Address>) resultTypes.get(0).getValue();
-        List<String> list = new ArrayList<>(results.size());
         for (Address address : results) {
+            if (INTRA_GROUP_USER_MANAGEMENT_ADDR.equalsIgnoreCase(address.getValue()))
+                continue;
             list.add(address.getValue());
         }
         return list;
@@ -604,7 +679,6 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
     /**
      * new group
      * @see <a href="https://docs.citahub.com/zh-CN/cita/sys-contract-interface/interface#newgroup">newGroup</a>
-     * @param superAdminAddress the address of super_admin
      * @param groupName the name of group to be created
      * @param accounts accounts added to the group
      * @param adminPrivateKey the private key of super_admin
@@ -613,36 +687,25 @@ public class CITAjSystemContract implements CITASystemContract, CITASystemAddres
      * @return the transaction hash for creating group
      * @throws IOException
      */
-    public String newGroup(String superAdminAddress,
-                           String groupName,
-                           List<String> accounts,
-                           String adminPrivateKey,
-                           int version,
-                           BigInteger chainId) throws IOException {
-        // account addresses convert to Address object list
-        List<Address> addresses = new ArrayList<>(accounts.size());
-        for(String acc : accounts){
-            addresses.add(new Address(acc));
-        }
-
-        // groupName string convert to bytes32
+    public String newGroup(String groupName, List<String> accounts, String adminPrivateKey, int version, BigInteger chainId) throws Exception {
         String nameHex = Util.addUpTo64Hex(ConvertStrByte.stringToHexString(groupName));
         byte[] nameBytes = ConvertStrByte.hexStringToBytes(Numeric.cleanHexPrefix(nameHex));
-
-        // build input parameters
+        List<Address> addrsToAdd = new ArrayList<>();
+        for (String str : accounts) {
+            addrsToAdd.add(new Address(str));
+        }
         List<Type> inputParameters = Arrays.asList(
-                new Address(superAdminAddress),//origin
-                new Bytes32(nameBytes),//name
-                new DynamicArray<Address>(addresses)//account
-        );
+                new Address(INTRA_GROUP_USER_MANAGEMENT_ADDR),
+                new Bytes32(nameBytes),
+                new DynamicArray<Address>(addrsToAdd));
 
-        // encode input parameters
-        String funcData = CITASystemContract.encodeFunction(USER_MANAGER_NEW_GROUP, inputParameters);
-
-        // send request to create group and return transaction hash
+        String funcData = CITASystemContract.encodeFunction(
+                USER_MANAGER_NEW_GROUP, inputParameters);
         String txHash = CITASystemContract.sendTxAndGetHash(
                 USER_MANAGER_ADDR, service, adminPrivateKey, funcData, version, chainId);
-        return txHash;
+
+        Log log = CITASystemContract.getReceiptLog(service, txHash, 0);
+        return log == null ? "" : log.getAddress();
     }
 
     public Transaction constructStoreTransaction(String data, int version, BigInteger chainId) {

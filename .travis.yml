@@ -5,20 +5,30 @@ language: java
 jdk:
   - oraclejdk8
 
-sudo: false  # as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+env:
+  - TEST_TYPE=UT
+  - CITA_DOCKER_IMAGE_TAG_NAME=sha3          TEST_TYPE=ST TEST_CITA_VERSION=CITA1.0
+  - CITA_DOCKER_IMAGE_TAG_NAME=sha3_88b90bb  TEST_TYPE=ST TEST_CITA_VERSION=CITA0.25
+  - CITA_DOCKER_IMAGE_TAG_NAME=sha3_1f10bc8  TEST_TYPE=ST TEST_CITA_VERSION=CITA0.24
+  - CITA_DOCKER_IMAGE_TAG_NAME=sha3_b1e3048  TEST_TYPE=ST TEST_CITA_VERSION=CITA0.23.1
+
+sudo: true  # as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
 
 # Avoid uploading cache after every build with Gradle - see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
 
-# Add --info to view details of test failures
-script: ./gradlew --info check jacocoRootTestReport
+before_script:
+  # upgrade gradle to 5.0
+  - wget http://services.gradle.org/distributions/gradle-5.0-all.zip > debug.log
+  - unzip gradle-5.0-all.zip > debug.log
+  - ./gradle-5.0/bin/gradle -v
 
-# Upload code coverage metrics
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+script: bash ./scripts/run.sh
+

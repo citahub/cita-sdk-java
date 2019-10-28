@@ -1,21 +1,41 @@
-package com.cryptape.cita.protocol.system;
+package com.cryptape.cita.tests;
 
-import static com.cryptape.cita.abi.FunctionEncoder.buildMethodId;
-
+import com.cryptape.cita.protobuf.ConvertStrByte;
+import com.cryptape.cita.protocol.CITAj;
+import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
+import com.cryptape.cita.protocol.core.methods.response.AppMetaData;
+import com.cryptape.cita.utils.Numeric;
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Random;
 
-import com.cryptape.cita.abi.FunctionEncoder;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.utils.Numeric;
+public class TestUtil {
 
-/**
- * remove this class later.
- * **/
+    static byte[] convertHexToBytes(String hex) {
+        String clearedStr = Numeric.cleanHexPrefix(hex);
+        return ConvertStrByte.hexStringToBytes(clearedStr);
+    }
 
-public class Util {
+    static int getVersion(CITAj service) {
+        AppMetaData appMetaData = null;
+        try {
+            appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            //System.exit(1);
+        }
+        return appMetaData.getAppMetaDataResult().getVersion();
+    }
+
+    static BigInteger getChainId(CITAj service) {
+        AppMetaData appMetaData = null;
+        try {
+            appMetaData = service.appMetaData(DefaultBlockParameterName.PENDING).send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            //System.exit(1);
+        }
+        return appMetaData.getAppMetaDataResult().getChainId();
+    }
 
     static String getNonce() {
         Random random = new Random(System.currentTimeMillis());
@@ -39,14 +59,14 @@ public class Util {
                     Thread.sleep(2000);
                 } catch (Exception e1) {
                     System.out.println("failed to get block number, Exception: " + e1);
-                    System.exit(1);
+                    //System.exit(1);
                 }
             }
             count++;
         }
         if (height == -1) {
             System.out.println("Failed to get block number after " + count + " times.");
-            System.exit(1);
+            //System.exit(1);
         }
         return BigInteger.valueOf(height);
     }
@@ -58,33 +78,5 @@ public class Util {
 
     static BigInteger getValidUtilBlock(CITAj service) {
         return getCurrentHeight(service).add(BigInteger.valueOf(88));
-    }
-
-    static String addUpTo64Hex(String hexStr) {
-        String result = Numeric.cleanHexPrefix(hexStr);
-        int len = 64 - result.length();
-        for (int i = 0; i < len; i++) {
-            result = "0" + result;
-        }
-        return Numeric.prependHexPrefix(result);
-    }
-
-
-    static String generateFunSig(String funcSignature) {
-        if(funcSignature.contains("(") && funcSignature.contains(")")){
-            return buildMethodId(funcSignature);
-        } else {
-            // compatible with old ways of using, only the func name
-            return buildMethodId(funcSignature+"()");
-        }
-    }
-
-    static String hexToASCII(String hexValue) {
-        StringBuilder output = new StringBuilder("");
-        for (int i = 0; i < hexValue.length(); i += 2) {
-            String str = hexValue.substring(i, i + 2);
-            output.append((char) Integer.parseInt(str, 16));
-        }
-        return output.toString();
     }
 }

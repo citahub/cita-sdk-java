@@ -1,5 +1,21 @@
 All notable changes to this project will be documented in this file.
 
+# [v1.0.0](https://github.com/cryptape/cita-sdk-java/compare/v0.25.0...v1.0.0) (2019-08-28)
+
+### Added
+
+* add group manager RPC requests
+* add matrix system test in travis
+
+### Fixed
+* fix test net url
+* fix inPermission method not support function having parameters
+* fix unit test in test module
+
+### Documented
+* add introduction document
+
+
 # [v0.25.0](https://github.com/cryptape/cita-sdk-java/compare/v0.24.1...v0.25.0) (2019-08-27)
 
 ### Feature
