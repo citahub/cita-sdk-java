@@ -1,5 +1,8 @@
 # cita-sdk-java
 [![Build Status](https://travis-ci.org/cryptape/cita-sdk-java.svg?branch=master)](https://travis-ci.org/cryptape/cita-sdk-java) 
+[![License: Apache-2.0](https://img.shields.io/github/license/cryptape/cita-sdk-java.svg)](https://github.com/cryptape/cita-sdk-java/blob/master/LICENSE)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/cryptape/cita-sdk-java.svg)
+
 
 [English](https://github.com/cryptape/cita-sdk-java#introduction)  
 [中文](https://github.com/cryptape/cita-sdk-java#简介)
