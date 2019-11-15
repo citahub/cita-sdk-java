@@ -12,7 +12,7 @@ env:
   - CITA_DOCKER_IMAGE_TAG_NAME=sha3_1f10bc8  TEST_TYPE=ST TEST_CITA_VERSION=CITA0.24
   - CITA_DOCKER_IMAGE_TAG_NAME=sha3_b1e3048  TEST_TYPE=ST TEST_CITA_VERSION=CITA0.23.1
 
-sudo: true  # as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
+sudo: required  # as per http://blog.travis-ci.com/2014-12-17-faster-builds-with-container-based-infrastructure/
 
 # Avoid uploading cache after every build with Gradle - see https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
@@ -26,8 +26,8 @@ cache:
 
 before_script:
   # upgrade gradle to 5.0
-  - wget http://services.gradle.org/distributions/gradle-5.0-all.zip > debug.log
-  - unzip gradle-5.0-all.zip > debug.log
+  - test -e $HOME/.gradle/caches/gradle-5.0.zip || sudo wget https://services.gradle.org/distributions/gradle-5.0-all.zip -O $HOME/.gradle/caches/gradle-5.0.zip > debug.log
+  - sudo unzip $HOME/.gradle/caches/gradle-5.0.zip  > debug.log
   - ./gradle-5.0/bin/gradle -v
 
 script: bash ./scripts/run.sh
