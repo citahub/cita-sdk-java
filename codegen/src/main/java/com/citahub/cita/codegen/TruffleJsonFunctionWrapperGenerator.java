@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.cryptape.cita.protocol.ObjectMapperFactory;
-import com.cryptape.cita.utils.Collection;
+import com.citahub.cita.protocol.ObjectMapperFactory;
+import com.citahub.cita.utils.Collection;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -23,11 +23,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
-import com.cryptape.cita.tx.ChainId;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.protocol.core.methods.response.AbiDefinition;
+import com.citahub.cita.tx.ChainId;
+import com.citahub.cita.utils.Strings;
 
-import static com.cryptape.cita.codegen.Console.exitError;
+import static com.citahub.cita.codegen.Console.exitError;
 
 /**
  * Java wrapper source code generator for Truffle JSON format. Truffle embeds the Solidity ABI

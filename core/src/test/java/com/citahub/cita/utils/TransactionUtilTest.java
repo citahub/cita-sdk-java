@@ -1,6 +1,6 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
-import com.cryptape.cita.protobuf.Blockchain;
+import com.citahub.cita.protobuf.Blockchain;
 import com.google.gson.Gson;
 import org.junit.Test;
 

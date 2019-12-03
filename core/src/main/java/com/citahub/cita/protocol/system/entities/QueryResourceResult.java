@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.system.entities;
+package com.citahub.cita.protocol.system.entities;
 
 import java.util.List;
 

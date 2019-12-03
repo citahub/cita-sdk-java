@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.io.DataInputStream;
 import java.io.File;

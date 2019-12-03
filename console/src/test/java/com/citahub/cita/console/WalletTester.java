@@ -1,7 +1,7 @@
-package com.cryptape.cita.console;
+package com.citahub.cita.console;
 
-import com.cryptape.cita.TempFileProvider;
-import com.cryptape.cita.crypto.SampleKeys;
+import com.citahub.cita.TempFileProvider;
+import com.citahub.cita.crypto.SampleKeys;
 import org.junit.Before;
 
 import static org.mockito.Mockito.mock;

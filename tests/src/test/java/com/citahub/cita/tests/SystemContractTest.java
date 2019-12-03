@@ -1,9 +1,9 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.system.CITAjSystemContract;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.system.CITAjSystemContract;
 import java.math.BigInteger;
 import java.util.List;
 import org.junit.Test;

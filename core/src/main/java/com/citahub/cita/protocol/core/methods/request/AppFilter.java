@@ -1,9 +1,9 @@
-package com.cryptape.cita.protocol.core.methods.request;
+package com.citahub.cita.protocol.core.methods.request;
 
 import java.util.Arrays;
 import java.util.List;
 
-import com.cryptape.cita.protocol.core.DefaultBlockParameter;
+import com.citahub.cita.protocol.core.DefaultBlockParameter;
 
 /**
  * Filter implementation as per

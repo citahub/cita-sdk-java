@@ -1,6 +1,6 @@
-package com.cryptape.cita.console;
+package com.citahub.cita.console;
 
-import com.cryptape.cita.crypto.SampleKeys;
+import com.citahub.cita.crypto.SampleKeys;
 import org.junit.Test;
 
 import static org.mockito.Matchers.contains;

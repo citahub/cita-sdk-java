@@ -1,4 +1,4 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

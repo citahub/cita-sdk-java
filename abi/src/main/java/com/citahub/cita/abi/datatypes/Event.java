@@ -1,10 +1,10 @@
-package com.cryptape.cita.abi.datatypes;
+package com.citahub.cita.abi.datatypes;
 
 import java.util.List;
 
-import com.cryptape.cita.abi.TypeReference;
+import com.citahub.cita.abi.TypeReference;
 
-import static com.cryptape.cita.abi.Utils.convert;
+import static com.citahub.cita.abi.Utils.convert;
 
 /**
  * Event wrapper type.

@@ -1,4 +1,4 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,11 +7,11 @@ import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static com.cryptape.cita.utils.Collection.EMPTY_STRING_ARRAY;
-import static com.cryptape.cita.utils.Collection.Function;
-import static com.cryptape.cita.utils.Collection.create;
-import static com.cryptape.cita.utils.Collection.join;
-import static com.cryptape.cita.utils.Collection.tail;
+import static com.citahub.cita.utils.Collection.EMPTY_STRING_ARRAY;
+import static com.citahub.cita.utils.Collection.Function;
+import static com.citahub.cita.utils.Collection.create;
+import static com.citahub.cita.utils.Collection.join;
+import static com.citahub.cita.utils.Collection.tail;
 
 public class CollectionTest {
 

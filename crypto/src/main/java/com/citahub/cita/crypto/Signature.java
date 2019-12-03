@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 public abstract class Signature {
 

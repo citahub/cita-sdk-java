@@ -48,7 +48,7 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    group 'com.cryptape.cita'
+    group 'com.citahub.cita'
     version '1.0.0'
 
     apply plugin: 'java'
@@ -144,7 +144,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId 'com.cryptape.cita'
+                groupId 'com.citahub.cita'
                 version '1.0.0'
                 from components.java
 
@@ -175,11 +175,11 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
                     name 'cita-sdk-java'
                     packaging 'jar'
                     description project.description
-                    url 'https://github.com/cryptape/cita-sdk-java.git'
+                    url 'https://github.com/citahub/cita-sdk-java.git'
 
                     scm {
-                        connection 'scm:git@github.com:cryptape/cita-sdk-java.git'
-                        url 'https://github.com/cryptape/cita-sdk-java.git'
+                        connection 'scm:git@github.com:citahub/cita-sdk-java.git'
+                        url 'https://github.com/citahub/cita-sdk-java.git'
                     }
 
                     licenses {
@@ -191,9 +191,9 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
 
                     developers {
                         developer {
-                            id 'cryptape'
-                            name 'cryptape developer'
-                            email 'op@cryptape.com'
+                            id 'citahub'
+                            name 'citahub developer'
+                            email 'op@citahub.com'
                         }
                     }
                 }
@@ -241,9 +241,9 @@ task jacocoRootTestReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
         classDirectories = files(classDirectories.files.collect {
             fileTree(dir: it,
                     exclude: [
-                            'com/cryptape/cita/abi/datatypes/generated/**',
-                            'com/cryptape/cita/tuples/generated/**',
-                            'com/cryptape/cita/ens/contracts/generated/**'
+                            'com/citahub/cita/abi/datatypes/generated/**',
+                            'com/citahub/cita/tuples/generated/**',
+                            'com/citahub/cita/ens/contracts/generated/**'
                     ])
         })
     }

@@ -1,12 +1,12 @@
-package com.cryptape.cita.protocol.ipc;
+package com.citahub.cita.protocol.ipc;
 
 import java.io.IOException;
 
-import com.cryptape.cita.protocol.core.methods.response.CITAClientVersion;
+import com.citahub.cita.protocol.core.methods.response.CITAClientVersion;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.core.Request;
+import com.citahub.cita.protocol.core.Request;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

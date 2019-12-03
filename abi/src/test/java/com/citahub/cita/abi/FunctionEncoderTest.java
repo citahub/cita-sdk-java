@@ -1,19 +1,19 @@
-package com.cryptape.cita.abi;
+package com.citahub.cita.abi;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 
-import com.cryptape.cita.abi.datatypes.generated.Bytes10;
-import com.cryptape.cita.abi.datatypes.generated.Uint32;
+import com.citahub.cita.abi.datatypes.generated.Bytes10;
+import com.citahub.cita.abi.datatypes.generated.Uint32;
 import org.junit.Test;
 
-import com.cryptape.cita.abi.datatypes.Bool;
-import com.cryptape.cita.abi.datatypes.DynamicArray;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.abi.datatypes.Uint;
-import com.cryptape.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.Bool;
+import com.citahub.cita.abi.datatypes.DynamicArray;
+import com.citahub.cita.abi.datatypes.DynamicBytes;
+import com.citahub.cita.abi.datatypes.Function;
+import com.citahub.cita.abi.datatypes.Uint;
+import com.citahub.cita.abi.datatypes.Utf8String;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

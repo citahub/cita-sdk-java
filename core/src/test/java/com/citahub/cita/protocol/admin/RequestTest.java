@@ -1,13 +1,13 @@
-package com.cryptape.cita.protocol.admin;
+package com.citahub.cita.protocol.admin;
 
 import java.math.BigInteger;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.RequestTester;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.http.HttpService;
+import com.citahub.cita.protocol.RequestTester;
+import com.citahub.cita.protocol.core.methods.request.Transaction;
+import com.citahub.cita.protocol.http.HttpService;
 /*
 * Method tested in the file are used to do wallet management in console for ethereum.
 * personal_xx rpc requests are not supported in CITA, so test case in the class is not required.

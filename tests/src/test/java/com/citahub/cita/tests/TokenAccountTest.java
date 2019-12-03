@@ -1,11 +1,11 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.account.Account;
-import com.cryptape.cita.protocol.account.CompiledContract;
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.account.Account;
+import com.citahub.cita.protocol.account.CompiledContract;
+import com.citahub.cita.protocol.core.methods.response.AbiDefinition;
+import com.citahub.cita.protocol.core.methods.response.AppSendTransaction;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
 import java.io.File;
 import java.math.BigInteger;
 import org.junit.Ignore;

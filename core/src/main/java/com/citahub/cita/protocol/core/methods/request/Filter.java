@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.core.methods.request;
+package com.citahub.cita.protocol.core.methods.request;
 
 import java.util.ArrayList;
 import java.util.List;

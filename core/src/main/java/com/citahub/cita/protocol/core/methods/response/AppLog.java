@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import com.cryptape.cita.protocol.ObjectMapperFactory;
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.ObjectMapperFactory;
+import com.citahub.cita.protocol.core.Response;
 
 public class AppLog extends Response<List<AppLog.LogResult>> {
 

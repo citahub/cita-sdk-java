@@ -1,10 +1,10 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static com.cryptape.cita.crypto.TransactionUtils.generateTransactionHashHexEncoded;
+import static com.citahub.cita.crypto.TransactionUtils.generateTransactionHashHexEncoded;
 
 public class TransactionUtilsTest {
 

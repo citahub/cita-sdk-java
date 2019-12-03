@@ -1,8 +1,8 @@
-package com.cryptape.cita.protocol.core.methods.request;
+package com.citahub.cita.protocol.core.methods.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Call {

@@ -1,17 +1,17 @@
-package com.cryptape.cita.protocol;
+package com.citahub.cita.protocol;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import com.cryptape.cita.protocol.core.Request;
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Request;
+import com.citahub.cita.protocol.core.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.reactivex.Flowable;
 import io.reactivex.Notification;
-import com.cryptape.cita.utils.Async;
+import com.citahub.cita.utils.Async;
 
 /**
  * Base service implementation.

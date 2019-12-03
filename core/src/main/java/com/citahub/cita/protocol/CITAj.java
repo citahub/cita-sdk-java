@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol;
+package com.citahub.cita.protocol;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-import com.cryptape.cita.protocol.core.CITA;
-import com.cryptape.cita.protocol.core.JsonRpc2_0CITAj;
-import com.cryptape.cita.protocol.rx.CITAjRx;
+import com.citahub.cita.protocol.core.CITA;
+import com.citahub.cita.protocol.core.JsonRpc2_0CITAj;
+import com.citahub.cita.protocol.rx.CITAjRx;
 
 /**
  * JSON-RPC Request object building factory.

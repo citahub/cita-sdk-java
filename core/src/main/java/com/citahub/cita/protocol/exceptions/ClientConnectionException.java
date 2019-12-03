@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.exceptions;
+package com.citahub.cita.protocol.exceptions;
 
 /**
  * Client connection exception.

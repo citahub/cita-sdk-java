@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import io.reactivex.Flowable;
-import com.cryptape.cita.utils.Async;
+import com.citahub.cita.utils.Async;
 
 /**
  * A common type for wrapping remote requests.

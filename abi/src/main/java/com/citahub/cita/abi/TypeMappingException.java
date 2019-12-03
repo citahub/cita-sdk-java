@@ -1,4 +1,4 @@
-package com.cryptape.cita.abi;
+package com.citahub.cita.abi;
 
 public class TypeMappingException extends RuntimeException {
 

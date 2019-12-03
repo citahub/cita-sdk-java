@@ -1,9 +1,9 @@
-package com.cryptape.cita.abi.datatypes;
+package com.citahub.cita.abi.datatypes;
 
 import java.util.stream.IntStream;
 
-import com.cryptape.cita.abi.datatypes.generated.StaticArray3;
-import com.cryptape.cita.abi.datatypes.generated.Uint8;
+import com.citahub.cita.abi.datatypes.generated.StaticArray3;
+import com.citahub.cita.abi.datatypes.generated.Uint8;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

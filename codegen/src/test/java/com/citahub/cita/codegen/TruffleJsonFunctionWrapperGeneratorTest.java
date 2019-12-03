@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,16 +15,16 @@ import javax.tools.ToolProvider;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cryptape.cita.TempFileProvider;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.TempFileProvider;
+import com.citahub.cita.utils.Strings;
 
 import static org.junit.Assert.assertTrue;
-import static com.cryptape.cita.codegen.FunctionWrapperGenerator.JAVA_TYPES_ARG;
-import static com.cryptape.cita.codegen.FunctionWrapperGenerator.SOLIDITY_TYPES_ARG;
+import static com.citahub.cita.codegen.FunctionWrapperGenerator.JAVA_TYPES_ARG;
+import static com.citahub.cita.codegen.FunctionWrapperGenerator.SOLIDITY_TYPES_ARG;
 
 public class TruffleJsonFunctionWrapperGeneratorTest extends TempFileProvider {
 
-    private static final String PackageName = "com.cryptape.cita.unittests.truffle.java";
+    private static final String PackageName = "com.citahub.cita.unittests.truffle.java";
 
     private String contractBaseDir;
 

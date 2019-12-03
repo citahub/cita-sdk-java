@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.system;
+package com.citahub.cita.protocol.system;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -7,28 +7,28 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.cryptape.cita.abi.FunctionEncoder;
-import com.cryptape.cita.abi.TypeReference;
-import com.cryptape.cita.abi.datatypes.generated.Bytes32;
-import com.cryptape.cita.abi.datatypes.generated.Bytes4;
-import com.cryptape.cita.abi.datatypes.generated.Uint64;
-import com.cryptape.cita.abi.datatypes.generated.Uint8;
-import com.cryptape.cita.protobuf.ConvertStrByte;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.core.methods.response.AppCall;
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.system.entities.QueryInfoResult;
-import com.cryptape.cita.protocol.system.entities.QueryResourceResult;
-import com.cryptape.cita.utils.Numeric;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Bool;
-import com.cryptape.cita.abi.datatypes.DynamicArray;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.Uint;
+import com.citahub.cita.abi.FunctionEncoder;
+import com.citahub.cita.abi.TypeReference;
+import com.citahub.cita.abi.datatypes.generated.Bytes32;
+import com.citahub.cita.abi.datatypes.generated.Bytes4;
+import com.citahub.cita.abi.datatypes.generated.Uint64;
+import com.citahub.cita.abi.datatypes.generated.Uint8;
+import com.citahub.cita.protobuf.ConvertStrByte;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.methods.request.Transaction;
+import com.citahub.cita.protocol.core.methods.response.AppCall;
+import com.citahub.cita.protocol.core.methods.response.Log;
+import com.citahub.cita.protocol.system.entities.QueryInfoResult;
+import com.citahub.cita.protocol.system.entities.QueryResourceResult;
+import com.citahub.cita.utils.Numeric;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Bool;
+import com.citahub.cita.abi.datatypes.DynamicArray;
+import com.citahub.cita.abi.datatypes.Function;
+import com.citahub.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.Uint;
 
-import static com.cryptape.cita.protocol.system.Util.getValidUtilBlock;
+import static com.citahub.cita.protocol.system.Util.getValidUtilBlock;
 
 public class CITAjSystemContract implements CITASystemContract, CITASystemAddress {
     private CITAj service;

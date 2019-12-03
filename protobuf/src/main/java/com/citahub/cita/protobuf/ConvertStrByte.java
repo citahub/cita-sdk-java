@@ -1,4 +1,4 @@
-package com.cryptape.cita.protobuf;
+package com.citahub.cita.protobuf;
 
 import java.util.Collections;
 import java.util.List;

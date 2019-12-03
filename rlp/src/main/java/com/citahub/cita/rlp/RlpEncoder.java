@@ -1,4 +1,4 @@
-package com.cryptape.cita.rlp;
+package com.citahub.cita.rlp;
 
 import java.util.Arrays;
 import java.util.List;

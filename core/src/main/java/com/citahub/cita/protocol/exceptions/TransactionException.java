@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.exceptions;
+package com.citahub.cita.protocol.exceptions;
 
 /**
  * Transaction timeout exception indicates that we have breached some threshold waiting for a

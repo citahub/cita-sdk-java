@@ -1,13 +1,13 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import com.cryptape.cita.protobuf.ConvertStrByte;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.protobuf.ConvertStrByte;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.methods.request.Transaction;
+import com.citahub.cita.protocol.core.methods.response.AppSendTransaction;
+import com.citahub.cita.protocol.core.methods.response.AppTransaction;
+import com.citahub.cita.utils.Numeric;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +56,7 @@ public class VerifySignatureTest {
         }
     }
 
-    private static com.cryptape.cita.protocol.core.methods.response.Transaction
+    private static com.citahub.cita.protocol.core.methods.response.Transaction
             getResponseTransaction(String hash) throws IOException {
         AppTransaction appTransaction = service.appGetTransactionByHash(hash).send();
         if (appTransaction.getTransaction() != null) {
@@ -83,7 +83,7 @@ public class VerifySignatureTest {
         TimeUnit.SECONDS.sleep(10);
 
         //get response transaction
-        com.cryptape.cita.protocol.core.methods.response.Transaction
+        com.citahub.cita.protocol.core.methods.response.Transaction
                 respTx = getResponseTransaction(txHash);
 
         //verify signature in response transaction

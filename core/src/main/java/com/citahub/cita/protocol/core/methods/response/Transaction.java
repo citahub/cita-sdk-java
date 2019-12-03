@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
 import java.math.BigInteger;
 import java.security.SignatureException;
 
-import com.cryptape.cita.utils.Numeric;
-import com.cryptape.cita.utils.TransactionUtil;
+import com.citahub.cita.utils.Numeric;
+import com.citahub.cita.utils.TransactionUtil;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
@@ -88,7 +88,7 @@ public class Transaction {
         return TransactionUtil.verifySignature(addr, content);
     }
 
-    public com.cryptape.cita.protocol.core.methods.request.Transaction
+    public com.citahub.cita.protocol.core.methods.request.Transaction
             decodeContent() throws InvalidProtocolBufferException {
         return TransactionUtil.decodeContent(content);
     }

@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,15 +12,15 @@ import javax.tools.ToolProvider;
 
 import org.junit.Test;
 
-import com.cryptape.cita.TempFileProvider;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.TempFileProvider;
+import com.citahub.cita.utils.Strings;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapperGenerator.JAVA_TYPES_ARG;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapperGenerator.SOLIDITY_TYPES_ARG;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapperGenerator.getFileNameNoExtension;
+import static com.citahub.cita.codegen.SolidityFunctionWrapperGenerator.JAVA_TYPES_ARG;
+import static com.citahub.cita.codegen.SolidityFunctionWrapperGenerator.SOLIDITY_TYPES_ARG;
+import static com.citahub.cita.codegen.SolidityFunctionWrapperGenerator.getFileNameNoExtension;
 
 
 public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
@@ -89,7 +89,7 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
             String contractName, String inputFileName) throws Exception {
 
         testCodeGeneration(
-                contractName, inputFileName, "com.cryptape.cita.unittests.java", JAVA_TYPES_ARG);
+                contractName, inputFileName, "com.citahub.cita.unittests.java", JAVA_TYPES_ARG);
 
     }
 
@@ -98,7 +98,7 @@ public class SolidityFunctionWrapperGeneratorTest extends TempFileProvider {
 
         testCodeGeneration(
                 contractName, inputFileName,
-                "com.cryptape.cita.unittests.solidity", SOLIDITY_TYPES_ARG);
+                "com.citahub.cita.unittests.solidity", SOLIDITY_TYPES_ARG);
     }
 
     private void testCodeGeneration(

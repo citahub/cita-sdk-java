@@ -1,19 +1,19 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import com.cryptape.cita.protocol.ObjectMapperFactory;
-import com.cryptape.cita.utils.Collection;
-import com.cryptape.cita.utils.Files;
+import com.citahub.cita.protocol.ObjectMapperFactory;
+import com.citahub.cita.utils.Collection;
+import com.citahub.cita.utils.Files;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.protocol.core.methods.response.AbiDefinition;
+import com.citahub.cita.utils.Strings;
 
-import static com.cryptape.cita.codegen.Console.exitError;
+import static com.citahub.cita.codegen.Console.exitError;
 
 /**
  * Java wrapper source code generator for Solidity ABI format.

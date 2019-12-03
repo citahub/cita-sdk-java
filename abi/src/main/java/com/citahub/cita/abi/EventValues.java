@@ -1,8 +1,8 @@
-package com.cryptape.cita.abi;
+package com.citahub.cita.abi;
 
 import java.util.List;
 
-import com.cryptape.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.Type;
 
 /**
  * Persisted solidity event parameters.

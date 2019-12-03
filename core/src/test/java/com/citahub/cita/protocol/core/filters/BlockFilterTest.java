@@ -1,6 +1,6 @@
-package com.cryptape.cita.protocol.core.filters;
+package com.citahub.cita.protocol.core.filters;
 
-import com.cryptape.cita.protocol.core.methods.response.AppLog;
+import com.citahub.cita.protocol.core.methods.response.AppLog;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;

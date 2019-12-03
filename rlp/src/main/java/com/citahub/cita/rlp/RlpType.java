@@ -1,4 +1,4 @@
-package com.cryptape.cita.rlp;
+package com.citahub.cita.rlp;
 
 /**
  * Base RLP type.

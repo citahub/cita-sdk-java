@@ -1,4 +1,4 @@
-package com.cryptape.cita.abi.datatypes;
+package com.citahub.cita.abi.datatypes;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public class StaticArray<T extends Type> extends Array<T> {
 
     /**
      * Warning: increasing this constant will cause more generated StaticArrayN types, see:
-     * com.cryptape.cita.codegen.AbiTypesGenerator#generateStaticArrayTypes
+     * com.citahub.cita.codegen.AbiTypesGenerator#generateStaticArrayTypes
      */
     public static int MAX_SIZE_OF_STATIC_ARRAY = 32;
 

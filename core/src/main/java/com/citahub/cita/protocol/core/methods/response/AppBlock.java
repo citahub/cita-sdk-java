@@ -1,8 +1,8 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
-import com.cryptape.cita.protocol.ObjectMapperFactory;
-import com.cryptape.cita.protocol.core.Response;
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.protocol.ObjectMapperFactory;
+import com.citahub.cita.protocol.core.Response;
+import com.citahub.cita.utils.Numeric;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;

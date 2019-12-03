@@ -1,8 +1,8 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import org.junit.Test;
 
-import static com.cryptape.cita.utils.Assertions.verifyPrecondition;
+import static com.citahub.cita.utils.Assertions.verifyPrecondition;
 
 public class AssertionsTest {
 

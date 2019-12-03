@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 import io.reactivex.Flowable;
-import com.cryptape.cita.protocol.CITAjService;
+import com.citahub.cita.protocol.CITAjService;
 
 public class Request<S, T extends Response> {
     private static AtomicLong nextId = new AtomicLong(0);

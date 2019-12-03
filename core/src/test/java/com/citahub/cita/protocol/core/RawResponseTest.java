@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
-import com.cryptape.cita.protocol.core.methods.response.AppBlock;
-import com.cryptape.cita.protocol.core.methods.response.CITAClientVersion;
+import com.citahub.cita.protocol.core.methods.response.AppBlock;
+import com.citahub.cita.protocol.core.methods.response.CITAClientVersion;
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.ResponseTester;
+import com.citahub.cita.protocol.ResponseTester;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;

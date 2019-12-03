@@ -1,9 +1,9 @@
-package com.cryptape.cita.protocol.core.filters;
+package com.citahub.cita.protocol.core.filters;
 
-import com.cryptape.cita.protocol.core.methods.response.AppLog;
+import com.citahub.cita.protocol.core.methods.response.AppLog;
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.core.methods.request.AppFilter;
+import com.citahub.cita.protocol.core.methods.request.AppFilter;
 
 public class LogFilterTest extends FilterTester {
 

@@ -1,4 +1,4 @@
-package com.cryptape.cita;
+package com.citahub.cita;
 
 import java.io.File;
 import java.nio.file.Files;

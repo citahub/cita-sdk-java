@@ -1,4 +1,4 @@
-package com.cryptape.cita.abi;
+package com.citahub.cita.abi;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -6,15 +6,15 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cryptape.cita.abi.datatypes.DynamicArray;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.Fixed;
-import com.cryptape.cita.abi.datatypes.Int;
-import com.cryptape.cita.abi.datatypes.StaticArray;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.Ufixed;
-import com.cryptape.cita.abi.datatypes.Uint;
-import com.cryptape.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.DynamicArray;
+import com.citahub.cita.abi.datatypes.DynamicBytes;
+import com.citahub.cita.abi.datatypes.Fixed;
+import com.citahub.cita.abi.datatypes.Int;
+import com.citahub.cita.abi.datatypes.StaticArray;
+import com.citahub.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.Ufixed;
+import com.citahub.cita.abi.datatypes.Uint;
+import com.citahub.cita.abi.datatypes.Utf8String;
 
 /**
  * Utility functions.

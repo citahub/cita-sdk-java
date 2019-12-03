@@ -1,17 +1,17 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
 import static junit.framework.TestCase.assertNull;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.core.methods.response.AppGetBalance;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.tx.response.PollingTransactionReceiptProcessor;
-import com.cryptape.cita.utils.Convert;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.DefaultBlockParameterName;
+import com.citahub.cita.protocol.core.methods.request.Transaction;
+import com.citahub.cita.protocol.core.methods.response.AppGetBalance;
+import com.citahub.cita.protocol.core.methods.response.AppSendTransaction;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.tx.response.PollingTransactionReceiptProcessor;
+import com.citahub.cita.utils.Convert;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import org.junit.Test;

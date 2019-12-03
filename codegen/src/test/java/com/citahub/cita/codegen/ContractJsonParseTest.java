@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 import java.net.URL;
@@ -6,13 +6,13 @@ import java.net.URL;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
+import com.citahub.cita.protocol.core.methods.response.AbiDefinition;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static com.cryptape.cita.codegen.TruffleJsonFunctionWrapperGenerator.Contract;
-import static com.cryptape.cita.codegen.TruffleJsonFunctionWrapperGenerator.loadContractDefinition;
+import static com.citahub.cita.codegen.TruffleJsonFunctionWrapperGenerator.Contract;
+import static com.citahub.cita.codegen.TruffleJsonFunctionWrapperGenerator.loadContractDefinition;
 
 /**
  * Test that we can parse Truffle Contract from JSON file.

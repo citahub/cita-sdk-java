@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
-import com.cryptape.cita.tuples.Tuple;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.tuples.Tuple;
+import com.citahub.cita.utils.Strings;
 
 /**
  * A class for generating arbitrary sized tuples.

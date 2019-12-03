@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.cryptape.cita.abi.datatypes.generated.Int256;
+import com.citahub.cita.abi.datatypes.generated.Int256;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -14,26 +14,26 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import org.junit.Test;
 
-import com.cryptape.cita.TempFileProvider;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Bool;
-import com.cryptape.cita.abi.datatypes.DynamicArray;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.StaticArray;
-import com.cryptape.cita.abi.datatypes.Utf8String;
-import com.cryptape.cita.abi.datatypes.generated.Bytes32;
-import com.cryptape.cita.abi.datatypes.generated.StaticArray10;
-import com.cryptape.cita.abi.datatypes.generated.Uint256;
-import com.cryptape.cita.abi.datatypes.generated.Uint64;
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
+import com.citahub.cita.TempFileProvider;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Bool;
+import com.citahub.cita.abi.datatypes.DynamicArray;
+import com.citahub.cita.abi.datatypes.DynamicBytes;
+import com.citahub.cita.abi.datatypes.StaticArray;
+import com.citahub.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.generated.Bytes32;
+import com.citahub.cita.abi.datatypes.generated.StaticArray10;
+import com.citahub.cita.abi.datatypes.generated.Uint256;
+import com.citahub.cita.abi.datatypes.generated.Uint64;
+import com.citahub.cita.protocol.core.methods.response.AbiDefinition;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapper.buildTypeName;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapper.createValidParamName;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapper.getEventNativeType;
-import static com.cryptape.cita.codegen.SolidityFunctionWrapper.getNativeType;
+import static com.citahub.cita.codegen.SolidityFunctionWrapper.buildTypeName;
+import static com.citahub.cita.codegen.SolidityFunctionWrapper.createValidParamName;
+import static com.citahub.cita.codegen.SolidityFunctionWrapper.getEventNativeType;
+import static com.citahub.cita.codegen.SolidityFunctionWrapper.getNativeType;
 
 
 public class SolidityFunctionWrapperTest extends TempFileProvider {
@@ -138,11 +138,11 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.cryptape.cita.protocol.core.RemoteCall<com.cryptape.cita.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.lang.Long quota, java.lang.String nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.math.BigInteger chainId, java.lang.String value) {\n" +
-                        "  com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function(\n" +
+                "public com.citahub.cita.protocol.core.RemoteCall<com.citahub.cita.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.lang.Long quota, java.lang.String nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.math.BigInteger chainId, java.lang.String value) {\n" +
+                        "  com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function(\n" +
                         "      \"functionName\", \n" +
-                        "      java.util.Arrays.<com.cryptape.cita.abi.datatypes.Type>asList(new com.cryptape.cita.abi.datatypes.generated.Uint8(param)), \n" +
-                        "      java.util.Collections.<com.cryptape.cita.abi.TypeReference<?>>emptyList());\n" +
+                        "      java.util.Arrays.<com.citahub.cita.abi.datatypes.Type>asList(new com.citahub.cita.abi.datatypes.generated.Uint8(param)), \n" +
+                        "      java.util.Collections.<com.citahub.cita.abi.TypeReference<?>>emptyList());\n" +
                         "  return executeRemoteCallTransaction(function, quota, nonce, validUntilBlock, version, chainId, value);\n" +
                         "}\n";
         //CHECKSTYLE:ON
@@ -165,11 +165,11 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.cryptape.cita.protocol.core.RemoteCall<com.cryptape.cita.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.lang.Long quota, java.lang.String nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.math.BigInteger chainId, java.lang.String value) {\n" +
-                        "  com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function(\n" +
+                "public com.citahub.cita.protocol.core.RemoteCall<com.citahub.cita.protocol.core.methods.response.TransactionReceipt> functionName(java.math.BigInteger param, java.math.BigInteger weiValue, java.lang.Long quota, java.lang.String nonce, java.lang.Long validUntilBlock, java.lang.Integer version, java.math.BigInteger chainId, java.lang.String value) {\n" +
+                        "  com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function(\n" +
                         "      \"functionName\", \n" +
-                        "      java.util.Arrays.<com.cryptape.cita.abi.datatypes.Type>asList(new com.cryptape.cita.abi.datatypes.generated.Uint8(param)), \n" +
-                        "      java.util.Collections.<com.cryptape.cita.abi.TypeReference<?>>emptyList());\n" +
+                        "      java.util.Arrays.<com.citahub.cita.abi.datatypes.Type>asList(new com.citahub.cita.abi.datatypes.generated.Uint8(param)), \n" +
+                        "      java.util.Collections.<com.citahub.cita.abi.TypeReference<?>>emptyList());\n" +
                         "  return executeRemoteCallTransaction(function, weiValue, quota, nonce, validUntilBlock, version, chainId, value);\n" +
                         "}\n";
         //CHECKSTYLE:ON
@@ -193,10 +193,10 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
 
         //CHECKSTYLE:OFF
         String expected =
-                "public com.cryptape.cita.protocol.core.RemoteCall<java.math.BigInteger> functionName(java.math.BigInteger param) {\n" +
-                        "  com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function(\"functionName\", \n" +
-                        "      java.util.Arrays.<com.cryptape.cita.abi.datatypes.Type>asList(new com.cryptape.cita.abi.datatypes.generated.Uint8(param)), \n" +
-                        "      java.util.Arrays.<com.cryptape.cita.abi.TypeReference<?>>asList(new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.generated.Int8>() {}));\n" +
+                "public com.citahub.cita.protocol.core.RemoteCall<java.math.BigInteger> functionName(java.math.BigInteger param) {\n" +
+                        "  com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function(\"functionName\", \n" +
+                        "      java.util.Arrays.<com.citahub.cita.abi.datatypes.Type>asList(new com.citahub.cita.abi.datatypes.generated.Uint8(param)), \n" +
+                        "      java.util.Arrays.<com.citahub.cita.abi.TypeReference<?>>asList(new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.generated.Int8>() {}));\n" +
                         "  return executeRemoteCallSingleValueReturn(function, java.math.BigInteger.class);\n" +
                         "}\n";
         //CHECKSTYLE:ON
@@ -236,17 +236,17 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
         MethodSpec methodSpec = solidityFunctionWrapper.buildFunction(functionDefinition);
 
         //CHECKSTYLE:OFF
-        String expected = "public com.cryptape.cita.protocol.core.RemoteCall<com.cryptape.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>> functionName(java.math.BigInteger param1, java.math.BigInteger param2) {\n" +
-                "  final com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function(\"functionName\", \n" +
-                "      java.util.Arrays.<com.cryptape.cita.abi.datatypes.Type>asList(new com.cryptape.cita.abi.datatypes.generated.Uint8(param1), \n" +
-                "      new com.cryptape.cita.abi.datatypes.generated.Uint32(param2)), \n" +
-                "      java.util.Arrays.<com.cryptape.cita.abi.TypeReference<?>>asList(new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.generated.Int8>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.generated.Int32>() {}));\n" +
-                "  return new com.cryptape.cita.protocol.core.RemoteCall<com.cryptape.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>(\n" +
-                "      new java.util.concurrent.Callable<com.cryptape.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>() {\n" +
+        String expected = "public com.citahub.cita.protocol.core.RemoteCall<com.citahub.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>> functionName(java.math.BigInteger param1, java.math.BigInteger param2) {\n" +
+                "  final com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function(\"functionName\", \n" +
+                "      java.util.Arrays.<com.citahub.cita.abi.datatypes.Type>asList(new com.citahub.cita.abi.datatypes.generated.Uint8(param1), \n" +
+                "      new com.citahub.cita.abi.datatypes.generated.Uint32(param2)), \n" +
+                "      java.util.Arrays.<com.citahub.cita.abi.TypeReference<?>>asList(new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.generated.Int8>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.generated.Int32>() {}));\n" +
+                "  return new com.citahub.cita.protocol.core.RemoteCall<com.citahub.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>(\n" +
+                "      new java.util.concurrent.Callable<com.citahub.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>>() {\n" +
                 "        @java.lang.Override\n" +
-                "        public com.cryptape.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger> call() throws java.lang.Exception {\n" +
-                "          java.util.List<com.cryptape.cita.abi.datatypes.Type> results = executeCallMultipleValueReturn(function);;\n" +
-                "          return new com.cryptape.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>(\n" +
+                "        public com.citahub.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger> call() throws java.lang.Exception {\n" +
+                "          java.util.List<com.citahub.cita.abi.datatypes.Type> results = executeCallMultipleValueReturn(function);;\n" +
+                "          return new com.citahub.cita.tuples.generated.Tuple2<java.math.BigInteger, java.math.BigInteger>(\n" +
                 "              (java.math.BigInteger) results.get(0).getValue(), \n" +
                 "              (java.math.BigInteger) results.get(1).getValue());\n" +
                 "        }\n" +
@@ -282,13 +282,13 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
         //CHECKSTYLE:OFF
         String expected =
                 "class testClass {\n" +
-                        "  public java.util.List<TransferEventResponse> getTransferEvents(com.cryptape.cita.protocol.core.methods.response.TransactionReceipt transactionReceipt) {\n" +
-                        "    final com.cryptape.cita.abi.datatypes.Event event = new com.cryptape.cita.abi.datatypes.Event(\"Transfer\", \n" +
-                        "        java.util.Arrays.<com.cryptape.cita.abi.TypeReference<?>>asList(new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Utf8String>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Address>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Address>() {}),\n" +
-                        "        java.util.Arrays.<com.cryptape.cita.abi.TypeReference<?>>asList(new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.generated.Uint256>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Utf8String>() {}));\n" +
-                        "    java.util.List<com.cryptape.cita.abi.EventValues> valueList = extractEventParameters(event, transactionReceipt);\n" +
+                        "  public java.util.List<TransferEventResponse> getTransferEvents(com.citahub.cita.protocol.core.methods.response.TransactionReceipt transactionReceipt) {\n" +
+                        "    final com.citahub.cita.abi.datatypes.Event event = new com.citahub.cita.abi.datatypes.Event(\"Transfer\", \n" +
+                        "        java.util.Arrays.<com.citahub.cita.abi.TypeReference<?>>asList(new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Utf8String>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Address>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Address>() {}),\n" +
+                        "        java.util.Arrays.<com.citahub.cita.abi.TypeReference<?>>asList(new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.generated.Uint256>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Utf8String>() {}));\n" +
+                        "    java.util.List<com.citahub.cita.abi.EventValues> valueList = extractEventParameters(event, transactionReceipt);\n" +
                         "    java.util.ArrayList<TransferEventResponse> responses = new java.util.ArrayList<TransferEventResponse>(valueList.size());\n" +
-                        "    for (com.cryptape.cita.abi.EventValues eventValues : valueList) {\n" +
+                        "    for (com.citahub.cita.abi.EventValues eventValues : valueList) {\n" +
                         "      TransferEventResponse typedResponse = new TransferEventResponse();\n" +
                         "      typedResponse.id = (byte[]) eventValues.getIndexedValues().get(0).getValue();\n" +
                         "      typedResponse.from = (java.lang.String) eventValues.getIndexedValues().get(1).getValue();\n" +
@@ -300,16 +300,16 @@ public class SolidityFunctionWrapperTest extends TempFileProvider {
                         "    return responses;\n" +
                         "  }\n" +
                         "\n" +
-                        "  public io.reactivex.Flowable<TransferEventResponse> transferEventFlowable(com.cryptape.cita.protocol.core.DefaultBlockParameter startBlock, com.cryptape.cita.protocol.core.DefaultBlockParameter endBlock) {\n" +
-                        "    final com.cryptape.cita.abi.datatypes.Event event = new com.cryptape.cita.abi.datatypes.Event(\"Transfer\", \n" +
-                        "        java.util.Arrays.<com.cryptape.cita.abi.TypeReference<?>>asList(new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Utf8String>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Address>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Address>() {}),\n" +
-                        "        java.util.Arrays.<com.cryptape.cita.abi.TypeReference<?>>asList(new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.generated.Uint256>() {}, new com.cryptape.cita.abi.TypeReference<com.cryptape.cita.abi.datatypes.Utf8String>() {}));\n" +
-                        "    com.cryptape.cita.protocol.core.methods.request.AppFilter filter = new com.cryptape.cita.protocol.core.methods.request.AppFilter(startBlock, endBlock, getContractAddress());\n" +
-                        "    filter.addSingleTopic(com.cryptape.cita.abi.EventEncoder.encode(event));\n" +
-                        "    return citaj.appLogFlowable(filter).map(new io.reactivex.functions.Function<com.cryptape.cita.protocol.core.methods.response.Log, TransferEventResponse>() {\n" +
+                        "  public io.reactivex.Flowable<TransferEventResponse> transferEventFlowable(com.citahub.cita.protocol.core.DefaultBlockParameter startBlock, com.citahub.cita.protocol.core.DefaultBlockParameter endBlock) {\n" +
+                        "    final com.citahub.cita.abi.datatypes.Event event = new com.citahub.cita.abi.datatypes.Event(\"Transfer\", \n" +
+                        "        java.util.Arrays.<com.citahub.cita.abi.TypeReference<?>>asList(new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Utf8String>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Address>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Address>() {}),\n" +
+                        "        java.util.Arrays.<com.citahub.cita.abi.TypeReference<?>>asList(new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.generated.Uint256>() {}, new com.citahub.cita.abi.TypeReference<com.citahub.cita.abi.datatypes.Utf8String>() {}));\n" +
+                        "    com.citahub.cita.protocol.core.methods.request.AppFilter filter = new com.citahub.cita.protocol.core.methods.request.AppFilter(startBlock, endBlock, getContractAddress());\n" +
+                        "    filter.addSingleTopic(com.citahub.cita.abi.EventEncoder.encode(event));\n" +
+                        "    return citaj.appLogFlowable(filter).map(new io.reactivex.functions.Function<com.citahub.cita.protocol.core.methods.response.Log, TransferEventResponse>() {\n" +
                         "      @java.lang.Override\n" +
-                        "      public TransferEventResponse apply(com.cryptape.cita.protocol.core.methods.response.Log log) {\n" +
-                        "        com.cryptape.cita.abi.EventValues eventValues = extractEventParameters(event, log);\n" +
+                        "      public TransferEventResponse apply(com.citahub.cita.protocol.core.methods.response.Log log) {\n" +
+                        "        com.citahub.cita.abi.EventValues eventValues = extractEventParameters(event, log);\n" +
                         "        TransferEventResponse typedResponse = new TransferEventResponse();\n" +
                         "        typedResponse.id = (byte[]) eventValues.getIndexedValues().get(0).getValue();\n" +
                         "        typedResponse.from = (java.lang.String) eventValues.getIndexedValues().get(1).getValue();\n" +

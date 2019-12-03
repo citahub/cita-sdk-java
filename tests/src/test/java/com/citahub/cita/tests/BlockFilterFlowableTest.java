@@ -1,6 +1,6 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
-import com.cryptape.cita.protocol.CITAj;
+import com.citahub.cita.protocol.CITAj;
 import io.reactivex.Flowable;
 import org.junit.Test;
 

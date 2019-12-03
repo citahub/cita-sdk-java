@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto.sm2;
+package com.citahub.cita.crypto.sm2;
 
 import java.math.BigInteger;
 

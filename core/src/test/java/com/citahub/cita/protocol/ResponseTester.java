@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol;
+package com.citahub.cita.protocol;
 
 import java.io.IOException;
 
@@ -8,12 +8,12 @@ import okhttp3.Protocol;
 import okhttp3.ResponseBody;
 import org.junit.Before;
 
-import com.cryptape.cita.protocol.core.Request;
-import com.cryptape.cita.protocol.core.Response;
-import com.cryptape.cita.protocol.http.HttpService;
+import com.citahub.cita.protocol.core.Request;
+import com.citahub.cita.protocol.core.Response;
+import com.citahub.cita.protocol.http.HttpService;
 
 import static org.junit.Assert.fail;
-import static com.cryptape.cita.protocol.http.HttpService.JSON_MEDIA_TYPE;
+import static com.citahub.cita.protocol.http.HttpService.JSON_MEDIA_TYPE;
 
 /**
  * Protocol Response tests.

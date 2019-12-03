@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.ipc;
+package com.citahub.cita.protocol.ipc;
 
 /**
  * Unix domain socket implementation of our services API.

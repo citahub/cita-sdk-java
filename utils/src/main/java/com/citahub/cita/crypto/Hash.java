@@ -1,8 +1,8 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.nio.charset.StandardCharsets;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 import org.bouncycastle.jcajce.provider.digest.Keccak;
 
 /**

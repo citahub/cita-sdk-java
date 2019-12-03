@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.ipc;
+package com.citahub.cita.protocol.ipc;
 
 /**
  * Windows named pipe implementation of our services API.
