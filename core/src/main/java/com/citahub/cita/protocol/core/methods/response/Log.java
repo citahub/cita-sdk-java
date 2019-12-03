@@ -1,9 +1,9 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * <p>Log object used by {@link AppLog} and {@link AppGetTransactionReceipt}.</p>

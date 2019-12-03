@@ -1,11 +1,11 @@
-package com.cryptape.cita.protocol.deserializer;
+package com.citahub.cita.protocol.deserializer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Response;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;

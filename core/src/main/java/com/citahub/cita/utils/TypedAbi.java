@@ -1,4 +1,4 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -7,15 +7,15 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cryptape.cita.abi.TypeReference;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Bool;
-import com.cryptape.cita.abi.datatypes.DynamicArray;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.StaticArray;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.Utf8String;
-import com.cryptape.cita.abi.datatypes.generated.AbiTypes;
+import com.citahub.cita.abi.TypeReference;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Bool;
+import com.citahub.cita.abi.datatypes.DynamicArray;
+import com.citahub.cita.abi.datatypes.DynamicBytes;
+import com.citahub.cita.abi.datatypes.StaticArray;
+import com.citahub.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.generated.AbiTypes;
 
 public class TypedAbi {
     public static class InvalidAbiType extends Exception {
@@ -54,7 +54,7 @@ public class TypedAbi {
             Class staticArray;
             try {
                 staticArray = Class.forName(
-                        "com.cryptape.cita.abi.datatypes.generated.StaticArray" + length);
+                        "com.citahub.cita.abi.datatypes.generated.StaticArray" + length);
             } catch (ClassNotFoundException e) {
                 staticArray = StaticArray.class;
             }
@@ -97,10 +97,10 @@ public class TypedAbi {
             } else if (typeName.equals("Utf8String")) {
                 ctor = Utf8String.class.getDeclaredConstructor(String.class);
             } else if (typeName.startsWith("Uint") || typeName.startsWith("Int")) {
-                Class c = Class.forName("com.cryptape.cita.abi.datatypes.generated." + typeName);
+                Class c = Class.forName("com.citahub.cita.abi.datatypes.generated." + typeName);
                 ctor = c.getDeclaredConstructor(BigInteger.class);
             } else if (typeName.startsWith("Bytes")) {
-                Class c = Class.forName("com.cryptape.cita.abi.datatypes.generated." + typeName);
+                Class c = Class.forName("com.citahub.cita.abi.datatypes.generated." + typeName);
                 ctor = c.getDeclaredConstructor(byte[].class);
             } else {
                 throw new InvalidAbiType(typeName);

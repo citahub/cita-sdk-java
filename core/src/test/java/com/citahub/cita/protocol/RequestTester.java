@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol;
+package com.citahub.cita.protocol;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import okhttp3.RequestBody;
 import okio.Buffer;
 import org.junit.Before;
 
-import com.cryptape.cita.protocol.http.HttpService;
+import com.citahub.cita.protocol.http.HttpService;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

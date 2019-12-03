@@ -1,6 +1,6 @@
-package com.cryptape.cita.tx.response;
+package com.citahub.cita.tx.response;
 
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
 
 /**
  * Transaction receipt processor callback.

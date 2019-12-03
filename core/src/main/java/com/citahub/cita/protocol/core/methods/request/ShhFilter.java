@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.core.methods.request;
+package com.citahub.cita.protocol.core.methods.request;
 
 /**
  * Filter implementation as per <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter">docs</a>

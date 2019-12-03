@@ -1,6 +1,6 @@
-package com.cryptape.cita.protocol;
+package com.citahub.cita.protocol;
 
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Response;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.BeanDescription;
 import com.fasterxml.jackson.databind.DeserializationConfig;
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import com.cryptape.cita.protocol.deserializer.RawResponseDeserializer;
+import com.citahub.cita.protocol.deserializer.RawResponseDeserializer;
 
 /**
  * Factory for managing our ObjectMapper instances.

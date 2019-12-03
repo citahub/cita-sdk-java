@@ -1,11 +1,11 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import com.cryptape.cita.exceptions.MessageDecodingException;
-import com.cryptape.cita.exceptions.MessageEncodingException;
+import com.citahub.cita.exceptions.MessageDecodingException;
+import com.citahub.cita.exceptions.MessageEncodingException;
 
 /**
  * <p>Message codec functions.</p>

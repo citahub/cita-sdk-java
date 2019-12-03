@@ -1,10 +1,10 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static com.cryptape.cita.utils.Bytes.trimLeadingZeroes;
+import static com.citahub.cita.utils.Bytes.trimLeadingZeroes;
 
 public class BytesTest {
 

@@ -1,12 +1,12 @@
-package com.cryptape.cita.contracts.token;
+package com.citahub.cita.contracts.token;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
 import io.reactivex.Flowable;
-import com.cryptape.cita.protocol.core.DefaultBlockParameter;
-import com.cryptape.cita.protocol.core.RemoteCall;
+import com.citahub.cita.protocol.core.DefaultBlockParameter;
+import com.citahub.cita.protocol.core.RemoteCall;
 
 /**
  * The Ethereum ERC-20 token standard.

@@ -1,11 +1,11 @@
-package com.cryptape.cita.tuples.generated;
+package com.citahub.cita.tuples.generated;
 
-import com.cryptape.cita.tuples.Tuple;
+import com.citahub.cita.tuples.Tuple;
 
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use com.cryptape.cita.codegen.TupleGenerator in the
+ * <p>Please use com.citahub.cita.codegen.TupleGenerator in the
  */
 public final class Tuple9<T1, T2, T3, T4, T5, T6, T7, T8, T9> implements Tuple {
     private static final int SIZE = 9;

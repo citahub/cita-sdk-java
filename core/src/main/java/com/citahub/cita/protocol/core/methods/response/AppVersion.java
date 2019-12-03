@@ -1,6 +1,6 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Response;
 
 /**
  * Created by duanyytop on 2019-04-09.

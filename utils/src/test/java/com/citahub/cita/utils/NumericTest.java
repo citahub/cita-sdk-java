@@ -1,4 +1,4 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -6,8 +6,8 @@ import java.math.BigInteger;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.cryptape.cita.exceptions.MessageDecodingException;
-import com.cryptape.cita.exceptions.MessageEncodingException;
+import com.citahub.cita.exceptions.MessageDecodingException;
+import com.citahub.cita.exceptions.MessageEncodingException;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.equalTo;

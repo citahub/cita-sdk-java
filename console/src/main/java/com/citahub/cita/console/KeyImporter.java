@@ -1,16 +1,16 @@
-package com.cryptape.cita.console;
+package com.citahub.cita.console;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.cryptape.cita.codegen.Console;
-import com.cryptape.cita.crypto.CipherException;
-import com.cryptape.cita.crypto.Credentials;
-import com.cryptape.cita.crypto.Keys;
-import com.cryptape.cita.crypto.WalletUtils;
-import com.cryptape.cita.utils.Files;
+import com.citahub.cita.codegen.Console;
+import com.citahub.cita.crypto.CipherException;
+import com.citahub.cita.crypto.Credentials;
+import com.citahub.cita.crypto.Keys;
+import com.citahub.cita.crypto.WalletUtils;
+import com.citahub.cita.utils.Files;
 
-import static com.cryptape.cita.codegen.Console.exitError;
+import static com.citahub.cita.codegen.Console.exitError;
 
 /**
  * Create Ethereum wallet file from a provided private key.

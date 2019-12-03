@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
 import java.math.BigInteger;
 
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.protocol.core.Response;
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.protocol.core.Response;
+import com.citahub.cita.utils.Numeric;
 
 
 public class AppMetaData extends Response<AppMetaData.AppMetaDataResult> {

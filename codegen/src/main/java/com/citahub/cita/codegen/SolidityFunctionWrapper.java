@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -11,15 +11,15 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import javax.lang.model.element.Modifier;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.ObjectMapperFactory;
-import com.cryptape.cita.protocol.core.DefaultBlockParameter;
-import com.cryptape.cita.protocol.core.RemoteCall;
-import com.cryptape.cita.protocol.core.methods.request.AppFilter;
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.utils.Collection;
-import com.cryptape.cita.utils.Version;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.ObjectMapperFactory;
+import com.citahub.cita.protocol.core.DefaultBlockParameter;
+import com.citahub.cita.protocol.core.RemoteCall;
+import com.citahub.cita.protocol.core.methods.request.AppFilter;
+import com.citahub.cita.protocol.core.methods.response.Log;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.utils.Collection;
+import com.citahub.cita.utils.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -32,24 +32,24 @@ import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
 import io.reactivex.Flowable;
-import com.cryptape.cita.abi.EventEncoder;
-import com.cryptape.cita.abi.EventValues;
-import com.cryptape.cita.abi.FunctionEncoder;
-import com.cryptape.cita.abi.TypeReference;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Bool;
-import com.cryptape.cita.abi.datatypes.DynamicArray;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.Event;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.abi.datatypes.StaticArray;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.Utf8String;
-import com.cryptape.cita.abi.datatypes.generated.AbiTypes;
-import com.cryptape.cita.protocol.core.methods.response.AbiDefinition;
-import com.cryptape.cita.tx.Contract;
-import com.cryptape.cita.tx.TransactionManager;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.abi.EventEncoder;
+import com.citahub.cita.abi.EventValues;
+import com.citahub.cita.abi.FunctionEncoder;
+import com.citahub.cita.abi.TypeReference;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Bool;
+import com.citahub.cita.abi.datatypes.DynamicArray;
+import com.citahub.cita.abi.datatypes.DynamicBytes;
+import com.citahub.cita.abi.datatypes.Event;
+import com.citahub.cita.abi.datatypes.Function;
+import com.citahub.cita.abi.datatypes.StaticArray;
+import com.citahub.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.generated.AbiTypes;
+import com.citahub.cita.protocol.core.methods.response.AbiDefinition;
+import com.citahub.cita.tx.Contract;
+import com.citahub.cita.tx.TransactionManager;
+import com.citahub.cita.utils.Strings;
 
 /**
  * Generate Java Classes based on generated Solidity bin and abi files.
@@ -80,7 +80,7 @@ public class SolidityFunctionWrapper extends Generator {
     private static final String CODEGEN_WARNING = "<p>Auto generated code.\n"
             + "<p><strong>Do not modify!</strong>\n"
             + "<p>Please use the "
-            + "<a href=\"https://github.com/cryptape/citaj/tree/master/codegen\">"
+            + "<a href=\"https://github.com/citahub/citaj/tree/master/codegen\">"
             + "codegen module</a> to update.\n";
 
     private final boolean useNativeJavaTypes;
@@ -670,7 +670,7 @@ public class SolidityFunctionWrapper extends Generator {
 
             ParameterizedTypeName parameterizedTupleType = ParameterizedTypeName.get(
                     ClassName.get(
-                            "com.cryptape.cita.tuples.generated",
+                            "com.citahub.cita.tuples.generated",
                             "Tuple" + returnTypes.size()),
                     returnTypes.toArray(
                             new TypeName[returnTypes.size()]));
@@ -918,7 +918,7 @@ public class SolidityFunctionWrapper extends Generator {
 
     private static Class<?> getStaticArrayTypeReferenceClass(String[] splitType) {
         try {
-            return Class.forName("com.cryptape.cita.abi.datatypes.generated.StaticArray"
+            return Class.forName("com.citahub.cita.abi.datatypes.generated.StaticArray"
                     + splitType[1]);
         } catch (ClassNotFoundException e) {
             // Unfortunately we can't encode it's length as a type if it's > 32.

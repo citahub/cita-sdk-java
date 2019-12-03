@@ -1,24 +1,24 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
-import static com.cryptape.cita.tx.Contract.staticExtractEventParameters;
+import static com.citahub.cita.tx.Contract.staticExtractEventParameters;
 import static org.junit.Assert.assertTrue;
 
-import com.cryptape.cita.abi.EventEncoder;
-import com.cryptape.cita.abi.EventValues;
-import com.cryptape.cita.abi.FunctionEncoder;
-import com.cryptape.cita.abi.TypeReference;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Event;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.abi.datatypes.generated.Uint256;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.DefaultBlockParameterName;
-import com.cryptape.cita.protocol.core.methods.request.AppFilter;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
-import com.cryptape.cita.protocol.core.methods.response.AppSendTransaction;
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.abi.EventEncoder;
+import com.citahub.cita.abi.EventValues;
+import com.citahub.cita.abi.FunctionEncoder;
+import com.citahub.cita.abi.TypeReference;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Event;
+import com.citahub.cita.abi.datatypes.Function;
+import com.citahub.cita.abi.datatypes.generated.Uint256;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.DefaultBlockParameterName;
+import com.citahub.cita.protocol.core.methods.request.AppFilter;
+import com.citahub.cita.protocol.core.methods.request.Transaction;
+import com.citahub.cita.protocol.core.methods.response.AppGetTransactionReceipt;
+import com.citahub.cita.protocol.core.methods.response.AppSendTransaction;
+import com.citahub.cita.protocol.core.methods.response.Log;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
 import io.reactivex.Flowable;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -94,7 +94,7 @@ public class TokenFilterFlowableTest {
 
     //this will call JSON RPC "newFilter" and get the filterId.
     private static String newFilter(AppFilter appFilter) throws IOException {
-        com.cryptape.cita.protocol.core.methods.response.AppFilter responseFilter
+        com.citahub.cita.protocol.core.methods.response.AppFilter responseFilter
                 = service.appNewFilter(appFilter).send();
         return responseFilter.getFilterId().toString();
     }

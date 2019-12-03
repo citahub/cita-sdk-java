@@ -1,10 +1,10 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-import com.cryptape.cita.protocol.system.CITAjSystemContract;
+import com.citahub.cita.protocol.system.CITAjSystemContract;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,15 +1,15 @@
-package com.cryptape.cita.protocol.admin;
+package com.citahub.cita.protocol.admin;
 
 import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.ResponseTester;
-import com.cryptape.cita.protocol.admin.methods.response.BooleanResponse;
-import com.cryptape.cita.protocol.admin.methods.response.NewAccountIdentifier;
-import com.cryptape.cita.protocol.admin.methods.response.PersonalListAccounts;
-import com.cryptape.cita.protocol.admin.methods.response.PersonalSign;
-import com.cryptape.cita.protocol.admin.methods.response.PersonalUnlockAccount;
+import com.citahub.cita.protocol.ResponseTester;
+import com.citahub.cita.protocol.admin.methods.response.BooleanResponse;
+import com.citahub.cita.protocol.admin.methods.response.NewAccountIdentifier;
+import com.citahub.cita.protocol.admin.methods.response.PersonalListAccounts;
+import com.citahub.cita.protocol.admin.methods.response.PersonalSign;
+import com.citahub.cita.protocol.admin.methods.response.PersonalUnlockAccount;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

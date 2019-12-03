@@ -1,11 +1,11 @@
-package com.cryptape.cita.tx.response;
+package com.citahub.cita.tx.response;
 
 import java.io.IOException;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.protocol.core.methods.response.AppGetTransactionReceipt;
-import com.cryptape.cita.protocol.exceptions.TransactionException;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.protocol.core.methods.response.AppGetTransactionReceipt;
+import com.citahub.cita.protocol.exceptions.TransactionException;
 
 /**
  * Abstraction for managing how we wait for transaction receipts to be generated on the network.

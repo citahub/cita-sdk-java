@@ -1,8 +1,8 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 
-import static com.cryptape.cita.codegen.Console.exitError;
+import static com.citahub.cita.codegen.Console.exitError;
 
 /**
  * Abstract base class for the concrete function wrapper generators.

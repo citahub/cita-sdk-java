@@ -1,9 +1,9 @@
-package com.cryptape.cita.abi.datatypes;
+package com.citahub.cita.abi.datatypes;
 
 import java.math.BigInteger;
 
-import com.cryptape.cita.abi.datatypes.generated.Uint160;
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.abi.datatypes.generated.Uint160;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * Address type, which is equivalent to uint160.

@@ -1,4 +1,4 @@
-package com.cryptape.cita.tx.response;
+package com.citahub.cita.tx.response;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
@@ -6,10 +6,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.utils.Async;
-import com.cryptape.cita.protocol.exceptions.TransactionException;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.utils.Async;
+import com.citahub.cita.protocol.exceptions.TransactionException;
 
 /**
  * Transaction receipt processor that uses a single thread to query for transaction receipts.

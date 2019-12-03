@@ -1,4 +1,4 @@
-package com.cryptape.cita.console;
+package com.citahub.cita.console;
 
 import java.io.Console;
 

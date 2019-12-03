@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
 import java.math.BigInteger;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * DefaultBlockParameter implementation that takes a numeric value.

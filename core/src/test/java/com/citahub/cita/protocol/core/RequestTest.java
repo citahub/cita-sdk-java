@@ -1,13 +1,13 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
 import org.junit.Test;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.RequestTester;
-import com.cryptape.cita.protocol.core.methods.request.AppFilter;
-import com.cryptape.cita.protocol.core.methods.request.Call;
-import com.cryptape.cita.protocol.http.HttpService;
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.RequestTester;
+import com.citahub.cita.protocol.core.methods.request.AppFilter;
+import com.citahub.cita.protocol.core.methods.request.Call;
+import com.citahub.cita.protocol.http.HttpService;
+import com.citahub.cita.utils.Numeric;
 
 public class RequestTest extends RequestTester {
 

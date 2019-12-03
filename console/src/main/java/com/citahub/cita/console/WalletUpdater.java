@@ -1,14 +1,14 @@
-package com.cryptape.cita.console;
+package com.citahub.cita.console;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.cryptape.cita.codegen.Console;
-import com.cryptape.cita.crypto.CipherException;
-import com.cryptape.cita.crypto.Credentials;
-import com.cryptape.cita.crypto.WalletUtils;
+import com.citahub.cita.codegen.Console;
+import com.citahub.cita.crypto.CipherException;
+import com.citahub.cita.crypto.Credentials;
+import com.citahub.cita.crypto.WalletUtils;
 
-import static com.cryptape.cita.codegen.Console.exitError;
+import static com.citahub.cita.codegen.Console.exitError;
 
 /**
  * Simple class for creating a wallet file.

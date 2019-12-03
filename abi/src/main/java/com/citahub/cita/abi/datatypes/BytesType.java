@@ -1,4 +1,4 @@
-package com.cryptape.cita.abi.datatypes;
+package com.citahub.cita.abi.datatypes;
 
 import java.util.Arrays;
 

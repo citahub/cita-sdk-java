@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol.ipc;
+package com.citahub.cita.protocol.ipc;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.cryptape.cita.protocol.Service;
+import com.citahub.cita.protocol.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

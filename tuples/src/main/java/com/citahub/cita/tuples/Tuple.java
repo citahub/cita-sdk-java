@@ -1,4 +1,4 @@
-package com.cryptape.cita.tuples;
+package com.citahub.cita.tuples;
 
 /**
  * Tuple abstraction.

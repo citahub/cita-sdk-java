@@ -1,4 +1,4 @@
-package com.cryptape.cita.tx.exceptions;
+package com.citahub.cita.tx.exceptions;
 
 /**
  * Exception resulting from issues calling methods on Smart Contracts.

@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +12,11 @@ import javax.tools.ToolProvider;
 
 import org.junit.Test;
 
-import com.cryptape.cita.TempFileProvider;
+import com.citahub.cita.TempFileProvider;
 
 import static org.junit.Assert.assertTrue;
-import static com.cryptape.cita.codegen.TupleGenerator.CLASS_NAME;
-import static com.cryptape.cita.codegen.TupleGenerator.LIMIT;
+import static com.citahub.cita.codegen.TupleGenerator.CLASS_NAME;
+import static com.citahub.cita.codegen.TupleGenerator.LIMIT;
 
 public class TupleGeneratorTest extends TempFileProvider {
 

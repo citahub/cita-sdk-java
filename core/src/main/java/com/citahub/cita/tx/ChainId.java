@@ -1,4 +1,4 @@
-package com.cryptape.cita.tx;
+package com.citahub.cita.tx;
 
 /**
  * Ethereum chain ids as per

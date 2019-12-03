@@ -1,4 +1,4 @@
-package com.cryptape.cita.utils;
+package com.citahub.cita.utils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,13 +10,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static com.cryptape.cita.utils.Strings.capitaliseFirstLetter;
-import static com.cryptape.cita.utils.Strings.isEmpty;
-import static com.cryptape.cita.utils.Strings.join;
-import static com.cryptape.cita.utils.Strings.lowercaseFirstLetter;
-import static com.cryptape.cita.utils.Strings.repeat;
-import static com.cryptape.cita.utils.Strings.toCsv;
-import static com.cryptape.cita.utils.Strings.zeros;
+import static com.citahub.cita.utils.Strings.capitaliseFirstLetter;
+import static com.citahub.cita.utils.Strings.isEmpty;
+import static com.citahub.cita.utils.Strings.join;
+import static com.citahub.cita.utils.Strings.lowercaseFirstLetter;
+import static com.citahub.cita.utils.Strings.repeat;
+import static com.citahub.cita.utils.Strings.toCsv;
+import static com.citahub.cita.utils.Strings.zeros;
 
 
 public class StringsTest {

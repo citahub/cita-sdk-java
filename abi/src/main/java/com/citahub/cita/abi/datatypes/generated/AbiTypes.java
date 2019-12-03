@@ -1,14 +1,14 @@
-package com.cryptape.cita.abi.datatypes.generated;
+package com.citahub.cita.abi.datatypes.generated;
 
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Bool;
-import com.cryptape.cita.abi.datatypes.DynamicBytes;
-import com.cryptape.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Bool;
+import com.citahub.cita.abi.datatypes.DynamicBytes;
+import com.citahub.cita.abi.datatypes.Utf8String;
 
 /**
  * Auto generated code.
  * <p><strong>Do not modifiy!</strong>
- * <p>Please use com.cryptape.cita.codegen.AbiTypesMapperGenerator in the
+ * <p>Please use com.citahub.cita.codegen.AbiTypesMapperGenerator in the
  */
 public final class AbiTypes {
     private AbiTypes() {

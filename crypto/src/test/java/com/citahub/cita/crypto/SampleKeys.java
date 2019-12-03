@@ -1,8 +1,8 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.math.BigInteger;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * Keys generated for unit testing purposes.

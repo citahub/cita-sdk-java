@@ -1,10 +1,10 @@
-package com.cryptape.cita.tx.response;
+package com.citahub.cita.tx.response;
 
 import java.math.BigInteger;
 import java.util.List;
 
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.protocol.core.methods.response.Log;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
 
 /**
  * An empty transaction receipt object containing only the transaction hash. This is to support the

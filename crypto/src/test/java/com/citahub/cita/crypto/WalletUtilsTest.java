@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -8,17 +8,17 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static com.cryptape.cita.crypto.SampleKeys.CREDENTIALS;
-import static com.cryptape.cita.crypto.SampleKeys.KEY_PAIR;
-import static com.cryptape.cita.crypto.SampleKeys.PASSWORD;
-import static com.cryptape.cita.crypto.WalletUtils.isValidAddress;
-import static com.cryptape.cita.crypto.WalletUtils.isValidPrivateKey;
+import static com.citahub.cita.crypto.SampleKeys.CREDENTIALS;
+import static com.citahub.cita.crypto.SampleKeys.KEY_PAIR;
+import static com.citahub.cita.crypto.SampleKeys.PASSWORD;
+import static com.citahub.cita.crypto.WalletUtils.isValidAddress;
+import static com.citahub.cita.crypto.WalletUtils.isValidPrivateKey;
 
 public class WalletUtilsTest {
 

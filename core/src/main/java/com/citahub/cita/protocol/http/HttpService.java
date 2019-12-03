@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.http;
+package com.citahub.cita.protocol.http;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.cryptape.cita.protocol.Service;
-import com.cryptape.cita.protocol.exceptions.ClientConnectionException;
+import com.citahub.cita.protocol.Service;
+import com.citahub.cita.protocol.exceptions.ClientConnectionException;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

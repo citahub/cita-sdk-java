@@ -1,14 +1,14 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
-import static com.cryptape.cita.utils.Numeric.decodeQuantity;
+import static com.citahub.cita.utils.Numeric.decodeQuantity;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cryptape.cita.protobuf.ConvertStrByte;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.request.Transaction;
-import com.cryptape.cita.protocol.core.methods.response.AppTransaction;
+import com.citahub.cita.protobuf.ConvertStrByte;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.methods.request.Transaction;
+import com.citahub.cita.protocol.core.methods.response.AppTransaction;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -66,7 +66,7 @@ public class DecodeTxTest {
 
         //get response transaction
         AppTransaction appTx = service.appGetTransactionByHash(hash).send();
-        com.cryptape.cita.protocol.core.methods.response.Transaction tx = appTx.getTransaction();
+        com.citahub.cita.protocol.core.methods.response.Transaction tx = appTx.getTransaction();
         JSONObject contendJson = JSONObject.parseObject(new Gson().toJson(tx.decodeContent()));
         assertTrue(payeeAddr.equals("0x"+contendJson.getString("to")));
         System.out.println(new Gson().toJson(tx.decodeContent()));

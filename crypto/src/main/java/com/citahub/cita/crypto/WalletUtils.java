@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * Utility functions for working with Wallet files.

@@ -1,4 +1,4 @@
-package com.cryptape.cita.exceptions;
+package com.citahub.cita.exceptions;
 
 /**
  * Encoding exception.

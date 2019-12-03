@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.math.BigInteger;
 import java.security.KeyPair;
@@ -11,7 +11,7 @@ import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * Elliptic Curve SECP-256k1 generated key pair.

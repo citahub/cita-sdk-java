@@ -1,14 +1,14 @@
-package com.cryptape.cita.protocol.core.filters;
+package com.citahub.cita.protocol.core.filters;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import com.cryptape.cita.protocol.core.methods.request.AppFilter;
-import com.cryptape.cita.protocol.core.methods.response.AppLog;
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.Request;
+import com.citahub.cita.protocol.core.methods.request.AppFilter;
+import com.citahub.cita.protocol.core.methods.response.AppLog;
+import com.citahub.cita.protocol.core.methods.response.Log;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.Request;
 
 /**
  * Log filter handler.
@@ -26,7 +26,7 @@ public class LogFilter extends Filter<Log> {
 
 
     @Override
-    com.cryptape.cita.protocol.core.methods.response.AppFilter sendRequest() throws IOException {
+    com.citahub.cita.protocol.core.methods.response.AppFilter sendRequest() throws IOException {
         return citaj.appNewFilter(ethFilter).send();
     }
 

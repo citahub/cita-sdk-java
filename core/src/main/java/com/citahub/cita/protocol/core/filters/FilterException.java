@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.core.filters;
+package com.citahub.cita.protocol.core.filters;
 
 /**
  * Filter exception wrapper.

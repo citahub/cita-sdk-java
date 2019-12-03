@@ -1,20 +1,20 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 //CHECKSTYLE:OFF
-import com.cryptape.cita.abi.EventEncoder;
-import com.cryptape.cita.abi.EventValues;
-import com.cryptape.cita.abi.TypeReference;
-import com.cryptape.cita.abi.datatypes.Address;
-import com.cryptape.cita.abi.datatypes.Event;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.generated.Uint256;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.DefaultBlockParameter;
-import com.cryptape.cita.protocol.core.RemoteCall;
-import com.cryptape.cita.protocol.core.methods.request.AppFilter;
-import com.cryptape.cita.protocol.core.methods.response.Log;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.tx.Contract;
-import com.cryptape.cita.tx.TransactionManager;
+import com.citahub.cita.abi.EventEncoder;
+import com.citahub.cita.abi.EventValues;
+import com.citahub.cita.abi.TypeReference;
+import com.citahub.cita.abi.datatypes.Address;
+import com.citahub.cita.abi.datatypes.Event;
+import com.citahub.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.generated.Uint256;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.DefaultBlockParameter;
+import com.citahub.cita.protocol.core.RemoteCall;
+import com.citahub.cita.protocol.core.methods.request.AppFilter;
+import com.citahub.cita.protocol.core.methods.response.Log;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.tx.Contract;
+import com.citahub.cita.tx.TransactionManager;
 import io.reactivex.Flowable;
 import io.reactivex.functions.Function;
 import java.math.BigInteger;
@@ -66,14 +66,14 @@ public class Token extends Contract {
     }
 
     public RemoteCall<BigInteger> balances(String param0) {
-        com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function("balances",
+        com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function("balances",
                 Arrays.<Type>asList(new Address(param0)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);
     }
 
     public RemoteCall<TransactionReceipt> transfer(String _to, BigInteger _value, Long quota, String nonce, Long validUntilBlock, Integer version, BigInteger chainId, String value) {
-        com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function(
+        com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function(
                 "transfer",
                 Arrays.<Type>asList(new Address(_to),
                 new Uint256(_value)),
@@ -82,7 +82,7 @@ public class Token extends Contract {
     }
 
     public RemoteCall<BigInteger> getBalance(String account) {
-        com.cryptape.cita.abi.datatypes.Function function = new com.cryptape.cita.abi.datatypes.Function("getBalance",
+        com.citahub.cita.abi.datatypes.Function function = new com.citahub.cita.abi.datatypes.Function("getBalance",
                 Arrays.<Type>asList(new Address(account)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeRemoteCallSingleValueReturn(function, BigInteger.class);

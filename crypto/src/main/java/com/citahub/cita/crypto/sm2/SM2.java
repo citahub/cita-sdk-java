@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto.sm2;
+package com.citahub.cita.crypto.sm2;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -16,11 +16,11 @@ import java.util.Arrays;
 import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.math.ec.ECCurve;
 import org.bouncycastle.math.ec.ECPoint;
-import com.cryptape.cita.utils.HexUtil;
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.HexUtil;
+import com.citahub.cita.utils.Numeric;
 
-import static com.cryptape.cita.crypto.sm2.SM2.Signature.fillBytes32;
-import static com.cryptape.cita.crypto.sm2.SM2.Signature.fillStr64;
+import static com.citahub.cita.crypto.sm2.SM2.Signature.fillBytes32;
+import static com.citahub.cita.crypto.sm2.SM2.Signature.fillStr64;
 
 public class SM2 {
     private static BigInteger n = new BigInteger(

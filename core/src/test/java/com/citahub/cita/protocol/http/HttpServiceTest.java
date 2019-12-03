@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.http;
+package com.citahub.cita.protocol.http;
 
 import java.util.HashMap;
 

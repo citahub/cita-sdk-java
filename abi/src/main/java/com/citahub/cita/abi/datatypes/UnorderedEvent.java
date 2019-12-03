@@ -1,9 +1,9 @@
-package com.cryptape.cita.abi.datatypes;
+package com.citahub.cita.abi.datatypes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cryptape.cita.abi.TypeReference;
+import com.citahub.cita.abi.TypeReference;
 
 public class UnorderedEvent {
     private class EventType {

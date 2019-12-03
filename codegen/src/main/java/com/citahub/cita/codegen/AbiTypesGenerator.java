@@ -1,4 +1,4 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -14,11 +14,11 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
 
-import com.cryptape.cita.abi.datatypes.Bytes;
-import com.cryptape.cita.abi.datatypes.Int;
-import com.cryptape.cita.abi.datatypes.StaticArray;
-import com.cryptape.cita.abi.datatypes.Type;
-import com.cryptape.cita.abi.datatypes.Uint;
+import com.citahub.cita.abi.datatypes.Bytes;
+import com.citahub.cita.abi.datatypes.Int;
+import com.citahub.cita.abi.datatypes.StaticArray;
+import com.citahub.cita.abi.datatypes.Type;
+import com.citahub.cita.abi.datatypes.Uint;
 
 /**
  * Generator class for creating all the different numeric type variants.

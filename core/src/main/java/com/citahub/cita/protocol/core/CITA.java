@@ -1,9 +1,9 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
 import java.math.BigInteger;
 
-import com.cryptape.cita.protocol.core.methods.request.Call;
-import com.cryptape.cita.protocol.core.methods.response.*;
+import com.citahub.cita.protocol.core.methods.request.Call;
+import com.citahub.cita.protocol.core.methods.response.*;
 
 
 /**
@@ -54,7 +54,7 @@ public interface CITA {
     Request<?, AppGetTransactionReceipt> appGetTransactionReceipt(String transactionHash);
 
     Request<?, AppFilter> appNewFilter(
-            com.cryptape.cita.protocol.core.methods.request.AppFilter ethFilter);
+            com.citahub.cita.protocol.core.methods.request.AppFilter ethFilter);
 
     Request<?, AppFilter> appNewBlockFilter();
 
@@ -67,5 +67,5 @@ public interface CITA {
     Request<?, AppLog> appGetFilterLogs(BigInteger filterId);
 
     Request<?, AppLog> appGetLogs(
-            com.cryptape.cita.protocol.core.methods.request.AppFilter ethFilter);
+            com.citahub.cita.protocol.core.methods.request.AppFilter ethFilter);
 }

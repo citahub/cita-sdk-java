@@ -1,11 +1,11 @@
-package com.cryptape.cita.tx;
+package com.citahub.cita.tx;
 
 import java.io.IOException;
 import java.math.BigInteger;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.core.methods.response.TransactionReceipt;
-import com.cryptape.cita.protocol.exceptions.TransactionException;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.core.methods.response.TransactionReceipt;
+import com.citahub.cita.protocol.exceptions.TransactionException;
 
 
 /**

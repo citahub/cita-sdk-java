@@ -1,4 +1,4 @@
-package com.cryptape.cita.protocol.core;
+package com.citahub.cita.protocol.core;
 
 import java.math.BigInteger;
 

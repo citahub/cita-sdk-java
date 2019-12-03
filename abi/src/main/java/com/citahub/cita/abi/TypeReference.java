@@ -1,9 +1,9 @@
-package com.cryptape.cita.abi;
+package com.citahub.cita.abi;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import com.cryptape.cita.abi.datatypes.Array;
+import com.citahub.cita.abi.datatypes.Array;
 
 
 /**
@@ -17,7 +17,7 @@ import com.cryptape.cita.abi.datatypes.Array;
  * <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/reflect/Type.html">Type</a> to
  * avoid working around this fundamental generics limitation.
  */
-public abstract class TypeReference<T extends com.cryptape.cita.abi.datatypes.Type>
+public abstract class TypeReference<T extends com.citahub.cita.abi.datatypes.Type>
         implements Comparable<TypeReference<T>> {
 
     private final Type type;
@@ -58,7 +58,7 @@ public abstract class TypeReference<T extends com.cryptape.cita.abi.datatypes.Ty
         }
     }
 
-    public static <T extends com.cryptape.cita.abi.datatypes.Type>
+    public static <T extends com.citahub.cita.abi.datatypes.Type>
                 TypeReference<T> create(Class<T> cls) {
         return new TypeReference<T>() {
             @Override
@@ -68,7 +68,7 @@ public abstract class TypeReference<T extends com.cryptape.cita.abi.datatypes.Ty
         };
     }
 
-    public static <T extends com.cryptape.cita.abi.datatypes.Type>
+    public static <T extends com.citahub.cita.abi.datatypes.Type>
             TypeReference<T> create(ParameterizedType type) {
         return new TypeReference<T>() {
             @Override
@@ -78,7 +78,7 @@ public abstract class TypeReference<T extends com.cryptape.cita.abi.datatypes.Ty
         };
     }
 
-    public static <T extends com.cryptape.cita.abi.datatypes.Type>
+    public static <T extends com.citahub.cita.abi.datatypes.Type>
             StaticArrayTypeReference<T> create(int length, ParameterizedType type) {
         return new StaticArrayTypeReference<T>(length) {
             @Override
@@ -89,7 +89,7 @@ public abstract class TypeReference<T extends com.cryptape.cita.abi.datatypes.Ty
     }
 
     public abstract static class StaticArrayTypeReference
-            <T extends com.cryptape.cita.abi.datatypes.Type>
+            <T extends com.citahub.cita.abi.datatypes.Type>
             extends TypeReference<T> {
 
         private final int size;

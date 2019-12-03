@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -17,10 +17,10 @@ import org.bouncycastle.crypto.generators.PKCS5S2ParametersGenerator;
 import org.bouncycastle.crypto.generators.SCrypt;
 import org.bouncycastle.crypto.params.KeyParameter;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static com.cryptape.cita.crypto.SecureRandomUtils.secureRandom;
+import static com.citahub.cita.crypto.SecureRandomUtils.secureRandom;
 
 /**
  * <p>Ethereum wallet file management. For reference, refer to

@@ -1,13 +1,13 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-import com.cryptape.cita.abi.FunctionEncoder;
-import com.cryptape.cita.abi.datatypes.Function;
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.system.CITAjSystemContract;
-import com.cryptape.cita.protocol.system.entities.QueryInfoResult;
+import com.citahub.cita.abi.FunctionEncoder;
+import com.citahub.cita.abi.datatypes.Function;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.system.CITAjSystemContract;
+import com.citahub.cita.protocol.system.entities.QueryInfoResult;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,8 +1,8 @@
-package com.cryptape.cita.codegen;
+package com.citahub.cita.codegen;
 
 import org.junit.Test;
 
-import com.cryptape.cita.TempFileProvider;
+import com.citahub.cita.TempFileProvider;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

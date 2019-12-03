@@ -1,6 +1,6 @@
-package com.cryptape.cita.protocol.admin.methods.response;
+package com.citahub.cita.protocol.admin.methods.response;
 
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Response;
 
 /**
  * personal_newAccount

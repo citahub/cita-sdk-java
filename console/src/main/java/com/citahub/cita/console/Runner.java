@@ -1,10 +1,10 @@
-package com.cryptape.cita.console;
+package com.citahub.cita.console;
 
-import com.cryptape.cita.codegen.Console;
-import com.cryptape.cita.codegen.SolidityFunctionWrapperGenerator;
-import com.cryptape.cita.codegen.TruffleJsonFunctionWrapperGenerator;
-import com.cryptape.cita.utils.Collection;
-import com.cryptape.cita.utils.Version;
+import com.citahub.cita.codegen.Console;
+import com.citahub.cita.codegen.SolidityFunctionWrapperGenerator;
+import com.citahub.cita.codegen.TruffleJsonFunctionWrapperGenerator;
+import com.citahub.cita.utils.Collection;
+import com.citahub.cita.utils.Version;
 
 /**
  * Main entry point for running command line utilities.

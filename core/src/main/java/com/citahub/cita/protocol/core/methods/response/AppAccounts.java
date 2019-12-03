@@ -1,8 +1,8 @@
-package com.cryptape.cita.protocol.core.methods.response;
+package com.citahub.cita.protocol.core.methods.response;
 
 import java.util.List;
 
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Response;
 
 /**
  * eth_accounts.

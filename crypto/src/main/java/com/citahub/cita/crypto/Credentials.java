@@ -1,6 +1,6 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
-import com.cryptape.cita.utils.Numeric;
+import com.citahub.cita.utils.Numeric;
 
 /**
  * Credentials wrapper.

@@ -12,7 +12,7 @@ for target in ${targets}; do
     echo "Generating citaj bindings"
     citaj truffle generate \
         build/contracts/${fileName}.json \
-        -p com.cryptape.cita.generated \
+        -p com.citahub.cita.generated \
         -o ../../../../../../integration-tests/src/test/java/ > /dev/null
     echo "Complete"
 

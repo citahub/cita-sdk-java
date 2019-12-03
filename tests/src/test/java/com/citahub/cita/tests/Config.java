@@ -1,7 +1,7 @@
-package com.cryptape.cita.tests;
+package com.citahub.cita.tests;
 
-import com.cryptape.cita.protocol.CITAj;
-import com.cryptape.cita.protocol.http.HttpService;
+import com.citahub.cita.protocol.CITAj;
+import com.citahub.cita.protocol.http.HttpService;
 import java.io.FileInputStream;
 import java.util.Properties;
 

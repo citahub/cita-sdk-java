@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.math.BigInteger;
 import java.security.KeyPair;
@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import com.cryptape.cita.utils.Numeric;
-import com.cryptape.cita.utils.Strings;
+import com.citahub.cita.utils.Numeric;
+import com.citahub.cita.utils.Strings;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -24,7 +24,7 @@ public class KeysTest {
 
     static {
         byte[] privateKey = Numeric.hexStringToByteArray(SampleKeys.PRIVATE_KEY_STRING);
-        byte[] publicKey = Numeric.hexStringToByteArray(SampleKeys.PUBLIC_KEY_STRING);
+        byte[] publicKey = Numeric.hexStringToByteArray(com.citahub.cita.crypto.SampleKeys.PUBLIC_KEY_STRING);
         ENCODED = Arrays.copyOf(privateKey, privateKey.length + publicKey.length);
         System.arraycopy(publicKey, 0, ENCODED, privateKey.length, publicKey.length);
     }

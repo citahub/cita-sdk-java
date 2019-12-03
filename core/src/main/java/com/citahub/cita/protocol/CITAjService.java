@@ -1,10 +1,10 @@
-package com.cryptape.cita.protocol;
+package com.citahub.cita.protocol;
 
 import java.io.IOException;
 import java.util.concurrent.Future;
 
-import com.cryptape.cita.protocol.core.Request;
-import com.cryptape.cita.protocol.core.Response;
+import com.citahub.cita.protocol.core.Request;
+import com.citahub.cita.protocol.core.Response;
 import io.reactivex.Flowable;
 import io.reactivex.Notification;
 

@@ -1,4 +1,4 @@
-package com.cryptape.cita.crypto;
+package com.citahub.cita.crypto;
 
 import java.math.BigInteger;
 
@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static com.cryptape.cita.crypto.ContractUtils.generateContractAddress;
+import static com.citahub.cita.crypto.ContractUtils.generateContractAddress;
 
 public class ContractUtilsTest {
 
