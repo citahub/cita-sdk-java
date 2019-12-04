@@ -22,7 +22,7 @@ for target in ${targets}; do
     citaj solidity generate \
         build/${fileName}.bin \
         build/${fileName}.abi \
-        -p com.cryptape.cita.generated \
+        -p com.citahub.cita.generated \
         -o ../../../../../../integration-tests/src/test/java/ > /dev/null
     echo "Complete"
 

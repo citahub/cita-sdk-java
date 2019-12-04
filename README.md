@@ -1,11 +1,11 @@
 # cita-sdk-java
-[![Build Status](https://travis-ci.org/cryptape/cita-sdk-java.svg?branch=master)](https://travis-ci.org/cryptape/cita-sdk-java) 
-[![License: Apache-2.0](https://img.shields.io/github/license/cryptape/cita-sdk-java.svg)](https://github.com/cryptape/cita-sdk-java/blob/master/LICENSE)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/cryptape/cita-sdk-java.svg)
+[![Build Status](https://travis-ci.org/citahub/cita-sdk-java.svg?branch=master)](https://travis-ci.org/citahub/cita-sdk-java) 
+[![License: Apache-2.0](https://img.shields.io/github/license/citahub/cita-sdk-java.svg)](https://github.com/citahub/cita-sdk-java/blob/master/LICENSE)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/citahub/cita-sdk-java.svg)
 
 
-[English](https://github.com/cryptape/cita-sdk-java#introduction)  
-[中文](https://github.com/cryptape/cita-sdk-java#简介)
+[English](https://github.com/citahub/cita-sdk-java#introduction)  
+[中文](https://github.com/citahub/cita-sdk-java#简介)
 
 ## Introduction
 
@@ -30,14 +30,14 @@ Install from repositories:
 maven  
 ```
 <dependency>
-  <groupId>com.cryptape.cita</groupId>
+  <groupId>com.citahub.cita</groupId>
   <artifactId>core</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:1.0.0'
+compile 'com.citahub.cita:core:1.0.0'
 ```
 
 Install manually
@@ -47,7 +47,7 @@ If you want to generate the jar and import manually.
 > should add `apply plugin: 'com.github.johnrengelman.shadow'` of `console/bulid.gradle` when packing locally.(It's annotated by default)
 
 ```
-git clone https://github.com/cryptape/cita-sdk-java.git
+git clone https://github.com/citahub/cita-sdk-java.git
 gradle shadowJar
 ```
 
@@ -58,13 +58,13 @@ Use CITA test net (recommended):
 https://testnet.citahub.com is provided as a test net.
 
 Or build your own CITA net:
-Please find more information in [CITA](https://github.com/cryptape/cita).
+Please find more information in [CITA](https://github.com/citahub/cita).
 
 ### Get started
 
 #### Deploy smart contract
 
-Similar as Ethereum, smart contracts are deployed in CITA network by sending transactions. CITA transaction is defined in [Transaction.java](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/core/methods/request/Transaction.java).  
+Similar as Ethereum, smart contracts are deployed in CITA network by sending transactions. CITA transaction is defined in [Transaction.java](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/protocol/core/methods/request/Transaction.java).  
 In CITA transaction, there are 3 special parameters:
 - nonce: generated randomly or depend on specific logic to avoid replay attack.
 - quota: transaction execution fee for operation, like gasPrice * gasLimit in Ethereum.
@@ -112,7 +112,7 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-Please check [TokenTransactionExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
+Please check [TokenTransactionExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
 
 ### Working with smart contract with cita-sdk-java wrapper
 Besides interacting with smart contracts by sending transactions with binary code, cita-sdk-java provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
@@ -125,13 +125,13 @@ $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes]
 ```
 Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `/tests/src/main/resources`:
 ```shell
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
+java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
 ```
-`Token.java` will be created from commands above and class `Token` can be used with TransactionManager to deploy and call smart contract `Token`. Please be attention that [TransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/TransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
-Please check [TokenCodegenExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenCodegenExample.java) for a complete example.
+`Token.java` will be created from commands above and class `Token` can be used with TransactionManager to deploy and call smart contract `Token`. Please be attention that [TransactionManager](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/tx/TransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
+Please check [TokenCodegenExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenCodegenExample.java) for a complete example.
 
 ### Working with smart contract with cita-sdk-java Account (Test)
-cita-sdk-java provides interface [Account](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
+cita-sdk-java provides interface [Account](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
 
 Method of smart contract deployment:
 ```java
@@ -148,12 +148,12 @@ public Object callContract(String contractAddress, String funcName, String nonce
 public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
 While contract file is required when first deploy the contract, cita-sdk-java can get the abi file according to address when call methods in deployed contract.
-Please find complete code in [TokenAccountExample](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenAccountExample.java).
+Please find complete code in [TokenAccountExample](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenAccountExample.java).
 
 ## Contributing
 
 ### Creating a Bug Report
-open a new issue: https://github.com/cryptape/cita-sdk-java/issues/new
+open a new issue: https://github.com/citahub/cita-sdk-java/issues/new
 
 with your version info
 
@@ -209,14 +209,14 @@ Gradle 5.0
 通过远程仓库安装：  
 ```
 <dependency>
-  <groupId>com.cryptape.cita</groupId>
+  <groupId>com.citahub.cita</groupId>
   <artifactId>core</artifactId>
   <version>1.0.0</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.cryptape.cita:core:1.0.0'
+compile 'com.citahub.cita:core:1.0.0'
 ```
 
 手动安装  
@@ -226,7 +226,7 @@ compile 'com.cryptape.cita:core:1.0.0'
 > 你需要添加和保留 `console/bulid.gradle` 文件下第一行 `apply plugin: 'com.github.johnrengelman.shadow'`（改行默认是被注释的）。
 
 ```
-git clone https://github.com/cryptape/cita-sdk-java.git
+git clone https://github.com/citahub/cita-sdk-java.git
 gradle shadowJar
 ```
 
@@ -236,12 +236,12 @@ gradle shadowJar
 https://testnet.citahub.com
 
 或者可以部署你自己的 CITA：  
-如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/cryptape/cita)。
+如果需要了解怎么部署 CITA 网络，请查阅[CITA](https://github.com/citahub/cita)。
 
 ### 快速教程
 
 #### 部署智能合约
-与以太坊类似，智能合约是通过发送交易来部署的。CITA 交易对象定义在 [Transaction.java](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/core/methods/request/Transaction.java)。
+与以太坊类似，智能合约是通过发送交易来部署的。CITA 交易对象定义在 [Transaction.java](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/protocol/core/methods/request/Transaction.java)。
 在 CITA 交易中，有三个特殊的参数：
 - nonce： 随机数或者通过特定的逻辑生成的随机信息，nonce是为了避免重放攻击。
 - quota： 交易执行费用，也就是矿工费，就像以太坊中的 gasPrice * gasLimit。
@@ -289,7 +289,7 @@ Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonc
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-请在 [TokenTransactionExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenTransactionExample.java) 中查看完整代码。
+请在 [TokenTransactionExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenTransactionExample.java) 中查看完整代码。
 
 ### 通过 cita-sdk-java 中的 wrapper 与智能合约交互
 以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，cita-sdk-java 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 cita-sdk-java 生成的 java 类，可以方便对合约进行部署和函数调用。
@@ -302,13 +302,13 @@ $ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes]
 ```
 这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `tests/src/main/resources` 生成对应的 java 类，命令如下：
 ```
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.cryptape.cita.tests
+java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
 ```
-`Token.java` 会通过以上命令生成， `Token` 可以与 `TransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [TransactionManager](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/tx/TransactionManager.java) 而不是 TransactionManager。
-请在 [TokenCodegenExample.java](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenCodegenExample.java) 查看完整代码.
+`Token.java` 会通过以上命令生成， `Token` 可以与 `TransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [TransactionManager](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/tx/TransactionManager.java) 而不是 TransactionManager。
+请在 [TokenCodegenExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenCodegenExample.java) 查看完整代码.
 
 ### 通过 CITAj 中的 Account 与智能合约交互（测试阶段）
-cita-sdk-java 还提供了接口 [Account](https://github.com/cryptape/cita-sdk-java/blob/master/core/src/main/java/com/cryptape/cita/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
+cita-sdk-java 还提供了接口 [Account](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
 
 合约部署示例代码：
 ```java
@@ -325,12 +325,12 @@ public Object callContract(String contractAddress, String funcName, String nonce
 public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
 虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 cita-sdk-java 通过 CITA 提供的 getAbi 接口根据合约地址得到对应的 abi。  
-请在 [TokenAccountExample](https://github.com/cryptape/cita-sdk-java/blob/master/tests/src/main/java/com/cryptape/cita/tests/TokenAccountExample.java) 中查看完整代码。
+请在 [TokenAccountExample](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenAccountExample.java) 中查看完整代码。
 
 ## 参与贡献
 
 ### 报告Bug
-提交 issue: https://github.com/cryptape/cita-sdk-java/issues/new
+提交 issue: https://github.com/citahub/cita-sdk-java/issues/new
 记得声明所使用软件的版本信息
 
 ### 技术栈

@@ -14,7 +14,7 @@ test -e cita_quality | git clone ${SYSTEM_TEST_CODE_URL}
 cp cita-sdk-java/console/build/libs/console-*-all.jar  ./cita_quality/systemTest/console.jar
 cd ./cita_quality/systemTest
 system_test_dir=$(pwd)
-git checkout master | git pull
+git checkout change-cryptape-citahub | git pull
 
 # use local sdk change the maven sdk
 CITA_SDk_VERSION=$( cat pom.xml | grep -A 1 ">core<" | grep version | awk -F "[<>]" '{print $3}')
