@@ -26,7 +26,7 @@ cache:
 
 before_script:
   # upgrade gradle to 5.0
-  - test -e $HOME/.gradle/caches/gradle-5.0.zip || sudo wget https://services.gradle.org/distributions/gradle-5.0-all.zip -O $HOME/.gradle/caches/gradle-5.0.zip > debug.log
+  - test -e $HOME/.gradle/caches/gradle-5.0.zip || sudo wget -q https://services.gradle.org/distributions/gradle-5.0-all.zip -O $HOME/.gradle/caches/gradle-5.0.zip > debug.log
   - sudo unzip $HOME/.gradle/caches/gradle-5.0.zip  > debug.log
   - ./gradle-5.0/bin/gradle -v
 
