@@ -10,7 +10,7 @@ docker pull ${DOCKER_IMAGE_URL}:${CITA_DOCKER_IMAGE_TAG_NAME} > ${DEBUG_LOG_PATH
 
 # get cita_quality code
 cd ..
-test -e cita_quality | git clone ${SYSTEM_TEST_CODE_URL}
+test -e cita_quality | git clone --depth 1 ${SYSTEM_TEST_CODE_URL}
 cp cita-sdk-java/console/build/libs/console-*-all.jar  ./cita_quality/systemTest/console.jar
 cd ./cita_quality/systemTest
 system_test_dir=$(pwd)

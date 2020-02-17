@@ -1,0 +1,52 @@
+package com.citahub.cita.crypto.sm2;
+
+import java.io.IOException;
+import java.math.BigInteger;
+
+import org.bouncycastle.math.ec.ECPoint;
+import com.citahub.cita.utils.HexUtil;
+import com.citahub.cita.utils.Numeric;
+import com.citahub.cita.utils.Strings;
+
+public class SM2Keys {
+
+    private static final int PUBLIC_KEY_SIZE = 64;
+
+    private static final int ADDRESS_SIZE = 160;
+    private static final int ADDRESS_LENGTH_IN_HEX = ADDRESS_SIZE >> 2;
+    private static final int PUBLIC_KEY_LENGTH_IN_HEX = PUBLIC_KEY_SIZE << 1;
+
+    public static String getAddress(ECPoint key) {
+        String pubXStr = key.getRawXCoord().toString();
+        String pubYStr = key.getRawYCoord().toString();
+        if (pubXStr.length() < PUBLIC_KEY_SIZE) {
+            pubXStr = Strings.zeros(
+                    PUBLIC_KEY_SIZE - pubXStr.length())
+                    + pubXStr;
+        }
+        if (pubYStr.length() < PUBLIC_KEY_SIZE) {
+            pubYStr = Strings.zeros(
+                    PUBLIC_KEY_SIZE - pubYStr.length())
+                    + pubYStr;
+        }
+        String publicKey = pubXStr + pubYStr;
+        return getAddress(publicKey);
+    }
+
+    public static String getAddress(String publicKey) {
+        String publicKeyNoPrefix = Numeric.cleanHexPrefix(publicKey);
+
+        if (publicKeyNoPrefix.length() < PUBLIC_KEY_LENGTH_IN_HEX) {
+            publicKeyNoPrefix = Strings.zeros(
+                    PUBLIC_KEY_LENGTH_IN_HEX - publicKeyNoPrefix.length())
+                    + publicKeyNoPrefix;
+        }
+        String hash = null;
+        try {
+            hash = new BigInteger(1, (SM3.hash(HexUtil.hexToBytes(publicKeyNoPrefix)))).toString(16);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return hash.substring(hash.length() - ADDRESS_LENGTH_IN_HEX);  // right most 160 bits
+    }
+}

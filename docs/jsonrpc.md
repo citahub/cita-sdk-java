@@ -417,7 +417,7 @@ blockFitlerObservable.subscribe(block -> {
 
 **方法名**
 
-`Request<?, AppFilter> appNewFilter(com.cryptape.cita.protocol.core.methods.request.AppFilter appFilter)`
+`Request<?, AppFilter> appNewFilter(com.citahub.cita.protocol.core.methods.request.AppFilter appFilter)`
 
 创建一个新的Event过滤器以用来监听合约中的Event。
 
@@ -433,7 +433,7 @@ Request<?, AppFilter>
 
 ```
 CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
-com.cryptape.cita.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
+com.citahub.cita.protocol.core.methods.request.AppFilter appFilter = new AppFilter(fromBlock, toBlock, addresses);
 AppFilter appFilter = service.appNewFilter(txHash).send();
 BigInteger filterId = appFilter.getFilterId();
 ```
