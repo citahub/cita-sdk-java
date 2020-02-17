@@ -49,7 +49,7 @@ allprojects {
     targetCompatibility = 1.8
 
     group 'com.citahub.cita'
-    version '1.0.0'
+    version '20.2.0'
 
     apply plugin: 'java'
     apply plugin: 'jacoco'
@@ -145,7 +145,7 @@ configure(subprojects.findAll { it.name != 'integration-tests' }) {
         publications {
             mavenJava(MavenPublication) {
                 groupId 'com.citahub.cita'
-                version '1.0.0'
+                version '20.2.0'
                 from components.java
 
                 artifact sourcesJar {

@@ -1,5 +1,20 @@
 All notable changes to this project will be documented in this file.
 
+# [v20.2.0](https://github.com/citahub/cita-sdk-java/compare/v1.0.0...v20.2.0) (2020-02-17)
+
+### Added
+
+* add gradle cache in travis ci
+
+### Changed
+
+* change cryptape to citahub in tests module
+
+### Documented
+
+* show license and tag badges in README
+* change cryptape to citahub in CHANGELOG
+
 # [v1.0.0](https://github.com/citahub/cita-sdk-java/compare/v0.25.0...v1.0.0) (2019-08-28)
 
 ### Added
