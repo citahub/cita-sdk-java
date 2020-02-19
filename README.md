@@ -32,12 +32,12 @@ maven
 <dependency>
   <groupId>com.citahub.cita</groupId>
   <artifactId>core</artifactId>
-  <version>1.0.0</version>
+  <version>20.2.0</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.citahub.cita:core:1.0.0'
+compile 'com.citahub.cita:core:20.2.0'
 ```
 
 Install manually
@@ -211,12 +211,12 @@ Gradle 5.0
 <dependency>
   <groupId>com.citahub.cita</groupId>
   <artifactId>core</artifactId>
-  <version>1.0.0</version>
+  <version>20.2.0</version>
 </dependency>
 ```
 Gradle
 ```
-compile 'com.citahub.cita:core:1.0.0'
+compile 'com.citahub.cita:core:20.2.0'
 ```
 
 手动安装  
