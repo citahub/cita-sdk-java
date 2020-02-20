@@ -21,3 +21,4 @@ dependencies {
 // Build command line library release with target distShadowZip
 mainClassName = 'com.citahub.cita.console.Runner'
 applicationName = 'cita'
+archivesBaseName = 'cita-sdk'
