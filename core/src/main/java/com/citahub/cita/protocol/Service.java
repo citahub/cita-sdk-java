@@ -30,13 +30,16 @@ public abstract class Service implements CITAjService {
     public <T extends Response> T send(
             Request request, Class<T> responseType) throws IOException {
         String payload = objectMapper.writeValueAsString(request);
-
-        try (InputStream result = performIO(payload)) {
-            if (result != null) {
+        InputStream result = null;
+        try {
+            result = performIO(payload);
+            if(result != null) {
                 return objectMapper.readValue(result, responseType);
-            } else {
-                return null;
             }
+            return null;
+        }finally {
+            if(result != null)
+                result.close();
         }
     }
 
