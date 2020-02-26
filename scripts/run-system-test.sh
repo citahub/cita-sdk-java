@@ -2,25 +2,25 @@
 
 DEBUG_LOG_PATH=./debug_log.txt
 # generate sdk and update docker image
-rm -r console/build/libs/* | true
+rm -r build/libs/*.jar | true
 ./gradle-5.0/bin/gradle shadowJar > ${DEBUG_LOG_PATH}
-test -e console/build/libs/console-*-all.jar ||  echo "build sdk failed !!!"
-test -e console/build/libs/console-*-all.jar ||  exit 1
+test -e build/libs/cita-sdk*.jar ||  echo "build sdk failed !!!"
+test -e build/libs/cita-sdk*.jar ||  exit 1
 docker pull ${DOCKER_IMAGE_URL}:${CITA_DOCKER_IMAGE_TAG_NAME} > ${DEBUG_LOG_PATH}
 
 # get cita_quality code
 cd ..
 test -e cita_quality | git clone --depth 1 ${SYSTEM_TEST_CODE_URL}
-cp cita-sdk-java/console/build/libs/console-*-all.jar  ./cita_quality/systemTest/console.jar
+cp cita-sdk-java/build/libs/cita-sdk*.jar  ./cita_quality/systemTest/cita-sdk.jar
 cd ./cita_quality/systemTest
 system_test_dir=$(pwd)
 git checkout master | git pull
 
 # use local sdk change the maven sdk
-CITA_SDk_VERSION=$( cat pom.xml | grep -A 1 ">core<" | grep version | awk -F "[<>]" '{print $3}')
-CITA_SDK_LOCAL_FILE_PATH=${system_test_dir}/console-${CITA_SDk_VERSION}-all.jar
+CITA_SDK_VERSION=$( cat pom.xml | grep -A 1 ">core<" | grep version | awk -F "[<>]" '{print $3}')
+CITA_SDK_LOCAL_FILE_PATH=${system_test_dir}/cita-sdk-${CITA_SDK_VERSION}.jar
 rm -r ${CITA_SDK_LOCAL_FILE_PATH} | true
-cp -r  ./console.jar  ${CITA_SDK_LOCAL_FILE_PATH}
+cp -r  ./cita-sdk.jar  ${CITA_SDK_LOCAL_FILE_PATH}
 
 echo ${CITA_SDK_LOCAL_FILE_PATH}
 TARGET_TEXT_LINE=$(($( cat pom.xml | grep -n  ">core<" | awk -F ":" '{print $1}')+2))
