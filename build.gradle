@@ -1,3 +1,4 @@
+
 buildscript {
     ext.bouncycastleVersion = '1.54'
     ext.jacksonVersion = '2.8.5'
@@ -35,6 +36,31 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    baseName = 'cita-sdk'
+    classifier = ''
+    version = '20.2.0'
+    manifest {
+        attributes('Main-Class': 'com.citahub.cita.console.Runner')
+    }
+}
+dependencies {
+    compile project(':abi'),
+            project(':crypto'),
+            project(':tuples'),
+            project(':console'),
+            project(':protobuf'),
+            "com.github.jnr:jnr-unixsocket:$jnr_unixsocketVersion",
+            "org.abstractj.kalium:kalium:0.7.0",
+            "com.squareup.okhttp3:okhttp:$okhttpVersion",
+            "com.squareup.okhttp3:logging-interceptor:$okhttpVersion",
+            "io.reactivex.rxjava2:rxjava:$rxjavaVersion",
+            "com.google.code.gson:gson:$gsonVersion"
+}
+
+
 apply plugin: 'idea'
 // should only be applied to the root project, see
 // https://github.com/Codearte/gradle-nexus-staging-plugin#multi-project-build

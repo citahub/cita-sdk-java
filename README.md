@@ -43,9 +43,6 @@ compile 'com.citahub.cita:core:20.2.0'
 Install manually
 If you want to generate the jar and import manually.
 
-> Because uploading jar package to maven server and packing jar package locally through `shadowJar` command have conflicts, you 
-> should add `apply plugin: 'com.github.johnrengelman.shadow'` of `console/bulid.gradle` when packing locally.(It's annotated by default)
-
 ```
 git clone https://github.com/citahub/cita-sdk-java.git
 gradle shadowJar
@@ -117,15 +114,15 @@ Please check [TokenTransactionExample.java](https://github.com/citahub/cita-sdk-
 ### Working with smart contract with cita-sdk-java wrapper
 Besides interacting with smart contracts by sending transactions with binary code, cita-sdk-java provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
 
-Download cita jar file from release page or run `gradle shadowJar` to generate jars so that the tool can be found under `console/build/libs`. Name of the tool is `console-version-all.jar`.
+Download cita jar file from release page or run `gradle shadowJar` to generate jars so that the tool can be found under `build/libs`. Name of the tool is `cita-sdk-$version.jar`.
 
-Usage of console-version-all is shown below:
+Usage of cita-sdk-$version is shown below:
 ```shell
-$ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
+$ java -jar cita-sdk-20.2.0.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
 ```
 Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under `/tests/src/main/resources`:
 ```shell
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
+java -jar build/libs/cita-sdk-20.2.0.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
 ```
 `Token.java` will be created from commands above and class `Token` can be used with TransactionManager to deploy and call smart contract `Token`. Please be attention that [TransactionManager](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/tx/TransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
 Please check [TokenCodegenExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenCodegenExample.java) for a complete example.
@@ -222,9 +219,6 @@ compile 'com.citahub.cita:core:20.2.0'
 手动安装  
 如果你想使用最新的 CITA，编译 CITA 生成 jar 包，并手动引入。
 
-> 由于上传 jar 包至 maven server 和本地通过 shadow 命令打包存在冲突，所以当你要在本地通过 shadowJar 命令打包时，
-> 你需要添加和保留 `console/bulid.gradle` 文件下第一行 `apply plugin: 'com.github.johnrengelman.shadow'`（改行默认是被注释的）。
-
 ```
 git clone https://github.com/citahub/cita-sdk-java.git
 gradle shadowJar
@@ -294,15 +288,15 @@ String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionR
 ### 通过 cita-sdk-java 中的 wrapper 与智能合约交互
 以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，cita-sdk-java 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 cita-sdk-java 生成的 java 类，可以方便对合约进行部署和函数调用。
 
-在 release 页面下载 cita-sdk-java 的 jar 包，或者在源项目中运行 `gradle shadowJar` 生成 jar 包，jar包会在 `console/build/libs` 中生成，名字是 `console-version-all.jar`。
+在 release 页面下载 cita-sdk-java 的 jar 包，或者在源项目中运行 `gradle shadowJar` 生成 jar 包，jar包会在 `build/libs` 中生成，名字是 `cita-sdk-$version.jar`。
 
 solidity 合约转化为 java 类操作如下：
 ```shell
-$ java -jar console-0.17-all.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
+$ java -jar cita-sdk-20.2.0.jar solidity generate [--javaTypes|--solidityTypes] /path/to/{smart-contract}.bin /path/to/{smart-contract}.abi -o /path/to/src/main/java -p {package-path}
 ```
 这个例子通过 `Token.sol`, `Token.bin` and `Token.abi` 这三个文件在  `tests/src/main/resources` 生成对应的 java 类，命令如下：
 ```
-java -jar console/build/libs/console-0.17-all.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
+java -jar build/libs/cita-sdk-20.2.0.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
 ```
 `Token.java` 会通过以上命令生成， `Token` 可以与 `TransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [TransactionManager](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/tx/TransactionManager.java) 而不是 TransactionManager。
 请在 [TokenCodegenExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenCodegenExample.java) 查看完整代码.

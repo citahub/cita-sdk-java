@@ -1,4 +1,3 @@
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'application'
 
 description 'cita-sdk-java command line tools'
