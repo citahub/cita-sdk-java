@@ -76,7 +76,8 @@ $solc example.sol --bin
 
 Construct a transaction with generated binary code and other 3 parameters.
 ```java
-long currentHeight = currentBlockNumber();
+CITAj service = CITAj.build(new HttpService(TEST_CHAIN_URL));
+long currentHeight = getCurrentHeight(CITAj service).longValue();
 long validUntilBlock = currentHeight + 80;
 Random random = new Random(System.currentTimeMillis());
 String nonce = String.valueOf(Math.abs(random.nextLong()));
@@ -250,7 +251,8 @@ $solc example.sol --bin
 
 根据生成的二进制文件和其他3个参数构造一个交易，代码如下：
 ```java
-long currentHeight = currentBlockNumber();
+CITAj service = CITAj.build(new HttpService(TEST_CHAIN_URL));
+long currentHeight = getCurrentHeight(CITAj service).longValue();
 long validUntilBlock = currentHeight + 80;
 Random random = new Random(System.currentTimeMillis());
 String nonce = String.valueOf(Math.abs(random.nextLong()));
