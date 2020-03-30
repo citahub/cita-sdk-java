@@ -76,19 +76,25 @@ $solc example.sol --bin
 
 Construct a transaction with generated binary code and other 3 parameters.
 ```java
-CITAj service = CITAj.build(new HttpService(TEST_CHAIN_URL));
-long currentHeight = getCurrentHeight(CITAj service).longValue();
+String contractCode = "6080604052600160005534801561001557600080fd5b5060df806100246000396000f3006080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360fe47b114604e5780636d4ce63c146078575b600080fd5b348015605957600080fd5b5060766004803603810190808035906020019092919050505060a0565b005b348015608357600080fd5b50608a60aa565b6040518082815260200191505060405180910390f35b8060008190555050565b600080549050905600a165627a7a723058202dd6056ea84968f05202910ca070fe13f6f46ff5507867f313d9c98bf2d2e55c0029";
+CITAj service = CITAj.build(new HttpService("https://testnet.citahub.com"));
+AppMetaData appMetaData;
+appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();
+String chainIdHex = appMetaData.getAppMetaDataResult().getChainIdV1();
+BigInteger chainId = new BigInteger(chainIdHex.substring(2), 16);
+int version = appMetaData.getAppMetaDataResult().getVersion();
+long currentHeight = service.appBlockNumber().send().getBlockNumber().longValue();
 long validUntilBlock = currentHeight + 80;
 Random random = new Random(System.currentTimeMillis());
 String nonce = String.valueOf(Math.abs(random.nextLong()));
 long quota = 1000000;
-Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, contractCode);
+Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, version, chainId, "0", contractCode);
 ```
 
 Sign the transaction with sender's private key and send it to CITA net.
 ```java
+String privateKey = "0x5f0258a4778057a8a7d97809bd209055b2fbafa654ce7d31ec7191066b9225e6"; // your private key
 String rawTx = tx.sign(privateKey);
-CITAj service = CITAj.build(new HttpService(ipAddr + ":" + port));
 AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```
 Please be attention that all transactions need to be signed since CITA only supports method `sendRawTransaction` rather than `sendTransaction`.
@@ -103,14 +109,16 @@ After contract deployed, contract address can be fetched from TransactionReceipt
 //get receipt and address from transaction
 String txHash = result.getSendTransactionResult().getHash();
 TransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send().getTransactionReceipt();
-String contractAddress = txReceipt.getContractAddress();
+String contractAddr = txReceipt.getContractAddress();
 
 //sign and send the transaction
-Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonce, quota, validUntilBlock, functionCallData);
+List<Type> inputParameters = Arrays.asList(new Uint(BigInteger.valueOf(4l)));
+String funcData = CITASystemContract.encodeFunction("set", inputParameters);
+Transaction tx = new Transaction(contractAddr, nonce, 10000000L, validUntilBlock, version, chainId, "0", funcData);
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-Please check [TokenTransactionExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenTransactionExample.java) to see a complete example for smart contract deployment and function invocation.
+Please check [TokenTransactionTest.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/test/java/com/citahub/cita/tests/TokenTransactionTest.java) to see a complete example for smart contract deployment and function invocation.
 
 ### Working with smart contract with cita-sdk-java wrapper
 Besides interacting with smart contracts by sending transactions with binary code, cita-sdk-java provides a tool to help to convert solidity contract to a Java class from which smart contracts can be deployed and called.
@@ -126,7 +134,7 @@ Example generate Java class from `Token.sol`, `Token.bin` and `Token.abi` under 
 java -jar build/libs/cita-sdk-20.2.0.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
 ```
 `Token.java` will be created from commands above and class `Token` can be used with TransactionManager to deploy and call smart contract `Token`. Please be attention that [TransactionManager](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/tx/TransactionManager.java) is supposed to be used as TransactionManager for transaction creation in CITA network.
-Please check [TokenCodegenExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenCodegenExample.java) for a complete example.
+Please check [TokenCodegenTest.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/test/java/com/citahub/cita/tests/TokenCodegenTest.java) for a complete example.
 
 ### Working with smart contract with cita-sdk-java Account (Test)
 cita-sdk-java provides interface [Account](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/protocol/account/Account.java) for smart contract manipulations. With parameters of smart contract's name, address, method and method's arguments, smart contracts can be deployed and called through the interface without exposing extra java, bin or abi file to developers.
@@ -146,7 +154,7 @@ public Object callContract(String contractAddress, String funcName, String nonce
 public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
 While contract file is required when first deploy the contract, cita-sdk-java can get the abi file according to address when call methods in deployed contract.
-Please find complete code in [TokenAccountExample](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenAccountExample.java).
+Please find complete code in [TokenAccountTest](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/test/java/com/citahub/cita/tests/TokenAccountTest.java).
 
 ## Contributing
 
@@ -251,19 +259,25 @@ $solc example.sol --bin
 
 根据生成的二进制文件和其他3个参数构造一个交易，代码如下：
 ```java
-CITAj service = CITAj.build(new HttpService(TEST_CHAIN_URL));
-long currentHeight = getCurrentHeight(CITAj service).longValue();
+String contractCode = "6080604052600160005534801561001557600080fd5b5060df806100246000396000f3006080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806360fe47b114604e5780636d4ce63c146078575b600080fd5b348015605957600080fd5b5060766004803603810190808035906020019092919050505060a0565b005b348015608357600080fd5b50608a60aa565b6040518082815260200191505060405180910390f35b8060008190555050565b600080549050905600a165627a7a723058202dd6056ea84968f05202910ca070fe13f6f46ff5507867f313d9c98bf2d2e55c0029";
+CITAj service = CITAj.build(new HttpService("https://testnet.citahub.com"));
+AppMetaData appMetaData;
+appMetaData = service.appMetaData(DefaultBlockParameter.valueOf("latest")).send();
+String chainIdHex = appMetaData.getAppMetaDataResult().getChainIdV1();
+BigInteger chainId = new BigInteger(chainIdHex.substring(2), 16);
+int version = appMetaData.getAppMetaDataResult().getVersion();
+long currentHeight = service.appBlockNumber().send().getBlockNumber().longValue();
 long validUntilBlock = currentHeight + 80;
 Random random = new Random(System.currentTimeMillis());
 String nonce = String.valueOf(Math.abs(random.nextLong()));
 long quota = 1000000;
-Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, contractCode);
+Transaction tx = Transaction.createContractTransaction(nonce, quota, validUntilBlock, version, chainId, "0", contractCode);
 ```
 
 用发送者的私钥对交易进行签名然后发送到 CITA 网络，代码如下：
 ```java
+String privateKey = "0x5f0258a4778057a8a7d97809bd209055b2fbafa654ce7d31ec7191066b9225e6"; // your private key
 String rawTx = tx.sign(privateKey);
-CITAj service = CITAj.build(new HttpService(ipAddr + ":" + port));
 AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 ```
 请注意因为 CITA 只支持 `sendRawTransaction` 方法而不是 `sendTransaction` ，所以所有发送给 CITA 的交易都需要被签名。
@@ -275,17 +289,19 @@ AppSendTransaction result = service.appSendRawTransaction(rawTx).send();
 
 智能合约成功部署以后，可以通过交易回执得到合约地址。以下是调用合约函数的例子，在例子中，`functionCallData`  通过对合约 ABI 中的函数名和入参编码得到。入参为 1 的`set()` 函数的编码数据 `functionCallData` 是 `60fe47b10000000000000000000000000000000000000000000000000000000000000001`.
 ```java
-//得到回执和回执中的合约部署地址
+//get receipt and address from transaction
 String txHash = result.getSendTransactionResult().getHash();
 TransactionReceipt txReceipt = service.appGetTransactionReceipt(txHash).send().getTransactionReceipt();
-String contractAddress = txReceipt.getContractAddress();
+String contractAddr = txReceipt.getContractAddress();
 
-//对交易签名并且发送
-Transaction tx = Transaction.createFunctionCallTransaction(contractAddress, nonce, quota, validUntilBlock, functionCallData);
+//sign and send the transaction
+List<Type> inputParameters = Arrays.asList(new Uint(BigInteger.valueOf(4l)));
+String funcData = CITASystemContract.encodeFunction("set", inputParameters);
+Transaction tx = new Transaction(contractAddr, nonce, 10000000L, validUntilBlock, version, chainId, "0", funcData);
 String rawTx = tx.sign(privateKey);
 String txHash =  service.appSendRawTransaction(rawTx).send().getSendTransactionResult().getHash();
 ```
-请在 [TokenTransactionExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenTransactionExample.java) 中查看完整代码。
+请在 [TokenTransactionTest.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/test/java/com/citahub/cita/tests/TokenTransactionTest.java) 中查看完整代码。
 
 ### 通过 cita-sdk-java 中的 wrapper 与智能合约交互
 以上例子展示了直接通过合约二进制码和函数的编码构造交易，并且发送与链上合约进行交互。除此方法以外，cita-sdk-java 提供了 codeGen 工具可以通过 solidity 合约生成 java 类。通过 cita-sdk-java 生成的 java 类，可以方便对合约进行部署和函数调用。
@@ -301,7 +317,7 @@ $ java -jar cita-sdk-20.2.0.jar solidity generate [--javaTypes|--solidityTypes] 
 java -jar build/libs/cita-sdk-20.2.0.jar solidity generate tests/src/main/resources/Token.bin tests/src/main/resources/Token.abi -o tests/src/main/java/ -p com.citahub.cita.tests
 ```
 `Token.java` 会通过以上命令生成， `Token` 可以与 `TransactionManager` 一起使用来和 Token 合约交互。请注意在 CITA 中应该使用 [TransactionManager](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/tx/TransactionManager.java) 而不是 TransactionManager。
-请在 [TokenCodegenExample.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenCodegenExample.java) 查看完整代码.
+请在 [TokenCodegenTest.java](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/test/java/com/citahub/cita/tests/TokenCodegenTest.java) 查看完整代码.
 
 ### 通过 CITAj 中的 Account 与智能合约交互（测试阶段）
 cita-sdk-java 还提供了接口 [Account](https://github.com/citahub/cita-sdk-java/blob/master/core/src/main/java/com/citahub/cita/protocol/account/Account.java) 与智能合约交互。 通过智能合约的名字，地址，函数名和函数入参，Account 可以进行合约的部署和合约函数的调用。通过 Account 这个方式，开发者无需进行合约二进制文件和 abi 细节处理。
@@ -321,7 +337,7 @@ public Object callContract(String contractAddress, String funcName, String nonce
 public Object callContract(String contractAddress, AbiDefinition functionAbi, String nonce, BigInteger quota, Object... args)
 ```
 虽然在第一次部署合约的时候需要提供合约文件，但是在以后调用合约函数的时候 cita-sdk-java 通过 CITA 提供的 getAbi 接口根据合约地址得到对应的 abi。  
-请在 [TokenAccountExample](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/main/java/com/citahub/cita/tests/TokenAccountExample.java) 中查看完整代码。
+请在 [TokenAccountTest](https://github.com/citahub/cita-sdk-java/blob/master/tests/src/test/java/com/citahub/cita/tests/TokenTransactionTest.java) 中查看完整代码。
 
 ## 参与贡献
 
