@@ -1,8 +1,5 @@
 package com.citahub.cita.protobuf;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ConvertStrByte {
 
     public static String bytesToHexString(byte[] b) {
@@ -31,7 +28,7 @@ public class ConvertStrByte {
         int l = src.length() / 2;
         byte[] ret = new byte[l];
         for (int i = 0; i < l; i++) {
-            ret[i] = (byte) Integer
+            ret[i] = Integer
                     .valueOf(src.substring(i * 2, i * 2 + 2), 16).byteValue();
         }
         return ret;
@@ -40,7 +37,7 @@ public class ConvertStrByte {
     /**
      * Convert hex string to byte array with fixed bit length
      *
-     * @param src hex string without "0x"
+     * @param src    hex string without "0x"
      * @param length length of bits of data to be sent to node.
      * @return byte array converted from src.
      */
@@ -53,7 +50,7 @@ public class ConvertStrByte {
             int l = src.length() / 2;
             byte[] value = new byte[l];
             for (int i = 0; i < l; i++) {
-                value[i] = (byte) Integer
+                value[i] = Integer
                         .valueOf(src.substring(i * 2, i * 2 + 2), 16).byteValue();
             }
 
@@ -69,33 +66,40 @@ public class ConvertStrByte {
 
 
     public static String stringToHexString(String strPart) {
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < strPart.length(); i++) {
-            int ch = (int) strPart.charAt(i);
-            String strHex = Integer.toHexString(ch);
-            hexString.append(strHex);
+        char[] chars = "0123456789abcdef".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        byte[] bs = strPart.getBytes();
+        int bit;
+        for (int i = 0; i < bs.length; i++) {
+            bit = (bs[i] & 0x0f0) >> 4;
+            sb.append(chars[bit]);
+            bit = bs[i] & 0x0f;
+            sb.append(chars[bit]);
         }
-        return hexString.toString();
+        return sb.toString().trim();
     }
 
 
     public static String hexStringToString(String src) {
-        String temp = "";
-        for (int i = 0; i < src.length() / 2; i++) {
-            temp = temp
-                    + (char) Integer.valueOf(src.substring(i * 2, i * 2 + 2),
-                    16).byteValue();
+        String str = "0123456789abcdef";
+        char[] hexs = src.toCharArray();
+        byte[] bytes = new byte[src.length() / 2];
+        int n;
+        for (int i = 0; i < bytes.length; i++) {
+            n = str.indexOf(hexs[2 * i]) * 16;
+            n += str.indexOf(hexs[2 * i + 1]);
+            bytes[i] = (byte) (n & 0xff);
         }
-        return temp;
+        return new String(bytes);
     }
 
 
     public static Byte charToByte(Character src) {
-        return Integer.valueOf((int)src).byteValue();
+        return Integer.valueOf((int) src).byteValue();
     }
 
 
-    private static String intToHexString(int a,int len) {
+    private static String intToHexString(int a, int len) {
         len <<= 1;
         String hexString = Integer.toHexString(a);
         int b = len - hexString.length();

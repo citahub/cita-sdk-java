@@ -35,12 +35,12 @@ public class StoreRecordTest {
         cryptoTx = Transaction.CryptoTx.valueOf(conf.cryptoTx);
     }
 
-    @Test
-    public void testStoreRecord()
+
+    public void testStoreRecord(String content)
             throws IOException, InterruptedException {
 
         String sampleDataToStore = ConvertStrByte
-                .stringToHexString("SampleDataToStore");
+                .stringToHexString(content);
 
         CITAjSystemContract sysContract = new CITAjSystemContract(service);
 
@@ -74,6 +74,21 @@ public class StoreRecordTest {
 
         System.out.println(unverifiedTransaction);
         String dataStored = unverifiedTransaction.getTransaction().getData().toStringUtf8();
-        assertThat(dataStored,equalTo("SampleDataToStore"));
+        assertThat(dataStored,equalTo(content));
     }
+
+    @Test
+    public void testStoreEnglish() throws IOException, InterruptedException {
+
+        testStoreRecord("SampleDataToStore");
+    }
+
+    @Test
+    public void testStoreChinese() throws IOException, InterruptedException {
+
+        testStoreRecord("中文存证");
+    }
+
+
+
 }
