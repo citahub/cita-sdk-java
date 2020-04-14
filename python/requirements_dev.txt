@@ -1,0 +1,14 @@
+pip
+wheel==0.33.6
+pytest==5.3.1
+pytest-cov==2.8.1
+pytest-sugar==0.9.2
+Sphinx==2.2.2
+watchdog==0.9.0
+mypy==0.750
+flake8==3.7.8
+
+requests==2.22.0
+eth-abi==2.1.0
+pysha3==1.0.2
+
