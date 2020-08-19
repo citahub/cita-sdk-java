@@ -134,7 +134,7 @@ Request<?, AppGetBalance>
 ```
 CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 string addr = "{hex cita address starting with 0x}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameter.valueOf("latest");
 AppGetBalance getBalance = service.appGetBalance(addr, defaultBlockParamter).send();
 BigInteger balance = getBalance.getBalance();
 ```
@@ -159,7 +159,7 @@ Request<?, AppGetAbi>
 ```
 CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 string addr = "{hex cita address starting with 0x}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameter.valueOf("latest");
 AppGetAbi getAbi = service.appGetAbi(addr, defaultBlockParamter).send();
 String abi = getAbi.getAbi();
 ```
@@ -185,7 +185,7 @@ Request<?, AppGetTransactionCount>
 ```
 CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 string addr = "{hex cita address starting with 0x}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameter.valueOf("latest");
 AppGetTransactionCount getTransactionCount = service.appGetTransactionCount(addr, defaultBlockParamter).send();
 BigInteger txCount = getTransactionCount.getTransactionCount();
 ```
@@ -211,8 +211,8 @@ Request<?, AppGetCode>
 ```
 CITAj service = CITAj.build(new HttpService("http://127.0.0.1"));
 string addr = "{hex cita address starting with 0x}";
-DefaultBlockParameter defaultBlockParameter = DefaultBlockParamter.valueOf("latest");
-AppGetCode getCode = service.appGetCode(addr, defaultBlockParamter).send();
+DefaultBlockParameter defaultBlockParameter = DefaultBlockParameter.valueOf("latest");
+AppGetCode getCode = service.appGetCode(addr, defaultBlockParameter).send();
 Sring code = getCode.getCode();
 ```
 
