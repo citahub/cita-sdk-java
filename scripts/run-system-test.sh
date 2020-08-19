@@ -10,11 +10,10 @@ docker pull ${DOCKER_IMAGE_URL}:${CITA_DOCKER_IMAGE_TAG_NAME} > ${DEBUG_LOG_PATH
 
 # get cita_quality code
 cd ..
-test -e cita_quality | git clone --depth 1 ${SYSTEM_TEST_CODE_URL}
+test -e cita_quality | git clone --depth 1 -b ${TEST_BRANCH_NAME} ${SYSTEM_TEST_CODE_URL}
 cp cita-sdk-java/build/libs/cita-sdk*.jar  ./cita_quality/systemTest/cita-sdk.jar
 cd ./cita_quality/systemTest
 system_test_dir=$(pwd)
-git checkout master | git pull
 
 # use local sdk change the maven sdk
 CITA_SDK_VERSION=$( cat pom.xml | grep -A 1 ">core<" | grep version | awk -F "[<>]" '{print $3}')
