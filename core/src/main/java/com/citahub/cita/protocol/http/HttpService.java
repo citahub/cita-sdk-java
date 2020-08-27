@@ -108,8 +108,10 @@ public class HttpService extends Service {
                 return null;
             }
         } else {
+            ResponseBody responseBody = response.body();
+            response.close();
             throw new ClientConnectionException(
-                    "Invalid response received: " + response.body());
+                    "Invalid response received: " + responseBody);
         }
     }
 
