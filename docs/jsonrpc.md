@@ -170,7 +170,7 @@ String abi = getAbi.getAbi();
 
 `Request<?, AppGetTransactionCount> appGetTransactionCount(String address, DefaultBlockParameter defaultBlockParameter)`
 
-获取账户发送合约数量。
+获取指定账户发送交易的数量。
 
 **参数**
 
