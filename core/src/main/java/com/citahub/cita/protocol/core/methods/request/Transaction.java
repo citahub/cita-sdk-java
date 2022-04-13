@@ -252,6 +252,6 @@ public class Transaction {
     }
 
     private static String processTo(String to) {
-        return !Strings.isEmpty(to) && Keys.verifyAddress(to) ? cleanHexPrefix(to).toLowerCase() : "";
+        return !Strings.isEmpty(to) && Keys.verifyAddress(to.trim()) ? cleanHexPrefix(to).toLowerCase() : "";
     }
 }
