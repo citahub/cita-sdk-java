@@ -1,8 +1,5 @@
 package com.citahub.cita.abi;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-
 import com.citahub.cita.abi.datatypes.Address;
 import com.citahub.cita.abi.datatypes.Array;
 import com.citahub.cita.abi.datatypes.Bool;
@@ -17,6 +14,8 @@ import com.citahub.cita.abi.datatypes.Ufixed;
 import com.citahub.cita.abi.datatypes.Uint;
 import com.citahub.cita.abi.datatypes.Utf8String;
 import com.citahub.cita.utils.Numeric;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 
 /**
  * <p>Ethereum Contract Application Binary Interface (ABI) encoding for types.
@@ -153,11 +152,49 @@ public class TypeEncoder {
     static <T extends Type> String encodeDynamicArray(DynamicArray<T> value) {
         int size = value.getValue().size();
         String encodedLength = encode(new Uint(BigInteger.valueOf(size)));
+        String valuesOffsets = encodeArrayValuesOffsets(value);
         String encodedValues = encodeArrayValues(value);
+
 
         StringBuilder result = new StringBuilder();
         result.append(encodedLength);
+        result.append(valuesOffsets);
         result.append(encodedValues);
+        return result.toString();
+    }
+
+
+    private static <T extends Type> String encodeArrayValuesOffsets(DynamicArray<T> value) {
+        StringBuilder result = new StringBuilder();
+        boolean arrayOfBytes =
+            !value.getValue().isEmpty() && value.getValue().get(0) instanceof DynamicBytes;
+        boolean arrayOfString =
+            !value.getValue().isEmpty() && value.getValue().get(0) instanceof Utf8String;
+//        boolean arrayOfDynamicStructs =
+//            !value.getValue().isEmpty() && value.getValue().get(0) instanceof DynamicStruct;
+        if (arrayOfBytes || arrayOfString) {
+            long offset = 0;
+            for (int i = 0; i < value.getValue().size(); i++) {
+                if (i == 0) {
+                    offset = value.getValue().size() * Type.MAX_BYTE_LENGTH;
+                } else {
+                    int bytesLength =
+                        arrayOfBytes
+                            ? ((byte[]) value.getValue().get(i - 1).getValue()).length
+                            : ((String) value.getValue().get(i - 1).getValue()).length();
+                    int numberOfWords = (bytesLength + Type.MAX_BYTE_LENGTH - 1) / Type.MAX_BYTE_LENGTH;
+                    int totalBytesLength = numberOfWords * Type.MAX_BYTE_LENGTH;
+                    offset += totalBytesLength + Type.MAX_BYTE_LENGTH;
+                }
+                result.append(
+                    Numeric.toHexStringNoPrefix(
+                        Numeric.toBytesPadded(
+                            new BigInteger(Long.toString(offset)), Type.MAX_BYTE_LENGTH)));
+            }
+        }
+//        else if (arrayOfDynamicStructs) {
+//            result.append(encodeStructsArraysOffsets(value));
+//        }
         return result.toString();
     }
 }

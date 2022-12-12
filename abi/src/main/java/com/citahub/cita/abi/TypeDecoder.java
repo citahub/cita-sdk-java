@@ -257,11 +257,29 @@ public class TypeDecoder {
             } else {
                 List<T> elements = new ArrayList<>(length);
 
+                /**
+                 * https://github.com/web3j/web3j/blob/ed98351fb7668cea52c4bbe19e99e4f47c728fe1/abi/src/main/java/org/web3j/abi/TypeDecoder.java#L630
+                 * 替换
                 for (int i = 0, currOffset = offset;
                         i < length;
                         i++, currOffset += getSingleElementLength(input, currOffset, cls)
                              * MAX_BYTE_LENGTH_FOR_HEX_STRING) {
                     T value = decode(input, currOffset, cls);
+                    elements.add(value);
+                } **/
+                int currOffset = offset;
+                for (int i = 0; i < length; i++) {
+                    T value;
+                    if (isDynamic(cls)) {
+                        int hexStringDataOffset = FunctionReturnDecoder.getDataOffset(input, currOffset, typeReference.getClassType());
+                        value = decode(input, offset + hexStringDataOffset, cls);
+                        currOffset += MAX_BYTE_LENGTH_FOR_HEX_STRING;
+                    } else {
+                        value = decode(input, currOffset, cls);
+                        currOffset +=
+                            getSingleElementLength(input, currOffset, cls)
+                                * MAX_BYTE_LENGTH_FOR_HEX_STRING;
+                    }
                     elements.add(value);
                 }
 
@@ -275,4 +293,11 @@ public class TypeDecoder {
                     e);
         }
     }
+
+    static <T extends Type> boolean isDynamic(Class<T> parameter) {
+        return DynamicBytes.class.isAssignableFrom(parameter)
+            || Utf8String.class.isAssignableFrom(parameter)
+            || DynamicArray.class.isAssignableFrom(parameter);
+    }
+
 }

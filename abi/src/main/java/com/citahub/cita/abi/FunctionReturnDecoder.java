@@ -1,10 +1,7 @@
 package com.citahub.cita.abi;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import static com.citahub.cita.abi.TypeDecoder.MAX_BYTE_LENGTH_FOR_HEX_STRING;
 
-import com.citahub.cita.abi.datatypes.generated.Bytes32;
 import com.citahub.cita.abi.datatypes.Array;
 import com.citahub.cita.abi.datatypes.Bytes;
 import com.citahub.cita.abi.datatypes.BytesType;
@@ -13,9 +10,11 @@ import com.citahub.cita.abi.datatypes.DynamicBytes;
 import com.citahub.cita.abi.datatypes.StaticArray;
 import com.citahub.cita.abi.datatypes.Type;
 import com.citahub.cita.abi.datatypes.Utf8String;
+import com.citahub.cita.abi.datatypes.generated.Bytes32;
 import com.citahub.cita.utils.Numeric;
-
-import static com.citahub.cita.abi.TypeDecoder.MAX_BYTE_LENGTH_FOR_HEX_STRING;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Decodes values returned by function or event calls.
@@ -129,7 +128,7 @@ public class FunctionReturnDecoder {
         return results;
     }
 
-    private static <T extends Type> int getDataOffset(String input, int offset, Class<T> type) {
+    protected static <T extends Type> int getDataOffset(String input, int offset, Class<T> type) {
         if (DynamicBytes.class.isAssignableFrom(type)
                 || Utf8String.class.isAssignableFrom(type)
                 || DynamicArray.class.isAssignableFrom(type)) {
@@ -138,4 +137,5 @@ public class FunctionReturnDecoder {
             return offset;
         }
     }
+
 }
